@@ -108,6 +108,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,12 +135,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DirectX-3D-Theory.h" />
-    <ClInclude Include="framework.h" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="BaseFile\Resource.h" />
     <ClInclude Include="BaseFile\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX-3D-Theory.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-1_BasicKnowledge.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./</AdditionalIncludeDirectories>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc" />
