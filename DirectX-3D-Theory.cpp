@@ -20,6 +20,8 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
+GameTimer timer;
+
 HRESULT InitDX3D(HWND hWnd)
 {
     // ========================================================
@@ -97,8 +99,25 @@ HRESULT InitDX3D(HWND hWnd)
     D3D11_VIEWPORT viewPort;
 
     CreateViewPort(deviceContext, &viewPort);
+
+    // ===============================================================================================
+
+    // ========================================================
+    //	타임머 설정
+    // ========================================================
+
+    timer.Reset();
     
     return S_OK;
+}
+
+void RunDX3D()
+{
+    // ========================================================
+    //  타임머 틱
+    // ========================================================
+
+    timer.Tick();
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
@@ -137,7 +156,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
         // 업데이트 렌더링
         else
         {
-
+            RunDX3D();
         }
     }
 
@@ -184,7 +203,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+   HWND hWnd = CreateWindowW(szWindowClass, L"DirectX 3D Game", WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
    g_hWnd = hWnd;
 

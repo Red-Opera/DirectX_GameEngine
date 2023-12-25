@@ -4,6 +4,10 @@
 
 #pragma once
 
+#ifdef _DEBUG
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+#endif
+
 #include "BaseFile/targetver.h"
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 
@@ -18,7 +22,12 @@
 #include <d3d11.h>
 #include <assert.h>
 
+#include <iostream>
+
+#include <Utility/GameTimer.h>
+
 // Define
+
 #define WindowWidth 1980
 #define WindowHeight 1080
 
@@ -26,4 +35,3 @@
 
 #define HR(x) { HRESULT hr = x; if(FAILED(hr)) { assert(false); } }
 #define ReleaseCOM(x) { if(x) { (x)->Release(); (x) = nullptr; } }
-

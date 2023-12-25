@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="DirectX-3D-Theory.h" />
     <ClInclude Include="DirectXSettings\DirectXSettings.h" />
+    <ClInclude Include="Utility\GameTimer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="BaseFile\Resource.h" />
     <ClInclude Include="BaseFile\targetver.h" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="DirectX-3D-Theory.cpp" />
     <ClCompile Include="DirectXSettings\DirectXSettings.cpp" />
+    <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -152,6 +154,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp" />
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc" />

@@ -30,6 +30,9 @@
     <ClInclude Include="DirectXSettings\DirectXSettings.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\GameTimer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX-3D-Theory.cpp">
@@ -45,6 +48,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="DirectXSettings\DirectXSettings.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\GameTimer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
