@@ -73,6 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Include</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Lib\x64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,11 +111,12 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>./</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>dxguid.lib;d3d11.lib;d3dx11.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dx11.lib;d3dx11d.lib;D3DCompiler.lib;Effects11d.lib;Effects11.lib;dxerr.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,18 +137,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DirectX-3D-Theory.h" />
+    <ClInclude Include="DirectXSettings\DirectXSettings.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="BaseFile\Resource.h" />
     <ClInclude Include="BaseFile\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectX-3D-Theory.cpp" />
+    <ClCompile Include="DirectXSettings\DirectXSettings.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-1_BasicKnowledge.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">./</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc" />

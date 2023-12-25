@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "DirectX-3D-Theory.h"
 
+#include "DirectXSettings/DirectXSettings.h"
+
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -18,10 +20,88 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+HRESULT InitDX3D(HWND hWnd)
+{
+    // ========================================================
+    //	Device 생성
+    // ========================================================
+    
+    UINT createDeviceFlags = 0;
+
+    D3D_FEATURE_LEVEL featureLevel;         // 품질 수준
+    ID3D11Device* device;                   // Device
+    ID3D11DeviceContext* deviceContext;     // DeviceContext
+
+    CreateDevice(&createDeviceFlags, &featureLevel, &device, &deviceContext);
+    
+
+    // ========================================================
+    //	4X MSAA 품질 수준 지원 점검
+    // ========================================================
+
+    // 반환된 품질 수준 값을 받기 위한 변수
+    UINT msaaQuality;
+
+    GetMSAAQuality(device, &msaaQuality);
+
+    // ========================================================
+    //	교환 사슬의 설정
+    // ========================================================
+
+    // 후면 버퍼 설정
+    DXGI_MODE_DESC backBufferModeDESC;
+
+    // MSAA를 사용하기 위한 설명서
+    DXGI_SAMPLE_DESC massDESC;
+
+    // 스왑 체인 설정
+    DXGI_SWAP_CHAIN_DESC swapChainDESC;
+
+    SwapChainSettings(hWnd, msaaQuality, &backBufferModeDESC, &massDESC, &swapChainDESC);
+
+    // ========================================================
+    //	교환 사슬의 생성
+    // ========================================================
+
+    // 스왑 체인
+    IDXGISwapChain* swapChain;
+    CreateSwapChain(device, swapChainDESC, &swapChain);
+
+    // ========================================================
+    //	렌더 대상 뷰의 생성
+    // ========================================================
+
+    ID3D11RenderTargetView* renderTargetView;
+    CreateRenderTargetView(swapChain, device, &renderTargetView);
+
+    // ========================================================
+    //	깊이 º 스텐실 버퍼와 뷰 생성
+    // ========================================================
+
+    ID3D11Texture2D* depthStencilBuffer;
+    ID3D11DepthStencilView* depthStencilView;
+
+    CreateDepthStencilView(device, msaaQuality, &depthStencilBuffer, &depthStencilView);
+
+    // ========================================================
+    //	뷰들을 출력 병합기 단계에 묶기
+    // ========================================================
+
+    // 첫번째 매개변수 : 렌더 대상 (2개 이상으로 지정할 경우 2개 이상의 장면을 동시에 렌더링함)
+    deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
+
+    // ========================================================
+    //	뷰포트 설정
+    // ========================================================
+
+    D3D11_VIEWPORT viewPort;
+
+    CreateViewPort(deviceContext, &viewPort);
+    
+    return S_OK;
+}
+
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -40,6 +120,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     MSG msg;
+    InitDX3D(g_hWnd);
 
     // 기본 메시지 루프입니다:
     while (true)
@@ -62,8 +143,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     return (int) msg.wParam;
 }
-
-
 
 //
 //  함수: MyRegisterClass()
