@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <xnamath.h>
 
 class InitScene : public DX3DApp
 {
