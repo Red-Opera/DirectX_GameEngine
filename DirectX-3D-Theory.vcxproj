@@ -136,16 +136,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DirectX-3D-Theory.h" />
+    <ClInclude Include="DX3DApp.h" />
     <ClInclude Include="DirectXSettings\DirectXSettings.h" />
+    <ClInclude Include="Utility\d3dUtil.h" />
     <ClInclude Include="Utility\GameTimer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="BaseFile\Resource.h" />
     <ClInclude Include="BaseFile\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX-3D-Theory.cpp" />
+    <ClCompile Include="DX3DApp.cpp" />
     <ClCompile Include="DirectXSettings\DirectXSettings.cpp" />
+    <ClCompile Include="Scene\InitScene.cpp" />
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -13,6 +13,7 @@
 
 // Windows 헤더 파일
 #include <windows.h>
+#include <windowsx.h>
 
 // C 런타임 헤더 파일입니다.
 #include <stdlib.h>
@@ -23,15 +24,13 @@
 #include <assert.h>
 
 #include <iostream>
+#include <sstream>
 
 #include <Utility/GameTimer.h>
+#include <Utility/d3dUtil.h>
+
+#include <DX3DApp.h>
 
 // Define
-
-#define WindowWidth 1980
-#define WindowHeight 1080
-
-#define MSAAUSAGE true
-
 #define HR(x) { HRESULT hr = x; if(FAILED(hr)) { assert(false); } }
 #define ReleaseCOM(x) { if(x) { (x)->Release(); (x) = nullptr; } }
