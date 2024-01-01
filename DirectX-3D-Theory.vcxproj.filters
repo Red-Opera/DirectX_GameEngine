@@ -65,6 +65,21 @@
     <ClCompile Include="Scene\InitScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-1_3DLllusion.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-2_ModelRepresentation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-3_FundamentalsOfColorRepresentation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-4_RenderingPipelineOverview.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-5_InputAssemblerStage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc">

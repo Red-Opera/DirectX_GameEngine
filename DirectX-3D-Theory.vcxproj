@@ -149,6 +149,11 @@
     <ClCompile Include="DirectXSettings\DirectXSettings.cpp" />
     <ClCompile Include="Scene\InitScene.cpp" />
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp" />
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-1_3DLllusion.cpp" />
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-2_ModelRepresentation.cpp" />
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-3_FundamentalsOfColorRepresentation.cpp" />
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-4_RenderingPipelineOverview.cpp" />
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-5_InputAssemblerStage.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
