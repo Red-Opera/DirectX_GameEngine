@@ -80,6 +80,9 @@
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-5_InputAssemblerStage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-6_VertexShaderStage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc">
