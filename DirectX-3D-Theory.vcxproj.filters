@@ -92,6 +92,12 @@
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-10_RasterizationStage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-11_PixelShaderStage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-12_OutputMergerStage.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc">
