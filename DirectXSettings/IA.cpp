@@ -65,4 +65,34 @@ IA::IA()
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	dx3dApp->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	dx3dApp->GetDeviceContext()->Draw(8, 0);
+
+	// IndexBuffer »ý¼º
+
+	D3D11_BUFFER_DESC indexBufferDesc;
+	indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	indexBufferDesc.ByteWidth = sizeof(UINT) * 24;
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.StructureByteStride = 0;
+
+	UINT indices[24] = {
+		0, 1, 2,
+		0, 2, 3,
+		0, 3, 4,
+		0, 4, 5,
+		0, 5, 6,
+		0, 6, 7,
+		0, 7, 8,
+		0, 8, 1
+	};
+
+  //D3D11_SUBRESOURCE_DATA initData;
+	initData.pSysMem = indices;
+
+	ID3D11Buffer* indexBuffer;
+	HR(dx3dApp->GetDevice()->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer));
+	dx3dApp->GetDeviceContext()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	dx3dApp->GetDeviceContext()->DrawIndexed(24, 0, 0);
 }
