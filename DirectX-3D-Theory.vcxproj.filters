@@ -110,6 +110,9 @@
     <ClCompile Include="DirectXSettings\IA.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-2_VertexBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc">

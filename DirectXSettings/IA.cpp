@@ -32,4 +32,37 @@ IA::IA()
 
 	// InputLayout을 렌더링 파이프라인에 연결
 	dx3dApp->GetDeviceContext()->IASetInputLayout(inputLaout);
+
+
+	// VertexBuffer 생성
+	Vertex vertices[] =
+	{
+		{ XMFLOAT3(-1.0f, -1.0f, -1.0f), (const float*)&Colors::White },
+		{ XMFLOAT3(-1.0f, +1.0f, -1.0f), (const float*)&Colors::Black },
+		{ XMFLOAT3(+1.0f, +1.0f, -1.0f), (const float*)&Colors::Cyan },
+		{ XMFLOAT3(+1.0f, -1.0f, -1.0f), (const float*)&Colors::Green },
+		{ XMFLOAT3(-1.0f, -1.0f, +1.0f), (const float*)&Colors::Blue },
+		{ XMFLOAT3(-1.0f, +1.0f, +1.0f), (const float*)&Colors::LightSteelBlue },
+		{ XMFLOAT3(+1.0f, +1.0f, +1.0f), (const float*)&Colors::Magenta },
+		{ XMFLOAT3(+1.0f, -1.0f, +1.0f), (const float*)&Colors::Red }
+	};
+
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	vertexBufferDesc.ByteWidth = sizeof(Vertex) * 8;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA initData;
+	initData.pSysMem = vertices;
+
+	ID3D11Buffer* vertexBuffer;
+	HR(dx3dApp->GetDevice()->CreateBuffer(&vertexBufferDesc, &initData, &vertexBuffer));
+
+	UINT stride = sizeof(Vertex);
+	UINT offset = 0;
+	dx3dApp->GetDeviceContext()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 }
