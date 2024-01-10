@@ -4,7 +4,7 @@
 #include "stdafx.h"
 
 #include "DirectXSettings/DirectXSettings.h"
-DX3DApp* dx3dApp = 0;
+#include "DirectXSettings/IA.h"
 
 float DX3DApp::displayFPSSEC = 0.5f;
 
@@ -14,6 +14,9 @@ bool DX3DApp::Init()
         return false;
 
     if (!InitDX3D())
+        return false;
+
+    if (!InitPipeLine())
         return false;
 
     return true;
@@ -327,6 +330,13 @@ bool DX3DApp::InitDX3D()
     // ========================================================
 
     runningTime.Reset();
+
+    return true;
+}
+
+bool DX3DApp::InitPipeLine()
+{
+    IA* ia = new IA;
 
     return true;
 }

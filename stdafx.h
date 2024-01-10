@@ -22,6 +22,7 @@
 #include <tchar.h>
 #include <d3d11.h>
 #include <assert.h>
+#include <BaseFile/d3dx11effect.h>
 
 #include <iostream>
 #include <sstream>

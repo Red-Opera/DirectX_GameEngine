@@ -28,6 +28,7 @@ public:
 	virtual void OnMouseMove(WPARAM buttonState, int x, int y) { }
 
 	ID3D11Device* GetDevice() { return device; }
+	ID3D11DeviceContext* GetDeviceContext() { return deviceContext; }
 
 	bool GetUsageMSAA() const { return isMSAAUsage; }
 	UINT GetMSAAQuality() const { return msaaQuality; }
@@ -40,6 +41,7 @@ public:
 protected:
 	bool InitMainWindow();			// 응용 프로그램의 주 창을 초기화
 	bool InitDX3D();				// DirectX 3D를 초기화하는 메소드
+	bool InitPipeLine();			// 렌더링 파이프라인을 초기화하는 메소드
 
 	void CalculateFrameStates();	// 평균 초당 프레임 수(FPS)와 평균 프레임당 밀리초를 계산
 
@@ -73,3 +75,5 @@ protected:
 	int clientWidth;				
 	int clientHeight;
 };
+
+static DX3DApp* dx3dApp = 0;

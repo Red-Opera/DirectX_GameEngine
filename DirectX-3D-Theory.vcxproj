@@ -136,15 +136,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseFile\d3dx11effect.h" />
+    <ClInclude Include="DirectXSettings\IA.h" />
     <ClInclude Include="DX3DApp.h" />
     <ClInclude Include="DirectXSettings\DirectXSettings.h" />
-    <ClInclude Include="Utility\d3dUtil.h" />
+    <ClInclude Include="Utility\d3dUtil.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Utility\GameTimer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="BaseFile\Resource.h" />
     <ClInclude Include="BaseFile\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXSettings\IA.cpp" />
     <ClCompile Include="DX3DApp.cpp" />
     <ClCompile Include="DirectXSettings\DirectXSettings.cpp" />
     <ClCompile Include="Scene\InitScene.cpp" />
@@ -160,6 +165,9 @@
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-6_VertexShaderStage.cpp" />
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-7_TessellationStage.cpp" />
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-8_9_GeometryShaderStage_Clipping.cpp" />
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-1_VertexAndInputLayout.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
