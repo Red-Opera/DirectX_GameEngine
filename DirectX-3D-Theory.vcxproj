@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="BaseFile\d3dx11effect.h" />
     <ClInclude Include="DirectXSettings\IA.h" />
+    <ClInclude Include="DirectXSettings\Rasterizer.h" />
     <ClInclude Include="DX3DApp.h" />
     <ClInclude Include="DirectXSettings\DirectXSettings.h" />
     <ClInclude Include="Utility\d3dUtil.h">
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectXSettings\IA.cpp" />
+    <ClCompile Include="DirectXSettings\Rasterizer.cpp" />
     <ClCompile Include="DX3DApp.cpp" />
     <ClCompile Include="DirectXSettings\DirectXSettings.cpp" />
     <ClCompile Include="Scene\InitScene.cpp" />
@@ -171,6 +173,9 @@
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-2_VertexBuffer.cpp" />
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-3_IndexAndIndexBuffer.cpp" />
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-4_VertexShader.cpp" />
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-5_ConstantBuffer.cpp" />
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-6_PixelShader.cpp" />
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-7_RenderState.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -189,7 +194,9 @@
     <Image Include="BaseFile\small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\VertexShader.hlsl" />
+    <FxCompile Include="Shader\VertexShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

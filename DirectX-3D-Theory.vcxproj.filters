@@ -42,6 +42,9 @@
     <ClInclude Include="DirectXSettings\IA.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXSettings\Rasterizer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DX3DApp.cpp">
@@ -117,6 +120,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-4_VertexShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-5_ConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-6_PixelShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-7_RenderState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXSettings\Rasterizer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
