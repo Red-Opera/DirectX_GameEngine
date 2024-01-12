@@ -170,6 +170,7 @@
     </ClCompile>
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-2_VertexBuffer.cpp" />
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-3_IndexAndIndexBuffer.cpp" />
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-4_VertexShader.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -186,6 +187,9 @@
   <ItemGroup>
     <Image Include="BaseFile\DirectX-3D-Theory.ico" />
     <Image Include="BaseFile\small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\VertexShader.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

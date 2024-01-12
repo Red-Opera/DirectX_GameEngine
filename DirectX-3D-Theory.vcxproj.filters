@@ -116,6 +116,9 @@
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-3_IndexAndIndexBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-4_VertexShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc">
@@ -129,5 +132,8 @@
     <Image Include="BaseFile\DirectX-3D-Theory.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\VertexShader.hlsl" />
   </ItemGroup>
 </Project>
