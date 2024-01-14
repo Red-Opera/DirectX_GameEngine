@@ -6,6 +6,7 @@
 #include "DirectXSettings/DirectXSettings.h"
 #include "DirectXSettings/IA.h"
 #include "DirectXSettings/Rasterizer.h"
+#include "DirectXSettings/Shader.h"
 
 float DX3DApp::displayFPSSEC = 0.5f;
 
@@ -340,6 +341,8 @@ bool DX3DApp::InitPipeLine()
     IA* ia = new IA;
 
     Rasterizer* rasterizer = new Rasterizer;
+
+    Shader* shader = new Shader;
 
     return true;
 }
