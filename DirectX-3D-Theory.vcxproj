@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -71,9 +71,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Include</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Include</IncludePath>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <ReferencePath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Lib\x64; $(ReferencePath)</ReferencePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -111,12 +111,13 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>./</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dx11.lib;d3dx11d.lib;D3DCompiler.lib;Effects11d.lib;Effects11.lib;dxerr.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;d3d11.lib;d3dx10.lib;d3dx11.lib;D3DCompiler.lib;dxerr.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Lib\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,49 +137,140 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BaseFile\d3dx11effect.h" />
-    <ClInclude Include="DirectXSettings\IA.h" />
-    <ClInclude Include="DirectXSettings\Rasterizer.h" />
-    <ClInclude Include="DirectXSettings\Shader.h" />
-    <ClInclude Include="DX3DApp.h" />
-    <ClInclude Include="DirectXSettings\DirectXSettings.h" />
-    <ClInclude Include="Utility\d3dUtil.h">
+    <ClInclude Include="App.h" />
+    <ClInclude Include="Core\Draw\Cone.h" />
+    <ClInclude Include="Core\Draw\Sphere.h" />
+    <ClInclude Include="Core\Draw\Plane.h" />
+    <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h" />
+    <ClInclude Include="Core\RenderingPipeline\VSPS\ConstantBuffer.h" />
+    <ClInclude Include="Core\RenderingPipeline\Bindable.h" />
+    <ClInclude Include="Core\Exception\BaseException.h" />
+    <ClInclude Include="Core\Draw\Cube.h" />
+    <ClInclude Include="DirectXSettings\IA.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="DirectXSettings\Rasterizer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="DirectXSettings\Shader.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Base\Drawable.h" />
+    <ClInclude Include="Core\Draw\DrawBox.h" />
+    <ClInclude Include="Core\Draw\Base\DrawableBase.h" />
+    <ClInclude Include="DX3DApp.h" />
+    <ClInclude Include="Core\InputSystem\KeyBoard.h" />
+    <ClInclude Include="Core\InputSystem\Mouse.h" />
+    <ClInclude Include="Core\DxGraphic.h" />
+    <ClInclude Include="Core\Exception\ExceptionInfo.h" />
+    <ClInclude Include="Core\Exception\GraphicsException.h" />
+    <ClInclude Include="Core\RenderingPipeline\IA\PrimitiveTopology.h" />
+    <ClInclude Include="Core\RenderingPipeline\IA\IndexBuffer.h" />
+    <ClInclude Include="Core\RenderingPipeline\IA\InputLayout.h" />
+    <ClInclude Include="Core\RenderingPipeline\VSPS\PixelShader.h" />
+    <ClInclude Include="Core\Draw\Pyramid.h" />
+    <ClInclude Include="Core\Draw\Melon.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.h" />
+    <ClInclude Include="Core\Draw\Base\TriangleIndexList.h" />
     <ClInclude Include="Utility\GameTimer.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="BaseFile\Resource.h" />
-    <ClInclude Include="BaseFile\targetver.h" />
+    <ClInclude Include="Core\Win.h" />
+    <ClInclude Include="Core\Window.h" />
+    <ClInclude Include="Core\RenderingPipeline\VSPS\VertexShader.h" />
+    <ClInclude Include="Core\RenderingPipeline\IA\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DirectXSettings\IA.cpp" />
-    <ClCompile Include="DirectXSettings\Rasterizer.cpp" />
-    <ClCompile Include="DirectXSettings\Shader.cpp" />
-    <ClCompile Include="DX3DApp.cpp" />
-    <ClCompile Include="DirectXSettings\DirectXSettings.cpp" />
-    <ClCompile Include="Scene\InitScene.cpp" />
-    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-10_RasterizationStage.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-11_PixelShaderStage.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-12_OutputMergerStage.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-1_3DLllusion.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-2_ModelRepresentation.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-3_FundamentalsOfColorRepresentation.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-4_RenderingPipelineOverview.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-5_InputAssemblerStage.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-6_VertexShaderStage.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-7_TessellationStage.cpp" />
-    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-8_9_GeometryShaderStage_Clipping.cpp" />
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-1_VertexAndInputLayout.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\VSPS\ConstantBuffer.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\Bindable.cpp" />
+    <ClCompile Include="Core\Exception\BaseException.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\VSPS\VertexShader.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\IA\VertexBuffer.cpp" />
+    <ClInclude Include="Core\Exception\WindowException.h" />
+    <ClCompile Include="DirectXSettings\IA.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-2_VertexBuffer.cpp" />
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-3_IndexAndIndexBuffer.cpp" />
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-4_VertexShader.cpp" />
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-5_ConstantBuffer.cpp" />
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-6_PixelShader.cpp" />
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-7_RenderState.cpp" />
-    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-8_EffectFrameWork.cpp" />
+    <ClCompile Include="DirectXSettings\Rasterizer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="DirectXSettings\Shader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Base\Drawable.cpp" />
+    <ClCompile Include="Core\Draw\DrawBox.cpp" />
+    <ClCompile Include="Core\Draw\Base\DrawableBase.cpp" />
+    <ClCompile Include="DX3DApp.cpp" />
+    <ClCompile Include="Core\InputSystem\KeyBoard.cpp" />
+    <ClCompile Include="Core\InputSystem\Mouse.cpp" />
+    <ClCompile Include="Core\DxGraphic.cpp" />
+    <ClCompile Include="Core\Exception\ExceptionInfo.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\IA\PrimitiveTopology.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\IA\IndexBuffer.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\IA\InputLayout.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\VSPS\PixelShader.cpp" />
+    <ClCompile Include="Core\Draw\Pyramid.cpp" />
+    <ClCompile Include="Core\Draw\Melon.cpp" />
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp" />
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-10_RasterizationStage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-11_PixelShaderStage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-12_OutputMergerStage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-1_3DLllusion.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-2_ModelRepresentation.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-3_FundamentalsOfColorRepresentation.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-4_RenderingPipelineOverview.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-5_InputAssemblerStage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-6_VertexShaderStage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-7_TessellationStage.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-8_9_GeometryShaderStage_Clipping.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\RotateCube.cpp" />
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-1_VertexAndInputLayout.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-2_VertexBuffer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-3_IndexAndIndexBuffer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-4_VertexShader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-5_ConstantBuffer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-6_PixelShader.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-7_RenderState.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-8_EffectFrameWork.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -188,16 +280,27 @@
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp" />
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp" />
+    <ClCompile Include="Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc" />
+    <FxCompile Include="Shader\BoxShader.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shader\ColorBlendShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Shader\Shader.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shader\ColorShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="BaseFile\DirectX-3D-Theory.ico" />
-    <Image Include="BaseFile\small.ico" />
+    <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\Shader.fx" />
+    <Image Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

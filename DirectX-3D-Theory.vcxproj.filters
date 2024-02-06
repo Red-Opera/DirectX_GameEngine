@@ -18,25 +18,10 @@
     <ClInclude Include="stdafx.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="BaseFile\targetver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseFile\Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="DX3DApp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXSettings\DirectXSettings.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\GameTimer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\d3dUtil.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseFile\d3dx11effect.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="DirectXSettings\IA.h">
@@ -46,6 +31,99 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="DirectXSettings\Shader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Window.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exception\BaseException.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\InputSystem\KeyBoard.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\InputSystem\Mouse.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Win.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="App.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DxGraphic.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exception\ExceptionInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exception\GraphicsException.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exception\WindowException.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Bindable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\VSPS\ConstantBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\IA\PrimitiveTopology.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\IA\IndexBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\IA\InputLayout.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\VSPS\VertexShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\VSPS\PixelShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\IA\VertexBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Base\Drawable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\DrawBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Base\DrawableBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Base\TriangleIndexList.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Cube.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Plane.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Sphere.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Pyramid.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Cone.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Melon.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,9 +140,6 @@
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXSettings\DirectXSettings.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -72,9 +147,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene\InitScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-1_3DLllusion.cpp">
@@ -143,21 +215,87 @@
     <ClCompile Include="DirectXSettings\Shader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Window.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Exception\BaseException.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\InputSystem\KeyBoard.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\InputSystem\Mouse.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="App.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DxGraphic.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Exception\ExceptionInfo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\RotateCube.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Bindable.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\VSPS\ConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\IA\PrimitiveTopology.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\IA\IndexBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\IA\InputLayout.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\VSPS\VertexShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\VSPS\PixelShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\IA\VertexBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Base\Drawable.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\DrawBox.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Base\DrawableBase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Pyramid.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Melon.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="BaseFile\DirectX-3D-Theory.rc">
+    <FxCompile Include="Shader\Shader.fx" />
+    <FxCompile Include="Shader\BoxShader.hlsl" />
+    <FxCompile Include="Shader\ColorShader.hlsl" />
+    <FxCompile Include="Shader\ColorBlendShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="BaseFile\small.ico">
+    <Image Include="Icon.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="BaseFile\DirectX-3D-Theory.ico">
-      <Filter>리소스 파일</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shader\Shader.fx" />
   </ItemGroup>
 </Project>

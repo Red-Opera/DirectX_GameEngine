@@ -1,7 +1,5 @@
 #pragma once
 
-#include "BaseFile/Resource.h"
-
 class DX3DApp
 {
 public:
@@ -67,7 +65,7 @@ protected:
 	ID3D11DepthStencilView* depthStencilView;	// 깊이 º 스텐실 뷰
 	D3D11_VIEWPORT			viewport;			// 뷰포트
 
-	std::wstring appTitle;			// 클라이언트 창 메뉴 이름
+	std::string appTitle;			// 클라이언트 창 메뉴 이름
 
 	D3D_DRIVER_TYPE driverType;		// 구동기 종류 (하드웨어 장치 또는 표준 장치)
 
