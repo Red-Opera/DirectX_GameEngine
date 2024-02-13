@@ -11,13 +11,13 @@ protected:
 		return !staticBinds.empty();
 	}
 
-	static void AddStaticBind(unique_ptr<Bindable> bind) noexcept (!_DEBUG)
+	static void AddStaticBind(std::unique_ptr<Bindable> bind) noexcept (!_DEBUG)
 	{
 		assert("Index Buffer는 AddStaticIndexBuffer를 사용" && typeid(*bind) != typeid(IndexBuffer));
 		staticBinds.push_back(move(bind));
 	}
 
-	void AddStaticIndexBuffer(unique_ptr<IndexBuffer> indexBuffer) noexcept (!_DEBUG)
+	void AddStaticIndexBuffer(std::unique_ptr<IndexBuffer> indexBuffer) noexcept (!_DEBUG)
 	{
 		assert("Index Buffer가 존재하지 않습니다." && this->indexBuffer == nullptr);
 		this->indexBuffer = indexBuffer.get();
@@ -41,13 +41,13 @@ protected:
 	}
 
 private:
-	const vector<unique_ptr<Bindable>>& GetStaticBinds() const noexcept override
+	const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept override
 	{
 		return staticBinds;
 	}
 
-	static vector<unique_ptr<Bindable>> staticBinds;
+	static std::vector<std::unique_ptr<Bindable>> staticBinds;
 };
 
 template<class T>
-vector<unique_ptr<Bindable>> DrawableBase<T>::staticBinds;
+std::vector<std::unique_ptr<Bindable>> DrawableBase<T>::staticBinds;

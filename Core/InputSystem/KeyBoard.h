@@ -3,8 +3,6 @@
 #include <bitset>
 #include <optional>
 
-using namespace std;
-
 class Keyboard
 {
 	friend class Window;
@@ -37,7 +35,7 @@ public:
 
 	// 키 이벤트 관련 메소드
 	bool IsPressed(unsigned char keycode) const noexcept;	// 현재 해당 키가 눌렸는지 여부
-	optional<Event> ReadKey() noexcept;						// 키보드 이벤트 중 하나를 가져오는 메소드
+	std::optional<Event> ReadKey() noexcept;				// 키보드 이벤트 중 하나를 가져오는 메소드
 	bool KeyIsEmpty() const noexcept;						// 키 이벤트가 존재하는지 여부
 	void FlushKey() noexcept;								// 키 이벤트를 모두 제거함
 

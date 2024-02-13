@@ -1,11 +1,12 @@
 #pragma once
 
-#include "stdafx.h"
 #include "Win.h"
 
 #include "Exception/BaseException.h"
 #include "Exception/ExceptionInfo.h"
 
+#include <d3d11.h>
+#include <DirectXMath.h>
 #include <wrl.h>
 #include <dxgidebug.h>
 
@@ -21,7 +22,7 @@ public:
 	class Exception : public BaseException
 	{
 	public:
-		static string TranslateErrorCode(HRESULT hr) noexcept;
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;
 
 	private:
 		using BaseException::BaseException;
@@ -30,21 +31,21 @@ public:
 	class HRException : public Exception
 	{
 	public:
-		HRException(int line, const char* file, HRESULT hr, vector<string> infoMessage = {}) noexcept;
-		HRException(int line, string file, HRESULT hr, vector<string> infoMessage = {}) noexcept;
+		HRException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMessage = {}) noexcept;
+		HRException(int line, std::string file, HRESULT hr, std::vector<std::string> infoMessage = {}) noexcept;
 
 		const char* what() const noexcept override;
 
 		// 예외 정보에 관한 메소드
 		const char* GetType() const noexcept override;
 		HRESULT GetErrorCode() const noexcept;
-		string GetExptionContent() const noexcept;
-		string GetErrorDescription() const noexcept;
-		string GetErrorInfo() const noexcept;
+		std::string GetExptionContent() const noexcept;
+		std::string GetErrorDescription() const noexcept;
+		std::string GetErrorInfo() const noexcept;
 
 	private:
 		HRESULT hr;
-		string info;
+		std::string info;
 	};
 
 	class RemoveException : public HRException
@@ -55,21 +56,21 @@ public:
 		const char* GetType() const noexcept override;
 
 	private:
-		string info;
+		std::string info;
 	};
 
 	class InfoException : public Exception
 	{
 	public:
-		InfoException(int line, const char* file, vector<string> infoMessage = {});
-		InfoException(int line, string file, vector<string> infoMessage = {});
+		InfoException(int line, const char* file, std::vector<std::string> infoMessage = {});
+		InfoException(int line, std::string file, std::vector<std::string> infoMessage = {});
 
 		const char* what() const noexcept override;
 		const char* GetType() const noexcept override;
-		string GetErrorInfo() const noexcept;
+		std::string GetErrorInfo() const noexcept;
 
 	private:
-		string info;
+		std::string info;
 	};
 
 	DxGraphic(HWND hWnd);
@@ -87,14 +88,22 @@ public:
 	ID3D11DeviceContext*	GetDeviceContext() { return deviceContext.Get(); }
 	ExceptionInfo&			GetInfoManager() { return infoManager; }
 	DirectX::XMMATRIX		GetProjection() const noexcept { return projection; }
+	bool					GetMsaaUsage() const noexcept { return isMSAAUsage; }
+	UINT					GetMsaaQuality() const noexcept { return msaaQuality; }
+
+	DirectX::XMMATRIX GetCamera() { return camera; }
 
 	// Set Method
 	void SetProjection(DirectX::XMMATRIX projection) noexcept;
+	void SetCamera(DirectX::FXMMATRIX camera) noexcept { this->camera = camera; }
 
+	void BeginFrame(float red, float green, float blue) noexcept;
 	void EndFrame();
 
-	// 화면 색깔 초기화 메소드
-	void ClearBuffer(float red, float green, float blue) noexcept;
+	// ImGui 관련 메소드
+	void EnableImGui() noexcept;
+	void DisableImGui() noexcept;
+	bool IsImGuiEnable() noexcept;
 
 private:
 #ifndef NDEBUG
@@ -122,4 +131,8 @@ private:
 	D3D11_VIEWPORT					viewport;			// 뷰포트
 
 	DirectX::XMMATRIX projection;
+	DirectX::XMMATRIX camera;			
+
+	// ImGui
+	bool imGuiEnable = true;
 };

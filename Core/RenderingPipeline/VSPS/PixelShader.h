@@ -4,7 +4,7 @@
 class PixelShader : public Bindable
 {
 public:
-	PixelShader(DxGraphic& graphic, const wstring& path);
+	PixelShader(DxGraphic& graphic, const std::wstring& path);
 
 	// Bindable을(를) 통해 상속됨
 	void PipeLineSet(DxGraphic& graphic) noexcept override;

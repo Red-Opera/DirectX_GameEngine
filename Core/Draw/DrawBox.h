@@ -6,12 +6,12 @@
 class DrawBox : public DrawableBase<DrawBox>
 {
 public:
-	DrawBox(DxGraphic& graphic, mt19937& random,
-		uniform_real_distribution<float>& adist,
-		uniform_real_distribution<float>& ddist,
-		uniform_real_distribution<float>& odist,
-		uniform_real_distribution<float>& rdist,
-		uniform_real_distribution<float>& bdist);
+	DrawBox(DxGraphic& graphic, std::mt19937& random,
+		std::uniform_real_distribution<float>& adist,
+		std::uniform_real_distribution<float>& ddist,
+		std::uniform_real_distribution<float>& odist,
+		std::uniform_real_distribution<float>& rdist,
+		std::uniform_real_distribution<float>& bdist);
 
 	void Update(float dt) noexcept override;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;

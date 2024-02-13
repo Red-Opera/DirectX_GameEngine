@@ -2,6 +2,7 @@
 #include "PixelShader.h"
 
 #include "Core/Exception/GraphicsException.h"
+using namespace std;
 
 PixelShader::PixelShader(DxGraphic& graphic, const wstring& path)
 {

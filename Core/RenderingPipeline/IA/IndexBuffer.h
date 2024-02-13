@@ -4,7 +4,7 @@
 class IndexBuffer : public Bindable
 {
 public:
-	IndexBuffer(DxGraphic& graphic, const vector<unsigned short>& indices);
+	IndexBuffer(DxGraphic& graphic, const std::vector<unsigned short>& indices);
 
 	// Bindable을(를) 통해 상속됨
 	void PipeLineSet(DxGraphic& graphic) noexcept override;

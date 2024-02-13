@@ -11,6 +11,8 @@
 
 #define INFOEXCEPTION(hr) if (FAILED(hr)) throw DxGraphic::HRException(__LINE__, __FILE__, hr)
 
+using namespace std;
+
 ExceptionInfo::ExceptionInfo()
 {
 	// dxgidebug.dll 라이브러리 안에 있는 DXGIGetDebugInterface 함수를 함수명으로 표시하기 위한 정의

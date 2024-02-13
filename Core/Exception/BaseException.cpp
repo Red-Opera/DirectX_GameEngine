@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BaseException.h"
+using namespace std;
 
 BaseException::BaseException(int line, const char* file) noexcept
 	: line(line), file(file)

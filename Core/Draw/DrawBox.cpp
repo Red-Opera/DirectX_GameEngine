@@ -5,12 +5,12 @@
 
 #include "Cube.h"
 
-DrawBox::DrawBox(DxGraphic& graphic, mt19937& random, 
-	uniform_real_distribution<float>& adist, 
-	uniform_real_distribution<float>& ddist, 
-	uniform_real_distribution<float>& odist, 
-	uniform_real_distribution<float>& rdist,
-	uniform_real_distribution<float>& bdist) 
+DrawBox::DrawBox(DxGraphic& graphic, std::mt19937& random, 
+	std::uniform_real_distribution<float>& adist, 
+	std::uniform_real_distribution<float>& ddist, 
+	std::uniform_real_distribution<float>& odist, 
+	std::uniform_real_distribution<float>& rdist,
+	std::uniform_real_distribution<float>& bdist) 
 	: r(rdist(random)), deltaRoll(ddist(random)), deltaPitch(ddist(random)), deltaYaw(ddist(random)),
 	deltaTheta(odist(random)), deltaPhi(odist(random)), deltaChi(odist(random)), chi(adist(random)), theta(adist(random)), phi(adist(random))
 {
@@ -25,15 +25,15 @@ DrawBox::DrawBox(DxGraphic& graphic, mt19937& random,
 		auto model = Cube::CreateIndex<Position>();
 		model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 1.2f));
 
-		AddStaticBind(make_unique<VertexBuffer>(graphic, model.vertices));
+		AddStaticBind(std::make_unique<VertexBuffer>(graphic, model.vertices));
 
-		auto vertexShader = make_unique<VertexShader>(graphic, L"Shader/ColorShader.hlsl");
+		auto vertexShader = std::make_unique<VertexShader>(graphic, L"Shader/ColorShader.hlsl");
 		auto VSShaderCode = vertexShader->GetShaderCode();
-		AddStaticBind(move(vertexShader));
+		AddStaticBind(std::move(vertexShader));
 
-		AddStaticBind(make_unique<PixelShader>(graphic, L"Shader/ColorShader.hlsl"));
+		AddStaticBind(std::make_unique<PixelShader>(graphic, L"Shader/ColorShader.hlsl"));
 
-		AddStaticIndexBuffer(make_unique<IndexBuffer>(graphic, model.indices));
+		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(graphic, model.indices));
 
 		struct ColorConstantBuffer
 		{
@@ -59,21 +59,21 @@ DrawBox::DrawBox(DxGraphic& graphic, mt19937& random,
 			}
 		};
 
-		AddStaticBind(make_unique<PixelConstantBuffer<ColorConstantBuffer>>(graphic, colorConstantBuffer));
+		AddStaticBind(std::make_unique<PixelConstantBuffer<ColorConstantBuffer>>(graphic, colorConstantBuffer));
 
-		const vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc =
+		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayoutDesc =
 		{
 			{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
 
-		AddStaticBind(make_unique<InputLayout>(graphic, inputLayoutDesc, VSShaderCode));
-		AddStaticBind(make_unique<PrimitiveTopology>(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		AddStaticBind(std::make_unique<InputLayout>(graphic, inputLayoutDesc, VSShaderCode));
+		AddStaticBind(std::make_unique<PrimitiveTopology>(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	}
 
 	else
 		SetIndexFromStatic();
 
-	AddBind(make_unique<TransformConstantBuffer>(graphic, *this));
+	AddBind(std::make_unique<TransformConstantBuffer>(graphic, *this));
 
 	DirectX::XMStoreFloat3x3(&transformMatrix, DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(random)));
 }
@@ -94,6 +94,5 @@ DirectX::XMMATRIX DrawBox::GetTransformXM() const noexcept
 	return DirectX::XMLoadFloat3x3(&transformMatrix) *
 		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 		DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi) *
-		DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
+		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi);
 }

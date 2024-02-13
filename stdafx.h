@@ -8,19 +8,15 @@
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #endif
 
-#define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
-
 #define _USE_MATH_DEFINES
 #include <cmath>
 
 // Windows 헤더 파일
-#include <windows.h>
 #include <windowsx.h>
 
 // C 런타임 헤더 파일입니다.
 #include <stdlib.h>
 #include <malloc.h>
-#include <memory.h>
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <dxerr.h>
@@ -28,9 +24,11 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
+#include <memory>
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 #include <Utility/GameTimer.h>
 
@@ -39,7 +37,7 @@
 // Define
 #define HR(x) { HRESULT hr = x; if(FAILED(hr)) { assert(false); } }
 #define ReleaseCOM(x) { if(x) { (x)->Release(); (x) = nullptr; } }
-#define PI 3.141592
+#define PI 3.141592f
 
 // namespace
 namespace DxMath = DirectX;

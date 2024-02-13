@@ -8,3 +8,4 @@
 #include "../RenderingPipeline/VSPS/VertexShader.h"
 #include "../RenderingPipeline/VSPS/PixelShader.h"
 #include "../RenderingPipeline/VSPS/TransformConstantBuffer.h"
+#include "../RenderingPipeline/VSPS/SamplerState.h"

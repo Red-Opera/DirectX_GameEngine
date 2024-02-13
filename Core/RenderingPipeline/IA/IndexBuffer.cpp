@@ -2,6 +2,7 @@
 #include "IndexBuffer.h"
 
 #include "Core/Exception/GraphicsException.h"
+using namespace std;
 
 IndexBuffer::IndexBuffer(DxGraphic& graphic, const vector<unsigned short>& indices) : indexCount((UINT) indices.size())
 {

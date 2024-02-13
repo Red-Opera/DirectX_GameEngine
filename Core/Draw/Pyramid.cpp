@@ -3,6 +3,7 @@
 #include "Cone.h"
 
 #include "../RenderingPipeline/RenderingPipeline.h"
+using namespace std;
 
 Pyramid::Pyramid(DxGraphic& graphic, mt19937& random, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist, std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist) :
 	r(rdist(random)), 
@@ -76,6 +77,5 @@ DirectX::XMMATRIX Pyramid::GetTransformXM() const noexcept
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 		DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi) *
-		DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
+		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi);
 }

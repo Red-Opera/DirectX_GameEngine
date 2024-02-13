@@ -1,7 +1,6 @@
 #pragma once
 #include <queue>
 #include <optional>
-using namespace std;
 
 class Mouse
 {
@@ -32,7 +31,7 @@ public:
 		Type GetType() const noexcept { return type; }
 
 		// 마우스 이벤트가 발생한 마우스 포인터 위치를 얻는 메소드
-		pair<int, int> GetPos() const noexcept { return{ x,y }; }
+		std::pair<int, int> GetPos() const noexcept { return{ x,y }; }
 		int GetPosX() const noexcept { return x; }
 		int GetPosY() const noexcept { return y; }
 
@@ -65,7 +64,7 @@ public:
 	bool LeftIsPressed() const noexcept;
 	bool RightIsPressed() const noexcept;
 
-	optional<Mouse::Event> Read() noexcept;
+	std::optional<Mouse::Event> Read() noexcept;
 	bool IsEmpty() const noexcept { return buffer.empty(); }
 	void Flush() noexcept;
 

@@ -5,7 +5,7 @@
 class Pyramid : public DrawableBase<Pyramid>
 {
 public:
-	Pyramid(DxGraphic& graphic, mt19937& random,
+	Pyramid(DxGraphic& graphic, std::mt19937& random,
 		std::uniform_real_distribution<float>& adist,
 		std::uniform_real_distribution<float>& ddist,
 		std::uniform_real_distribution<float>& odist,

@@ -13,7 +13,7 @@ public:
 	void PipeLineSet(DxGraphic& graphic) noexcept override;
 
 private:
-	static unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> vertexConstantBufferMatrix;
+	static std::unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> vertexConstantBufferMatrix;
 	const Drawable& parent;
 };
 

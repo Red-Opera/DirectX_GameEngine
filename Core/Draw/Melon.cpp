@@ -3,6 +3,7 @@
 #include "Sphere.h"
 
 #include "../RenderingPipeline/RenderingPipeline.h"
+using namespace std;
 
 Melon::Melon(DxGraphic& graphic, mt19937& random, uniform_real_distribution<float>& adist, uniform_real_distribution<float>& ddist, uniform_real_distribution<float>& odist, uniform_real_distribution<float>& rdist, uniform_int_distribution<int>& longdist, uniform_int_distribution<int>& latdist)
 	: r(rdist(random)),
@@ -85,6 +86,5 @@ DirectX::XMMATRIX Melon::GetTransformXM() const noexcept
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 		DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi) *
-		DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
+		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi);
 }

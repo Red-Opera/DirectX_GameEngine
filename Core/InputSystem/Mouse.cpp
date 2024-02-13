@@ -3,6 +3,7 @@
 #include "../Win.h"
 
 #include "Mouse.h"
+using namespace std;
 
 
 pair<int, int> Mouse::GetPos() const noexcept

@@ -2,6 +2,7 @@
 #include "VertexShader.h"
 
 #include "Core/Exception/GraphicsException.h"
+using namespace std;
 
 VertexShader::VertexShader(DxGraphic& graphic, const wstring& path)
 {

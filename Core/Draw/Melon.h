@@ -7,7 +7,7 @@
 class Melon : public DrawableBase<Melon>
 {
 public:
-	Melon(DxGraphic& graphic, mt19937& random,
+	Melon(DxGraphic& graphic, std::mt19937& random,
 		std::uniform_real_distribution<float>& adist,
 		std::uniform_real_distribution<float>& ddist,
 		std::uniform_real_distribution<float>& odist,

@@ -16,7 +16,7 @@ int CALLBACK wWinMain(
 		MessageBox(nullptr, e.what(), e.GetType(), MB_OK | MB_ICONEXCLAMATION);
 	}
 
-	catch (const exception& e)
+	catch (const std::exception& e)
 	{
 		MessageBox(nullptr, e.what(), "표준 예외", MB_OK | MB_ICONEXCLAMATION);
 	}

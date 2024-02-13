@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "InputLayout.h"
 #include "Core/Exception/GraphicsException.h"
+using namespace std;
 
 InputLayout::InputLayout(DxGraphic& graphic, const vector<D3D11_INPUT_ELEMENT_DESC>& layout, ID3DBlob* shaderCode)
 {

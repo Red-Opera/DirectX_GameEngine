@@ -5,7 +5,6 @@
 #include <vector>
 #include <string>
 #include <wrl.h>
-using namespace std;
 
 class ExceptionInfo
 {
@@ -17,7 +16,7 @@ public:
 	ExceptionInfo& operator=(const ExceptionInfo&) = delete;
 
 	void Set() noexcept;
-	vector<string> GetMessages() const;
+	std::vector<std::string> GetMessages() const;
 
 private:
 	unsigned long long next = 0u;

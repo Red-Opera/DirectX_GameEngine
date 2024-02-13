@@ -7,7 +7,7 @@ class VertexBuffer : public Bindable
 {
 public:
 	template<class BufferType>
-	VertexBuffer(DxGraphic& graphic, const vector<BufferType>& vertices) : stride(sizeof(BufferType))
+	VertexBuffer(DxGraphic& graphic, const std::vector<BufferType>& vertices) : stride(sizeof(BufferType))
 	{
 		CREATEINFOMANAGER(graphic);
 

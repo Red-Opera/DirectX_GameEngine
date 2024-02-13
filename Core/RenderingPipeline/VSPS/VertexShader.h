@@ -4,7 +4,7 @@
 class VertexShader : public Bindable
 {
 public:
-	VertexShader(DxGraphic& graphic, const wstring& path);
+	VertexShader(DxGraphic& graphic, const std::wstring& path);
 	
 	ID3DBlob* GetShaderCode() const noexcept;
 

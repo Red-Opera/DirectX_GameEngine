@@ -5,14 +5,18 @@ TransformConstantBuffer::TransformConstantBuffer(DxGraphic& graphic, const Drawa
 	: parent(parent)
 {
 	if (!vertexConstantBufferMatrix)
-		vertexConstantBufferMatrix = make_unique<VertexConstantBuffer<DirectX::XMMATRIX>>(graphic);
+		vertexConstantBufferMatrix = std::make_unique<VertexConstantBuffer<DirectX::XMMATRIX>>(graphic);
 }
 
 void TransformConstantBuffer::PipeLineSet(DxGraphic& graphic) noexcept
 {
-	vertexConstantBufferMatrix->Update(graphic, DirectX::XMMatrixTranspose(parent.GetTransformXM() * graphic.GetProjection()));
+	vertexConstantBufferMatrix->Update(graphic, 
+		DirectX::XMMatrixTranspose(
+			parent.GetTransformXM() *		// World
+			graphic.GetCamera() *			// View
+			graphic.GetProjection()));		// Projection
 
 	vertexConstantBufferMatrix->PipeLineSet(graphic);
 }
 
-unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> TransformConstantBuffer::vertexConstantBufferMatrix;
+std::unique_ptr<VertexConstantBuffer<DirectX::XMMATRIX>> TransformConstantBuffer::vertexConstantBufferMatrix;

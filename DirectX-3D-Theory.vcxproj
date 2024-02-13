@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>./;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Core\Camera.h" />
     <ClInclude Include="Core\Draw\Cone.h" />
     <ClInclude Include="Core\Draw\Sphere.h" />
     <ClInclude Include="Core\Draw\Plane.h" />
@@ -170,23 +171,58 @@
     <ClInclude Include="Core\RenderingPipeline\VSPS\PixelShader.h" />
     <ClInclude Include="Core\Draw\Pyramid.h" />
     <ClInclude Include="Core\Draw\Melon.h" />
+    <ClInclude Include="Core\Draw\Base\Material.h" />
+    <ClInclude Include="Core\Draw\Base\Image\GDIPlus.h" />
+    <ClInclude Include="Utility\Imgui\Usage\ImguiManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.h" />
     <ClInclude Include="Core\Draw\Base\TriangleIndexList.h" />
+    <ClInclude Include="Core\Draw\Base\Image\Texture.h" />
+    <ClInclude Include="Core\RenderingPipeline\VSPS\SamplerState.h" />
+    <ClInclude Include="Core\Draw\Sheet.h" />
+    <ClInclude Include="Core\Draw\TextureCube.h" />
     <ClInclude Include="Utility\GameTimer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Core\Win.h" />
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Core\RenderingPipeline\VSPS\VertexShader.h" />
     <ClInclude Include="Core\RenderingPipeline\IA\VertexBuffer.h" />
+    <ClInclude Include="Utility\Imgui\imconfig.h" />
+    <ClInclude Include="Utility\Imgui\imgui.h" />
+    <ClInclude Include="Utility\Imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="Utility\Imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Utility\Imgui\imgui_internal.h" />
+    <ClInclude Include="Utility\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="Utility\Imgui\imstb_textedit.h" />
+    <ClInclude Include="Utility\Imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Core\Camera.cpp" />
     <ClCompile Include="Core\RenderingPipeline\VSPS\ConstantBuffer.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Bindable.cpp" />
     <ClCompile Include="Core\Exception\BaseException.cpp" />
     <ClCompile Include="Core\RenderingPipeline\VSPS\VertexShader.cpp" />
     <ClCompile Include="Core\RenderingPipeline\IA\VertexBuffer.cpp" />
+    <ClCompile Include="Utility\Imgui\Usage\ImguiManager.cpp" />
+    <ClCompile Include="Utility\Imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utility\Imgui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utility\Imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utility\Imgui\imgui_impl_dx11.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utility\Imgui\imgui_impl_win32.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utility\Imgui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClInclude Include="Core\Exception\WindowException.h" />
     <ClCompile Include="DirectXSettings\IA.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -211,6 +247,12 @@
     <ClCompile Include="Core\RenderingPipeline\VSPS\PixelShader.cpp" />
     <ClCompile Include="Core\Draw\Pyramid.cpp" />
     <ClCompile Include="Core\Draw\Melon.cpp" />
+    <ClCompile Include="Core\Draw\Base\Material.cpp" />
+    <ClCompile Include="Core\Draw\Base\Image\GDIPlus.cpp" />
+    <ClCompile Include="Core\Draw\Base\Image\Texture.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\VSPS\SamplerState.cpp" />
+    <ClCompile Include="Core\Draw\Sheet.cpp" />
+    <ClCompile Include="Core\Draw\TextureCube.cpp" />
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp" />
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-10_RasterizationStage.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -271,6 +313,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.cpp" />
+    <ClCompile Include="Theory\Chapter8_TexutreAndOverviewOfResources\T8-1_TexutreAndOverviewOfResources.cpp" />
+    <ClCompile Include="Theory\Chapter8_TexutreAndOverviewOfResources\T8-7_TextureSampling.cpp" />
     <ClCompile Include="Utility\GameTimer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -294,6 +338,10 @@
     </FxCompile>
     <FxCompile Include="Shader\ColorShader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Shader\Texture.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

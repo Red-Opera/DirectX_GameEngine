@@ -4,6 +4,8 @@
 #include "dxgi.h"
 
 #include "Exception/GraphicsException.h"
+#include "Utility/Imgui/imgui_impl_dx11.h"
+#include "Utility/Imgui/imgui_impl_win32.h"
 using namespace std;
 
 DxGraphic::HRException::HRException(int line, const char* file, HRESULT hr, vector<string> infoMessage) noexcept :
@@ -88,6 +90,9 @@ DxGraphic::DxGraphic(HWND hWnd)
     CreateSwapChain();
     CreateRenderTargetView();
     CreateDepthStencilBuffer();
+
+    // ImGui를 초기 설정함
+    ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
 }
 
 void DxGraphic::SetProjection(DirectX::XMMATRIX projection) noexcept
@@ -95,8 +100,29 @@ void DxGraphic::SetProjection(DirectX::XMMATRIX projection) noexcept
     this->projection = projection;
 }
 
+void DxGraphic::BeginFrame(float red, float green, float blue) noexcept
+{
+    if (imGuiEnable)
+    {
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+    }
+
+    const float color[] = { red, green, blue, 1.0f };
+    deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
+    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);    // 깊이 값을 모두 1.0f로 설정
+}
+
 void DxGraphic::EndFrame()
 {
+    // ImGui는 마지막에 처리를 해야 화면 맨 앞으로 나옴
+    if (imGuiEnable)
+    {
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    }
+
     HRESULT hr = swapChain->Present(1, 0);
 
 #ifndef NDEBUG
@@ -118,11 +144,19 @@ void DxGraphic::EndFrame()
     }
 }
 
-void DxGraphic::ClearBuffer(float red, float green, float blue) noexcept
+void DxGraphic::EnableImGui() noexcept
 {
-    const float color[] = { red, green, blue, 1.0f };
-    deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
-    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);   // 깊이 값을 모두 1.0f로 설정
+    imGuiEnable = true;
+}
+
+void DxGraphic::DisableImGui() noexcept
+{
+    imGuiEnable = false;
+}
+
+bool DxGraphic::IsImGuiEnable() noexcept
+{
+    return imGuiEnable;
 }
 
 HRESULT DxGraphic::CreateDevice()

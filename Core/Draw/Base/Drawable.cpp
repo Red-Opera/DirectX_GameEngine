@@ -3,6 +3,7 @@
 
 #include "../../RenderingPipeline/Bindable.h"
 #include "../../RenderingPipeline/IA/IndexBuffer.h"
+using namespace std;
 
 void Drawable::Draw(DxGraphic& graphic) const noexcept(!_DEBUG)
 {

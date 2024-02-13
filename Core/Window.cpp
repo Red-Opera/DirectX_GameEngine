@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Window.h"
 #include "resource.h"
+#include "Utility/Imgui/imgui_impl_win32.h"
+using namespace std;
 
 string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
@@ -133,6 +135,7 @@ Window::Window(int width, int height, const char* name) : width(width), height(h
 		throw LASTEXCEPT();
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
+	ImGui_ImplWin32_Init(hWnd);
 	graphic = make_unique<DxGraphic>(hWnd);
 
 	RAWINPUTDEVICE rawDevice;
@@ -148,6 +151,7 @@ Window::Window(int width, int height, const char* name) : width(width), height(h
 
 Window::~Window()
 {
+	ImGui_ImplWin32_Shutdown();
 	DestroyWindow(hWnd);
 }
 
@@ -265,6 +269,10 @@ LRESULT Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		return true;
+	const auto imGuiIO = ImGui::GetIO();
+
 	switch (msg)
 	{
 	// 창을 닫는 메세지가 들어온 경우
@@ -281,6 +289,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	// =================================
 	case WM_SYSKEYDOWN:
 	case WM_KEYDOWN:
+		// ImGui에서 캡션에 키보드로 입력하고 있을 때는 키보드 처리를 안함
+		if (imGuiIO.WantCaptureKeyboard)
+			break;
+
 		// 이전에 키보드를 누른적이 없거나 지속적으로 눌렸을 때 키누르는 것을 인정할 경우
 		if (!(lParam & 0x40000000) || keyBoard.AutorepeatIsEnabled())
 			keyBoard.OnKeyPressed(static_cast<unsigned char>(wParam));
@@ -288,10 +300,16 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_SYSKEYUP:
 	case WM_KEYUP:
+		if (imGuiIO.WantCaptureKeyboard)
+			break;
+
 		keyBoard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 
 	case WM_CHAR:
+		if (imGuiIO.WantCaptureKeyboard)
+			break;
+
 		keyBoard.OnChar(static_cast<unsigned char>(wParam));
 		break;
 
@@ -300,6 +318,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	// =================================
 	case WM_MOUSEMOVE:
 	{
+		// ImGui에 마우스를 이동시킬 때 처리 안함
+		if (imGuiIO.WantCaptureMouse)
+			break;
+
 		const POINTS point = MAKEPOINTS(lParam);
 
 		// 마우스가 클라이언트 창 안에 있을 경우
@@ -335,6 +357,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_LBUTTONDOWN:
 	{
+		SetForegroundWindow(hWnd);
+		if (imGuiIO.WantCaptureMouse)
+			break;
+
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnLeftPressed(point.x, point.y);
 
@@ -343,6 +369,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_RBUTTONDOWN:
 	{
+		if (imGuiIO.WantCaptureMouse)
+			break;
+
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnRightPressed(point.x, point.y);
 
@@ -351,6 +380,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_LBUTTONUP:
 	{
+		if (imGuiIO.WantCaptureMouse)
+			break;
+
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnLeftReleased(point.x, point.y);
 
@@ -359,6 +391,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_RBUTTONUP:
 	{
+		if (imGuiIO.WantCaptureMouse)
+			break;
+
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnRightReleased(point.x, point.y);
 
@@ -367,6 +402,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_MOUSEWHEEL:
 	{
+		if (imGuiIO.WantCaptureMouse)
+			break;
+
 		const POINTS point = MAKEPOINTS(lParam);
 		
 		// 마우스 휠을 올릴 경우

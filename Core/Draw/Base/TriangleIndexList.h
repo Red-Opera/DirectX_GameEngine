@@ -2,14 +2,13 @@
 
 #include <vector>
 #include <DirectXMath.h>
-using namespace std;
 
 template<class T>
 class TriangleIndexList
 {
 public:
 	TriangleIndexList() = default;
-	TriangleIndexList(vector<T> vertices, vector<unsigned short> indices) : vertices(vertices), indices(indices)
+	TriangleIndexList(std::vector<T> vertices, std::vector<unsigned short> indices) : vertices(vertices), indices(indices)
 	{
 		assert("삼각형의 정점 개수가 부족합니다." && vertices.size() > 2);
 		assert("삼각형의 인덱스가 맞지 않습니다." && (indices.size() % 3 == 0));
@@ -24,7 +23,7 @@ public:
 		}
 	}
 
-	vector<T> vertices;
-	vector<unsigned short> indices;
+	std::vector<T> vertices;
+	std::vector<unsigned short> indices;
 };
 

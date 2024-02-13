@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Base/TriangleIndexList.h"
-
+#include <vector>
+#include <array>
 
 class Plane
 {
@@ -15,7 +16,7 @@ public:
 		constexpr float width = 2.0f, height = 2.0f;
 		const int vertices_x = division_x + 1, vertices_y = division_y + 1;
 
-		vector<V> vertices(vertices_x * vertices_y);
+		std::vector<V> vertices(vertices_x * vertices_y);
 		const float side_x = width / 2.0f, side_y = height / 2;
 		const float divisionSizeX = width / float(division_x), divisitionSizeY = height / float(division_y);
 		const auto bottomLeft = DirectX::XMVectorSet(-side_x, -side_y, 0.0f, 0.0f);
@@ -33,7 +34,7 @@ public:
 		}
 
 		std::vector<unsigned short> indices;
-		indices.reserve(pow(divisions_x * divisions_y, 2) * 6);
+		indices.reserve(pow(division_x * division_y, 2) * 6);
 		{
 			const auto vxy2i = [vertices_x](size_t x, size_t y) { return (unsigned short)(y * vertices_x + x); };
 

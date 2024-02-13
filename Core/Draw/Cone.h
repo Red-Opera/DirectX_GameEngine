@@ -11,7 +11,7 @@ public:
 		assert(longDiv >= 3);
 
 		const auto base = DirectX::XMVectorSet(1.0f, 0.0f, -1.0f, 0.0f);
-		const float longitudeAngle = 2.0f * 3.141592 / longDiv;
+		const float longitudeAngle = 2.0f * PI / longDiv;
 
 		// base vertices
 		std::vector<V> vertices;

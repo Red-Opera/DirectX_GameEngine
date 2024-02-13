@@ -22,7 +22,7 @@ public:
 	class Exception : public BaseException
 	{
 	public:
-		static string TranslateErrorCode(HRESULT hr) noexcept;
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;
 
 	private:
 		using BaseException::BaseException;
@@ -32,14 +32,14 @@ public:
 	{
 	public:
 		HRException(int line, const char* file, HRESULT hr) noexcept;
-		HRException(int line, string file, HRESULT hr) noexcept;
+		HRException(int line, std::string file, HRESULT hr) noexcept;
 
 		const char* what() const noexcept override;
 		
 		// 예외 정보에 관한 메소드
 		const char* GetType() const noexcept override;
 		HRESULT GetErrorCode() const noexcept;
-		string GetExptionContent() const noexcept;
+		std::string GetExptionContent() const noexcept;
 
 	private:
 		HRESULT hr;
@@ -62,19 +62,20 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 
-	void SetTitle(const string& title);
+	void SetTitle(const std::string& title);
 
 	// 커서 관련 메소드
 	void EnableCursor() noexcept;				// 커서를 사용할 수 있도록 설정하는 메소드
 	void DisableCursor() noexcept;				// 커서를 사용할 수 없도록 설정하는 메소드
 	bool GetCursorEnabled() const noexcept;		// 커서 사용할 수 있는 여부를 반환하는 메소드
 
-	static optional<int> ProcessMessages() noexcept;
+	static std::optional<int> ProcessMessages() noexcept;
 
 	int GetClientWidht() { return width; }			// 클라이언트 창 너비
 	int GetClientHeight() { return height; }		// 클라이언트 창 높이
 
 	DxGraphic& GetDxGraphic();	// 그래픽 관련 클래스를 얻는 메소드
+	HWND GetHWnd() const { return hWnd; }
 
 	// =================================
 	//	Class Parameter
@@ -128,14 +129,14 @@ private:
 	//	Class Parameter
 	// =================================
 
-	bool cursorEnabled = true;		// 커서가 보이는 여부
+	bool cursorEnabled = true;			// 커서가 보이는 여부
 	
-	int width;						// 클라이언트 창 너비
-	int height;						// 클라이언트 창 높이
+	int width;							// 클라이언트 창 너비
+	int height;							// 클라이언트 창 높이
 
 	HWND hWnd;
-	unique_ptr<DxGraphic> graphic; // DierctX 3D 그래픽 클래스
+	std::unique_ptr<DxGraphic> graphic; // DierctX 3D 그래픽 클래스
 
-	vector<BYTE> rawBuffer;
-	string commandLine;
+	std::vector<BYTE> rawBuffer;
+	std::string commandLine;
 };
