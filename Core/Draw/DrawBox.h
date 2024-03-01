@@ -1,9 +1,9 @@
 #pragma once
-#include "Base/DrawableBase.h"
+#include "TestObject.h"
 
-#include <random>
+#include "Core/RenderingPipeline/VSPS/ConstantBuffer.h"
 
-class DrawBox : public DrawableBase<DrawBox>
+class DrawBox : public TestObject<DrawBox>
 {
 public:
 	DrawBox(DxGraphic& graphic, std::mt19937& random,
@@ -11,30 +11,25 @@ public:
 		std::uniform_real_distribution<float>& ddist,
 		std::uniform_real_distribution<float>& odist,
 		std::uniform_real_distribution<float>& rdist,
-		std::uniform_real_distribution<float>& bdist);
+		std::uniform_real_distribution<float>& bdist,
+		DirectX::XMFLOAT3 material);
 
-	void Update(float dt) noexcept override;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
+	bool CreateControlWindow(int id, DxGraphic& graphic) noexcept;
 
 private:
-	// Position Rotation
-	float r;
-	float roll = 0.0f;		// X축 기준 회전
-	float pitch = 0.0f;		// Y축 기준 회전
-	float yaw = 0.0f;		// Z축 기준 회전
+	void SyncMaterial(DxGraphic& graphic) noexcept(!_DEBUG);
 
-	float theta;
-	float phi;
-	float chi;
+	struct PSMaterialConstant
+	{
+		DirectX::XMFLOAT3 color;
 
-	// speed (deltaTime/s)
-	float deltaRoll;
-	float deltaPitch;
-	float deltaYaw;
-	
-	float deltaTheta;
-	float deltaPhi;
-	float deltaChi;
+		float specularIntensity = 0.6f;
+		float specularPower = 30.0f;
+		float padding[3];
+	} materialConstants;
+
+	using MaterialConstantBuffer = PixelConstantBuffer<PSMaterialConstant>;
 
 	DirectX::XMFLOAT3X3 transformMatrix;
 };

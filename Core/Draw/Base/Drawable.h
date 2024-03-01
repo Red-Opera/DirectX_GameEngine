@@ -22,6 +22,18 @@ public:
 	virtual ~Drawable() = default;
 
 protected:
+	template<class T>
+	T* GetBindObject() noexcept
+	{
+		for (auto& bindObject : binds)
+		{
+			if (auto out = dynamic_cast<T*>(bindObject.get()))
+				return out;
+		}
+
+		return nullptr;
+	}
+
 	void AddBind(std::unique_ptr<Bindable> bind) noexcept (!_DEBUG);
 	void AddIndexBuffer(std::unique_ptr<class IndexBuffer> indexBuffer) noexcept (!_DEBUG);
 

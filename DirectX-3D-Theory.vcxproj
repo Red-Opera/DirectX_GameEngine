@@ -138,8 +138,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Core\Draw\ColorSphere.h" />
     <ClInclude Include="Core\Camera.h" />
     <ClInclude Include="Core\Draw\Cone.h" />
+    <ClInclude Include="Core\Draw\Prism.h" />
     <ClInclude Include="Core\Draw\Sphere.h" />
     <ClInclude Include="Core\Draw\Plane.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h" />
@@ -147,6 +149,7 @@
     <ClInclude Include="Core\RenderingPipeline\Bindable.h" />
     <ClInclude Include="Core\Exception\BaseException.h" />
     <ClInclude Include="Core\Draw\Cube.h" />
+    <ClInclude Include="Core\Draw\Cylinder.h" />
     <ClInclude Include="DirectXSettings\IA.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -173,6 +176,8 @@
     <ClInclude Include="Core\Draw\Melon.h" />
     <ClInclude Include="Core\Draw\Base\Material.h" />
     <ClInclude Include="Core\Draw\Base\Image\GDIPlus.h" />
+    <ClInclude Include="Core\Draw\Light\PointLight.h" />
+    <ClInclude Include="Core\Draw\TestObject.h" />
     <ClInclude Include="Utility\Imgui\Usage\ImguiManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.h" />
@@ -198,12 +203,46 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Core\Draw\ColorSphere.cpp" />
     <ClCompile Include="Core\Camera.cpp" />
     <ClCompile Include="Core\RenderingPipeline\VSPS\ConstantBuffer.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Bindable.cpp" />
     <ClCompile Include="Core\Exception\BaseException.cpp" />
     <ClCompile Include="Core\RenderingPipeline\VSPS\VertexShader.cpp" />
     <ClCompile Include="Core\RenderingPipeline\IA\VertexBuffer.cpp" />
+    <FxCompile Include="Shader\BlendedLitShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\IndexedLitShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shader\ColorShader2.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\LitShader.hlsl">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <ClCompile Include="Core\Draw\Light\PointLight.cpp" />
+    <ClCompile Include="Core\Draw\TestObject.cpp" />
+    <ClCompile Include="Core\Draw\Cylinder.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-10_PointLight.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-11_SpotLight.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-1_InteractionOfLightAndMaterial.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-2_NormalVector.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-4_DIstributedLightIllumination.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-3_LambertCosineLaw.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-5_AmbientLightIllumination.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-6_SpecularLightIllumination.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-7_MidArrangement.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-8_MaterialSetting.cpp" />
+    <ClCompile Include="Theory\Chapter7_Lighting\T7-9_DirectionLight.cpp" />
     <ClCompile Include="Utility\Imgui\Usage\ImguiManager.cpp" />
     <ClCompile Include="Utility\Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -325,6 +364,10 @@
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp" />
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp" />
     <ClCompile Include="Core\Window.cpp" />
+    <FxCompile Include="Shader\TextureLitShader.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\BoxShader.hlsl">

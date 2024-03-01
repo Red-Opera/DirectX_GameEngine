@@ -7,7 +7,7 @@ template<typename BufferType>
 class ConstantBuffer : public Bindable
 {
 public:
-	ConstantBuffer(DxGraphic& graphic, const BufferType& bufferList)
+	ConstantBuffer(DxGraphic& graphic, const BufferType& bufferList, UINT slot = 0u) : slot(slot)
 	{
 		CREATEINFOMANAGER(graphic);
 
@@ -26,7 +26,7 @@ public:
 		GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer));
 	}
 
-	ConstantBuffer(DxGraphic& graphic)
+	ConstantBuffer(DxGraphic& graphic, UINT slot = 0u) : slot(slot)
 	{
 		CREATEINFOMANAGER(graphic);
 
@@ -54,6 +54,7 @@ public:
 
 protected:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constantBuffer;
+	UINT slot;
 };
 
 // Vertex Constant Buffer 생성 클래스
@@ -62,6 +63,7 @@ class VertexConstantBuffer : public ConstantBuffer<BufferType>
 {
 	// 기존에 있는 상수 버퍼 변수와 Device Context를 가져오는 코드를 그대로 사용
 	using ConstantBuffer<BufferType>::constantBuffer;
+	using ConstantBuffer<BufferType>::slot;
 	using Bindable::GetDeviceContext;
 
 public:
@@ -69,7 +71,7 @@ public:
 	
 	void PipeLineSet(DxGraphic& graphic) noexcept override
 	{
-		GetDeviceContext(graphic)->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
+		GetDeviceContext(graphic)->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf());
 	}
 };
 
@@ -78,6 +80,7 @@ template<typename BufferType>
 class PixelConstantBuffer : public ConstantBuffer<BufferType>
 {
 	using ConstantBuffer<BufferType>::constantBuffer;
+	using ConstantBuffer<BufferType>::slot;
 	using Bindable::GetDeviceContext;
 
 public:
@@ -85,6 +88,6 @@ public:
 	
 	void PipeLineSet(DxGraphic& graphic)noexcept override
 	{
-		GetDeviceContext(graphic)->PSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
+		GetDeviceContext(graphic)->PSSetConstantBuffers(slot, 1, constantBuffer.GetAddressOf());
 	}
 };

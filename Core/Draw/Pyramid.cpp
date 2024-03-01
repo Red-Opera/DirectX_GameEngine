@@ -3,79 +3,61 @@
 #include "Cone.h"
 
 #include "../RenderingPipeline/RenderingPipeline.h"
+
+#include <array>
 using namespace std;
 
-Pyramid::Pyramid(DxGraphic& graphic, mt19937& random, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist, std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist) :
-	r(rdist(random)), 
-	deltaRoll(ddist(random)), deltaPitch(ddist(random)), deltaYaw(ddist(random)), 
-	deltaPhi(odist(random)), deltaTheta(odist(random)), deltaChi(odist(random)),
-	chi(adist(random)), theta(adist(random)), phi(adist(random))
-
+Pyramid::Pyramid(DxGraphic& graphic, mt19937& random, std::uniform_real_distribution<float>& adist, std::uniform_real_distribution<float>& ddist, std::uniform_real_distribution<float>& odist, std::uniform_real_distribution<float>& rdist, uniform_int_distribution<int>& tdist)
+	: TestObject(graphic, random, adist, ddist, odist, rdist)
 {
 	if (!IsStaticInitialized())
 	{
-		struct Vertex
-		{
-			DirectX::XMFLOAT3 position;
-			struct
-			{
-				unsigned char r;
-				unsigned char g;
-				unsigned char b;
-				unsigned char a;
-			} color;
-		};
-		auto model = Cone::MakeTesselated<Vertex>(4);
-		// set vertex colors for mesh
-		model.vertices[0].color = { 255,255,0 };
-		model.vertices[1].color = { 255,255,0 };
-		model.vertices[2].color = { 255,255,0 };
-		model.vertices[3].color = { 255,255,0 };
-		model.vertices[4].color = { 255,255,80 };
-		model.vertices[5].color = { 255,10,0 };
-		// deform mesh linearly
-		model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 0.7f));
-
-		AddStaticBind(make_unique<VertexBuffer>(graphic, model.vertices));
-
-		auto pvs = make_unique<VertexShader>(graphic, L"Shader/ColorBlendShader.hlsl");
+		auto pvs = make_unique<VertexShader>(graphic, L"Shader/BlendedLitShader.hlsl");
 		auto pvsbc = pvs->GetShaderCode();
 		AddStaticBind(move(pvs));
-
-		AddStaticBind(make_unique<PixelShader>(graphic, L"Shader/ColorBlendShader.hlsl"));
-
-		AddStaticIndexBuffer(make_unique<IndexBuffer>(graphic, model.indices));
+		AddStaticBind(make_unique<PixelShader>(graphic, L"Shader/BlendedLitShader.hlsl"));
 
 		const vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Color",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{ "Color",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,24,D3D11_INPUT_PER_VERTEX_DATA,0 }
 		};
 		AddStaticBind(make_unique<InputLayout>(graphic, ied, pvsbc));
-
 		AddStaticBind(make_unique<PrimitiveTopology>(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+
+		struct PSMaterialConstant
+		{
+			float specularIntensity = 0.6f;
+			float specularPower = 30.0f;
+			float padding[2];
+		} colorConstant;
+		AddStaticBind(std::make_unique<PixelConstantBuffer<PSMaterialConstant>>(graphic, colorConstant, 1));
 	}
-	else
+
+	struct Vertex
 	{
-		SetIndexFromStatic();
-	}
+		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT3 normal;
+		std::array<char, 4> color;
+		char padding;
+	};
+
+	auto tesselation = tdist(random);
+	auto model = Cone::MakeTesselatedIndependentFaces<Vertex>(tesselation);
+
+	for (auto& vertex : model.vertices)
+		vertex.color = { (char)10, (char)10, (char)255 };
+
+	for (int i = 0; i < tesselation; i++)
+		model.vertices[i * 3].color = { (char)255, (char)10, (char)10 };
+
+	// deform mesh linearly
+	model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 0.7f));
+	model.SetNormalVector();
+
+	AddBind(make_unique<VertexBuffer>(graphic, model.vertices));
+	AddIndexBuffer(make_unique<IndexBuffer>(graphic, model.indices));
 
 	AddBind(make_unique<TransformConstantBuffer>(graphic, *this));
-}
-
-void Pyramid::Update(float dt) noexcept
-{
-	roll += deltaRoll * dt;
-	pitch += deltaPitch * dt;
-	yaw += deltaYaw * dt;
-	theta += deltaTheta * dt;
-	phi += deltaPhi * dt;
-	chi += deltaChi * dt;
-}
-
-DirectX::XMMATRIX Pyramid::GetTransformXM() const noexcept
-{
-	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi);
 }
