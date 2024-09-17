@@ -29,6 +29,7 @@
 
 	- VertexBuffer로 버퍼를 렌더링파이프라인에 연결한 후 ID3D11DeviceContext에 있는 Draw를 호출해야 정점을 그린다.
 */
+using namespace DirectX;
 
 namespace Sample
 {

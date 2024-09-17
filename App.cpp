@@ -1,80 +1,24 @@
+#pragma comment(lib, "Utility\\assimp\\assimp-vc143-mt.lib")
+
+//#define FULL_WINTARD
 #include "stdafx.h"
 #include "App.h"
 
-#include "Core/Draw/DrawBox.h"
-#include "Core/Draw/Melon.h"
-#include "Core/Draw/Pyramid.h"
-#include "Core/Draw/Sheet.h"
-#include "Core/Draw/TextureCube.h"
-#include "Core/Draw/Cylinder.h"
+#include "Core/Draw/BaseModel/ImportObjectTest.h"
 
 #include "Core/Draw/Base/Material.h"
 #include "Core/Draw/Base/Image/GDIPlus.h"
 
-#include "Utility/Imgui/imgui.h"
+#include "Core/RenderingPipeline/IA/VertexBuffer.h"
 
 #include <iomanip>
 using namespace std;
 
 GDIPlus gdiPlus;
 
-App::App() : wnd(800, 600, "Make Box Game"), light(wnd.GetDxGraphic())
+App::App() : wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), light(wnd.GetDxGraphic())
 {
-	class Factory
-	{
-	public:
-		Factory(DxGraphic& graphic) : graphic(graphic) {}
-
-		unique_ptr<Drawable> operator()()
-		{
-			const DirectX::XMFLOAT3 matrix = { cdist(rng), cdist(rng), cdist(rng) };
-
-			switch (sdist(rng))
-			{
-			case 0:
-				return make_unique<DrawBox>(graphic, rng, adist, ddist, odist, rdist, bdist, matrix);
-			case 1:
-				return make_unique<Cylinder>(graphic, rng, adist, ddist, odist, rdist, bdist, tdist);
-			case 2:
-				return make_unique<Pyramid>(graphic, rng, adist, ddist, odist, rdist, tdist);
-			case 3:
-				return make_unique<TextureCube>(graphic, rng, adist, ddist, odist, rdist);
-			//case 3:
-			//	return make_unique<Sheet>(graphic, rng, adist, ddist, odist, rdist);
-			
-			default:
-				assert(false && "bad drawable type in factory");
-				return {};
-			}
-		}
-	private:
-		DxGraphic& graphic;
-		mt19937 rng{ random_device{}() };
-		uniform_int_distribution<int> sdist{ 0,3 };
-		uniform_real_distribution<float> adist{ 0.0f, PI * 2.0f };
-		uniform_real_distribution<float> ddist{ 0.0f, PI * 0.5f };
-		uniform_real_distribution<float> odist{ 0.0f, PI * 0.08f };
-		uniform_real_distribution<float> rdist{ 6.0f,20.0f };
-		uniform_real_distribution<float> bdist{ 0.4f,3.0f };
-		uniform_int_distribution<int> latdist{ 5,20 };
-		uniform_int_distribution<int> longdist{ 10,40 };
-		uniform_int_distribution<int> typedist{ 0, 4 };
-		uniform_real_distribution<float> cdist{ 0.0f, 1.0f };
-		uniform_int_distribution<int> tdist{ 3,30 };
-	};
-
-	Factory f(wnd.GetDxGraphic());
-	drawables.reserve(drawableCount);
-	std::generate_n(std::back_inserter(drawables), drawableCount, f);
-
-	// init box pointers for editing instance parameters
-	for (auto& drawable : drawables)
-	{
-		if (auto out = dynamic_cast<DrawBox*>(drawable.get()))
-			boxes.push_back(out);
-	}
-
-	wnd.GetDxGraphic().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
+	wnd.GetDxGraphic().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40.0f));
 }
 
 App::~App()
@@ -101,6 +45,7 @@ void App::DoFrame()
 {
 	const float t = timer.TotalTime();
 	const float deltaTime = timer.DeltaTime();
+	const auto cameraDelta = timer.DeltaTime() * cameraSpeed;
 
 	ostringstream out;
 	out << "Play Time : " << setprecision(1) << fixed << t << "s";
@@ -109,22 +54,83 @@ void App::DoFrame()
 	light.Bind(wnd.GetDxGraphic(), camera.GetMatrix());
 
 	// 모든 기하구조를 업데이트한 후 그림
-	for (auto& box : drawables)
+	//for (auto& box : drawables)
+	//{
+	//	box->Update(wnd.keyBoard.IsPressed(VK_SPACE) ? 0.0f : deltaTime * objectSpeed);
+	//	box->Draw(wnd.GetDxGraphic());
+	//}
+
+	while (const auto currentKey = wnd.keyBoard.ReadKey())
 	{
-		box->Update(wnd.keyBoard.IsPressed(VK_SPACE) ? 0.0f : deltaTime * objectSpeed);
-		box->Draw(wnd.GetDxGraphic());
+		if (!currentKey->IsPress())
+			continue;
+
+		switch (currentKey->GetCode())
+		{
+		case VK_ESCAPE:
+			if (wnd.GetCursorEnabled())
+			{
+				wnd.DisableCursor();
+				wnd.mouse.EnableRaw();
+			}
+
+			else
+			{
+				wnd.EnableCursor();
+				wnd.mouse.DisableRaw();
+			}
+			
+			break;
+
+		case VK_F1:
+			isShowDemoWindow = true;
+			break;
+		}
 	}
+
+	if (!wnd.GetCursorEnabled())
+	{
+		if (wnd.keyBoard.IsPressed('W'))
+			camera.Translate(Vector::forward * cameraDelta);
+
+		if (wnd.keyBoard.IsPressed('A'))
+			camera.Translate(Vector::left * cameraDelta);
+
+		if (wnd.keyBoard.IsPressed('S'))
+			camera.Translate(Vector::back * cameraDelta);
+
+		if (wnd.keyBoard.IsPressed('D'))
+			camera.Translate(Vector::right * cameraDelta);
+
+		if (wnd.keyBoard.IsPressed('R'))
+			camera.Translate(Vector::up * cameraDelta);
+
+		if (wnd.keyBoard.IsPressed('F'))
+			camera.Translate(Vector::down * cameraDelta);
+	}
+
+	while (const auto mouseDelta = wnd.mouse.ReadRawDelta())
+	{
+		if (!wnd.GetCursorEnabled())
+			camera.Rotate((float)mouseDelta->x, (float)mouseDelta->y);
+	}
+
+	model.Draw(wnd.GetDxGraphic());
+	model2.Draw(wnd.GetDxGraphic());
 	light.Draw(wnd.GetDxGraphic());
 
 	CreateSimulationWindow();
 	camera.SpawnControlWindow();
 	light.CreatePositionChangeWindow();
+	CreateDemoWindows();
+	model.ShowWindow("Model 1");
+	model2.ShowWindow("Model 2");
 
 	// imgui window to open box windows
-	CreateBoxWindowManagerWindow();
+	//CreateBoxWindowManagerWindow();
 
 	// 박스 상태 창 생성
-	CreateBoxWindows();
+	//CreateBoxWindows();
 	
 	wnd.SetTitle(out.str());		// 제목 동기화
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
@@ -175,14 +181,8 @@ void App::CreateBoxWindowManagerWindow() noexcept
 	ImGui::End();
 }
 
-void App::CreateBoxWindows() noexcept
+void App::CreateDemoWindows() noexcept
 {
-	for (auto i = boxControlIds.begin(); i != boxControlIds.end(); )
-	{
-		if (!boxes[*i]->CreateControlWindow(*i, wnd.GetDxGraphic()))
-			i = boxControlIds.erase(i);
-
-		else
-			i++;
-	}
+	if (isShowDemoWindow)
+		ImGui::ShowDemoWindow(&isShowDemoWindow);
 }

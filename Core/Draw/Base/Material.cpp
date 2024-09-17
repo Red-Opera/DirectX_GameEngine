@@ -71,14 +71,14 @@ void Material::Clear(Color fillColor) noexcept
     memset(color.get(), fillColor.colorHex, width * height * sizeof(Color));
 }
 
-void Material::SetColorPixel(UINT x, UINT y, Color c) noexcept(!_DEBUG)
+void Material::SetColorPixel(UINT x, UINT y, Color c) NOEXCEPTRELEASE
 {
     assert("지정할 픽셀의 위치를 벗어났습니다!" && x >= 0 && y >= 0 && x < width && y < height);
 
     color[y * width + x] = c;
 }
 
-Material::Color Material::GetColorPixel(UINT x, UINT y) const noexcept(!_DEBUG)
+Material::Color Material::GetColorPixel(UINT x, UINT y) const NOEXCEPTRELEASE
 {
     assert("지정할 픽셀의 위치를 벗어났습니다!" && x >= 0 && y >= 0 && x < width && y < height);
 
@@ -138,7 +138,7 @@ Material Material::FromFile(const std::string& name)
         for (UINT x = 0; x < width; x++)
         {
             Gdiplus::Color c;
-            bitmap.GetPixel(x, y, &c);
+            bitmap.GetPixel(x, height - y - 1, &c);
             color[y * width + x] = c.GetValue();
         }
     }
@@ -215,7 +215,7 @@ void Material::Save(const string& fileName) const
     }
 }
 
-void Material::Copy(const Material& src) noexcept(!_DEBUG)
+void Material::Copy(const Material& src) NOEXCEPTRELEASE
 {
     assert("복사할 표면의 너비 또는 높이가 다릅니다." && width == src.width && height == src.height);
     memcpy(color.get(), src.color.get(), width * height * sizeof(Color));

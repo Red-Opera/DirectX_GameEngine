@@ -1,4 +1,4 @@
-#define FULL_WINTARD
+//#define FULL_WINTARD
 #include "stdafx.h"
 #include "GDIPlus.h"
 

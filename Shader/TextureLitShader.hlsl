@@ -25,8 +25,8 @@ cbuffer LightInfoConstant
 
 cbuffer ObjectColor
 {
-    float specularIntensity; // Specular 세기
-    float specularPower; // Specular 강도
+    float specularIntensity;    // Specular 세기
+    float specularPower;        // Specular 강도
     float padding[2];
 };
 
@@ -66,5 +66,5 @@ float4 PS(float3 worldPosition : Position, float3 normal : Normal, float2 textur
     const float3 specular = attResult * (diffuseColor * diffuseIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-reflectVector), normalize(worldPosition))), specularPower);
     
     // 주변광과 분산광을 합친 후 1.0이 넘어간 경우 최대 1.0으로 제한함
-    return float4(saturate(diffuse + ambient + specular), 1.0f) * tex.Sample(state, textureCoord);
+    return float4(saturate((diffuse + ambient) * tex.Sample(state, textureCoord).rgb + specular), 1.0f);
 }

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Base/DrawableBase.h"
+#include "Base/Drawable.h"
 #include <random>
 
 template<class T>
-class TestObject :  public DrawableBase<T>
+class TestObject : public Drawable
 {
 public:
 	TestObject(DxGraphic& graphic, std::mt19937& random,
@@ -17,16 +17,16 @@ public:
 
 	void Update(float dt) noexcept
 	{
-		roll = wrap_angle(roll +  deltaRoll * dt);
-		pitch = wrap_angle(pitch + deltaPitch * dt);
-		yaw = wrap_angle(yaw + deltaYaw * dt);
+		roll = Math::NormalizeRadian(roll +  deltaRoll * dt);
+		pitch = Math::NormalizeRadian(pitch + deltaPitch * dt);
+		yaw = Math::NormalizeRadian(yaw + deltaYaw * dt);
 
-		theta = wrap_angle(theta + deltaTheta * dt);
-		phi = wrap_angle(phi + deltaPhi * dt);
-		chi = wrap_angle(chi + deltaChi * dt);
+		theta = Math::NormalizeRadian(theta + deltaTheta * dt);
+		phi = Math::NormalizeRadian(phi + deltaPhi * dt);
+		chi = Math::NormalizeRadian(chi + deltaChi * dt);
 	}
 
-	DirectX::XMMATRIX GetTransformXM() const noexcept
+	DirectX::XMMATRIX GetTransformMatrix() const noexcept
 	{
 		return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 			   DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
@@ -52,15 +52,5 @@ protected:
 	float deltaTheta;
 	float deltaPhi;
 	float deltaChi;
-
-private:
-	template<typename T>
-	T wrap_angle(T theta)
-	{
-		const T modded = fmod(theta, (T)2.0 * (T)PI);
-		return (modded > (T)PI) ?
-			(modded - (T)2.0 * (T)PI) :
-			modded;
-	}
 };
 

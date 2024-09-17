@@ -1,14 +1,21 @@
 #pragma once
-#include "../Bindable.h"
+#include "../Render.h"
 
-class SamplerState : public Bindable
+namespace Graphic
 {
-public:
-	SamplerState(DxGraphic& graphic);
+	class SamplerState : public Render
+	{
+	public:
+		SamplerState(DxGraphic& graphic);
 
-	// Bindable을(를) 통해 상속됨
-	void PipeLineSet(DxGraphic& graphic) noexcept override;
+		// Bindable을(를) 통해 상속됨
+		void PipeLineSet(DxGraphic& graphic) noexcept override;
 
-protected:
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
-};
+		static std::shared_ptr<SamplerState> GetRender(DxGraphic& graphic);
+		static std::string CreateID();
+		std::string GetID() const noexcept override;
+
+	protected:
+		Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
+	};
+}

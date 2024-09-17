@@ -66,7 +66,7 @@
     <ClInclude Include="Core\Exception\WindowException.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\Bindable.h">
+    <ClInclude Include="Core\RenderingPipeline\Render.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\VSPS\ConstantBuffer.h">
@@ -93,37 +93,19 @@
     <ClInclude Include="Core\Draw\Base\Drawable.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\DrawBox.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\Base\DrawableBase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Base\TriangleIndexList.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\Cube.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\Plane.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\Sphere.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\Pyramid.h">
+    <ClInclude Include="Core\Draw\BaseModel\Sphere.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\Cone.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\Melon.h">
+    <ClInclude Include="Core\Draw\BaseModel\Cone.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Base\Material.h">
@@ -136,12 +118,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\VSPS\SamplerState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\Sheet.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\TextureCube.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Imgui\imconfig.h">
@@ -177,16 +153,31 @@
     <ClInclude Include="Core\Draw\Light\PointLight.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\ColorSphere.h">
+    <ClInclude Include="Core\Draw\BaseModel\ColorSphere.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\TestObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\Prism.h">
+    <ClInclude Include="Core\Draw\BaseModel\ImportObjectTest.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\Cylinder.h">
+    <ClInclude Include="Core\RenderingPipeline\Vertex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Mesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Base\ColorInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\MathInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Vector.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -195,9 +186,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-1_BasicKnowledge.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp">
@@ -302,7 +290,7 @@
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\RotateCube.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\Bindable.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Render.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\RenderingPipeline\VSPS\ConstantBuffer.cpp">
@@ -329,19 +317,7 @@
     <ClCompile Include="Core\Draw\Base\Drawable.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\DrawBox.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\Base\DrawableBase.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\Pyramid.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\Melon.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Base\Material.cpp">
@@ -360,12 +336,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter8_TexutreAndOverviewOfResources\T8-7_TextureSampling.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\Sheet.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\TextureCube.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Utility\Imgui\imgui.cpp">
@@ -428,21 +398,31 @@
     <ClCompile Include="Core\Draw\Light\PointLight.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\ColorSphere.cpp">
+    <ClCompile Include="Core\Draw\BaseModel\ColorSphere.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\TestObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\Cylinder.cpp">
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\BaseModel\ImportObjectTest.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Mesh.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Vertex.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Vector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Shader.fx" />
-    <FxCompile Include="Shader\BoxShader.hlsl" />
     <FxCompile Include="Shader\ColorShader.hlsl" />
-    <FxCompile Include="Shader\ColorBlendShader.hlsl" />
     <FxCompile Include="Shader\Texture.hlsl" />
     <FxCompile Include="Shader\LitShader.hlsl">
       <Filter>소스 파일</Filter>
@@ -451,6 +431,7 @@
     <FxCompile Include="Shader\IndexedLitShader.hlsl" />
     <FxCompile Include="Shader\BlendedLitShader.hlsl" />
     <FxCompile Include="Shader\TextureLitShader.hlsl" />
+    <FxCompile Include="Shader\TextureSpecularLitShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -461,5 +442,12 @@
     <Image Include="Icon.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Utility\assimp\assimp-vc143-mt.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Utility\assimp\assimp-vc143-mt.dll" />
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

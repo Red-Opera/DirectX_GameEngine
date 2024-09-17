@@ -1,15 +1,25 @@
 #pragma once
-#include "../Bindable.h"
+#include "../Render.h"
 
-class PixelShader : public Bindable
+namespace Graphic
 {
-public:
-	PixelShader(DxGraphic& graphic, const std::wstring& path);
+	class PixelShader : public Render
+	{
+	public:
+		PixelShader(DxGraphic& graphic, const std::string& path);
 
-	// Bindable을(를) 통해 상속됨
-	void PipeLineSet(DxGraphic& graphic) noexcept override;
+		ID3DBlob* GetShaderCode() const noexcept;
 
-protected:
-	Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;
-};
+		// Bindable을(를) 통해 상속됨
+		void PipeLineSet(DxGraphic& graphic) noexcept override;
 
+		static std::shared_ptr<PixelShader> GetRender(DxGraphic& graphic, const std::string& path);
+		static std::string CreateID(const std::string& path);
+		std::string GetID() const noexcept override;
+
+	protected:
+		std::string path;
+		Microsoft::WRL::ComPtr<ID3DBlob> shaderCode;				// 컴파일된 셰이더 코드
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;		// Pixel Shader
+	};
+}

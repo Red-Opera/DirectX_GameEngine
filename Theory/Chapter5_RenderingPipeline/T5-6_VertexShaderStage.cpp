@@ -99,6 +99,8 @@
 		- v를 구할 때는 무조건 단위 벡터가 나오기 때문에 정규화할 필요가 없다.
 */
 
+using namespace DirectX;
+
 namespace Sample
 {
 	// 월드 공간에서 사야 공간으로 바꿔주는 함수

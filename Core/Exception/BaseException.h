@@ -21,6 +21,6 @@ protected:
 	mutable std::string exceptionText;	// 예외가 발생했을 때 예외 내용을 받을 변수
 
 private:
-	int line;		// 예외가 생긴 줄 번호
+	int line;			// 예외가 생긴 줄 번호
 	std::string file;	// 예외가 발생한 파일 이름
 };

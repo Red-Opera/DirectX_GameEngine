@@ -116,9 +116,9 @@ Window::Window(int width, int height, const char* name) : width(width), height(h
 {
 	RECT rect;
 
-	rect.left = 0;
+	rect.left = 100;
 	rect.right = rect.left + width;
-	rect.top = 0;
+	rect.top = 100;
 	rect.bottom = rect.top + height;
 
 	if (AdjustWindowRect(&rect, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
@@ -167,6 +167,7 @@ void Window::EnableCursor() noexcept
 
 	// 커서를 보여주고 커서가 마음대로 움직일 수 있게 설정
 	ShowCursor();
+	EnableImGuiMouse();
 	FreeCursor();
 }
 
@@ -176,6 +177,7 @@ void Window::DisableCursor() noexcept
 
 	// 커서를 없애고 커서를 움직이지 못하게 설정
 	HideCursor();
+	DisableImGuiMouse();
 	ConfineCursor();
 }
 
@@ -236,7 +238,17 @@ void Window::ShowCursor() noexcept
 void Window::HideCursor() noexcept
 {
 	// 커서 보이기를 한 만큼 커서 감추기를 함
-	while (::ShowCursor(FALSE) < 0);
+	while (::ShowCursor(FALSE) >= 0);
+}
+
+void Window::EnableImGuiMouse() noexcept
+{
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+}
+
+void Window::DisableImGuiMouse() noexcept
+{
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
 
 LRESULT Window::WndMessageSetting(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
@@ -284,6 +296,24 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		keyBoard.ClearState();
 		break;
 
+	// Window 창이 활성화 되었을 경우
+	case WM_ACTIVATE:
+		if (!cursorEnabled)
+		{
+			if (wParam & WA_ACTIVE)
+			{
+				ConfineCursor();
+				HideCursor();
+			}
+
+			else
+			{
+				FreeCursor();
+				ShowCursor();
+			}
+		}
+		break;
+
 	// =================================
 	//	키보드 메세지 관련 이벤트
 	// =================================
@@ -318,11 +348,23 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	// =================================
 	case WM_MOUSEMOVE:
 	{
+		const POINTS point = MAKEPOINTS(lParam);
+
+		if (!cursorEnabled)
+		{
+			if (!mouse.IsInWindow())
+			{
+				SetCapture(hWnd);
+				mouse.OnMouseEnter();
+				HideCursor();
+			}
+
+			break;
+		}
+
 		// ImGui에 마우스를 이동시킬 때 처리 안함
 		if (imGuiIO.WantCaptureMouse)
 			break;
-
-		const POINTS point = MAKEPOINTS(lParam);
 
 		// 마우스가 클라이언트 창 안에 있을 경우
 		if (point.x >= 0 && point.y >= 0 && point.x < width && point.y < height)
@@ -358,6 +400,13 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_LBUTTONDOWN:
 	{
 		SetForegroundWindow(hWnd);
+
+		if (!cursorEnabled)
+		{
+			ConfineCursor();
+			HideCursor();
+		}
+
 		if (imGuiIO.WantCaptureMouse)
 			break;
 
@@ -386,6 +435,12 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnLeftReleased(point.x, point.y);
 
+		if (point.x < 0 || point.x >= WINWIDTH || point.y < 0 || point.y >= WINHEIGHT)
+		{
+			ReleaseCapture();
+			mouse.OnMouseLeave();
+		}
+
 		break;
 	}
 
@@ -396,6 +451,12 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnRightReleased(point.x, point.y);
+
+		if (point.x < 0 || point.x >= WINWIDTH || point.y < 0 || point.y >= WINHEIGHT)
+		{
+			ReleaseCapture();
+			mouse.OnMouseLeave();
+		}
 
 		break;
 	}
@@ -413,6 +474,28 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 		else if (GET_WHEEL_DELTA_WPARAM(wParam) < 0)
 			mouse.OnWheelDown(point.x, point.y);
+
+		break;
+	}
+
+	case WM_INPUT:
+	{
+		if (!mouse.RawEnabled())
+			break;
+
+		UINT size;
+		if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER)) == -1)
+			break;
+		
+		rawBuffer.resize(size);
+
+		if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, rawBuffer.data(), &size, sizeof(RAWINPUTHEADER)) == -1)
+			break;
+
+		auto& rawInput = reinterpret_cast<const RAWINPUT&>(*rawBuffer.data());
+
+		if (rawInput.header.dwType == RIM_TYPEMOUSE && (rawInput.data.mouse.lLastX != 0 || rawInput.data.mouse.lLastY != 0))
+			mouse.OnRawDelta(rawInput.data.mouse.lLastX, rawInput.data.mouse.lLastY);
 
 		break;
 	}

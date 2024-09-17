@@ -279,8 +279,8 @@ void DxGraphic::CreateRenderTargetView()
     D3D11_VIEWPORT viewPort;
     viewPort.TopLeftX = 0.0f;
     viewPort.TopLeftY = 0.0f;
-    viewPort.Width = 800;
-    viewPort.Height = 600;
+    viewPort.Width = WINWIDTH;
+    viewPort.Height = WINHEIGHT;
     viewPort.MinDepth = 0.0f;
     viewPort.MaxDepth = 1.0f;
 
@@ -307,8 +307,8 @@ void DxGraphic::CreateDepthStencilBuffer()
     // 깊이 스텐실 버퍼의 텍스쳐 제작
     wrl::ComPtr<ID3D11Texture2D> depthStencil;
     D3D11_TEXTURE2D_DESC descDepth = {};
-    descDepth.Width = 800;
-    descDepth.Height = 600;
+    descDepth.Width = WINWIDTH;
+    descDepth.Height = WINHEIGHT;
     descDepth.MipLevels = 1;
     descDepth.ArraySize = 1;
     descDepth.Format = DXGI_FORMAT_D32_FLOAT;       // 깊이 정보를 담는 32비트 float형 데이터로 설정
@@ -411,8 +411,8 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     D3D11_VIEWPORT viewPort;
     viewPort.TopLeftX = 0.0f;
     viewPort.TopLeftY = 0.0f;
-    viewPort.Width = 800;
-    viewPort.Height = 600;
+    viewPort.Width = WINWIDTH;
+    viewPort.Height = WINHEIGHT;
     viewPort.MinDepth = 0.0f;
     viewPort.MaxDepth = 1.0f;
 
@@ -567,7 +567,7 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     GRAPHIC_THROW_INFO_ONLY(deviceContext->DrawIndexed((UINT)size(indices), 0, 0));
 }
 
-void DxGraphic::DrawIndexed(UINT count) noexcept(!_DEBUG)
+void DxGraphic::DrawIndexed(UINT count) NOEXCEPTRELEASE
 {
     GRAPHIC_THROW_INFO_ONLY(deviceContext->DrawIndexed(count, 0, 0));
 }

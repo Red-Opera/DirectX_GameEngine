@@ -119,6 +119,8 @@ private:
 	void FreeCursor() noexcept;				// 커서 이동제한이 없도록 설정하는 메소드
 	void ShowCursor() noexcept;				// 커서를 보이기 위한 메소드
 	void HideCursor() noexcept;				// 커서를 감추기 위한 메소드
+	void EnableImGuiMouse() noexcept;
+	void DisableImGuiMouse() noexcept;
 	
 	static LRESULT CALLBACK WndMessageSetting(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;

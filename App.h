@@ -5,6 +5,7 @@
 #include "Core/Window.h"
 #include "Core/Camera.h"
 #include "Core/Draw/Light/PointLight.h"
+#include "Core/Draw/Mesh.h"
 
 #include "Utility/Imgui/Usage/ImguiManager.h"
 
@@ -22,16 +23,17 @@ private:
 	// ImGui
 	void CreateSimulationWindow() noexcept;
 	void CreateBoxWindowManagerWindow() noexcept;
-	void CreateBoxWindows() noexcept;
+	void CreateDemoWindows() noexcept;
 
 	// ImGui
 	ImguiManager imgui;
-	bool show_demo_window = true;		// ImGui의 Demo 창을 띄울 것인지 여부
+	bool isShowDemoWindow = false;		// ImGui의 Demo 창을 띄울 것인지 여부
 	
 	Window wnd;
 	GameTimer timer;
 	Camera camera;
 	PointLight light;
+	float cameraSpeed = 1.0f;
 
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	std::vector<class DrawBox*> boxes;
@@ -40,5 +42,8 @@ private:
 
 	std::optional<int> comboBoxIndex;
 	std::set<int> boxControlIds;
+
+	Model model{ wnd.GetDxGraphic(), "Model/Sample/nano_textured/nanosuit.obj" };
+	Model model2{ wnd.GetDxGraphic(), "Model/Sample/nano_textured/nanosuit.obj" };
 };
 

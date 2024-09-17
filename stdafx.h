@@ -30,14 +30,19 @@
 #include <sstream>
 #include <algorithm>
 
-#include <Utility/GameTimer.h>
+#include "Utility/GameTimer.h"
+#include "Utility/MathInfo.h"
+#include "Utility/Vector.h"
+
+#include "Utility/Imgui/imgui.h"
 
 #include <DX3DApp.h>
 
 // Define
 #define HR(x) { HRESULT hr = x; if(FAILED(hr)) { assert(false); } }
 #define ReleaseCOM(x) { if(x) { (x)->Release(); (x) = nullptr; } }
-#define PI 3.141592f
+#define WINWIDTH 1280
+#define WINHEIGHT 720
 
 // namespace
 namespace DxMath = DirectX;

@@ -41,6 +41,7 @@ public:
 
 	private:
 		Type type;				// 해당 마우스 이벤트 타입
+
 		bool leftIsPressed;		// 왼쪽 키가 눌렸는지 여부
 		bool rightIsPressed;	// 오른쪽 키가 눌렸는지 여부
 		int x;					// 마우스 x좌표

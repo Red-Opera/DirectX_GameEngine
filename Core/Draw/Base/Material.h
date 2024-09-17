@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Exception/BaseException.h"
+#include "Core/Exception/WindowException.h"
 #include <memory>
 
 class Material
@@ -74,8 +75,8 @@ public:
 
 	void Clear(Color fillColor) noexcept;
 
-	void SetColorPixel(UINT x, UINT y, Color c) noexcept(!_DEBUG);
-	Color GetColorPixel(UINT x, UINT y) const noexcept(!_DEBUG);
+	void SetColorPixel(UINT x, UINT y, Color c) NOEXCEPTRELEASE;
+	Color GetColorPixel(UINT x, UINT y) const NOEXCEPTRELEASE;
 
 	UINT GetWidth() const noexcept;
 	UINT GetHeigth() const noexcept;
@@ -88,7 +89,7 @@ public:
 	static Material FromFile(const std::string& name);
 
 	void Save(const std::string& fileName) const;
-	void Copy(const Material& src) noexcept(!_DEBUG);
+	void Copy(const Material& src) NOEXCEPTRELEASE;
 
 private:
 	Material(UINT width, UINT height, std::unique_ptr<Color[]> color) noexcept;

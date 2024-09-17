@@ -9,3 +9,5 @@
 #include "../RenderingPipeline/VSPS/PixelShader.h"
 #include "../RenderingPipeline/VSPS/TransformConstantBuffer.h"
 #include "../RenderingPipeline/VSPS/SamplerState.h"
+
+#include "Core/Draw/Base/Image/Texture.h" 

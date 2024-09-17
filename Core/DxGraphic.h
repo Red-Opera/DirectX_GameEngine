@@ -4,6 +4,7 @@
 
 #include "Exception/BaseException.h"
 #include "Exception/ExceptionInfo.h"
+#include "Exception/WindowException.h"
 
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -11,6 +12,8 @@
 #include <dxgidebug.h>
 
 using Microsoft::WRL::ComPtr;
+
+namespace Graphic { class Render; }
 
 class DxGraphic
 {
@@ -81,7 +84,7 @@ public:
 	DxGraphic& operator=(const DxGraphic&) = delete;
 
 	void DrawTestTriangle(float angle, float x, float z);
-	void DrawIndexed(UINT count) noexcept(!_DEBUG);
+	void DrawIndexed(UINT count) NOEXCEPTRELEASE;
 
 	// Get Method
 	ID3D11Device*			GetDevice() { return device.Get(); }
@@ -109,6 +112,8 @@ private:
 #ifndef NDEBUG
 	ExceptionInfo infoManager;
 #endif
+
+	friend Graphic::Render;
 
 	HRESULT CreateDevice();
 	void CheckMSAAQuality();

@@ -1,18 +1,24 @@
 #pragma once
-#include "../Bindable.h"
+#include "../Render.h"
 
-class InputLayout : public Bindable
+#include "Core/RenderingPipeline/Vertex.h"
+
+namespace Graphic
 {
-public:
-	InputLayout(
-		DxGraphic& graphic, 
-		const std::vector<D3D11_INPUT_ELEMENT_DESC>& layout,
-		ID3DBlob* shaderCode);
+	class InputLayout : public Render
+	{
+	public:
+		InputLayout(DxGraphic& graphic, VertexCore::VertexLayout vertexLayout, ID3DBlob* shaderCode);
 
-	// Bindable을(를) 통해 상속됨
-	void PipeLineSet(DxGraphic& graphic) noexcept override;
+		// Bindable을(를) 통해 상속됨
+		void PipeLineSet(DxGraphic& graphic) noexcept override;
 
-protected:
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
-};
+		static std::shared_ptr<InputLayout> GetRender(DxGraphic& graphic, const VertexCore::VertexLayout& vertexLayout, ID3DBlob* shaderCode);
+		static std::string CreateID(const VertexCore::VertexLayout& vertexLayout, ID3DBlob* shaderCode = nullptr);
+		std::string GetID() const noexcept override;
 
+	protected:
+		VertexCore::VertexLayout vertexLayout;
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+	};
+}

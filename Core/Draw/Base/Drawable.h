@@ -2,9 +2,14 @@
 
 #include "../../DxGraphic.h"
 
+#include <memory>
 #include <DirectXMath.h>
 
-class Bindable;
+namespace Graphic
+{
+	class Render;
+	class IndexBuffer;
+}
 
 class Drawable
 {
@@ -15,10 +20,9 @@ public:
 	Drawable() = default;
 	Drawable(const Drawable&) = delete;
 
-	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
-	void Draw(DxGraphic& graphic) const noexcept (!_DEBUG);
+	virtual DirectX::XMMATRIX GetTransformMatrix() const noexcept = 0;	// 오브젝트의 Transform의 행렬을 반환
+	void Draw(DxGraphic& graphic) const NOEXCEPTRELEASE;				// 해당 오브젝트를 그리는 메소드
 
-	virtual void Update(float dt) noexcept = 0;
 	virtual ~Drawable() = default;
 
 protected:
@@ -34,13 +38,10 @@ protected:
 		return nullptr;
 	}
 
-	void AddBind(std::unique_ptr<Bindable> bind) noexcept (!_DEBUG);
-	void AddIndexBuffer(std::unique_ptr<class IndexBuffer> indexBuffer) noexcept (!_DEBUG);
+	void AddBind(std::shared_ptr<Graphic::Render> bind) NOEXCEPTRELEASE;
 
 private:
-	virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBinds() const noexcept = 0;
-
-	const class IndexBuffer* indexBuffer = nullptr;
-	std::vector<std::unique_ptr<Bindable>> binds;
+	const Graphic::IndexBuffer* indexBuffer = nullptr;
+	std::vector<std::shared_ptr<Graphic::Render>> binds;
 };
 

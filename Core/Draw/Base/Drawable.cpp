@@ -1,31 +1,26 @@
 #include "stdafx.h"
 #include "Drawable.h"
 
-#include "../../RenderingPipeline/Bindable.h"
+#include "../../RenderingPipeline/Render.h"
 #include "../../RenderingPipeline/IA/IndexBuffer.h"
 using namespace std;
+using namespace Graphic;
 
-void Drawable::Draw(DxGraphic& graphic) const noexcept(!_DEBUG)
+void Drawable::Draw(DxGraphic& graphic) const NOEXCEPTRELEASE
 {
 	for (auto& b : binds)
-		b->PipeLineSet(graphic);
-	
-	for (auto& b : GetStaticBinds())
 		b->PipeLineSet(graphic);
 
 	graphic.DrawIndexed(indexBuffer->GetIndexCount());
 }
 
-void Drawable::AddBind(unique_ptr<Bindable> bind) noexcept(!_DEBUG)
+void Drawable::AddBind(shared_ptr<Render> bind) NOEXCEPTRELEASE
 {
-	assert("AddIndexBuffer를 통해서 Index Buffer를 만들어야 합니다." && typeid(*bind) != typeid(IndexBuffer));
+	if (typeid(*bind) == typeid(IndexBuffer))
+	{
+		assert("타켓티하는 Render에 IndexBuffer가 존재하지 않음" && indexBuffer == nullptr);
+		indexBuffer = &static_cast<IndexBuffer&>(*bind);
+;	}
+
 	binds.push_back(move(bind));
-}
-
-void Drawable::AddIndexBuffer(unique_ptr<IndexBuffer> indexBuffer) noexcept(!_DEBUG)
-{
-	assert("인덱스 버퍼가 존재하지 않음. 인덱스 버퍼를 만들어야 합니다." && this->indexBuffer == nullptr);
-
-	this->indexBuffer = indexBuffer.get();
-	binds.push_back(move(indexBuffer));
 }

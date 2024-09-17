@@ -3,7 +3,7 @@
 #include "Core/DxGraphic.h"
 #include "Core/RenderingPipeline/VSPS/ConstantBuffer.h"
 
-#include "../ColorSphere.h"
+#include "../BaseModel/ColorSphere.h"
 
 class PointLight
 {
@@ -12,7 +12,7 @@ public:
 
 	void CreatePositionChangeWindow() noexcept;
 	void Reset() noexcept;
-	void Draw(DxGraphic& graphic) const noexcept(!_DEBUG);
+	void Draw(DxGraphic& graphic) const NOEXCEPTRELEASE;
 	void Bind(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept;
 
 private:
@@ -29,5 +29,5 @@ private:
 
 	PointLightConstantBuffer lightInfo;
 	mutable ColorSphere mesh;
-	mutable PixelConstantBuffer<PointLightConstantBuffer> cBuffer;
+	mutable Graphic::PixelConstantBuffer<PointLightConstantBuffer> cBuffer;
 };

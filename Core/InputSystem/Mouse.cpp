@@ -14,9 +14,8 @@ pair<int, int> Mouse::GetPos() const noexcept
 optional<Mouse::RawDelta> Mouse::ReadRawDelta() noexcept
 {
 	if (rawDeltaBuffer.empty())
-	{
 		return std::nullopt;
-	}
+
 	const RawDelta d = rawDeltaBuffer.front();
 	rawDeltaBuffer.pop();
 	return d;

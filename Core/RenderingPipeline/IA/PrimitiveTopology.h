@@ -1,14 +1,22 @@
 #pragma once
 
-#include "../Bindable.h"
+#include "../Render.h"
+#include "../RenderManager.h"
 
-class PrimitiveTopology : public Bindable
+namespace Graphic
 {
-public:
-	PrimitiveTopology(DxGraphic& graphic, D3D11_PRIMITIVE_TOPOLOGY topology);
-	
-	void PipeLineSet(DxGraphic& grahpic) noexcept override;
+	class PrimitiveTopology : public Render
+	{
+	public:
+		PrimitiveTopology(DxGraphic& graphic, D3D11_PRIMITIVE_TOPOLOGY topology);
 
-protected:
-	D3D11_PRIMITIVE_TOPOLOGY topology;
-};
+		void PipeLineSet(DxGraphic& grahpic) noexcept override;
+
+		static std::shared_ptr<PrimitiveTopology> GetRender(DxGraphic& graphic, D3D11_PRIMITIVE_TOPOLOGY topology);
+		static std::string CreateID(D3D11_PRIMITIVE_TOPOLOGY topology);
+		std::string GetID() const noexcept override;
+
+	protected:
+		D3D11_PRIMITIVE_TOPOLOGY topology;
+	};
+}
