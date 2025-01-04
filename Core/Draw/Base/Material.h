@@ -45,6 +45,8 @@ public:
 		void SetG(UCHAR g) noexcept { colorHex = (colorHex & 0xFFFF00FFu) | (g << 8u); }
 		void SetB(UCHAR b) noexcept { colorHex = (colorHex & 0xFFFFFF00u) | b; }
 
+		static DirectX::XMVECTOR ConvertVector(Material::Color color);
+
 		UINT colorHex;
 	};
 
@@ -79,7 +81,7 @@ public:
 	Color GetColorPixel(UINT x, UINT y) const NOEXCEPTRELEASE;
 
 	UINT GetWidth() const noexcept;
-	UINT GetHeigth() const noexcept;
+	UINT GetHeight() const noexcept;
 
 	Color* get() noexcept;
 	const Color* get() const noexcept;
@@ -90,11 +92,14 @@ public:
 
 	void Save(const std::string& fileName) const;
 	void Copy(const Material& src) NOEXCEPTRELEASE;
+	bool HasAlpha() const noexcept;
 
 private:
-	Material(UINT width, UINT height, std::unique_ptr<Color[]> color) noexcept;
+	Material(UINT width, UINT height, std::unique_ptr<Color[]> color, bool hasAlpha = false) noexcept;
 
 	std::unique_ptr<Color[]> color;
 	UINT width;
 	UINT height;
+
+	bool hasAlpha = false;
 };

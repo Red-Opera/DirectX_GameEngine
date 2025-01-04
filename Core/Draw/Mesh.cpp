@@ -3,13 +3,14 @@
 
 #include "Base/Material.h"
 
+#include <filesystem>
 #include <unordered_map>
 #include <sstream>
 
 class ModelHierarchy
 {
 public:
-	void ShowWindow(const char* windowName, const SceneGraphNode& root) noexcept
+	void ShowWindow(DxGraphic& graphic, const char* windowName, const SceneGraphNode& root) noexcept
 	{
 		windowName = windowName ? windowName : "Model";
 
@@ -23,8 +24,27 @@ public:
 
 			if (selectNode != nullptr)
 			{
-				auto& transform = transforms[selectNode->GetID()];
+				const auto id = selectNode->GetID();
+				auto i = transforms.find(id);
 
+				if (i == transforms.end())
+				{
+					const auto& nodeTransform = selectNode->GetTranform();
+					const auto angle = Vector::GetEulerAngle(nodeTransform);
+					const auto position = Vector::GetPosition(nodeTransform);
+
+					TransformType getNodeTransform;
+					getNodeTransform.roll = angle.z;
+					getNodeTransform.pitch = angle.x;
+					getNodeTransform.yaw = angle.y;
+					getNodeTransform.x = position.x;
+					getNodeTransform.y = position.y;
+					getNodeTransform.z = position.z;
+
+					std::tie(i, std::ignore) = transforms.insert({ id, getNodeTransform });
+				}
+
+				auto& transform = i->second;
 				ImGui::Text("Orientation");
 				ImGui::SliderAngle("Roll", &transform.roll, -180.0f, 180.0f);
 				ImGui::SliderAngle("Pitch", &transform.pitch, -180.0f, 180.0f);
@@ -33,6 +53,9 @@ public:
 				ImGui::SliderFloat("X", &transform.x, -20.0f, 20.0f);
 				ImGui::SliderFloat("Y", &transform.y, -20.0f, 20.0f);
 				ImGui::SliderFloat("Z", &transform.z, -20.0f, 20.0f);
+
+				if (!selectNode->MaterialControl(graphic, psConstant))
+					selectNode->MaterialControl(graphic, ringMaterial);
 			}
 		}
 		ImGui::End();
@@ -60,19 +83,21 @@ private:
 		float x = 0.0f, y = 0.0f, z = 0.0f;
 	};
 
-	SceneGraphNode* selectNode;		// 선택한 모델의 부분 노드
+	SceneGraphNode* selectNode;								// 선택한 모델의 부분 노드
+	SceneGraphNode::PSMaterialConstant psConstant;
+	SceneGraphNode::PSMaterialConstantNoTexture ringMaterial;
 
 	std::unordered_map<int, TransformType> transforms;
 };
 
 Mesh::Mesh(DxGraphic& graphic, std::vector<std::shared_ptr<Graphic::Render>> bindPtr)
 {
-	AddBind(std::make_shared<Graphic::PrimitiveTopology>(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	AddRender(Graphic::PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	for (auto& renderingState : bindPtr)
-		AddBind(std::move(renderingState));
+		AddRender(std::move(renderingState));
 
-	AddBind(std::make_shared<Graphic::TransformConstantBuffer>(graphic, *this));
+	AddRender(std::make_shared<Graphic::TransformConstantBuffer>(graphic, *this));
 }
 
 void Mesh::Draw(DxGraphic& graphic, DirectX::FXMMATRIX parentWorldTransform) NOEXCEPTRELEASE
@@ -115,6 +140,11 @@ void SceneGraphNode::ApplyWorldTranfsorm(DirectX::FXMMATRIX transform) noexcept
 	DirectX::XMStoreFloat4x4(&worldTransform, transform);
 }
 
+const DirectX::XMFLOAT4X4& SceneGraphNode::GetTranform() const noexcept
+{
+	return worldTransform;
+}
+
 void SceneGraphNode::ShowTree(SceneGraphNode*& selectNode) const noexcept
 {
 	const int selectId = (selectNode == nullptr) ? -1 : selectNode->GetID();
@@ -149,17 +179,18 @@ void SceneGraphNode::AddChild(std::unique_ptr<SceneGraphNode> child) NOEXCEPTREL
 	childPtrs.push_back(std::move(child));
 }
 
-Model::Model(DxGraphic& graphic, const std::string fileName) : modelHierarchy(std::make_unique<ModelHierarchy>())
+Model::Model(DxGraphic& graphic, const std::string& pathString, const float scale) : modelHierarchy(std::make_unique<ModelHierarchy>())
 {
 	Assimp::Importer importer;
 
-	const auto model = importer.ReadFile(fileName.c_str(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals);
+	const auto model = importer.ReadFile(pathString.c_str(),
+		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_GenNormals | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 
 	if (model == nullptr)
 		throw ModelException(__LINE__, __FILE__, importer.GetErrorString());
 
 	for (size_t i = 0; i < model->mNumMeshes; i++)
-		meshPtrs.push_back(ConvertMesh(graphic, *model->mMeshes[i], model->mMaterials));
+		meshPtrs.push_back(ConvertMesh(graphic, *model->mMeshes[i], model->mMaterials, pathString, scale));
 
 	int nextID = 0;
 	root = ConvertSceneGraphNode(nextID, *model->mRootNode);
@@ -173,55 +204,45 @@ void Model::Draw(DxGraphic& graphic) const NOEXCEPTRELEASE
 	root->Draw(graphic, DirectX::XMMatrixIdentity());
 }
 
-void Model::ShowWindow(const char* windowName) noexcept
+void Model::ShowWindow(DxGraphic& graphic, const char* windowName) noexcept
 {
-	modelHierarchy->ShowWindow(windowName, *root);
+	modelHierarchy->ShowWindow(graphic, windowName, *root);
+}
+
+void Model::SetRootTransform(DirectX::FXMMATRIX transform) noexcept
+{
+	root->ApplyWorldTranfsorm(transform);
 }
 
 Model::~Model() noexcept
 {
 }
 
-std::unique_ptr<Mesh> Model::ConvertMesh(DxGraphic& graphic, const aiMesh& mesh, const aiMaterial* const* materials)
+std::unique_ptr<Mesh> Model::ConvertMesh(DxGraphic& graphic, const aiMesh& mesh, const aiMaterial* const* materials, const std::filesystem::path& path, float scale)
 {
 	using VertexCore::VertexLayout;
 	using namespace Graphic;
 
-	// Vertex Buffer를 Position3D와 Normal을 갖도록 Vertex Laout를 수정
-	VertexCore::VertexBuffer vertexBuffer(std::move(VertexLayout{}.AddType(VertexLayout::Position3D).AddType(VertexLayout::Normal).AddType(VertexLayout::Texture2D)));
-
-	// Vertex Layout에 설정한 정점 정보에 따라서 모델 메시에서 정점과 Normal을 가져옴
-	for (UINT i = 0; i < mesh.mNumVertices; i++)
-	{
-		vertexBuffer.emplace_back(
-			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mVertices[i]),
-			*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]),
-			*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i]));
-	}
-
-	// 메쉬에서 정점 출력 순서를 저장하는 인덱스 가져옴
-	std::vector<USHORT> indices;
-	indices.reserve(mesh.mNumFaces * 3);
-
-	// 모델 메시에서 모든 면의 정점 순서를 저장함
-	for (UINT i = 0; i < mesh.mNumFaces; i++)
-	{
-		const auto& face = mesh.mFaces[i];
-		assert(face.mNumIndices == 3 && "모델의 면이 점 3개로 이루어지지 않음");
-
-		indices.push_back(face.mIndices[0]);
-		indices.push_back(face.mIndices[1]);
-		indices.push_back(face.mIndices[2]);
-	}
+	using namespace std::string_literals;
+	const auto texturePath = path.parent_path().string() + "/";
+	auto meshTag = texturePath + "%" + mesh.mName.C_Str();
 
 	// 해당 메시에 대해서 랜더링할 수 있도록 바인딩
 	std::vector<std::shared_ptr<Render>> bindablePtrs;
 
-	using namespace std::string_literals;
-	const auto texturePath = "Model/Sample/nano_textured/"s;
-
 	bool hasSpecular = false;
-	float shininess = 35.0f;
+	bool hasNormalMap = false;
+	bool hasDiffuse = false;
+	bool hasGlassAlpha = false;
+	bool hasAlphaDiffuse = false;
+	float shininess = 2.0f;
+
+	DirectX::XMFLOAT4 specularColor = { 0.18f, 0.18f, 0.18f, 1.0f };
+	DirectX::XMFLOAT4 diffuseColor = { 0.45f, 0.45f, 0.85f, 1.0f };
+
+	// =============================================================================
+	//						Material에 들어간 이미지 가져오는 기능
+	// =============================================================================
 
 	if (mesh.mMaterialIndex >= 0)
 	{
@@ -231,50 +252,304 @@ std::unique_ptr<Mesh> Model::ConvertMesh(DxGraphic& graphic, const aiMesh& mesh,
 		aiString textureFileName;
 
 		// 해당 메쉬에 들어가는 Material의 DIFFUSE에 사용된 이미지 이름을 가져옴
-		material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName);
-		bindablePtrs.push_back(Texture::GetRender(graphic, texturePath + textureFileName.C_Str()));
+		if (material.GetTexture(aiTextureType_DIFFUSE, 0, &textureFileName) == aiReturn_SUCCESS)
+		{
+			auto texture = Texture::GetRender(graphic, texturePath + textureFileName.C_Str());	// 해당 이미지를 가져옴
+			hasAlphaDiffuse = texture->HasAlpha();												// 해당 이미지가 투명도를 가지고 있는지 확인
+			bindablePtrs.push_back(std::move(texture));											// 해당 이미지를 렌더링할 수 있도록 바인딩함
+
+			hasDiffuse = true;
+		}
+
+		else
+			material.Get(AI_MATKEY_COLOR_DIFFUSE, reinterpret_cast<aiColor3D&>(diffuseColor));
 
 		// 해당 메쉬에 들어가는 Material의 SPECULAR에 사용된 이미지 이름을 가져옴
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &textureFileName) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(Texture::GetRender(graphic, texturePath + textureFileName.C_Str(), 1));
+			auto texture = Texture::GetRender(graphic, texturePath + textureFileName.C_Str(), 1);
+			hasGlassAlpha = texture->HasAlpha();
+
+			bindablePtrs.push_back(std::move(texture));
 			hasSpecular = true;
 		}
 
 		else
-			material.Get(AI_MATKEY_SHININESS, shininess);
-		
-		bindablePtrs.push_back(SamplerState::GetRender(graphic));
+			material.Get(AI_MATKEY_COLOR_SPECULAR, reinterpret_cast<aiColor3D&>(specularColor));
+
+		if (!hasGlassAlpha)
+			material.Get(AI_MATKEY_SHININESS, shininess);	// SPECULAR 맵이 없다면 기본 shininess를 사용함
+
+		// 해당 메쉬에 들어가는 Material의 NormalMap에 사용된 이미지 이름을 가져옴
+		if (material.GetTexture(aiTextureType_NORMALS, 0, &textureFileName) == aiReturn_SUCCESS)
+		{
+			auto texture = Texture::GetRender(graphic, texturePath + textureFileName.C_Str(), 2);
+			hasGlassAlpha = texture->HasAlpha();
+
+			bindablePtrs.push_back(std::move(texture));
+			hasNormalMap = true;
+		}
+
+		if (hasDiffuse || hasSpecular || hasNormalMap)
+			bindablePtrs.push_back(Graphic::SamplerState::GetRender(graphic));
 	}
-	
-	auto meshTag = texturePath + "%" + mesh.mName.C_Str();
-	bindablePtrs.push_back(VertexBuffer::GetRender(graphic, meshTag, vertexBuffer));
-	bindablePtrs.push_back(IndexBuffer::GetRender(graphic, meshTag, indices));
 
-	auto vertexShader = VertexShader::GetRender(graphic, "Shader/TextureLitShader.hlsl");
-	auto VSShaderCode = vertexShader->GetShaderCode();
-	bindablePtrs.push_back(std::move(vertexShader));
-
-	bindablePtrs.push_back(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
-
-	if (hasSpecular)
-		bindablePtrs.push_back(PixelShader::GetRender(graphic, "Shader/TextureSpecularLitShader.hlsl"));
-
-	else
+	if (hasDiffuse && hasNormalMap && hasSpecular)
 	{
-		bindablePtrs.push_back(PixelShader::GetRender(graphic, "Shader/TextureLitShader.hlsl"));
+		// Vertex Buffer를 Position3D와 Normal을 갖도록 Vertex Laout를 수정
+		VertexCore::VertexBuffer vertexBuffer(std::move(VertexLayout{}.AddType(VertexLayout::Position3D).AddType(VertexLayout::Normal).AddType(VertexLayout::Tangent).AddType(VertexLayout::BiTangent).AddType(VertexLayout::Texture2D)));
+
+		// Vertex Layout에 설정한 정점 정보에 따라서 모델 메시에서 정점과 Normal을 가져옴
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			vertexBuffer.emplace_back(
+				DirectX::XMFLOAT3(mesh.mVertices[i].x * scale, mesh.mVertices[i].y * scale, mesh.mVertices[i].z * scale),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mTangents[i]),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mBitangents[i]),
+				*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i]));
+		}
+
+		// 메쉬에서 정점 출력 순서를 저장하는 인덱스 가져옴
+		std::vector<USHORT> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+
+		// 모델 메시에서 모든 면의 정점 순서를 저장함
+		for (UINT i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3 && "모델의 면이 점 3개로 이루어지지 않음");
+
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		bindablePtrs.push_back(VertexBuffer::GetRender(graphic, meshTag, vertexBuffer));
+		bindablePtrs.push_back(IndexBuffer::GetRender(graphic, meshTag, indices));
+
+		auto vertexShader = VertexShader::GetRender(graphic, "Shader/TextureNormalMap.hlsl");
+		auto VSShaderCode = vertexShader->GetShaderCode();
+		bindablePtrs.push_back(std::move(vertexShader));
+
+		bindablePtrs.push_back(PixelShader::GetRender(graphic, hasAlphaDiffuse ? "Shader/TextureNormalAlphaLitShader.hlsl" : "Shader/TextureNormalLitShader.hlsl"));
+		bindablePtrs.push_back(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
+
+		SceneGraphNode::PSMaterialConstant psConstant;
+		psConstant.specularPower = shininess;
+		psConstant.hasGlassMap = hasGlassAlpha ? TRUE : FALSE;
+
+		bindablePtrs.push_back(PixelConstantBuffer<SceneGraphNode::PSMaterialConstant>::GetRender(graphic, psConstant, 1u));
+	}
+
+	else if (hasDiffuse && hasNormalMap)
+	{
+		// Vertex Buffer를 Position3D와 Normal을 갖도록 Vertex Laout를 수정
+		VertexCore::VertexBuffer vertexBuffer(std::move(VertexLayout{}.AddType(VertexLayout::Position3D).AddType(VertexLayout::Normal).AddType(VertexLayout::Tangent).AddType(VertexLayout::BiTangent).AddType(VertexLayout::Texture2D)));
+
+		// Vertex Layout에 설정한 정점 정보에 따라서 모델 메시에서 정점과 Normal을 가져옴
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			vertexBuffer.emplace_back(
+				DirectX::XMFLOAT3(mesh.mVertices[i].x * scale, mesh.mVertices[i].y * scale, mesh.mVertices[i].z * scale),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mTangents[i]),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mBitangents[i]),
+				*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i]));
+		}
+
+		// 메쉬에서 정점 출력 순서를 저장하는 인덱스 가져옴
+		std::vector<USHORT> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+
+		// 모델 메시에서 모든 면의 정점 순서를 저장함
+		for (UINT i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3 && "모델의 면이 점 3개로 이루어지지 않음");
+
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		bindablePtrs.push_back(VertexBuffer::GetRender(graphic, meshTag, vertexBuffer));
+		bindablePtrs.push_back(IndexBuffer::GetRender(graphic, meshTag, indices));
+
+		auto vertexShader = VertexShader::GetRender(graphic, "Shader/TextureNormalMap.hlsl");
+		auto VSShaderCode = vertexShader->GetShaderCode();
+		bindablePtrs.push_back(std::move(vertexShader));
+
+		bindablePtrs.push_back(PixelShader::GetRender(graphic, "Shader/TextureNormalMap.hlsl"));
+		bindablePtrs.push_back(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
 
 		struct PSMaterialConstant
 		{
-			float specularIntensity = 0.8f;
+			float specularIntensity;
+			float specularPower;
+			BOOL normalMapEnable = TRUE;
+			float padding[1];
+		} matConst;
+		matConst.specularPower = shininess;
+		matConst.specularIntensity = (specularColor.x + specularColor.y + specularColor.z) / 3.0f;
+
+		bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstant>::GetRender(graphic, matConst, 1u));
+	}
+
+	else if (hasDiffuse && !hasNormalMap && hasSpecular)
+	{
+		// Vertex Buffer를 Position3D와 Normal을 갖도록 Vertex Laout를 수정
+		VertexCore::VertexBuffer vertexBuffer(std::move(VertexLayout{}.AddType(VertexLayout::Position3D).AddType(VertexLayout::Normal).AddType(VertexLayout::Texture2D)));
+
+		// Vertex Layout에 설정한 정점 정보에 따라서 모델 메시에서 정점과 Normal을 가져옴
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			vertexBuffer.emplace_back(
+				DirectX::XMFLOAT3(mesh.mVertices[i].x * scale, mesh.mVertices[i].y * scale, mesh.mVertices[i].z * scale),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]),
+				*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i]));
+		}
+
+		// 메쉬에서 정점 출력 순서를 저장하는 인덱스 가져옴
+		std::vector<USHORT> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+
+		// 모델 메시에서 모든 면의 정점 순서를 저장함
+		for (UINT i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3 && "모델의 면이 점 3개로 이루어지지 않음");
+
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		bindablePtrs.push_back(VertexBuffer::GetRender(graphic, meshTag, vertexBuffer));
+		bindablePtrs.push_back(IndexBuffer::GetRender(graphic, meshTag, indices));
+
+		auto vertexShader = VertexShader::GetRender(graphic, "Shader/TextureLitSpecular.hlsl");
+		auto VSShaderCode = vertexShader->GetShaderCode();
+		bindablePtrs.push_back(std::move(vertexShader));
+
+		bindablePtrs.push_back(PixelShader::GetRender(graphic, "Shader/TextureLitSpecular.hlsl"));
+		bindablePtrs.push_back(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
+
+		struct PSMaterialConstant
+		{
+			float specularPower;
+			BOOL hasGlass = TRUE;
+			float specularMapWeight;
+			float padding;
+		} matConst;
+
+		matConst.specularPower = shininess;
+		matConst.hasGlass = hasGlassAlpha ? TRUE : FALSE;
+		matConst.specularMapWeight = 1.0f;
+
+		bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstant>::GetRender(graphic, matConst, 1u));
+	}
+
+	else if (hasDiffuse)
+	{
+		// Vertex Buffer를 Position3D와 Normal을 갖도록 Vertex Laout를 수정
+		VertexCore::VertexBuffer vertexBuffer(std::move(VertexLayout{}.AddType(VertexLayout::Position3D).AddType(VertexLayout::Normal).AddType(VertexLayout::Texture2D)));
+
+		// Vertex Layout에 설정한 정점 정보에 따라서 모델 메시에서 정점과 Normal을 가져옴
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			// vertex는 scale에 따라 크게 만들어지도록 설정
+			vertexBuffer.emplace_back(
+				DirectX::XMFLOAT3(mesh.mVertices[i].x * scale, mesh.mVertices[i].y * scale, mesh.mVertices[i].z * scale),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]),
+				*reinterpret_cast<DirectX::XMFLOAT2*>(&mesh.mTextureCoords[0][i]));
+		}
+
+		// 메쉬에서 정점 출력 순서를 저장하는 인덱스 가져옴
+		std::vector<USHORT> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+
+		// 모델 메시에서 모든 면의 정점 순서를 저장함
+		for (UINT i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3 && "모델의 면이 점 3개로 이루어지지 않음");
+
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		bindablePtrs.push_back(VertexBuffer::GetRender(graphic, meshTag, vertexBuffer));
+		bindablePtrs.push_back(IndexBuffer::GetRender(graphic, meshTag, indices));
+
+		auto vertexShader = VertexShader::GetRender(graphic, "Shader/TextureLitShader.hlsl");
+		auto VSShaderCode = vertexShader->GetShaderCode();
+		bindablePtrs.push_back(std::move(vertexShader));
+
+		bindablePtrs.push_back(PixelShader::GetRender(graphic, "Shader/TextureLitShader.hlsl"));
+		bindablePtrs.push_back(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
+
+		struct PSMaterialConstant
+		{
+			float specularIntensity;
 			float specularPower;
 			float padding[2];
 		} matConst;
 		matConst.specularPower = shininess;
-
+		matConst.specularIntensity = (specularColor.x + specularColor.y + specularColor.z) / 3.0f;
 
 		bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstant>::GetRender(graphic, matConst, 1u));
 	}
+
+	else if (!hasDiffuse && !hasNormalMap && !hasSpecular)
+	{
+		VertexCore::VertexBuffer vertexBuffer(std::move(VertexLayout{}.AddType(VertexLayout::Position3D).AddType(VertexLayout::Normal)));
+
+		for (UINT i = 0; i < mesh.mNumVertices; i++)
+		{
+			// vertex는 scale에 따라 크게 만들어지도록 설정
+			vertexBuffer.emplace_back(
+				DirectX::XMFLOAT3(mesh.mVertices[i].x * scale, mesh.mVertices[i].y * scale, mesh.mVertices[i].z * scale),
+				*reinterpret_cast<DirectX::XMFLOAT3*>(&mesh.mNormals[i]));
+		}
+
+		std::vector<USHORT> indices;
+		indices.reserve(mesh.mNumFaces * 3);
+
+		for (UINT i = 0; i < mesh.mNumFaces; i++)
+		{
+			const auto& face = mesh.mFaces[i];
+			assert(face.mNumIndices == 3 && "모델의 면이 점 3개로 이루어지지 않음");
+
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		bindablePtrs.push_back(VertexBuffer::GetRender(graphic, meshTag, vertexBuffer));
+		bindablePtrs.push_back(IndexBuffer::GetRender(graphic, meshTag, indices));
+
+		auto vertexShader = VertexShader::GetRender(graphic, "Shader/LitShader.hlsl");
+		auto VSShaderCode = vertexShader->GetShaderCode();
+		bindablePtrs.push_back(std::move(vertexShader));
+
+		bindablePtrs.push_back(PixelShader::GetRender(graphic, "Shader/LitShader.hlsl"));
+		bindablePtrs.push_back(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
+
+		SceneGraphNode::PSMaterialConstantNoTexture matConst;
+		matConst.specularPower = shininess;
+		matConst.specularColor = specularColor;
+		matConst.materialColor = diffuseColor;
+
+		bindablePtrs.push_back(PixelConstantBuffer<SceneGraphNode::PSMaterialConstantNoTexture>::GetRender(graphic, matConst, 1u));
+	}
+
+	else
+		throw std::runtime_error("해당 이미지 조합으로 적절한 Material을 만들 수 없음");
+
+	bindablePtrs.push_back(Rasterizer::GetRender(graphic, hasAlphaDiffuse));
+	bindablePtrs.push_back(ColorBlend::GetRender(graphic, false));
 
 	return std::make_unique<Mesh>(graphic, std::move(bindablePtrs));
 }

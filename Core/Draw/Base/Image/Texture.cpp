@@ -12,12 +12,13 @@ namespace Graphic
     {
         CREATEINFOMANAGER(graphic);
         const auto material = Material::FromFile(path);
+        hasAlpha = material.HasAlpha();
 
         // 2D 텍스처를 가져오기 위한 Desc
         D3D11_TEXTURE2D_DESC textureDesc = { };
         textureDesc.Width = material.GetWidth();	    // 머터리얼의 너비를 가져옴
-        textureDesc.Height = material.GetHeigth();	    // 머터리얼의 높이를 가져옴
-        textureDesc.MipLevels = 1;					    // 밉맵 개수 설정
+        textureDesc.Height = material.GetHeight();	    // 머터리얼의 높이를 가져옴
+        textureDesc.MipLevels = 0;					    // 밉맵 개수 설정
         textureDesc.ArraySize = 1;					    // 이미지 크기
         textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;// 텍스처의 한 픽셀 정보
 
@@ -36,27 +37,29 @@ namespace Graphic
         }
 
         textureDesc.Usage = D3D11_USAGE_DEFAULT;
-        textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
         textureDesc.CPUAccessFlags = 0;
-        textureDesc.MiscFlags = 0;
-
-        D3D11_SUBRESOURCE_DATA initData = { };
-        initData.pSysMem = material.get();
-        initData.SysMemPitch = material.GetWidth() * sizeof(Material::Color);
+        textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
         // D3D11_TEXTURE2D_DESC를 통해서 Texture2D를 생성함
         Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&textureDesc, &initData, &texture));
+        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&textureDesc, nullptr, &texture));
+
+		// 머터리얼의 정보를 텍스처에 업데이트
+		GetDeviceContext(graphic)->UpdateSubresource(texture.Get(), 0u, nullptr, material.getConst(), material.GetWidth() * sizeof(Material::Color), 0u);
 
         // 이미지 데이터를 ID3D11Texture2D에 저장하기 위한 셰이더 리소스 뷰를 저장하기 위한 Desc
         D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = { };
         viewDesc.Format = textureDesc.Format;
         viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D; // 이미지를 2D로 보여줌
         viewDesc.Texture2D.MostDetailedMip = 0;
-        viewDesc.Texture2D.MipLevels = 1;
+        viewDesc.Texture2D.MipLevels = -1;
 
         hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), &viewDesc, &textureView);
         GRAPHIC_THROW_INFO(hr);
+
+		// 밉맵 생성
+		GetDeviceContext(graphic)->GenerateMips(textureView.Get());
     }
 
     void Texture::PipeLineSet(DxGraphic& graphic) noexcept
@@ -79,5 +82,18 @@ namespace Graphic
     std::string Texture::GetID() const noexcept
     {
         return CreateID(path, slot);
+    }
+
+    bool Texture::HasAlpha() const noexcept
+    {
+        return hasAlpha;
+    }
+
+    UINT Texture::CountMipLevels(UINT width, UINT height) noexcept
+    {
+        const float xSteps = (float)std::ceil(std::log2(width));
+        const float ySteps = (float)std::ceil(std::log2(height));
+
+        return (UINT)(std::max)(xSteps, ySteps);
     }
 }

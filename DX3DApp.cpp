@@ -2,6 +2,23 @@
 #include "Core/Window.h"
 #include "App.h"
 
+LPSTR ConvertPWSTRToLPSTR(PWSTR pwsz)
+{
+	// 유니코드 문자열의 길이를 구함 (null-terminator 포함)
+	int lenW = lstrlenW(pwsz) + 1;
+
+	// 멀티바이트로 변환했을 때의 길이를 구함
+	int lenA = WideCharToMultiByte(CP_ACP, 0, pwsz, lenW, NULL, 0, NULL, NULL);
+
+	// 변환된 문자열을 저장할 메모리 할당
+	LPSTR pszA = new char[lenA];
+
+	// 실제 변환 수행
+	WideCharToMultiByte(CP_ACP, 0, pwsz, lenW, pszA, lenA, NULL, NULL);
+
+	return pszA;
+}
+
 int CALLBACK wWinMain(
 	HINSTANCE hInstance, 
 	HINSTANCE hPrevInstance, 
@@ -9,7 +26,12 @@ int CALLBACK wWinMain(
 	int nCmdShow)
 {
 	try
-	{ return App().Run(); }
+	{
+		// PWSTR -> LPSTR 변환
+		LPSTR cmdLineA = ConvertPWSTRToLPSTR(pCmdLine);
+
+		return App{ cmdLineA }.Run();
+	}
 	
 	catch (const BaseException& e)
 	{

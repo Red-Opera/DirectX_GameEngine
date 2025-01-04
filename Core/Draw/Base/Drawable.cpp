@@ -8,13 +8,13 @@ using namespace Graphic;
 
 void Drawable::Draw(DxGraphic& graphic) const NOEXCEPTRELEASE
 {
-	for (auto& b : binds)
+	for (auto& b : renderObjects)
 		b->PipeLineSet(graphic);
 
 	graphic.DrawIndexed(indexBuffer->GetIndexCount());
 }
 
-void Drawable::AddBind(shared_ptr<Render> bind) NOEXCEPTRELEASE
+void Drawable::AddRender(shared_ptr<Render> bind) NOEXCEPTRELEASE
 {
 	if (typeid(*bind) == typeid(IndexBuffer))
 	{
@@ -22,5 +22,5 @@ void Drawable::AddBind(shared_ptr<Render> bind) NOEXCEPTRELEASE
 		indexBuffer = &static_cast<IndexBuffer&>(*bind);
 ;	}
 
-	binds.push_back(move(bind));
+	renderObjects.push_back(move(bind));
 }

@@ -41,10 +41,10 @@ void Camera::SpawnControlWindow() noexcept
 
 void Camera::Reset() noexcept
 {
-	position = { -3.0f, 12.0f, 9.0f };
+	position = { 13.0f, 12.5f, 5.0f };
 
-	pitch = 0.0f;
-	yaw = 160.0f;
+	pitch = 0.2f;
+	yaw = -3.00f;
 }
 
 void Camera::Rotate(float dx, float dy) noexcept
@@ -62,4 +62,9 @@ void Camera::Translate(DirectX::XMFLOAT3 translation) noexcept
 	));
 
 	position = { position.x + translation.x, position.y + translation.y, position.z + translation.z };
+}
+
+DirectX::XMFLOAT3 Camera::GetPosition() const noexcept
+{
+	return position;
 }

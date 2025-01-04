@@ -14,14 +14,14 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 	model.Transform(DirectX::XMMatrixScaling(radius, radius, radius));
 
 	const auto objectTag = "$sphere." + std::to_string(radius);
-	AddBind(std::make_shared<VertexBuffer>(graphic, objectTag, model.vertices));
-	AddBind(std::make_shared<IndexBuffer>(graphic, objectTag, model.indices));
+	AddRender(std::make_shared<VertexBuffer>(graphic, objectTag, model.vertices));
+	AddRender(std::make_shared<IndexBuffer>(graphic, objectTag, model.indices));
 
 	auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader2.hlsl");
 	auto VSShaderCode = vertexShader->GetShaderCode();
-	AddBind(std::move(vertexShader));
+	AddRender(std::move(vertexShader));
 
-	AddBind(PixelShader::GetRender(graphic, "Shader/ColorShader2.hlsl"));
+	AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader2.hlsl"));
 
 	struct PixelShaderLightConstant
 	{
@@ -29,12 +29,15 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 		float padding;
 	} pixelConstant;
 
-	AddBind(PixelConstantBuffer<PixelShaderLightConstant>::GetRender(graphic, pixelConstant));
+	AddRender(PixelConstantBuffer<PixelShaderLightConstant>::GetRender(graphic, pixelConstant, 1u));
 				
-	AddBind(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
-	AddBind(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
+	AddRender(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-	AddBind(std::make_shared<TransformConstantBuffer>(graphic, *this));
+	AddRender(std::make_shared<TransformConstantBuffer>(graphic, *this));
+
+	AddRender(ColorBlend::GetRender(graphic, false));
+	AddRender(Rasterizer::GetRender(graphic, false));
 }
 
 void ColorSphere::SetPos(DirectX::XMFLOAT3 position) noexcept

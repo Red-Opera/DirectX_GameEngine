@@ -27,9 +27,6 @@
     <ClInclude Include="DirectXSettings\IA.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXSettings\Rasterizer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXSettings\Shader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -180,6 +177,30 @@
     <ClInclude Include="Core\RenderingPipeline\RenderManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Draw\TestPlane.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\BaseModel\Plane.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBufferAddPixel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\BaseModel\TextureCube.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\TestTextureCube.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\OM\ColorBlend.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Rasterizer\Rasterizer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DX3DApp.cpp">
@@ -255,9 +276,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-7_RenderState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXSettings\Rasterizer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-8_EffectFrameWork.cpp">
@@ -419,6 +437,27 @@
     <ClCompile Include="Utility\Vector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Draw\TestPlane.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\VSPS\TransformConstantBufferAddPixel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\BaseModel\TextureCube.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\TestTextureCube.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\OM\ColorBlend.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Rasterizer\Rasterizer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\Shader.fx" />
@@ -431,7 +470,15 @@
     <FxCompile Include="Shader\IndexedLitShader.hlsl" />
     <FxCompile Include="Shader\BlendedLitShader.hlsl" />
     <FxCompile Include="Shader\TextureLitShader.hlsl" />
-    <FxCompile Include="Shader\TextureSpecularLitShader.hlsl" />
+    <FxCompile Include="Shader\TextureNormalLitShader.hlsl" />
+    <FxCompile Include="Shader\TextureNormalMap.hlsl" />
+    <FxCompile Include="Shader\TextureNormalMapObject.hlsl" />
+    <FxCompile Include="Shader\ShaderHeader\LightShader.hlsl" />
+    <FxCompile Include="Shader\ShaderHeader\PointLight.hlsl" />
+    <FxCompile Include="Shader\ShaderHeader\Transform.hlsl" />
+    <FxCompile Include="Shader\ShaderHeader\LightVector.hlsl" />
+    <FxCompile Include="Shader\TextureLitSpecular.hlsl" />
+    <FxCompile Include="Shader\TextureNormalAlphaLitShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">

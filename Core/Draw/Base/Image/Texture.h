@@ -16,12 +16,17 @@ namespace Graphic
 		static std::shared_ptr<Texture> GetRender(DxGraphic& graphic, const std::string& path, UINT slot = 0);
 		static std::string CreateID(const std::string& path, UINT slot = 0);
 		std::string GetID() const noexcept override;
+		bool HasAlpha() const noexcept;
 
 	protected:
 		std::string path;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> textureView;
 
+		bool hasAlpha = false;
+
 	private:
+		static UINT CountMipLevels(UINT width, UINT height) noexcept;
+
 		UINT slot;
 	};
 }

@@ -1,10 +1,6 @@
-cbuffer ObjectTransform
-{
-    matrix transform;
-    matrix worldViewProjection;
-};
+#include "ShaderHeader/Transform.hlsl"
 
-cbuffer Color
+cbuffer Color : register(b1)
 {
     float4 color;
 };

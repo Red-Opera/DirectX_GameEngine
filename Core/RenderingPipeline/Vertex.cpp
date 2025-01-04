@@ -41,6 +41,12 @@ namespace VertexCore
 		case VertexLayout::Normal:
 			return CreateInputDESC<Normal>(GetOffset());
 
+		case VertexLayout::Tangent:
+			return CreateInputDESC<Tangent>(GetOffset());
+
+		case VertexLayout::BiTangent:
+			return CreateInputDESC<BiTangent>(GetOffset());
+
 		case VertexLayout::ColorFloat3:
 			return CreateInputDESC<ColorFloat3>(GetOffset());
 
@@ -70,6 +76,12 @@ namespace VertexCore
 
 		case VertexCore::VertexLayout::Normal:
 			return Map<Normal>::code;
+
+		case VertexCore::VertexLayout::Tangent:
+			return Map<Tangent>::code;
+
+		case VertexCore::VertexLayout::BiTangent:
+			return Map<BiTangent>::code;
 
 		case VertexCore::VertexLayout::ColorFloat3:
 			return Map<ColorFloat3>::code;
@@ -102,6 +114,12 @@ namespace VertexCore
 
 		case VertexLayout::Normal:
 			return sizeof(Map<Normal>::Type);
+
+		case VertexLayout::Tangent:
+			return sizeof(Map<Tangent>::Type);
+
+		case VertexLayout::BiTangent:
+			return sizeof(Map<BiTangent>::Type);
 
 		case VertexLayout::ColorFloat3:
 			return sizeof(Map<ColorFloat3>::Type);
@@ -167,7 +185,10 @@ namespace VertexCore
 
 	ConstVertex::ConstVertex(const Vertex& vertex) NOEXCEPTRELEASE : vertex(vertex) { }
 
-	VertexBuffer::VertexBuffer(VertexLayout vertexLayout) NOEXCEPTRELEASE : vertexLayout(std::move(vertexLayout)) { }
+	VertexBuffer::VertexBuffer(VertexLayout vertexLayout, size_t size) NOEXCEPTRELEASE : vertexLayout(std::move(vertexLayout)) 
+	{ 
+		Resize(size);
+	}
 	
 	const char* VertexBuffer::data() const NOEXCEPTRELEASE
 	{
@@ -187,6 +208,14 @@ namespace VertexCore
 	size_t VertexBuffer::size() const NOEXCEPTRELEASE
 	{
 		return buffer.size();
+	}
+
+	void VertexBuffer::Resize(size_t newSize) noexcept(!_DEBUG)
+	{
+		const auto currentSize = size();
+
+		if (currentSize < newSize)
+			buffer.resize(buffer.size() + vertexLayout.size() * (newSize - currentSize));
 	}
 
 	Vertex VertexBuffer::back() NOEXCEPTRELEASE

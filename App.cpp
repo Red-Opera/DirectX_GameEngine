@@ -8,17 +8,62 @@
 
 #include "Core/Draw/Base/Material.h"
 #include "Core/Draw/Base/Image/GDIPlus.h"
+#include "Core/Draw/Base/Image/TexturePreprocessor.h"
 
 #include "Core/RenderingPipeline/IA/VertexBuffer.h"
 
 #include <iomanip>
+#include <shellapi.h>
 using namespace std;
 
 GDIPlus gdiPlus;
 
-App::App() : wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), light(wnd.GetDxGraphic())
+App::App(const std::string& commandLine) : wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), commandLine(commandLine), light(wnd.GetDxGraphic())
 {
-	wnd.GetDxGraphic().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40.0f));
+	if (this->commandLine != "")
+	{
+		int nArgs;
+		const auto pLineW = GetCommandLineW();
+		const auto pArgs = CommandLineToArgvW(pLineW, &nArgs);
+
+		if (nArgs >= 3 && std::wstring(pArgs[1]) == L"--twerk-objnorm")
+		{
+			const std::wstring pathInWide = pArgs[2];
+			TexturePreprocessor::FilpYAllNormalMapsInObject(std::string(pathInWide.begin(), pathInWide.end()));
+
+			throw std::runtime_error("Normal maps all processed successfully. Just kidding about that whole runtime error thing.");
+		}
+
+		else if (nArgs >= 3 && std::wstring(pArgs[1]) == L"--twerk-flipy")
+		{
+			const std::wstring pathInWide = pArgs[2];
+			const std::wstring pathOutWide = pArgs[3];
+
+			TexturePreprocessor::FilpYNormalMap(std::string(pathInWide.begin(), pathInWide.end()), std::string(pathOutWide.begin(), pathOutWide.end()));
+
+			throw std::runtime_error("Normal map processed successfully. Just kidding about that whole runtime error thing.");
+		}
+
+		else if (nArgs >= 4 && std::wstring(pArgs[1]) == L"--twerk-validate")
+		{
+			const std::wstring minWide = pArgs[2];
+			const std::wstring maxWide = pArgs[3];
+			const std::wstring pathWide = pArgs[4];
+
+			TexturePreprocessor::VaildateNormalMap(std::string(pathWide.begin(), pathWide.end()), std::stof(minWide), std::stof(maxWide));
+
+			throw std::runtime_error("Normal map validated successfully. Just kidding about that whole runtime error thing.");
+		}
+	}
+
+	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
+	//texturePlane.SetPosition({ -2.0f, 13.0f, -10.0f });
+	//texturePlane.SetRotation(0.0f, 3.14f, 0.0f);
+	//gobber.SetRootTransform(DirectX::XMMatrixTranslation(9.2f, 7.0f, 0.0f));
+	bluePlane.SetPosition(camera.GetPosition());
+	redPlane.SetPosition(camera.GetPosition());
+
+	wnd.GetDxGraphic().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 400.0f));
 }
 
 App::~App()
@@ -115,23 +160,33 @@ void App::DoFrame()
 			camera.Rotate((float)mouseDelta->x, (float)mouseDelta->y);
 	}
 
-	model.Draw(wnd.GetDxGraphic());
-	model2.Draw(wnd.GetDxGraphic());
 	light.Draw(wnd.GetDxGraphic());
+	//wall.Draw(wnd.GetDxGraphic());
+	//texturePlane.Draw(wnd.GetDxGraphic());
+	//gobber.Draw(wnd.GetDxGraphic());
+	//nano.Draw(wnd.GetDxGraphic());
+	sponza.Draw(wnd.GetDxGraphic());
+	bluePlane.Draw(wnd.GetDxGraphic());
+	redPlane.Draw(wnd.GetDxGraphic());
 
 	CreateSimulationWindow();
 	camera.SpawnControlWindow();
 	light.CreatePositionChangeWindow();
 	CreateDemoWindows();
-	model.ShowWindow("Model 1");
-	model2.ShowWindow("Model 2");
+	//wall.ShowWindow(wnd.GetDxGraphic(), "Wall");
+	//texturePlane.SpawnControlWindow(wnd.GetDxGraphic());
+	//gobber.ShowWindow(wnd.GetDxGraphic(), "Gobber");
+	//nano.ShowWindow(wnd.GetDxGraphic(), "Nano");
+	sponza.ShowWindow(wnd.GetDxGraphic(), "Sponza");
+	bluePlane.SpawnControlWindow(wnd.GetDxGraphic(), "Blue Plane");
+	redPlane.SpawnControlWindow(wnd.GetDxGraphic(), "Red Plane");
 
 	// imgui window to open box windows
 	//CreateBoxWindowManagerWindow();
 
 	// 박스 상태 창 생성
 	//CreateBoxWindows();
-	
+		  
 	wnd.SetTitle(out.str());		// 제목 동기화
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 }

@@ -11,20 +11,28 @@ namespace Graphic
 
 	void TransformConstantBuffer::PipeLineSet(DxGraphic& graphic) noexcept
 	{
+		UpdatePipeLineSet(graphic, GetTransform(graphic));
+	}
+
+	void TransformConstantBuffer::UpdatePipeLineSet(DxGraphic& graphic, const Transform& transform) noexcept
+	{
+		vertexConstantBufferMatrix->Update(graphic, transform);
+		vertexConstantBufferMatrix->PipeLineSet(graphic);
+	}
+
+	TransformConstantBuffer::Transform TransformConstantBuffer::GetTransform(DxGraphic& graphic) noexcept
+	{
 		// 부모의 Transformd에서 카메라 위치를 곱하여 View 위치를 구함
 		const auto viewTransform = parent.GetTransformMatrix() * graphic.GetCamera();
 
 		// 상수 버퍼로 만들 Transform을 만듬
-		const Transform transform =
+		return 
 		{
 			DirectX::XMMatrixTranspose(viewTransform),
 
 			// World * View * Projection
 			DirectX::XMMatrixTranspose(viewTransform * graphic.GetProjection())
 		};
-
-		vertexConstantBufferMatrix->Update(graphic, transform);
-		vertexConstantBufferMatrix->PipeLineSet(graphic);
 	}
 
 	std::unique_ptr<VertexConstantBuffer<TransformConstantBuffer::Transform>> TransformConstantBuffer::vertexConstantBufferMatrix;

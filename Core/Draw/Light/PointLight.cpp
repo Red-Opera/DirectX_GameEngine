@@ -16,7 +16,7 @@ void PointLight::CreatePositionChangeWindow() noexcept
 		ImGui::SliderFloat("Z", &lightInfo.position.z, -60.0f, 60.0f, "%.1f");
 
 		ImGui::Text("Intensity/Color");
-		ImGui::SliderFloat("Intensity", &lightInfo.diffuseIntensity, 0.01f, 5.0f, "%.2f", 2);
+		ImGui::SliderFloat("Intensity", &lightInfo.diffuseIntensity, 0.01f, 200.0f, "%.2f", 2);
 		ImGui::ColorEdit3("Diffuse Color", &lightInfo.diffuseColor.x);
 		ImGui::ColorEdit3("Ambient", &lightInfo.ambient.x);
 
@@ -35,10 +35,10 @@ void PointLight::CreatePositionChangeWindow() noexcept
 void PointLight::Reset() noexcept
 {
 	lightInfo = { 
-		{ 1.5f, 14.0f, 4.5f },
-		{ 0.05f, 0.05f, 0.05f},
-		{ 1.0f, 1.0f, 1.0f},
-		3.0f, 1.0f, 0.045f, 0.075f };
+		{ 0.0f, 10.0f, 0.0f },
+		{ 0.4f, 0.4f, 0.4f },
+		{ 1.0f, 1.0f, 1.0f },
+		10.0f, 1.0f, 0.045f, 0.075f };
 }
 
 void PointLight::Draw(DxGraphic& graphic) const NOEXCEPTRELEASE

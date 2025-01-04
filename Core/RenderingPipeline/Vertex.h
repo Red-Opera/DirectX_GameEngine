@@ -14,7 +14,7 @@ namespace VertexCore
 	class VertexLayout
 	{
 	public:
-		enum VertexType { Position2D, Position3D, Texture2D, Normal, ColorFloat3, ColorFloat4, ARBGColor, Count };
+		enum VertexType { Position2D, Position3D, Texture2D, Normal, Tangent, BiTangent,ColorFloat3, ColorFloat4, ARBGColor, Count };
 
 		template<VertexType> struct Map;
 		template<> struct Map<Position2D>
@@ -51,6 +51,24 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Normal";
 			static constexpr const char* code = "Normal";
+		};
+
+		template<> struct Map<Tangent>
+		{
+			using Type = DirectX::XMFLOAT3;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+
+			static constexpr const char* semantic = "Tangent";
+			static constexpr const char* code = "Tangent";
+		};
+
+		template<> struct Map<BiTangent>
+		{
+			using Type = DirectX::XMFLOAT3;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32B32_FLOAT;
+
+			static constexpr const char* semantic = "Bitangent";
+			static constexpr const char* code = "BiTangent";
 		};
 
 		template<> struct Map<ColorFloat3>
@@ -176,6 +194,14 @@ namespace VertexCore
 				SetVertexType<VertexLayout::Normal>(vertex, std::forward<T>(val));
 				break;
 
+			case VertexLayout::Tangent:
+				SetVertexType<VertexLayout::Tangent>(vertex, std::forward<T>(val));
+				break;
+
+			case VertexLayout::BiTangent:
+				SetVertexType<VertexLayout::BiTangent>(vertex, std::forward<T>(val));
+				break;
+
 			case VertexLayout::ColorFloat3:
 				SetVertexType<VertexLayout::ColorFloat3>(vertex, std::forward<T>(val));
 				break;
@@ -238,12 +264,13 @@ namespace VertexCore
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(VertexLayout vertexLayout) NOEXCEPTRELEASE;
+		VertexBuffer(VertexLayout vertexLayout, size_t size = 0u) NOEXCEPTRELEASE;
 
 		const char* data() const NOEXCEPTRELEASE;
 		const VertexLayout& GetVertexLayout() const noexcept;
 		size_t count() const NOEXCEPTRELEASE;
 		size_t size() const NOEXCEPTRELEASE;
+		void Resize(size_t newSize) NOEXCEPTRELEASE;
 
 		Vertex back() NOEXCEPTRELEASE;
 		Vertex front() NOEXCEPTRELEASE;

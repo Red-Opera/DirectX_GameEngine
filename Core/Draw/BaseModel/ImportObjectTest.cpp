@@ -55,23 +55,23 @@ ImportObjectTest::ImportObjectTest(DxGraphic& graphic, std::mt19937& random, std
 
 	const auto path = "Model/Monster";
 
-	AddBind(VertexBuffer::GetRender(graphic, path, vertexBuffer));
-	AddBind(IndexBuffer::GetRender(graphic, path,indices));
+	AddRender(VertexBuffer::GetRender(graphic, path, vertexBuffer));
+	AddRender(IndexBuffer::GetRender(graphic, path,indices));
 
 	auto vertexShader = VertexShader::GetRender(graphic, "Shader/LitShader.hlsl");
 	auto VSShaderCode = vertexShader->GetShaderCode();
-	AddBind(std::move(vertexShader));
+	AddRender(std::move(vertexShader));
 
-	AddBind(PixelShader::GetRender(graphic, "Shader/LitShader.hlsl"));
+	AddRender(PixelShader::GetRender(graphic, "Shader/LitShader.hlsl"));
 
 	const std::vector<D3D11_INPUT_ELEMENT_DESC> inputLayout =
 	{
 		{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
 	};
-	AddBind(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
+	AddRender(InputLayout::GetRender(graphic, vertexBuffer.GetVertexLayout(), VSShaderCode));
 
-	AddBind(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	AddRender(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	struct PSMaterialConstant
 	{
@@ -82,7 +82,7 @@ ImportObjectTest::ImportObjectTest(DxGraphic& graphic, std::mt19937& random, std
 	} matConst;
 
 	matConst.color = material;
-	AddBind(PixelConstantBuffer<PSMaterialConstant>::GetRender(graphic, matConst, 1u));
+	AddRender(PixelConstantBuffer<PSMaterialConstant>::GetRender(graphic, matConst, 1u));
 
-	AddBind(std::make_shared<TransformConstantBuffer>(graphic, *this));
+	AddRender(std::make_shared<TransformConstantBuffer>(graphic, *this));
 }

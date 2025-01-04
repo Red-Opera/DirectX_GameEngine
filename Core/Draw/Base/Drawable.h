@@ -25,23 +25,23 @@ public:
 
 	virtual ~Drawable() = default;
 
-protected:
 	template<class T>
-	T* GetBindObject() noexcept
+	T* GetRenderObject() noexcept
 	{
-		for (auto& bindObject : binds)
+		for (auto& renderObject : renderObjects)
 		{
-			if (auto out = dynamic_cast<T*>(bindObject.get()))
+			if (auto out = dynamic_cast<T*>(renderObject.get()))
 				return out;
 		}
 
 		return nullptr;
 	}
 
-	void AddBind(std::shared_ptr<Graphic::Render> bind) NOEXCEPTRELEASE;
+protected:
+	void AddRender(std::shared_ptr<Graphic::Render> bind) NOEXCEPTRELEASE;
 
 private:
 	const Graphic::IndexBuffer* indexBuffer = nullptr;
-	std::vector<std::shared_ptr<Graphic::Render>> binds;
+	std::vector<std::shared_ptr<Graphic::Render>> renderObjects;
 };
 

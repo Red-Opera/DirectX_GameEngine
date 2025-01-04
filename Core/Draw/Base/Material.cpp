@@ -90,7 +90,7 @@ UINT Material::GetWidth() const noexcept
     return width;
 }
 
-UINT Material::GetHeigth() const noexcept
+UINT Material::GetHeight() const noexcept
 {
     return height;
 }
@@ -115,6 +115,7 @@ Material Material::FromFile(const std::string& name)
     // 너비, 높이, 피치
     UINT width = 0, height = 0;
     std::unique_ptr<Color[]> color = nullptr;
+    bool hasAlpha = false;
 
     wchar_t toWidename[512];
     mbstowcs_s(nullptr, toWidename, name.c_str(), _TRUNCATE);
@@ -140,10 +141,13 @@ Material Material::FromFile(const std::string& name)
             Gdiplus::Color c;
             bitmap.GetPixel(x, height - y - 1, &c);
             color[y * width + x] = c.GetValue();
+
+            if (c.GetAlpha() != 255)
+                hasAlpha = true;
         }
     }
     
-    return Material(width, height, std::move(color));
+    return Material(width, height, std::move(color), hasAlpha);
 }
 
 void Material::Save(const string& fileName) const
@@ -221,7 +225,24 @@ void Material::Copy(const Material& src) NOEXCEPTRELEASE
     memcpy(color.get(), src.color.get(), width * height * sizeof(Color));
 }
 
-Material::Material(UINT width, UINT height, std::unique_ptr<Color[]> color) noexcept : width(width), height(height), color(std::move(color))
+bool Material::HasAlpha() const noexcept
+{
+    return hasAlpha;
+}
+
+Material::Material(UINT width, UINT height, std::unique_ptr<Color[]> color, bool hasAlpha) noexcept 
+    : width(width), height(height), color(std::move(color)), hasAlpha(hasAlpha)
 {
 
+}
+
+DirectX::XMVECTOR Material::Color::ConvertVector(Material::Color color)
+{
+    using namespace DirectX;
+
+    auto vector = XMVectorSet((float)color.GetR(), (float)color.GetG(), (float)color.GetB(), 0.0f);
+    vector = vector * XMVectorReplicate(2.0f / 255.0f);
+    vector = vector - Vector::allDirV;
+
+    return vector;
 }

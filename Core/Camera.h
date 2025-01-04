@@ -15,6 +15,8 @@ public:
 	void Rotate(float dx, float dy) noexcept;
 	void Translate(DirectX::XMFLOAT3 translation) noexcept;
 
+	DirectX::XMFLOAT3 GetPosition() const noexcept;	// 카메라 위치를 반환함
+
 private:
 	DirectX::XMFLOAT3 position;	// 카메라 위치
 
