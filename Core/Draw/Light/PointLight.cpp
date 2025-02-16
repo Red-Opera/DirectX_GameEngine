@@ -38,21 +38,26 @@ void PointLight::Reset() noexcept
 		{ 0.0f, 10.0f, 0.0f },
 		{ 0.4f, 0.4f, 0.4f },
 		{ 1.0f, 1.0f, 1.0f },
-		10.0f, 1.0f, 0.045f, 0.075f };
+		3.0f, 1.0f, 0.045f, 0.075f };
 }
 
-void PointLight::Draw(DxGraphic& graphic) const NOEXCEPTRELEASE
+void PointLight::Submit() const NOEXCEPTRELEASE
 {
 	mesh.SetPos(lightInfo.position);
-	mesh.Draw(graphic);
+	mesh.Submit();
 }
 
-void PointLight::Bind(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept
+void PointLight::Update(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept
 {
 	auto dataCopy = lightInfo;
 	const auto position = DirectX::XMLoadFloat3(&lightInfo.position);
 	DirectX::XMStoreFloat3(&dataCopy.position, DirectX::XMVector3Transform(position, view));
 
 	cBuffer.Update(graphic, dataCopy);
-	cBuffer.PipeLineSet(graphic);
+	cBuffer.SetRenderPipeline(graphic);
+}
+
+void PointLight::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
+{
+	mesh.LinkTechniques(renderGraph);
 }

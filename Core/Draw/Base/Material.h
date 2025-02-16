@@ -1,105 +1,42 @@
 #pragma once
 
-#include "Core/Exception/BaseException.h"
-#include "Core/Exception/WindowException.h"
-#include <memory>
+#include "Core/DxGraphic.h"
+
+#include "Core/RenderingPipeline/Vertex.h"
+#include "Core/RenderingPipeline/RenderingManager/Technique/Technique.h"
+
+#include <filesystem>
+#include <vector>
+
+struct aiMaterial;
+struct aiMesh;
+
+namespace Graphic
+{
+	class VertexBuffer;
+	class IndexBuffer;
+};
 
 class Material
 {
 public:
-	// =================================
-	//	Inner Class
-	// =================================
+	Material(DxGraphic& graphic, const aiMaterial& material, const std::filesystem::path& path) NOEXCEPTRELEASE;
 
-	class Color
-	{
-	public:
-		constexpr Color() noexcept						: colorHex() { }
-		constexpr Color(const Color& color) noexcept	: colorHex(color.colorHex) { }
-		constexpr Color(UINT colorHex) noexcept			: colorHex(colorHex) { }
+	VertexCore::VertexBuffer GetVertex(const aiMesh& mesh) const noexcept;
+	std::vector<unsigned short> GetIndex(const aiMesh& mesh) const noexcept;
 
-		constexpr Color(UCHAR x, UCHAR r, UCHAR g, UCHAR b) noexcept
-			: colorHex((x << 24u) | (r << 16u) | (g << 8u) | b) { }
-		constexpr Color(UCHAR r, UCHAR g, UCHAR b) noexcept
-			: colorHex((r << 16u) | (g << 8u) | b) { }
-		constexpr Color(Color color, UCHAR x) noexcept
-			: colorHex((x << 24u) | color.colorHex) { }
+	std::shared_ptr<Graphic::VertexBuffer> CreateVertexBuffer(DxGraphic& graphic, const aiMesh& mesh, float scale = 1.0f) const NOEXCEPTRELEASE;
 
-		Color& operator= (Color color) noexcept
-		{
-			colorHex = color.colorHex;
-			return *this;
-		}
+	std::shared_ptr<Graphic::IndexBuffer> CreateIndexBuffer(DxGraphic& graphic, const aiMesh& mesh) const NOEXCEPTRELEASE;
 
-		// Get Method
-		constexpr UCHAR GetX() const noexcept { return colorHex >> 24u; }
-		constexpr UCHAR GetA() const noexcept { return GetX(); }
-		constexpr UCHAR GetR() const noexcept { return (colorHex >> 16u) & 0xFFu; }
-		constexpr UCHAR GetG() const noexcept { return (colorHex >> 8u) & 0xFFu; }
-		constexpr UCHAR GetB() const noexcept { return colorHex & 0xFFu; }
-
-		// Set Method
-		void SetX(UCHAR x) noexcept { colorHex = (colorHex & 0xFFFFFFu) | (x << 24u); }
-		void SetA(UCHAR a) noexcept { SetX(a); }
-		void SetR(UCHAR r) noexcept { colorHex = (colorHex & 0xFF00FFFFu) | (r << 16u); }
-		void SetG(UCHAR g) noexcept { colorHex = (colorHex & 0xFFFF00FFu) | (g << 8u); }
-		void SetB(UCHAR b) noexcept { colorHex = (colorHex & 0xFFFFFF00u) | b; }
-
-		static DirectX::XMVECTOR ConvertVector(Material::Color color);
-
-		UINT colorHex;
-	};
-
-	class Exception : public BaseException
-	{
-	public:
-		Exception(int line, const char* file, std::string note) noexcept;
-
-		const char* what() const noexcept override;
-		const char* GetType() const noexcept override;
-		const std::string& GetNote() const noexcept;
-
-	private:
-		std::string note;
-	};
-
-	// =================================
-	//	Inner Method
-	// =================================
-
-	Material(UINT width, UINT height) noexcept;
-	Material(Material&& source) noexcept;
-	Material& operator=(Material&& donor) noexcept;
-
-	Material(Material&) = delete;
-	Material& operator=(const Material&) = delete;
-	~Material();
-
-	void Clear(Color fillColor) noexcept;
-
-	void SetColorPixel(UINT x, UINT y, Color c) NOEXCEPTRELEASE;
-	Color GetColorPixel(UINT x, UINT y) const NOEXCEPTRELEASE;
-
-	UINT GetWidth() const noexcept;
-	UINT GetHeight() const noexcept;
-
-	Color* get() noexcept;
-	const Color* get() const noexcept;
-	const Color* getConst() const noexcept;
-
-public:
-	static Material FromFile(const std::string& name);
-
-	void Save(const std::string& fileName) const;
-	void Copy(const Material& src) NOEXCEPTRELEASE;
-	bool HasAlpha() const noexcept;
+	std::vector<Technique> GetTechnique() const noexcept;
 
 private:
-	Material(UINT width, UINT height, std::unique_ptr<Color[]> color, bool hasAlpha = false) noexcept;
+	std::string CreateMeshTag(const aiMesh& mesh) const noexcept;
 
-	std::unique_ptr<Color[]> color;
-	UINT width;
-	UINT height;
+	VertexCore::VertexLayout vertexLayout;
+	std::vector<Technique> techniques;
 
-	bool hasAlpha = false;
+	std::string modelPath;
+	std::string name;
 };

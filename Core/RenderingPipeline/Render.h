@@ -1,15 +1,24 @@
 #pragma once
 
-#include "RenderManager.h"
+#include "Core/DxGraphicResource.h"
+#include "Core/Exception/GraphicsException.h"
 
-#include "../DxGraphic.h"
+#include <memory>
+#include <string>
+
+class Drawable;
+class TechniqueBase;
+class DxGraphic;
 
 namespace Graphic
 {
-	class Render
+	class Render : public DxGraphicResource
 	{
 	public:
-		virtual void PipeLineSet(DxGraphic& graphic) noexcept = 0;
+		virtual void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE = 0;
+		virtual void InitializeParentReference(const Drawable&) noexcept { }
+		virtual void Accept(TechniqueBase&) { }
+
 		virtual ~Render() = default;
 
 		virtual std::string GetID() const noexcept
@@ -17,10 +26,11 @@ namespace Graphic
 			assert(false);
 			return "";
 		}
+	};
 
-	protected:
-		static ID3D11Device* GetDevice(DxGraphic& graphic) noexcept;
-		static ID3D11DeviceContext* GetDeviceContext(DxGraphic& graphic) noexcept;
-		static ExceptionInfo& GetInfoManager(DxGraphic& graphic);
+	class RenderInstance : public Render
+	{
+	public:
+		virtual std::unique_ptr<RenderInstance> Instance() const noexcept = 0;
 	};
 }

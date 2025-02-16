@@ -1,26 +1,49 @@
 #include "stdafx.h"
 #include "Texture.h"
 
-#include "../Material.h"
+#include "Image.h"
 
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderManager.h"
+
+
+std::unordered_map<std::string, std::unique_ptr<GraphicResource::Image>> Graphic::Texture::imageCache;
 
 namespace Graphic
 {
     Texture::Texture(DxGraphic& graphic, const std::string& path, UINT slot) : slot(slot), path(path)
     {
         CREATEINFOMANAGER(graphic);
-        const auto material = Material::FromFile(path);
-        hasAlpha = material.HasAlpha();
+
+        GraphicResource::Image* image = nullptr;
+
+        auto imageIter = imageCache.find(path);
+        if (imageIter != imageCache.end())
+            image = imageIter->second.get();
+
+        else
+        {
+            auto newImage = std::make_unique<GraphicResource::Image>(GraphicResource::Image::FromFile(path));
+            imageCache[path] = std::move(newImage);
+
+            image = imageCache[path].get();
+        }
+
+        if (image == nullptr)
+            return;
+
+        hasAlpha = image->HasAlpha();
+
+        //const auto image = GraphicResource::Image::FromFile(path);
+        //hasAlpha = image.HasAlpha();
 
         // 2D 텍스처를 가져오기 위한 Desc
         D3D11_TEXTURE2D_DESC textureDesc = { };
-        textureDesc.Width = material.GetWidth();	    // 머터리얼의 너비를 가져옴
-        textureDesc.Height = material.GetHeight();	    // 머터리얼의 높이를 가져옴
+        textureDesc.Width = image->GetWidth();	    // 머터리얼의 너비를 가져옴
+        textureDesc.Height = image->GetHeight();	    // 머터리얼의 높이를 가져옴
         textureDesc.MipLevels = 0;					    // 밉맵 개수 설정
         textureDesc.ArraySize = 1;					    // 이미지 크기
-        textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;// 텍스처의 한 픽셀 정보
+        textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;// 텍스처의 한 픽셀 정보
 
         // MSAA를 사용할 경우
         if (graphic.GetMsaaUsage())
@@ -46,7 +69,7 @@ namespace Graphic
         GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&textureDesc, nullptr, &texture));
 
 		// 머터리얼의 정보를 텍스처에 업데이트
-		GetDeviceContext(graphic)->UpdateSubresource(texture.Get(), 0u, nullptr, material.getConst(), material.GetWidth() * sizeof(Material::Color), 0u);
+		GetDeviceContext(graphic)->UpdateSubresource(texture.Get(), 0u, nullptr, image->getConst(), image->GetWidth() * sizeof(GraphicResource::Image::Color), 0u);
 
         // 이미지 데이터를 ID3D11Texture2D에 저장하기 위한 셰이더 리소스 뷰를 저장하기 위한 Desc
         D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = { };
@@ -62,9 +85,11 @@ namespace Graphic
 		GetDeviceContext(graphic)->GenerateMips(textureView.Get());
     }
 
-    void Texture::PipeLineSet(DxGraphic& graphic) noexcept
+    void Texture::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
     {
-        GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf());
+        CREATEINFOMANAGERNOHR(graphic);
+
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
     }
 
     std::shared_ptr<Texture> Texture::GetRender(DxGraphic& graphic, const std::string& path, UINT slot)

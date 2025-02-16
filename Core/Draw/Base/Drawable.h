@@ -2,13 +2,24 @@
 
 #include "../../DxGraphic.h"
 
+#include "Core/Exception/GraphicsException.h"
+#include "Core/RenderingPipeline/RenderingManager/Technique/Technique.h"
+
 #include <memory>
 #include <DirectXMath.h>
 
+class TechniqueBase;
+class Material;
+struct aiMesh;
+
+namespace RenderGraphNameSpace { class RenderGraph; }
+
 namespace Graphic
 {
-	class Render;
 	class IndexBuffer;
+	class VertexBuffer;
+	class PrimitiveTopology;
+	class InputLayout;
 }
 
 class Drawable
@@ -18,30 +29,25 @@ class Drawable
 
 public:
 	Drawable() = default;
+	Drawable(DxGraphic& graphic, const Material& material, const aiMesh& mesh, float scale = 1.0f) noexcept;
 	Drawable(const Drawable&) = delete;
 
+	void Submit() const noexcept;
+	void Accept(TechniqueBase& tech);
+	void SetRenderPipeline(DxGraphic& graphic) const NOEXCEPTRELEASE;
+	UINT GetIndexCount() const NOEXCEPTRELEASE;
+
+	void AddTechnique(Technique technique) noexcept;
+	void LinkTechniques(RenderGraphNameSpace::RenderGraph&);
+
 	virtual DirectX::XMMATRIX GetTransformMatrix() const noexcept = 0;	// 오브젝트의 Transform의 행렬을 반환
-	void Draw(DxGraphic& graphic) const NOEXCEPTRELEASE;				// 해당 오브젝트를 그리는 메소드
-
-	virtual ~Drawable() = default;
-
-	template<class T>
-	T* GetRenderObject() noexcept
-	{
-		for (auto& renderObject : renderObjects)
-		{
-			if (auto out = dynamic_cast<T*>(renderObject.get()))
-				return out;
-		}
-
-		return nullptr;
-	}
+	virtual ~Drawable();
 
 protected:
-	void AddRender(std::shared_ptr<Graphic::Render> bind) NOEXCEPTRELEASE;
+	std::vector<Technique> techniques;
 
-private:
-	const Graphic::IndexBuffer* indexBuffer = nullptr;
-	std::vector<std::shared_ptr<Graphic::Render>> renderObjects;
+	std::shared_ptr<Graphic::IndexBuffer> indexBuffer;
+	std::shared_ptr<Graphic::VertexBuffer> vertexBuffer;
+	std::shared_ptr<Graphic::PrimitiveTopology> primitiveTopology;
 };
 

@@ -1,9 +1,52 @@
+#define USE_VERTEX_CODE
+
 #include "stdafx.h"
 #include "Vertex.h"
 
 namespace VertexCore
 {
+	template<VertexLayout::VertexType type>
+	struct SystemSize
+	{
+		static constexpr auto Run() noexcept { return sizeof(VertexLayout::Map<type>::Type); }
+	};
+
+	template<VertexLayout::VertexType type>
+	struct GetTypeCode
+	{
+		static constexpr auto Run() noexcept { return VertexLayout::Map<type>::code; }
+	};
+
+	// Input Layout DESC를 만들어주는 메소드
+	template<VertexLayout::VertexType type>
+	struct CreateInputDESC
+	{
+		static constexpr D3D11_INPUT_ELEMENT_DESC Run(size_t offset) noexcept
+		{
+			return 
+			{
+				VertexLayout::Map<type>::semantic, 
+				0, 
+				VertexLayout::Map<type>::dxgiFormat, 
+				0, 
+				(UINT)offset, 
+				D3D11_INPUT_PER_VERTEX_DATA, 
+				0 
+			};
+		}
+	};
+
 	VertexLayout::VertexInfo::VertexInfo(VertexType type, size_t offset) : type(type), offset(offset) { }
+
+	constexpr const size_t VertexLayout::VertexInfo::GetTypeSize(VertexType type) NOEXCEPTRELEASE
+	{
+		return RunStructFunction<SystemSize>(type);
+	}
+
+	const char* VertexLayout::VertexInfo::GetCode() const noexcept
+	{
+		return RunStructFunction<GetTypeCode>(type);
+	}
 
 	size_t VertexLayout::VertexInfo::GetNextOffset() const NOEXCEPTRELEASE
 	{
@@ -27,113 +70,7 @@ namespace VertexCore
 
 	D3D11_INPUT_ELEMENT_DESC VertexLayout::VertexInfo::GetInputDESC() const NOEXCEPTRELEASE
 	{
-		switch (type)
-		{
-		case VertexLayout::Position2D:
-			return CreateInputDESC<Position2D>(GetOffset());
-
-		case VertexLayout::Position3D:
-			return CreateInputDESC<Position3D>(GetOffset());
-
-		case VertexLayout::Texture2D:
-			return CreateInputDESC<Texture2D>(GetOffset());
-
-		case VertexLayout::Normal:
-			return CreateInputDESC<Normal>(GetOffset());
-
-		case VertexLayout::Tangent:
-			return CreateInputDESC<Tangent>(GetOffset());
-
-		case VertexLayout::BiTangent:
-			return CreateInputDESC<BiTangent>(GetOffset());
-
-		case VertexLayout::ColorFloat3:
-			return CreateInputDESC<ColorFloat3>(GetOffset());
-
-		case VertexLayout::ColorFloat4:
-			return CreateInputDESC<ColorFloat4>(GetOffset());
-
-		case VertexLayout::ARBGColor:
-			return CreateInputDESC<ARBGColor>(GetOffset());
-		}
-
-		assert(false && "해당 Vertex 타입은 존재하지 않음");
-		return { "INVALID", 0, DXGI_FORMAT_UNKNOWN, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-	}
-
-	const char* VertexLayout::VertexInfo::GetCode() const noexcept
-	{
-		switch (type)
-		{
-		case VertexCore::VertexLayout::Position2D:
-			return Map<Position2D>::code;
-
-		case VertexCore::VertexLayout::Position3D:
-			return Map<Position3D>::code;
-
-		case VertexCore::VertexLayout::Texture2D:
-			return Map<Texture2D>::code;
-
-		case VertexCore::VertexLayout::Normal:
-			return Map<Normal>::code;
-
-		case VertexCore::VertexLayout::Tangent:
-			return Map<Tangent>::code;
-
-		case VertexCore::VertexLayout::BiTangent:
-			return Map<BiTangent>::code;
-
-		case VertexCore::VertexLayout::ColorFloat3:
-			return Map<ColorFloat3>::code;
-
-		case VertexCore::VertexLayout::ColorFloat4:
-			return Map<ColorFloat4>::code;
-
-		case VertexCore::VertexLayout::ARBGColor:
-			return Map<ARBGColor>::code;
-		}
-
-		assert("해당 Vertex Type은 존재하지 않습니다." && false);
-		return "Invaild";
-	}
-
-	constexpr const size_t VertexLayout::VertexInfo::GetTypeSize(VertexType type) NOEXCEPTRELEASE
-	{
-		using namespace DirectX;
-
-		switch (type)
-		{
-		case VertexLayout::Position2D:
-			return sizeof(Map<Position2D>::Type);
-
-		case VertexLayout::Position3D:
-			return sizeof(Map<Position3D>::Type);
-
-		case VertexLayout::Texture2D:
-			return sizeof(Map<Texture2D>::Type);
-
-		case VertexLayout::Normal:
-			return sizeof(Map<Normal>::Type);
-
-		case VertexLayout::Tangent:
-			return sizeof(Map<Tangent>::Type);
-
-		case VertexLayout::BiTangent:
-			return sizeof(Map<BiTangent>::Type);
-
-		case VertexLayout::ColorFloat3:
-			return sizeof(Map<ColorFloat3>::Type);
-
-		case VertexLayout::ColorFloat4:
-			return sizeof(Map<ColorFloat4>::Type);
-
-		case VertexLayout::ARBGColor:
-			return sizeof(Map<ARBGColor>::Type);
-		}
-
-		assert("확인할 수 없는 Vertex Type" && false);
-
-		return 0;
+		return RunStructFunction<CreateInputDESC>(type, GetOffset());
 	}
 
 	const VertexLayout::VertexInfo& VertexLayout::GetVertexInfoFromIndex(size_t i) const NOEXCEPTRELEASE
@@ -143,7 +80,9 @@ namespace VertexCore
 
 	VertexLayout& VertexLayout::AddType(VertexType type) NOEXCEPTRELEASE
 	{
-		vertexInfo.push_back({ type, size() });
+		if (!has(type))
+			vertexInfo.push_back({ type, size() });
+
 		return *this;
 	}
 
@@ -178,6 +117,17 @@ namespace VertexCore
 		return code;
 	}
 
+	bool VertexLayout::has(VertexType type) const noexcept
+	{
+		for (auto& info : vertexInfo)
+		{
+			if (info.GetType() == type)
+				return true;
+		}
+
+		return false;
+	}
+
 	Vertex::Vertex(char* data, const VertexLayout& vertexLayout) NOEXCEPTRELEASE : data(data), vertexLayout(vertexLayout)
 	{
 		assert(data != nullptr);
@@ -185,9 +135,33 @@ namespace VertexCore
 
 	ConstVertex::ConstVertex(const Vertex& vertex) NOEXCEPTRELEASE : vertex(vertex) { }
 
-	VertexBuffer::VertexBuffer(VertexLayout vertexLayout, size_t size) NOEXCEPTRELEASE : vertexLayout(std::move(vertexLayout)) 
+	VertexBuffer::VertexBuffer(VertexLayout vertexLayout, size_t size) NOEXCEPTRELEASE 
+		: vertexLayout(std::move(vertexLayout)) 
 	{ 
 		Resize(size);
+	}
+	template<VertexLayout::VertexType type>
+	struct VertexSettingFromAIMEsh
+	{
+		static constexpr void Run(VertexBuffer* vertexBuffer, const aiMesh& mesh) NOEXCEPTRELEASE
+		{
+			for (auto end = mesh.mNumVertices, i = 0u; i < end; i++)
+				(*vertexBuffer)[i].GetValue<type>() = VertexLayout::Map<type>::get(mesh, i);
+		}
+	};
+
+	VertexBuffer::VertexBuffer(VertexLayout vertexLayout, const aiMesh& mesh) 
+		: vertexLayout(std::move(vertexLayout))
+	{
+		Resize(mesh.mNumVertices);
+
+		for (size_t i = 0, end = this->vertexLayout.count(); i < end; i++)
+			VertexLayout::RunStructFunction<VertexSettingFromAIMEsh>
+			(
+				this->vertexLayout.GetVertexInfoFromIndex(i).GetType(), 
+				this, 
+				mesh
+			);
 	}
 	
 	const char* VertexBuffer::data() const NOEXCEPTRELEASE
@@ -210,7 +184,7 @@ namespace VertexCore
 		return buffer.size();
 	}
 
-	void VertexBuffer::Resize(size_t newSize) noexcept(!_DEBUG)
+	void VertexBuffer::Resize(size_t newSize) NOEXCEPTRELEASE
 	{
 		const auto currentSize = size();
 

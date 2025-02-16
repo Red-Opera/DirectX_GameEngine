@@ -4,8 +4,12 @@
 #include "dxgi.h"
 
 #include "Exception/GraphicsException.h"
+#include "RenderingPipeline/Pipeline/OM/DepthStencil.h"
+#include "RenderingPipeline/RenderTarget.h"
 #include "Utility/Imgui/imgui_impl_dx11.h"
 #include "Utility/Imgui/imgui_impl_win32.h"
+
+#include <array>
 using namespace std;
 
 DxGraphic::HRException::HRException(int line, const char* file, HRESULT hr, vector<string> infoMessage) noexcept :
@@ -84,12 +88,14 @@ const char* DxGraphic::RemoveException::GetType() const noexcept
 
 DxGraphic::DxGraphic(HWND hWnd)
 {
+    width = WINWIDTH;
+    height = WINHEIGHT;
+
 	CreateDevice();
     CheckMSAAQuality();
     SwapChainSettings(hWnd);
     CreateSwapChain();
     CreateRenderTargetView();
-    CreateDepthStencilBuffer();
 
     // ImGui를 초기 설정함
     ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
@@ -108,10 +114,6 @@ void DxGraphic::BeginFrame(float red, float green, float blue) noexcept
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
     }
-
-    const float color[] = { red, green, blue, 1.0f };
-    deviceContext->ClearRenderTargetView(renderTargetView.Get(), color);
-    deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);    // 깊이 값을 모두 1.0f로 설정
 }
 
 void DxGraphic::EndFrame()
@@ -142,6 +144,21 @@ void DxGraphic::EndFrame()
             throw GRAPHIC_EXCEPT(hr);
         }
     }
+}
+
+UINT DxGraphic::GetWidth() const noexcept
+{
+    return width;
+}
+
+UINT DxGraphic::GetHeight() const noexcept
+{
+    return height;
+}
+
+std::shared_ptr<Graphic::RenderTarget> DxGraphic::GetRenderTarget()
+{
+    return renderTarget;
 }
 
 void DxGraphic::EnableImGui() noexcept
@@ -273,72 +290,16 @@ void DxGraphic::CreateRenderTargetView()
     // 교환 사슬의 버퍼를 가져옴 (0번째 후면 버퍼를 ID3D11Texture2D 형식으로 3번째 인수로 반환)
     GRAPHIC_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
 
-    // 후면 버퍼로 RenderTargetView를 생성함
-    GRAPHIC_THROW_INFO(device->CreateRenderTargetView(backBuffer.Get(), 0, &renderTargetView)); 
+    renderTarget = std::shared_ptr<Graphic::RenderTarget>{ new Graphic::OutputOnlyRenderTarget(*this, backBuffer.Get()) };
 
-    D3D11_VIEWPORT viewPort;
-    viewPort.TopLeftX = 0.0f;
-    viewPort.TopLeftY = 0.0f;
-    viewPort.Width = WINWIDTH;
-    viewPort.Height = WINHEIGHT;
-    viewPort.MinDepth = 0.0f;
-    viewPort.MaxDepth = 1.0f;
-
-    // 렌더링 파이프라인의 RS 단계에 ViewPort 설정 (1번째 매개변수 : 뷰 포트의 개수(뷰 포트 2개 이상할 경우 화면을 나눌 수 있음))
-    deviceContext->RSSetViewports(1, &viewPort);
-}
-
-void DxGraphic::CreateDepthStencilBuffer()
-{
-    namespace wrl = Microsoft::WRL;
-
-    // 깊이 스텐실 버퍼 생성
-    D3D11_DEPTH_STENCIL_DESC dsDesc = {};
-    dsDesc.DepthEnable = TRUE;                          // 깊이 버퍼값을 사용하도록 설정
-    dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // 깊이 값을 모든 마스크에서 쓰도록 설정
-    dsDesc.DepthFunc = D3D11_COMPARISON_LESS;           // 현재 픽셀 값이 깊이 버퍼 값보다 작을 때 렌더링 허용
-
-    wrl::ComPtr<ID3D11DepthStencilState> stencilState;
-    GRAPHIC_THROW_INFO(device->CreateDepthStencilState(&dsDesc, &stencilState));
-
-    // 깊이 스텐실 버퍼를 렌더링 파이프라인에 연결 
-    deviceContext->OMSetDepthStencilState(stencilState.Get(), 1);
-
-    // 깊이 스텐실 버퍼의 텍스쳐 제작
-    wrl::ComPtr<ID3D11Texture2D> depthStencil;
-    D3D11_TEXTURE2D_DESC descDepth = {};
-    descDepth.Width = WINWIDTH;
-    descDepth.Height = WINHEIGHT;
-    descDepth.MipLevels = 1;
-    descDepth.ArraySize = 1;
-    descDepth.Format = DXGI_FORMAT_D32_FLOAT;       // 깊이 정보를 담는 32비트 float형 데이터로 설정
-
-    // MSAA를 사용할 경우
-    if (isMSAAUsage)
-    {
-        descDepth.SampleDesc.Count = 4;  
-        descDepth.SampleDesc.Quality = msaaQuality - 1; 
-    }
-
-    // MSAA를 사용하지 않을 경우
-    else
-    {
-        descDepth.SampleDesc.Count = 1;
-        descDepth.SampleDesc.Quality = 0;
-    }
-    
-    descDepth.Usage = D3D11_USAGE_DEFAULT;
-    descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    GRAPHIC_THROW_INFO(device->CreateTexture2D(&descDepth, nullptr, &depthStencil));
-
-    // 깊이 스텐실 텍스쳐 뷰 생성
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewdesc = {} ;
-    depthStencilViewdesc.Format = DXGI_FORMAT_D32_FLOAT;                    // float형 32비트 깊이 데이터 타입을 사용함
-    depthStencilViewdesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;     // 깊이 스텐실 텍스처가 Texture 2D이므로 D3D11_DSV_DIMENSION_TEXTURE2D로 설정
-    depthStencilViewdesc.Texture2D.MipSlice = 0;
-    GRAPHIC_THROW_INFO(device->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewdesc, &depthStencilView));
-
-    deviceContext->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), depthStencilView.Get());
+    D3D11_VIEWPORT viewport;
+    viewport.Width = (float)width;
+    viewport.Height = (float)height;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0.0f;
+    viewport.TopLeftY = 0.0f;
+    deviceContext->RSSetViewports(1u, &viewport);
 }
 
 void DxGraphic::DrawTestTriangle(float angle, float x, float z)

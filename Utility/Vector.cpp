@@ -49,7 +49,7 @@ XMFLOAT3 operator/(const XMFLOAT3& lhs, const XMFLOAT3& rhs)
 	return XMFLOAT3{ lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z };
 }
 
-Material::Color Vector::ConvertColor(DirectX::XMVECTOR vector)
+GraphicResource::Image::Color Vector::ConvertColor(DirectX::XMVECTOR vector)
 {
 	using namespace DirectX;
 

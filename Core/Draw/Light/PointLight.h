@@ -1,9 +1,12 @@
 #pragma once
 
+#include "Core/Exception/WindowException.h"
 #include "Core/DxGraphic.h"
-#include "Core/RenderingPipeline/VSPS/ConstantBuffer.h"
+#include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBuffer.h"
 
 #include "../BaseModel/ColorSphere.h"
+
+namespace RenderGraphNameSpace { class RenderGraph; }
 
 class PointLight
 {
@@ -12,8 +15,10 @@ public:
 
 	void CreatePositionChangeWindow() noexcept;
 	void Reset() noexcept;
-	void Draw(DxGraphic& graphic) const NOEXCEPTRELEASE;
-	void Bind(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept;
+	void Submit() const NOEXCEPTRELEASE;
+	void Update(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept;
+
+	void LinkTechniques(RenderGraphNameSpace::RenderGraph&);
 
 private:
 	struct PointLightConstantBuffer

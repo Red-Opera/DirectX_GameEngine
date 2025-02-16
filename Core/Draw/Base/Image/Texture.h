@@ -1,7 +1,9 @@
 #pragma once
 #include "Core/RenderingPipeline/Render.h"
 
-class Material;
+#include <map>
+
+class Image;
 
 namespace Graphic
 {
@@ -11,7 +13,7 @@ namespace Graphic
 		Texture(DxGraphic& graphic,const  std::string& path, UINT slot = 0);
 
 		// Bindable을(를) 통해 상속됨
-		void PipeLineSet(DxGraphic& graphic) noexcept override;
+		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
 
 		static std::shared_ptr<Texture> GetRender(DxGraphic& graphic, const std::string& path, UINT slot = 0);
 		static std::string CreateID(const std::string& path, UINT slot = 0);
@@ -26,6 +28,7 @@ namespace Graphic
 
 	private:
 		static UINT CountMipLevels(UINT width, UINT height) noexcept;
+		static std::unordered_map<std::string, std::unique_ptr<GraphicResource::Image>> imageCache;
 
 		UINT slot;
 	};

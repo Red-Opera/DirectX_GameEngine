@@ -21,4 +21,5 @@
 #define CREATEINFOMANAGER(graphic) HRESULT hr;
 #else
 #define CREATEINFOMANAGER(graphic) HRESULT hr; ExceptionInfo& infoManager = GetInfoManager((graphic));
+#define CREATEINFOMANAGERNOHR(graphic) ExceptionInfo& infoManager = GetInfoManager((graphic));
 #endif

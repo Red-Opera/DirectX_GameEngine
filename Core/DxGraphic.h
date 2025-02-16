@@ -11,9 +11,16 @@
 #include <wrl.h>
 #include <dxgidebug.h>
 
+#include <memory>
+#include <random>
+
 using Microsoft::WRL::ComPtr;
 
-namespace Graphic { class Render; }
+namespace Graphic 
+{ 
+	class Render;
+	class RenderTarget;
+}
 
 class DxGraphic
 {
@@ -103,6 +110,10 @@ public:
 	void BeginFrame(float red, float green, float blue) noexcept;
 	void EndFrame();
 
+	UINT GetWidth() const noexcept;
+	UINT GetHeight() const noexcept;
+	std::shared_ptr<Graphic::RenderTarget> GetRenderTarget();
+
 	// ImGui 관련 메소드
 	void EnableImGui() noexcept;
 	void DisableImGui() noexcept;
@@ -113,30 +124,33 @@ private:
 	ExceptionInfo infoManager;
 #endif
 
-	friend Graphic::Render;
+	friend class DxGraphicResource;
 
 	HRESULT CreateDevice();
 	void CheckMSAAQuality();
 	void SwapChainSettings(HWND hWnd);
 	void CreateSwapChain();
 	void CreateRenderTargetView();
-	void CreateDepthStencilBuffer();
 
 	bool		isMSAAUsage;		// 4X MSAA 사용 여부
 	UINT		msaaQuality;		// 4X MSAA의 품질 수준
 
-	DXGI_SWAP_CHAIN_DESC swapChainDesc;			// Swap Chain Desc
+	DXGI_SWAP_CHAIN_DESC swapChainDesc;						// Swap Chain Desc
+	std::shared_ptr<Graphic::RenderTarget> renderTarget;	// 랜더 타켓
 
-	ComPtr<ID3D11Device>			device;				// D3D11 장치
-	ComPtr<ID3D11DeviceContext>		deviceContext;		// D3D11 Context
-	ComPtr<IDXGISwapChain>			swapChain;			// 페이지 전환을 위한 교환 사슬
-	ComPtr<ID3D11Texture2D>			depthStencilBuffer;	// 깊이 º 스텐실 버퍼를 위한 2차원 텍스처
-	ComPtr<ID3D11RenderTargetView>	renderTargetView;	// 렌더 대상용 2차원 텍스처
-	ComPtr<ID3D11DepthStencilView>	depthStencilView;	// 깊이 º 스텐실 뷰
-	D3D11_VIEWPORT					viewport;			// 뷰포트
+	ComPtr<ID3D11Device>			device;					// D3D11 장치
+	ComPtr<ID3D11DeviceContext>		deviceContext;			// D3D11 Context
+	ComPtr<IDXGISwapChain>			swapChain;				// 페이지 전환을 위한 교환 사슬
+	ComPtr<ID3D11Texture2D>			depthStencilBuffer;		// 깊이 º 스텐실 버퍼를 위한 2차원 텍스처
+	ComPtr<ID3D11RenderTargetView>	renderTargetView;		// 렌더 대상용 2차원 텍스처
+	ComPtr<ID3D11DepthStencilView>	depthStencilView;		// 깊이 º 스텐실 뷰
+	D3D11_VIEWPORT					viewport;				// 뷰포트
 
 	DirectX::XMMATRIX projection;
 	DirectX::XMMATRIX camera;			
+
+	UINT width;
+	UINT height;
 
 	// ImGui
 	bool imGuiEnable = true;

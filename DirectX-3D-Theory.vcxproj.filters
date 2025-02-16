@@ -24,12 +24,6 @@
     <ClInclude Include="Utility\GameTimer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXSettings\IA.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXSettings\Shader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Window.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -66,31 +60,31 @@
     <ClInclude Include="Core\RenderingPipeline\Render.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\VSPS\ConstantBuffer.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\ConstantBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\IA\PrimitiveTopology.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\IA\PrimitiveTopology.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\IA\IndexBuffer.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\IA\IndexBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\IA\InputLayout.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\IA\InputLayout.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\VSPS\VertexShader.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\VertexShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\VSPS\PixelShader.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\PixelShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\IA\VertexBuffer.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\IA\VertexBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Base\Drawable.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Base\TriangleIndexList.h">
@@ -105,16 +99,13 @@
     <ClInclude Include="Core\Draw\BaseModel\Cone.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\Base\Material.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\Base\Image\GDIPlus.h">
+    <ClInclude Include="Core\Draw\Base\Image\Image.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Base\Image\Texture.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\VSPS\SamplerState.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\SamplerState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Utility\Imgui\imconfig.h">
@@ -183,10 +174,7 @@
     <ClInclude Include="Core\Draw\BaseModel\Plane.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\VSPS\TransformConstantBufferAddPixel.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\BaseModel\TextureCube.h">
+    <ClInclude Include="Core\Draw\BaseModel\Cube.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\TestTextureCube.h">
@@ -195,10 +183,163 @@
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\OM\ColorBlend.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\Rasterizer\Rasterizer.h">
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\Rasterizer\Rasterizer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\BC.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\BCDirectCompute.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\DDS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\DirectXTex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\DirectXTexP.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\filters.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\scoped.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\DirectXTex\include\d3dx12.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\StringConverter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Json\ScriptCommander.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\DynamicConstantBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\ConstantBufferEx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\Stencil.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\BaseModel\ColorCube.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStep.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderJob.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\Technique.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\NullPixelShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\LogSystem\PerformanceLog.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\TechniqueBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Base\Material.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Model.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exception\ModelException.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\SceneGraphNode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\ModelBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderTarget.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DxGraphicResource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Buffer\BufferResource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Buffer\BufferPassClear.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exception\RenderGraphCompileException.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderingPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderQueuePass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderGraph\RenderGraph.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStepLinkBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\LambertianRenderPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\PostProcessFullScreenRenderPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\OutlineDrawPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\OutlineMaskPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBufferScaling.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TestModelBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderGraph\BlurOutlineRenderGraph.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\HorizontalBlurPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\VerticalBlurPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderGraph\BlurOutlineRenderingPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderGraph\PipelineDataConsumer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderGraph\PipelineDataProvider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -257,9 +398,6 @@
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-1_VertexAndInputLayout.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXSettings\IA.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-2_VertexBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -279,9 +417,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter6_DirectX3DDrawCalc\T6-8_EffectFrameWork.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXSettings\Shader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Window.cpp">
@@ -311,37 +446,31 @@
     <ClCompile Include="Core\RenderingPipeline\Render.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\VSPS\ConstantBuffer.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\PrimitiveTopology.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\IA\PrimitiveTopology.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\IndexBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\IA\IndexBuffer.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\InputLayout.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\IA\InputLayout.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\VertexShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\VSPS\VertexShader.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\PixelShader.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\VSPS\PixelShader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\IA\VertexBuffer.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\VertexBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Base\Drawable.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\VSPS\TransformConstantBuffer.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\Base\Material.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\Base\Image\GDIPlus.cpp">
+    <ClCompile Include="Core\Draw\Base\Image\Image.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Base\Image\Texture.cpp">
@@ -350,7 +479,7 @@
     <ClCompile Include="Theory\Chapter8_TexutreAndOverviewOfResources\T8-1_TexutreAndOverviewOfResources.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\VSPS\SamplerState.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\SamplerState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter8_TexutreAndOverviewOfResources\T8-7_TextureSampling.cpp">
@@ -440,45 +569,141 @@
     <ClCompile Include="Core\Draw\TestPlane.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\VSPS\TransformConstantBufferAddPixel.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\BaseModel\TextureCube.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Draw\TestTextureCube.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\OM\ColorBlend.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\Rasterizer\Rasterizer.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\Rasterizer\Rasterizer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\StringConverter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Json\ScriptCommander.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\DynamicConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\BaseModel\ColorCube.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStep.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderJob.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Technique\Technique.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\NullPixelShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Base\Material.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Model.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Exception\ModelException.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\SceneGraphNode.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\MathInfo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DxGraphicResource.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderTarget.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Exception\RenderGraphCompileException.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderingPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderQueuePass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderGraph\RenderGraph.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Buffer\BufferPassClear.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStepLinkBase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Pass\PostProcessFullScreenRenderPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBufferScaling.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderGraph\BlurOutlineRenderGraph.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Pass\HorizontalBlurPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderingManager\Pass\VerticalBlurPass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderGraph\PipelineDataProvider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\RenderGraph\PipelineDataConsumer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\Shader.fx" />
-    <FxCompile Include="Shader\ColorShader.hlsl" />
-    <FxCompile Include="Shader\Texture.hlsl" />
-    <FxCompile Include="Shader\LitShader.hlsl">
+    <FxCompile Include="Shader\_Sample_Shader.fx" />
+    <FxCompile Include="Shader\_Sample_ColorShader.hlsl" />
+    <FxCompile Include="Shader\_Sample_Texture.hlsl" />
+    <FxCompile Include="Shader\LitTexture.hlsl">
       <Filter>소스 파일</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\ColorShader2.hlsl" />
-    <FxCompile Include="Shader\IndexedLitShader.hlsl" />
-    <FxCompile Include="Shader\BlendedLitShader.hlsl" />
-    <FxCompile Include="Shader\TextureLitShader.hlsl" />
-    <FxCompile Include="Shader\TextureNormalLitShader.hlsl" />
-    <FxCompile Include="Shader\TextureNormalMap.hlsl" />
-    <FxCompile Include="Shader\TextureNormalMapObject.hlsl" />
+    <FxCompile Include="Shader\ColorShader.hlsl" />
+    <FxCompile Include="Shader\_Sample_IndexedLitShader.hlsl" />
+    <FxCompile Include="Shader\_Sample_BlendedLitShader.hlsl" />
+    <FxCompile Include="Shader\LitTextureDiffuse.hlsl" />
+    <FxCompile Include="Shader\LitTextureDiffuseSpecularNormal.hlsl" />
+    <FxCompile Include="Shader\LitTextureDiffuseNormal.hlsl" />
+    <FxCompile Include="Shader\xLitTextureLitDiffuseNormal.hlsl" />
     <FxCompile Include="Shader\ShaderHeader\LightShader.hlsl" />
     <FxCompile Include="Shader\ShaderHeader\PointLight.hlsl" />
     <FxCompile Include="Shader\ShaderHeader\Transform.hlsl" />
     <FxCompile Include="Shader\ShaderHeader\LightVector.hlsl" />
-    <FxCompile Include="Shader\TextureLitSpecular.hlsl" />
-    <FxCompile Include="Shader\TextureNormalAlphaLitShader.hlsl" />
+    <FxCompile Include="Shader\LitTextureDiffuseSpecular.hlsl" />
+    <FxCompile Include="Shader\LitTextureDiffuseMaskSpecularNormal.hlsl" />
+    <FxCompile Include="Shader\NormalOffset.hlsl" />
+    <FxCompile Include="Shader\PostProcessing\ScreenBlur.hlsl" />
+    <FxCompile Include="Shader\PostProcessing\OutlineBlur.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -496,5 +721,9 @@
   <ItemGroup>
     <None Include="Utility\assimp\assimp-vc143-mt.dll" />
     <None Include="cpp.hint" />
+    <None Include="Utility\DirectXTex\include\DirectXTex.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="Json\process.json" />
   </ItemGroup>
 </Project>

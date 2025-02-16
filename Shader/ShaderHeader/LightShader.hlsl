@@ -37,5 +37,5 @@ float3 GetSpecular(
     const float3 reflectVector = normalize(reflectAngle * 2.0f - vertexToLight); // 빛이 반사되는 각도를 구함
     
     // 반사광 법칙으로 반사광을 구함
-    return attResult * (diffuseColor * diffuseIntensity) * pow(max(0.0f, dot(normalize(-reflectVector), normalize(viewPosition))), specularPower);
+    return attResult * diffuseColor * diffuseIntensity * pow(max(0.0f, dot(-reflectVector, normalize(viewPosition))), specularPower);
 }

@@ -6,15 +6,38 @@
 #include <DirectXMath.h>
 #include <minwindef.h>
 
+#include <assimp/scene.h>
+#include <utility>
+
 #include "Core/DxGraphic.h"
 #include "Core/Draw/Base/ColorInfo.h"
+
+#define CREATE_GET_VERTEX_INFO(aiMeshMember) \
+static Type get(const aiMesh& mesh, size_t i) noexcept { return *reinterpret_cast<const Type*>(&mesh.aiMeshMember[i]);}
+
+#define LAYOUT_TYPES	\
+	TYPE(Position2D)	\
+	TYPE(Position3D)	\
+	TYPE(Texture2D)		\
+	TYPE(Normal)		\
+	TYPE(Tangent)		\
+	TYPE(BiTangent)		\
+	TYPE(ColorFloat3)	\
+	TYPE(ColorFloat4)	\
+	TYPE(ARBGColor)		\
+	TYPE(Count)
 
 namespace VertexCore
 {
 	class VertexLayout
 	{
 	public:
-		enum VertexType { Position2D, Position3D, Texture2D, Normal, Tangent, BiTangent,ColorFloat3, ColorFloat4, ARBGColor, Count };
+		enum VertexType 
+		{ 
+#define TYPE(type) type,
+			LAYOUT_TYPES
+#undef TYPE
+		};
 
 		template<VertexType> struct Map;
 		template<> struct Map<Position2D>
@@ -24,6 +47,8 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Position";
 			static constexpr const char* code = "Position2D";
+
+			CREATE_GET_VERTEX_INFO(mVertices)
 		};
 
 		template<> struct Map<Position3D>
@@ -33,6 +58,8 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Position";
 			static constexpr const char* code = "Position3D";
+
+			CREATE_GET_VERTEX_INFO(mVertices)
 		};
 
 		template<> struct Map<Texture2D>
@@ -40,8 +67,10 @@ namespace VertexCore
 			using Type = DirectX::XMFLOAT2;
 			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_R32G32_FLOAT;
 
-			static constexpr const char* semantic = "TexCoord";
+			static constexpr const char* semantic = "TEXCOORD";
 			static constexpr const char* code = "Texture2D";
+
+			CREATE_GET_VERTEX_INFO(mTextureCoords[0])
 		};
 
 		template<> struct Map<Normal>
@@ -51,6 +80,8 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Normal";
 			static constexpr const char* code = "Normal";
+
+			CREATE_GET_VERTEX_INFO(mNormals)
 		};
 
 		template<> struct Map<Tangent>
@@ -60,6 +91,8 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Tangent";
 			static constexpr const char* code = "Tangent";
+
+			CREATE_GET_VERTEX_INFO(mTangents)
 		};
 
 		template<> struct Map<BiTangent>
@@ -69,6 +102,8 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Bitangent";
 			static constexpr const char* code = "BiTangent";
+
+			CREATE_GET_VERTEX_INFO(mBitangents)
 		};
 
 		template<> struct Map<ColorFloat3>
@@ -78,6 +113,8 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Color";
 			static constexpr const char* code = "Color3D";
+
+			CREATE_GET_VERTEX_INFO(mColors[0])
 		};
 
 		template<> struct Map<ColorFloat4>
@@ -87,6 +124,8 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Color";
 			static constexpr const char* code = "Color4D";
+
+			CREATE_GET_VERTEX_INFO(mColors[0])
 		};
 
 		template<> struct Map<ARBGColor>
@@ -96,12 +135,46 @@ namespace VertexCore
 
 			static constexpr const char* semantic = "Color";
 			static constexpr const char* code = "Color4D8Bit";
+
+			CREATE_GET_VERTEX_INFO(mColors[0])
 		};
+
+		template<> struct Map<Count>
+		{
+			using Type = long double;
+			static constexpr DXGI_FORMAT dxgiFormat = DXGI_FORMAT_UNKNOWN;
+
+			static constexpr const char* semantic = "ErrorType";
+			static constexpr const char* code = "ErrorType";
+			
+			CREATE_GET_VERTEX_INFO(mFaces)
+		};
+
+		template<template<VertexLayout::VertexType> class VertexTypeTarget, typename... Args>
+		static constexpr auto RunStructFunction(VertexLayout::VertexType vertexType, Args&&... data) NOEXCEPTRELEASE
+		{
+			switch (vertexType)
+			{
+#define TYPE(type)						\
+				case VertexLayout::type:\
+					return VertexTypeTarget<VertexLayout::type>::Run(std::forward<Args>(data)...);
+
+				LAYOUT_TYPES
+#undef TYPE
+			}
+
+			assert("해당 Vertex Type은 존재하지 않음" && false);
+
+			return VertexTypeTarget<VertexLayout::Count>::Run(std::forward<Args>(data)...);
+		}
 
 		class VertexInfo
 		{
 		public:
 			VertexInfo(VertexType type, size_t offset);
+
+			// 입력된 VertexType에 다라 실제 메모리 크기를 컴파일 타임에 반환해주는 함수
+			static const constexpr size_t GetTypeSize(VertexType type) NOEXCEPTRELEASE;
 
 			size_t GetNextOffset() const NOEXCEPTRELEASE;					// 이 데이터 포함했을 때 다음 데이터 위치를 나타내는 메소드
 			size_t GetOffset() const;										// 이 데이터가 시작하는 위치
@@ -112,16 +185,13 @@ namespace VertexCore
 
 			const char* GetCode() const noexcept;
 
-			// 입력된 VertexType에 다라 실제 메모리 크기를 컴파일 타임에 반환해주는 함수
-			static const constexpr size_t GetTypeSize(VertexType type) NOEXCEPTRELEASE;
-
 		private:
 			// Input Layout DESC를 만들어주는 메소드
-			template<VertexType type>
-			static constexpr D3D11_INPUT_ELEMENT_DESC CreateInputDESC(size_t offset) noexcept
-			{
-				return { Map<type>::semantic, 0, Map<type>::dxgiFormat, 0, (UINT)offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
-			}
+			//template<VertexType type>
+			//static constexpr D3D11_INPUT_ELEMENT_DESC CreateInputDESC(size_t offset) noexcept
+			//{
+			//	return { Map<type>::semantic, 0, Map<type>::dxgiFormat, 0, (UINT)offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+			//}
 
 			VertexType type;	// 정점 타입
 			size_t offset;		// 해당 정점 타입의 시작 메모리 위치
@@ -152,6 +222,8 @@ namespace VertexCore
 		std::vector<D3D11_INPUT_ELEMENT_DESC> GetInputElement() const NOEXCEPTRELEASE;
 		std::string GetCode() const NOEXCEPTRELEASE;
 
+		bool has(VertexType type) const noexcept;
+
 	private:
 		std::vector<VertexInfo> vertexInfo;
 	};
@@ -176,53 +248,23 @@ namespace VertexCore
 			const auto& info = vertexLayout.GetVertexInfoFromIndex(i);
 			auto vertex = data + info.GetOffset();
 
-			switch (info.GetType())
-			{
-			case VertexLayout::Position2D:
-				SetVertexType<VertexLayout::Position2D>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::Position3D:
-				SetVertexType<VertexLayout::Position3D>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::Texture2D:
-				SetVertexType<VertexLayout::Texture2D>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::Normal:
-				SetVertexType<VertexLayout::Normal>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::Tangent:
-				SetVertexType<VertexLayout::Tangent>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::BiTangent:
-				SetVertexType<VertexLayout::BiTangent>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::ColorFloat3:
-				SetVertexType<VertexLayout::ColorFloat3>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::ColorFloat4:
-				SetVertexType<VertexLayout::ColorFloat4>(vertex, std::forward<T>(val));
-				break;
-
-			case VertexLayout::ARBGColor:
-				SetVertexType<VertexLayout::ARBGColor>(vertex, std::forward<T>(val));
-				break;
-
-			default:
-				assert("해당 Vertex Type은 존재하지 않음" && false);
-			}
+			VertexLayout::RunStructFunction<SetVertexTypeSetting>(info.GetType(), this, vertex, std::forward<T>(val));
 		}
 
 	protected:
 		Vertex(char* data, const VertexLayout& vertexLayout) NOEXCEPTRELEASE;
 
 	private:
+		template<VertexLayout::VertexType type>
+		struct SetVertexTypeSetting
+		{
+			template<typename T>
+			static constexpr auto Run(Vertex* vertex, char* vertexData, T&& data) NOEXCEPTRELEASE
+			{
+				return vertex->SetVertexType<type>(vertexData, std::forward<T>(data));
+			}
+		};
+
 		// 여러개 정점 타입을 받고 재귀를 통해서 한개씩 처리를 하고 그 한개는 
 		template<typename First, typename ...Rest>
 		void SetVertexFromIndex(size_t i, First&& first, Rest&&... rest) NOEXCEPTRELEASE
@@ -265,6 +307,7 @@ namespace VertexCore
 	{
 	public:
 		VertexBuffer(VertexLayout vertexLayout, size_t size = 0u) NOEXCEPTRELEASE;
+		VertexBuffer(VertexLayout vertexLayout, const aiMesh& mesh);
 
 		const char* data() const NOEXCEPTRELEASE;
 		const VertexLayout& GetVertexLayout() const noexcept;
@@ -297,3 +340,8 @@ namespace VertexCore
 		VertexLayout vertexLayout;	// Vertex Buffer의 Vertex Layout
 	};
 }
+
+#undef CREATE_GET_VERTEX_INFO
+#ifndef USE_VERTEX_CODE
+#undef LAYOUT_TYPES
+#endif

@@ -1,26 +1,63 @@
 #include "stdafx.h"
 #include "Drawable.h"
 
-#include "../../RenderingPipeline/Render.h"
-#include "../../RenderingPipeline/IA/IndexBuffer.h"
-using namespace std;
+#include "Core/Draw/Base/Material.h"
+#include "Core/Exception/GraphicsException.h"
+#include "Core/RenderingPipeline/Render.h"
+#include "Core/RenderingPipeline/RenderManager.h"
+#include "Core/RenderingPipeline/RenderingPipeline.h"
+
+#include <assimp/scene.h>
+
 using namespace Graphic;
 
-void Drawable::Draw(DxGraphic& graphic) const NOEXCEPTRELEASE
+Drawable::Drawable(DxGraphic& graphic, const Material& material, const aiMesh& mesh, float scale) noexcept
 {
-	for (auto& b : renderObjects)
-		b->PipeLineSet(graphic);
+	vertexBuffer = material.CreateVertexBuffer(graphic, mesh, scale);
+	indexBuffer = material.CreateIndexBuffer(graphic, mesh);
+	primitiveTopology = Graphic::PrimitiveTopology::GetRender(graphic);
 
-	graphic.DrawIndexed(indexBuffer->GetIndexCount());
+	for (auto& tech : material.GetTechnique())
+		AddTechnique(std::move(tech));
 }
 
-void Drawable::AddRender(shared_ptr<Render> bind) NOEXCEPTRELEASE
+void Drawable::Submit() const noexcept
 {
-	if (typeid(*bind) == typeid(IndexBuffer))
-	{
-		assert("타켓티하는 Render에 IndexBuffer가 존재하지 않음" && indexBuffer == nullptr);
-		indexBuffer = &static_cast<IndexBuffer&>(*bind);
-;	}
+	for (const auto& technique : techniques)
+		technique.Submit(*this);
+}
 
-	renderObjects.push_back(move(bind));
+void Drawable::Accept(TechniqueBase& tech)
+{
+	for (auto& technique : techniques)
+		technique.Accept(tech);
+}
+
+void Drawable::SetRenderPipeline(DxGraphic& graphic) const NOEXCEPTRELEASE
+{
+	primitiveTopology->SetRenderPipeline(graphic);
+	indexBuffer->SetRenderPipeline(graphic);
+	vertexBuffer->SetRenderPipeline(graphic);
+}
+
+UINT Drawable::GetIndexCount() const NOEXCEPTRELEASE
+{
+	return indexBuffer->GetIndexCount();
+}
+
+void Drawable::AddTechnique(Technique technique) noexcept
+{
+	technique.InitializeParentReferences(*this);
+	techniques.push_back(std::move(technique));
+}
+
+void Drawable::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
+{
+	for (auto& tech : techniques)
+		tech.Link(renderGraph);
+}
+
+Drawable::~Drawable()
+{
+
 }

@@ -3,7 +3,7 @@
 
 // GameTimer 초기화
 GameTimer::GameTimer() : secondsPerFrame(0.0), deltaTime(-1.0), totalTime(0), pauseTime(0),
-						 prevTime(0), currentTime(0), isStopped(false), stopTime(0)
+						 prevTime(0), currentTime(0), isStopped(false), stopTime(0), beforeTimePoint(0)
 {
 	// 초당 프레임을 설정함
 	__int64 framePerSec;
@@ -90,6 +90,17 @@ void GameTimer::Tick()
 	// deltaTime이 음수가 되지 않도록 설정
 	if (this->deltaTime < 0.0)
 		this->deltaTime = 0.0;
+}
+
+float GameTimer::CheckTime()
+{
+	__int64 currentTime;
+	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
+
+	float totalTime = (currentTime - beforeTimePoint) * secondsPerFrame;
+	beforeTimePoint = currentTime;
+
+	return totalTime;
 }
 
 float GameTimer::DeltaTime() const { return (float)deltaTime; }

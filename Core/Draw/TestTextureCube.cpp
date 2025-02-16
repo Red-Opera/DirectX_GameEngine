@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "TestTextureCube.h"
 
-#include "BaseModel/TextureCube.h"
+#include "BaseModel/Cube.h"
 
-#include "Core/RenderingPipeline/VSPS/TransformConstantBufferAddPixel.h"
+#include "Core/RenderingPipeline/Pipeline/VSPS/TransformConstantBufferAddPixel.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "Utility/Imgui/imgui.h"
 
@@ -12,13 +12,21 @@ TestTextureCube::TestTextureCube(DxGraphic& graphic, float size)
 	using VertexCore::VertexLayout;
 	using namespace Graphic;
 
-	auto model = TextureCube::MakeIndependentTextured();
+	auto model = Cube::SetCubeTexturePosition();
 	model.Transform(DirectX::XMMatrixScaling(size, size, size));
 	model.SetNormalVector();
 
 	const auto geometryTag = "$cube." + std::to_string(size);
-	AddRender(VertexBuffer::GetRender(graphic, geometryTag, model.vertices));
-	AddRender(IndexBuffer::GetRender(graphic, geometryTag, model.indices));
+	vertexBuffer = VertexBuffer::GetRender(graphic, geometryTag, model.vertices);
+	indexBuffer = IndexBuffer::GetRender(graphic, geometryTag, model.indices);
+	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	
+	{
+		Technique tech;
+
+		RenderStep cubeRender;
+	}
 
 	AddRender(Texture::GetRender(graphic, "Images/brickwall.jpg"));
 	AddRender(Texture::GetRender(graphic, "Images/brickwall_normal.jpg", 1u));
@@ -31,8 +39,6 @@ TestTextureCube::TestTextureCube(DxGraphic& graphic, float size)
 	AddRender(PixelConstantBuffer<PSMaterialConstant>::GetRender(graphic, matConst, 1u));
 
 	AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
-
-	AddRender(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	AddRender(std::make_shared<TransformConstantBufferAddPixel>(graphic, *this, 0u, 2u));
 }

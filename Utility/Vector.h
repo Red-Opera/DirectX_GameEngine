@@ -2,7 +2,7 @@
 
 #include <DirectXMath.h>
 
-#include "Core/Draw/Base/Material.h"
+#include "Core/Draw/Base/Image/Image.h"
 
 using namespace DirectX;
 
@@ -37,7 +37,7 @@ public:
 	//			XMFLOAT3, XMVECTOR to Convert
 	// ==============================================
 
-	static Material::Color ConvertColor(DirectX::XMVECTOR vector);
+	static GraphicResource::Image::Color ConvertColor(DirectX::XMVECTOR vector);
 
 	// ==============================================
 	//			XMFLOAT4X4 to Position, Rotate

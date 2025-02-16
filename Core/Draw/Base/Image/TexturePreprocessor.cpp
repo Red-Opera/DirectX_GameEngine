@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "TexturePreprocessor.h"
 
-#include "Core/Draw/Mesh.h"
+#include "Core/Exception/ModelException.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include <filesystem>
 #include <sstream>
@@ -71,9 +75,9 @@ void TexturePreprocessor::VaildateNormalMap(const std::string& pathIn, float thr
         return vector;
     };
 
-    // 파일에서 머터리얼을 로드
-    auto material = Material::FromFile(pathIn);
-	TransformMaterial(material, process);           // 머티리얼에 대해 람다 함수를 적용
+    // 파일에서 이미지를 로드
+    auto image = GraphicResource::Image::FromFile(pathIn);
+    TransformImage(image, process);           // 머티리얼에 대해 람다 함수를 적용
 
     {
         XMFLOAT2 sumVector;
@@ -84,4 +88,28 @@ void TexturePreprocessor::VaildateNormalMap(const std::string& pathIn, float thr
         oss << "Sum of normals: (" << sumVector.x << ", " << sumVector.y << ")\n";
         OutputDebugStringA(oss.str().c_str());
     }
+}
+
+void TexturePreprocessor::MakeStripes(const std::string& pathOut, int size, int stripeWidth)
+{
+    auto power = log2(size);
+	assert("텍스처 크기가 2의 거듭제곱이 아닙니다!" && modf(power, &power) == 0.0);
+	assert("스트라이프 너비가 텍스처 크기보다 큽니다!" && stripeWidth < size / 2);
+
+	GraphicResource::Image material(size, size);
+
+	for (int y = 0; y < size; y++)
+	{
+		for (int x = 0; x < size; x++)
+		{
+            GraphicResource::Image::Color color = { 0, 0, 0 };
+
+			if ((x / stripeWidth) % 2 == 0)
+				color = { 255, 255, 255 };
+
+			material.SetColorPixel(x, y, color);
+		}
+	}
+
+	material.Save(pathOut);
 }

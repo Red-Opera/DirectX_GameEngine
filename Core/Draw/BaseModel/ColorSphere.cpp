@@ -4,6 +4,7 @@
 
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "Core/RenderingPipeline/Vertex.h"
+#include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
 #include "Core/Exception/GraphicsException.h"
 
 ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
@@ -14,30 +15,36 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 	model.Transform(DirectX::XMMatrixScaling(radius, radius, radius));
 
 	const auto objectTag = "$sphere." + std::to_string(radius);
-	AddRender(std::make_shared<VertexBuffer>(graphic, objectTag, model.vertices));
-	AddRender(std::make_shared<IndexBuffer>(graphic, objectTag, model.indices));
+	vertexBuffer = std::make_shared<VertexBuffer>(graphic, objectTag, model.vertices);
+	indexBuffer = std::make_shared<IndexBuffer>(graphic, objectTag, model.indices);
+	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader2.hlsl");
-	auto VSShaderCode = vertexShader->GetShaderCode();
-	AddRender(std::move(vertexShader));
-
-	AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader2.hlsl"));
-
-	struct PixelShaderLightConstant
 	{
-		DirectX::XMVECTOR color = { 1.0f, 1.0f, 1.0f };
-		float padding;
-	} pixelConstant;
+		Technique tech;
+		RenderStep sphereRender("lambertian");
 
-	AddRender(PixelConstantBuffer<PixelShaderLightConstant>::GetRender(graphic, pixelConstant, 1u));
-				
-	AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
-	AddRender(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");
+		auto VSShaderCode = vertexShader->GetShaderCode();
+		sphereRender.AddRender(std::move(vertexShader));
 
-	AddRender(std::make_shared<TransformConstantBuffer>(graphic, *this));
+		sphereRender.AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
 
-	AddRender(ColorBlend::GetRender(graphic, false));
-	AddRender(Rasterizer::GetRender(graphic, false));
+		struct PixelShaderLightConstant
+		{
+			DirectX::XMVECTOR color = { 1.0f, 1.0f, 1.0f };
+			float padding;
+		} pixelConstant;
+
+		sphereRender.AddRender(PixelConstantBuffer<PixelShaderLightConstant>::GetRender(graphic, pixelConstant, 1u));
+
+		sphereRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
+		sphereRender.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+		
+		sphereRender.AddRender(Rasterizer::GetRender(graphic, false));
+
+		tech.push_back(std::move(sphereRender));
+		AddTechnique(std::move(tech));
+	}
 }
 
 void ColorSphere::SetPos(DirectX::XMFLOAT3 position) noexcept
