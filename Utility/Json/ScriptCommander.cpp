@@ -4,6 +4,7 @@
 #include "Core/Draw/Base/Image/TexturePreprocessor.h"
 #include "Utility/Json/json.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <sstream>
 
@@ -101,6 +102,12 @@ ScriptCommander::ScriptCommander(const std::vector<std::string>& args)
 					abort = true;
 				}
 
+				else if (commandName == "Export")
+				{
+					Export(params.at("dest"));
+					abort = true;
+				}
+
 				else
 					throw SCRIPT_ERROR("알 수 없는 명령어 : "s + commandName);
 			}
@@ -109,4 +116,23 @@ ScriptCommander::ScriptCommander(const std::vector<std::string>& args)
 				throw Completion("스크립트 실행 완료");
 		}
 	}
+}
+
+void ScriptCommander::Export(std::string path) const
+{
+	namespace fs = std::filesystem;
+
+	fs::create_directory(path);
+	fs::copy_file(R"(..\x64\Release\GameEngine.exe)", path + R"(\GameEngine.exe)", fs::copy_options::overwrite_existing);
+	fs::copy_file("Utility/Imgui/Usage/imgui_default.ini", path + R"(Utility/Imgui/Usage/imgui_default.ini)", fs::copy_options::overwrite_existing);
+
+	for (auto& p : fs::directory_iterator(""))
+	{
+		if (p.path().extension() == L".dll")
+			fs::copy_file(p.path(), path + "\\" + p.path().filename().string(), fs::copy_options::overwrite_existing);
+	}
+
+	fs::copy("ShaderBins", path + R"(\ShaderBins)", fs::copy_options::overwrite_existing);
+	fs::copy("Images", path + R"(\Images)", fs::copy_options::overwrite_existing | fs::copy_options::recursive);
+	fs::copy("Models", path + R"(\Models)", fs::copy_options::overwrite_existing | fs::copy_options::recursive);
 }

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "RenderTarget.h"
+
+#include "Core/Draw/Base/Image/Image.h"
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Pipeline/OM/DepthStencil.h"
 
@@ -145,6 +147,49 @@ namespace Graphic
         CREATEINFOMANAGERNOHR(graphic);
 
         GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1, shaderResourceView.GetAddressOf()));
+    }
+
+    GraphicResource::Image ShaderInputRenderTarget::ToImage(DxGraphic& graphic) const
+    {
+        CREATEINFOMANAGER(graphic);
+
+        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+        shaderResourceView->GetResource(&resource);
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+        resource.As(&texture);
+
+        D3D11_TEXTURE2D_DESC textureDESC;
+        texture->GetDesc(&textureDESC);
+        textureDESC.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        textureDESC.Usage = D3D11_USAGE_STAGING;
+        textureDESC.BindFlags = 0;
+        
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
+
+        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&textureDESC, nullptr, &textureTemp));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->CopyResource(textureTemp.Get(), texture.Get()));
+
+        const auto width = GetWidth();
+        const auto height = GetHeight();
+
+        GraphicResource::Image image(width, height);
+        D3D11_MAPPED_SUBRESOURCE mapped = { };
+        GRAPHIC_THROW_INFO(GetDeviceContext(graphic)->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped));
+
+        auto mappedBytes = static_cast<const char*>(mapped.pData);
+
+        for (UINT y = 0; y < height; y++)
+        {
+            auto color = reinterpret_cast<const GraphicResource::Image::Color*>(mappedBytes + mapped.RowPitch * size_t(y));
+
+            for (UINT x = 0; x < width; x++)
+                image.SetColorPixel(x, y, *(color + x));
+        }
+
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->Unmap(textureTemp.Get(), 0));
+
+        return image;
     }
 
     void OutputOnlyRenderTarget::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE

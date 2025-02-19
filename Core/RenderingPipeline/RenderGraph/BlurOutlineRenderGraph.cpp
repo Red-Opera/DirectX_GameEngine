@@ -3,6 +3,7 @@
 
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
 #include "Core/RenderingPipeline/RenderingManager/Buffer/BufferPassClear.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/CameraWireFramePass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/HorizontalBlurPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/LambertianRenderPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/OutlineDrawPass.h"
@@ -98,7 +99,15 @@ namespace RenderGraphNameSpace
 			AddRenderPass(std::move(pass));
 		}
 
-		SetSinkTarget("backbuffer", "vertical.renderTarget");
+		{
+			auto pass = std::make_unique<CameraWireFramePass>(graphic, "wireframe");
+			pass->SetSinkLinkage("renderTarget", "vertical.renderTarget");
+			pass->SetSinkLinkage("depthStencil", "vertical.depthStencil");
+
+			AddRenderPass(std::move(pass));
+		}
+
+		SetSinkTarget("backbuffer", "wireframe.renderTarget");
 
 		Finalize();
 	}

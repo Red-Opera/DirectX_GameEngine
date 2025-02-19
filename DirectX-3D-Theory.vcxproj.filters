@@ -135,7 +135,7 @@
     <ClInclude Include="Utility\Imgui\Usage\ImguiManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Camera.h">
+    <ClInclude Include="Core\Camera\Camera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Light\PointLight.h">
@@ -145,9 +145,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\TestObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\BaseModel\ImportObjectTest.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\Vertex.h">
@@ -342,6 +339,21 @@
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\PipelineDataProvider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Camera\CameraContainer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Camera\CameraProjection.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Camera\CameraIndicator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Camera\CameraFrustum.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\CameraWireFramePass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DX3DApp.cpp">
@@ -506,7 +518,7 @@
     <ClCompile Include="Utility\Imgui\Usage\ImguiManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Camera.cpp">
+    <ClCompile Include="Core\Camera\Camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter7_Lighting\T7-1_InteractionOfLightAndMaterial.cpp">
@@ -552,9 +564,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\BaseModel\ImportObjectTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Mesh.cpp">
@@ -680,6 +689,18 @@
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\PipelineDataConsumer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Camera\CameraContainer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Camera\CameraProjection.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Camera\CameraIndicator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Camera\CameraFrustum.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\_Sample_Shader.fx" />
@@ -704,6 +725,10 @@
     <FxCompile Include="Shader\NormalOffset.hlsl" />
     <FxCompile Include="Shader\PostProcessing\ScreenBlur.hlsl" />
     <FxCompile Include="Shader\PostProcessing\OutlineBlur.hlsl" />
+    <FxCompile Include="Shader\LitTextureDiffuseMaskSpecular.hlsl" />
+    <FxCompile Include="Shader\Test1_VS.cso" />
+    <FxCompile Include="Shader\Test2_VS.cso" />
+    <FxCompile Include="Shader\Test_PS.cso" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -725,5 +750,6 @@
       <Filter>헤더 파일</Filter>
     </None>
     <None Include="Json\process.json" />
+    <None Include="Utility\Imgui\Usage\imgui_default.ini" />
   </ItemGroup>
 </Project>

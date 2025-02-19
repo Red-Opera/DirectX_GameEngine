@@ -24,7 +24,7 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 		RenderStep sphereRender("lambertian");
 
 		auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");
-		auto VSShaderCode = vertexShader->GetShaderCode();
+		sphereRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), *vertexShader));
 		sphereRender.AddRender(std::move(vertexShader));
 
 		sphereRender.AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
@@ -37,7 +37,6 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 
 		sphereRender.AddRender(PixelConstantBuffer<PixelShaderLightConstant>::GetRender(graphic, pixelConstant, 1u));
 
-		sphereRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
 		sphereRender.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
 		
 		sphereRender.AddRender(Rasterizer::GetRender(graphic, false));

@@ -3,6 +3,7 @@
 #include "Core/RenderingPipeline/RenderingManager/Buffer/BufferResource.h"
 
 class DxGraphic;
+class Image;
 
 // 렌더링 한 결과를 특정 텍스처에 저장하고 후처리나 다른 셰이더를 적용하기 위한 클래스
 namespace Graphic
@@ -42,6 +43,8 @@ namespace Graphic
 
 		// RenderTarget을(를) 통해 상속됨
 		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+
+		GraphicResource::Image ToImage(DxGraphic& graphic) const;
 
 	private:
 		UINT slot;

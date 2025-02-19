@@ -30,11 +30,6 @@ public:
 		}
 	}
 
-	static std::vector<std::string> SplitString(const std::string& text, const std::string& delim)
-	{
-		std::vector<std::string> strings;
-		StringConverter::SplitStringIterator(text, delim, std::back_inserter(strings));
-
-		return strings;
-	}
+	static std::vector<std::string> SplitString(const std::string& text, const std::string& delim);
+	static bool IsStringContain(std::string_view text, std::string_view findText);
 };

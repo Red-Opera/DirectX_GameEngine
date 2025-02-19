@@ -32,6 +32,8 @@ public:
 		return OnVisitBuffer(buffer);
 	}
 
+	virtual ~TechniqueBase() { }
+
 protected:
 	virtual void OnSetTechnique() { }
 	virtual void OnSetRenderStep() { }

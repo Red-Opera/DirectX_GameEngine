@@ -23,7 +23,7 @@ namespace RenderGraphNameSpace
 		AddRender(Graphic::IndexBuffer::GetRender(graphic, "$Full", std::move(indices)));
 
 		auto vertexShader = Graphic::VertexShader::GetRender(graphic, "Shader/PostProcessing/ScreenBlur.hlsl");
-		AddRender(Graphic::InputLayout::GetRender(graphic, layout, vertexShader->GetShaderCode()));
+		AddRender(Graphic::InputLayout::GetRender(graphic, layout, *vertexShader));
 		AddRender(std::move(vertexShader));
 		AddRender(Graphic::PrimitiveTopology::GetRender(graphic));
 		AddRender(Graphic::Rasterizer::GetRender(graphic, false));

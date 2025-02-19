@@ -34,4 +34,7 @@ public:
 	};
 
 	ScriptCommander(const std::vector<std::string>& args);
+
+private:
+	void Export(std::string path) const;
 };

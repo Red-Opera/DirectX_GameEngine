@@ -36,7 +36,7 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 			cubeRender.AddRender(SamplerState::GetRender(graphic));
 
 			auto vertexShader = VertexShader::GetRender(graphic, "Shader/LitTextureDiffuse.hlsl");
-			auto VSShaderCode = vertexShader->GetShaderCode();
+			cubeRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), *vertexShader));
 			cubeRender.AddRender(std::move(vertexShader));
 
 			cubeRender.AddRender(PixelShader::GetRender(graphic, "Shader/LitTextureDiffuse.hlsl"));
@@ -52,7 +52,6 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 			buffer["specularGlass"] = 20.0f;
 			cubeRender.AddRender(std::make_shared<Graphic::CachingPixelConstantBufferEx>(graphic, buffer, 1u));
 
-			cubeRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
 			cubeRender.AddRender(Rasterizer::GetRender(graphic, false));
 
 			cubeRender.AddRender(transformConstantBuffer);
@@ -73,7 +72,7 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 				InputLayout::GetRender(
 					graphic,
 					model.vertices.GetVertexLayout(), 
-					VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")->GetShaderCode()
+					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
 				)
 			);
 
@@ -96,7 +95,7 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 				InputLayout::GetRender(
 					graphic,
 					model.vertices.GetVertexLayout(),
-					VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")->GetShaderCode()
+					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
 			));
 	
 			outlineDraw.AddRender(std::make_shared<TransformConstantBuffer>(graphic));

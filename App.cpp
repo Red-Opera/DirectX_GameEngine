@@ -3,10 +3,9 @@
 #include "stdafx.h"
 #include "App.h"
 
-#include "Core/Draw/BaseModel/ImportObjectTest.h"
-
 #include "Test.h"
 #include "Core/TestModelBase.h"
+#include "Core/Camera/Camera.h"
 
 #include <iomanip>
 
@@ -15,7 +14,8 @@ using namespace std;
 App::App(const std::string& commandLine) 
 	: wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), light(wnd.GetDxGraphic())
 {
-	Test();
+	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
+	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 
 	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
 	//texturePlane.SetPosition({ -2.0f, 13.0f, -10.0f });
@@ -26,12 +26,22 @@ App::App(const std::string& commandLine)
 	cube.SetPosition({ 4.0f, 0.0f, 0.0f });
 	cube2.SetPosition({ 0.0f, 4.0f, 0.0f });
 
+	nano.SetRootTransform(
+		DirectX::XMMatrixRotationY(Math::PI / 2.f) *
+		DirectX::XMMatrixTranslation(27.f, -0.56f, 1.7f)
+	);
+	gobber.SetRootTransform(
+		DirectX::XMMatrixRotationY(-Math::PI / 2.f) *
+		DirectX::XMMatrixTranslation(-8.f, 10.f, 0.f)
+	);
+
 	cube.LinkTechniques(renderGraph);
 	cube2.LinkTechniques(renderGraph);
 	light.LinkTechniques(renderGraph);
 	sponza.LinkTechniques(renderGraph);
-
-	wnd.GetDxGraphic().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 400.0f));
+	gobber.LinkTechniques(renderGraph);
+	nano.LinkTechniques(renderGraph);
+	cameras.LinkTechniques(renderGraph);
 }
 
 App::~App()
@@ -64,27 +74,33 @@ void App::DoFrame(float deltaTime)
 	ostringstream out;
 	out << "Play Time : " << setprecision(1) << fixed << t << "s";
 	wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
-	wnd.GetDxGraphic().SetCamera(camera.GetMatrix());
-	light.Update(wnd.GetDxGraphic(), camera.GetMatrix());
+	cameras->RenderToGraphic(wnd.GetDxGraphic());
+	light.Update(wnd.GetDxGraphic(), cameras->GetMatrix());
 
 	light.Submit();
 	//wall.Draw(wnd.GetDxGraphic());
 	//texturePlane.Draw(wnd.GetDxGraphic());
 	//gobber.Submit(frameCommander);
-	//nano.Draw(wnd.GetDxGraphic());
 	//bluePlane.Draw(wnd.GetDxGraphic());
 	//redPlane.Draw(wnd.GetDxGraphic());
 	cube.Submit();
 	cube2.Submit();
 	sponza.Submit();
+	nano.Submit();
+	gobber.Submit();
+	cameras.Submit();
 
 	renderGraph.Execute(wnd.GetDxGraphic());
 
-	static MB modelBase;
-	modelBase.CreateWindow(sponza);
+	static MB sponzaBase{ "Sponza" };
+	static MB gobbarBase{ "Gobbar" };
+	static MB nanoBase{ "Nano" };
+	sponzaBase.CreateWindow(sponza);
+	gobbarBase.CreateWindow(gobber);
+	nanoBase.CreateWindow(nano);
 
 	CreateSimulationWindow();
-	camera.SpawnControlWindow();
+	cameras.CreateWindow(wnd.GetDxGraphic());
 	light.CreatePositionChangeWindow();
 	CreateDemoWindows();
 	//wall.ShowWindow(wnd.GetDxGraphic(), "Wall");
@@ -136,28 +152,28 @@ void App::KeyBoardInput(float deltaTime)
 	if (!wnd.GetCursorEnabled())
 	{
 		if (wnd.keyBoard.IsPressed('W'))
-			camera.Translate(Vector::forward * cameraDelta);
+			cameras->Translate(Vector::forward * cameraDelta);
 
 		if (wnd.keyBoard.IsPressed('A'))
-			camera.Translate(Vector::left * cameraDelta);
+			cameras->Translate(Vector::left * cameraDelta);
 
 		if (wnd.keyBoard.IsPressed('S'))
-			camera.Translate(Vector::back * cameraDelta);
+			cameras->Translate(Vector::back * cameraDelta);
 
 		if (wnd.keyBoard.IsPressed('D'))
-			camera.Translate(Vector::right * cameraDelta);
+			cameras->Translate(Vector::right * cameraDelta);
 
 		if (wnd.keyBoard.IsPressed('R'))
-			camera.Translate(Vector::up * cameraDelta);
+			cameras->Translate(Vector::up * cameraDelta);
 
 		if (wnd.keyBoard.IsPressed('F'))
-			camera.Translate(Vector::down * cameraDelta);
+			cameras->Translate(Vector::down * cameraDelta);
 	}
 
 	while (const auto mouseDelta = wnd.mouse.ReadRawDelta())
 	{
 		if (!wnd.GetCursorEnabled())
-			camera.Rotate((float)mouseDelta->x, (float)mouseDelta->y);
+			cameras->Rotate((float)mouseDelta->x, (float)mouseDelta->y);
 	}
 }
 

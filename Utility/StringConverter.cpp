@@ -33,3 +33,16 @@ std::string StringConverter::ToNarrow(const std::wstring& wide)
 
 	return narrow;
 }
+
+std::vector<std::string> StringConverter::SplitString(const std::string& text, const std::string& delim)
+{
+	std::vector<std::string> strings;
+	StringConverter::SplitStringIterator(text, delim, std::back_inserter(strings));
+
+	return strings;
+}
+
+bool StringConverter::IsStringContain(std::string_view text, std::string_view findText)
+{
+	return std::search(text.begin(), text.end(), findText.begin(), findText.end()) != text.end();
+}

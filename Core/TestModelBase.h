@@ -73,9 +73,11 @@ public:
 class MB : ModelBase
 {
 public:
+	MB(std::string name) : name(std::move(name)) { }
+
 	void CreateWindow(Model& model)
 	{
-		ImGui::Begin("Model");
+		ImGui::Begin(name.c_str());
 		ImGui::Columns(2, nullptr, true);
 		model.Accept(*this);
 		ImGui::NextColumn();
@@ -166,4 +168,6 @@ private:
 
 	std::unordered_map<int, TransformType> transform;
 	SceneGraphNode* selectNode = nullptr;
+
+	std::string name;
 };

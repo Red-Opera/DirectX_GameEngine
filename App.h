@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Window.h"
-#include "Core/Camera.h"
+#include "Core/Camera/CameraContainer.h"
 #include "Core/Draw/Light/PointLight.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/BaseModel/ColorCube.h"
@@ -11,6 +11,7 @@
 #include "Utility/GameTimer.h"
 #include "Utility/Imgui/Usage/ImguiManager.h"
 #include "Utility/Json/ScriptCommander.h"
+#include "Utility/MathInfo.h"
 
 class App
 {
@@ -34,7 +35,7 @@ private:
 	
 	Window wnd;
 	GameTimer timer;
-	Camera camera;
+	CameraContainer cameras;
 	PointLight light;
 	float cameraSpeed = 1.0f;
 
@@ -50,8 +51,8 @@ private:
 	RenderGraphNameSpace::BlurOutlineRenderGraph renderGraph{ wnd.GetDxGraphic() };
 
 	//Model wall { wnd.GetDxGraphic(), "Model/Sample/brick_wall/brick_wall.obj", 6.0f };
-	//Model gobber{ wnd.GetDxGraphic(),"Model/Sample/gobber/GoblinX.obj", 4.0f };
-	//Model nano { wnd.GetDxGraphic(),"Model/Sample/nano_textured/nanosuit.obj", 2.0f };
+	Model gobber{ wnd.GetDxGraphic(),"Model/Sample/gobber/GoblinX.obj", 4.0f };
+	Model nano { wnd.GetDxGraphic(),"Model/Sample/nano_textured/nanosuit.obj", 1.0f };
 	Model sponza { wnd.GetDxGraphic(),"Model/Sample/sponza/sponza.obj", 1.0f / 20.0f };
 	//TestPlane texturePlane{ wnd.GetDxGraphic(), 6.0f };
 	//TestPlane bluePlane{ wnd.GetDxGraphic(), 6.0f, {0.3f, 0.3f, 1.0f, 0.0f} };

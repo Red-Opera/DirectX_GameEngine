@@ -139,6 +139,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Core\Camera\CameraContainer.h" />
+    <ClInclude Include="Core\Camera\CameraFrustum.h" />
+    <ClInclude Include="Core\Camera\CameraIndicator.h" />
+    <ClInclude Include="Core\Camera\CameraProjection.h" />
     <ClInclude Include="Core\Draw\BaseModel\ColorCube.h" />
     <ClInclude Include="Core\Draw\BaseModel\Plane.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
@@ -161,6 +165,7 @@
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\PipelineDataProvider.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Buffer\BufferPassClear.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Buffer\BufferResource.h" />
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\CameraWireFramePass.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\HorizontalBlurPass.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\LambertianRenderPass.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\OutlineDrawPass.h" />
@@ -178,7 +183,7 @@
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\TechniqueBase.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderManager.h" />
     <ClInclude Include="Core\Draw\BaseModel\ColorSphere.h" />
-    <ClInclude Include="Core\Camera.h" />
+    <ClInclude Include="Core\Camera\Camera.h" />
     <ClInclude Include="Core\Draw\BaseModel\Cone.h" />
     <ClInclude Include="Core\Draw\BaseModel\Sphere.h" />
     <ClInclude Include="Core\Draw\Base\ColorInfo.h" />
@@ -207,9 +212,6 @@
     <ClInclude Include="Core\Draw\Base\Image\Image.h" />
     <ClInclude Include="Core\Draw\Light\PointLight.h" />
     <ClInclude Include="Core\Draw\TestObject.h" />
-    <ClInclude Include="Core\Draw\BaseModel\ImportObjectTest.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Core\Draw\Mesh.h" />
     <ClInclude Include="Core\Draw\TestPlane.h" />
     <ClInclude Include="Core\Draw\BaseModel\Cube.h" />
@@ -269,9 +271,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Core\Camera\CameraContainer.cpp" />
+    <ClCompile Include="Core\Camera\CameraFrustum.cpp" />
+    <ClCompile Include="Core\Camera\CameraIndicator.cpp" />
+    <ClCompile Include="Core\Camera\CameraProjection.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorCube.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorSphere.cpp" />
-    <ClCompile Include="Core\Camera.cpp" />
+    <ClCompile Include="Core\Camera\Camera.cpp" />
     <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp" />
     <ClCompile Include="Core\Draw\Base\Material.cpp" />
     <ClCompile Include="Core\Draw\Model.cpp" />
@@ -319,6 +325,10 @@
     <ClCompile Include="Utility\MathInfo.cpp" />
     <ClCompile Include="Utility\StringConverter.cpp" />
     <ClCompile Include="Utility\Vector.cpp" />
+    <FxCompile Include="Shader\LitTextureDiffuseMaskSpecular.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shader\PostProcessing\ScreenBlur.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -333,6 +343,18 @@
     <FxCompile Include="Shader\PostProcessing\OutlineBlur.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\Test1_VS.cso">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Shader\Test2_VS.cso">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Shader\Test_PS.cso">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
     </FxCompile>
     <FxCompile Include="Shader\_Sample_BlendedLitShader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
@@ -355,9 +377,6 @@
     </FxCompile>
     <ClCompile Include="Core\Draw\Light\PointLight.cpp" />
     <ClCompile Include="Core\Draw\TestObject.cpp" />
-    <ClCompile Include="Core\Draw\BaseModel\ImportObjectTest.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Core\Draw\Mesh.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -548,6 +567,7 @@
     <None Include="Utility\DirectXTex\include\DirectXTex.inl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </None>
+    <None Include="Utility\Imgui\Usage\imgui_default.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

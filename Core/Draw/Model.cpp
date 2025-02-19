@@ -11,8 +11,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-Model::Model(DxGraphic& graphic, const std::string& pathString, const float scale) 
-	//: modelHierarchy(std::make_unique<ModelHierarchy>())
+Model::Model(DxGraphic& graphic, const std::string& pathString, const float scale)
 {
 	Assimp::Importer importer;
 

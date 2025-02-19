@@ -1,11 +1,17 @@
 #include "stdafx.h"
 #include "Test.h"
 
+#include "Core/Window.h"
+#include "Core/DxGraphic.h"
+
+#include "Core/Draw/Base/Image/Image.h"
 #include "Core/Draw/Base/Material.h"
 #include "Core/Draw/Mesh.h"
 #include "Core/RenderingPipeline/Vertex.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/TypeCache.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
+#include "Core/RenderingPipeline/RenderingPipeline.h"
+#include "Core/RenderingPipeline/RenderTarget.h"
 #include "Utility/MathInfo.h"
 
 #include <assimp/Importer.hpp>
@@ -314,4 +320,50 @@ void TestScaleMatrixTranslation()
 	DirectX::XMStoreFloat4x4(&f4, tlMat);
 	auto etl = Vector::GetPosition(f4);
 	assert(etl.x == 2.f && etl.y == 3.f && etl.z == 4.f);
+}
+
+void D3DTestScratchPad(Window& wnd)
+{
+	namespace dx = DirectX;
+	using namespace VertexCore;
+
+	const auto RenderWithVS = [&gfx = wnd.GetDxGraphic()](const std::string& vsName)
+		{
+			const auto bitop = Graphic::PrimitiveTopology::GetRender(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			const auto layout = VertexLayout{}
+				.AddType(VertexLayout::Position2D)
+				.AddType(VertexLayout::ColorFloat3);
+
+			VertexBuffer vb(layout, 3);
+			vb[0].GetValue<VertexLayout::Position2D>() = dx::XMFLOAT2{ 0.0f,0.5f };
+			vb[0].GetValue<VertexLayout::ColorFloat3>() = dx::XMFLOAT3{ 1.0f,0.0f,0.0f };
+			vb[1].GetValue<VertexLayout::Position2D>() = dx::XMFLOAT2{ 0.5f,-0.5f };
+			vb[1].GetValue<VertexLayout::ColorFloat3>() = dx::XMFLOAT3{ 0.0f,1.0f,0.0f };
+			vb[2].GetValue<VertexLayout::Position2D>() = dx::XMFLOAT2{ -0.5f,-0.5f };
+			vb[2].GetValue<VertexLayout::ColorFloat3>() = dx::XMFLOAT3{ 0.0f,0.0f,1.0f };
+
+			const auto bivb = Graphic::VertexBuffer::GetRender(gfx, "##?", vb);
+			const std::vector<unsigned short> idx = { 0,1,2 };
+			const auto biidx = Graphic::IndexBuffer::GetRender(gfx, "##?", idx);
+			const auto bips = Graphic::PixelShader::GetRender(gfx, "Shader/Test_PS.cso");
+			const auto bivs = Graphic::VertexShader::GetRender(gfx, "Shader/" + vsName);
+			const auto bilay = Graphic::InputLayout::GetRender(gfx, layout, *bivs);
+			auto rt = Graphic::ShaderInputRenderTarget{ gfx,1280,720,0 };
+
+			biidx->SetRenderPipeline(gfx);
+			bivb->SetRenderPipeline(gfx);
+			bitop->SetRenderPipeline(gfx);
+			bips->SetRenderPipeline(gfx);
+			bivs->SetRenderPipeline(gfx);
+			bilay->SetRenderPipeline(gfx);
+			rt.Clear(gfx, { 0.0f,0.0f,0.0f,1.0f });
+			rt.RenderAsBuffer(gfx);
+			gfx.DrawIndexed(biidx->GetIndexCount());
+			gfx.GetRenderTarget()->RenderAsBuffer(gfx);
+
+			rt.ToImage(gfx).Save("Test_" + vsName + ".png");
+		};
+
+	RenderWithVS("Test2_VS.cso");
+	RenderWithVS("Test1_VS.cso");
 }

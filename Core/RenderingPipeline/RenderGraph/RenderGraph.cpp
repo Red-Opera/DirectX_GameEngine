@@ -149,14 +149,25 @@ namespace RenderGraphNameSpace
 
 			else
 			{
+				bool bound = false;
 				for (auto& pass : renderPasses)
 				{
 					if (pass->GetName() == inputSourcePassName)
 					{
 						auto& source = pass->GetSource(passInput->GetOutputName());
 						passInput->SetConsumeData(source);
+						bound = true;
+
 						break;
 					}
+				}
+
+				if (!bound)
+				{
+					std::ostringstream oss;
+					oss << "Pass Name [" << inputSourcePassName << "]을 발견하지 않음";
+
+					throw RENDER_GRAPHIC_EXCEPTION(oss.str());
 				}
 			}
 		}

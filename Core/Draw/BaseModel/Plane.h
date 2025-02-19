@@ -52,7 +52,7 @@ public:
 		}
 
 		std::vector<USHORT> indices;
-		indices.reserve(pow(divisionX * divisionSizeY, 2) * 6);
+		indices.reserve((size_t)(pow(divisionX * divisionSizeY, 2) * 6));
 
 		const auto vxy2i = [verticesX](size_t x, size_t y) { return (USHORT)(y * verticesX + x); };
 

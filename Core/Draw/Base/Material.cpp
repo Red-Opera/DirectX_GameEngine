@@ -109,10 +109,9 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 			renderStep.AddRender(std::make_shared<TransformConstantBuffer>(graphic, 0u));
 
 			auto vertexShader = VertexShader::GetRender(graphic, shaderCodeName + ".hlsl");
-			auto VSShaderCode = vertexShader->GetShaderCode();
+			renderStep.AddRender(InputLayout::GetRender(graphic, vertexLayout, *vertexShader));
 			renderStep.AddRender(std::move(vertexShader));
 			renderStep.AddRender(PixelShader::GetRender(graphic, shaderCodeName + ".hlsl"));
-			renderStep.AddRender(InputLayout::GetRender(graphic, vertexLayout, VSShaderCode));
 
 			if (hasTexture)
 				renderStep.AddRender(Graphic::SamplerState::GetRender(graphic));
@@ -166,7 +165,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 				InputLayout::GetRender(
 					graphic, 
 					vertexLayout, 
-					VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")->GetShaderCode()
+					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
 				)
 			);
 
@@ -192,7 +191,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 				InputLayout::GetRender(
 					graphic,
 					vertexLayout,
-					VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")->GetShaderCode()
+					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
 				)
 			);
 
