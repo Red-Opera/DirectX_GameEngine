@@ -174,9 +174,6 @@
     <ClInclude Include="Core\Draw\BaseModel\Cube.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\TestTextureCube.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -352,6 +349,30 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\CameraWireFramePass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingChannel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\ShadowMapPass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowCameraConstantBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowSamplerState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\Rasterizer\ShadowRasterizer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\TextureCube.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\SkyboxPass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -578,9 +599,6 @@
     <ClCompile Include="Core\Draw\TestPlane.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\TestTextureCube.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -701,6 +719,21 @@
     <ClCompile Include="Core\Camera\CameraFrustum.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowCameraConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowSamplerState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\Rasterizer\ShadowRasterizer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\TextureCube.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\_Sample_Shader.fx" />
@@ -715,20 +748,14 @@
     <FxCompile Include="Shader\LitTextureDiffuse.hlsl" />
     <FxCompile Include="Shader\LitTextureDiffuseSpecularNormal.hlsl" />
     <FxCompile Include="Shader\LitTextureDiffuseNormal.hlsl" />
-    <FxCompile Include="Shader\xLitTextureLitDiffuseNormal.hlsl" />
-    <FxCompile Include="Shader\ShaderHeader\LightShader.hlsl" />
-    <FxCompile Include="Shader\ShaderHeader\PointLight.hlsl" />
-    <FxCompile Include="Shader\ShaderHeader\Transform.hlsl" />
-    <FxCompile Include="Shader\ShaderHeader\LightVector.hlsl" />
     <FxCompile Include="Shader\LitTextureDiffuseSpecular.hlsl" />
     <FxCompile Include="Shader\LitTextureDiffuseMaskSpecularNormal.hlsl" />
     <FxCompile Include="Shader\NormalOffset.hlsl" />
     <FxCompile Include="Shader\PostProcessing\ScreenBlur.hlsl" />
     <FxCompile Include="Shader\PostProcessing\OutlineBlur.hlsl" />
     <FxCompile Include="Shader\LitTextureDiffuseMaskSpecular.hlsl" />
-    <FxCompile Include="Shader\Test1_VS.cso" />
-    <FxCompile Include="Shader\Test2_VS.cso" />
-    <FxCompile Include="Shader\Test_PS.cso" />
+    <FxCompile Include="Shader\ShadowTest.hlsl" />
+    <FxCompile Include="Shader\Skybox.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -751,5 +778,14 @@
     </None>
     <None Include="Json\process.json" />
     <None Include="Utility\Imgui\Usage\imgui_default.ini" />
+    <None Include="Shader\ShaderHeader\LightShader.hlsli" />
+    <None Include="Shader\ShaderHeader\LightVector.hlsli" />
+    <None Include="Shader\ShaderHeader\PointLight.hlsli" />
+    <None Include="Shader\ShaderHeader\Transform.hlsli" />
+    <None Include="Shader\ShaderHeader\ShadowStaticPS.hlsli" />
+    <None Include="Shader\ShaderHeader\ShadowDynamicPS.hlsli">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="Shader\ShaderHeader\ShadowVS.hlsli" />
   </ItemGroup>
 </Project>

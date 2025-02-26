@@ -19,10 +19,10 @@ Mesh::Mesh(DxGraphic& graphic, const Material& material, const aiMesh& mesh, flo
 
 }
 
-void Mesh::Submit(DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
+void Mesh::Submit(size_t channel, DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
 {
 	DirectX::XMStoreFloat4x4(&transform, parentWorldTransform);
-	Drawable::Submit();
+	Drawable::Submit(channel);
 }
 
 DirectX::XMMATRIX Mesh::GetTransformMatrix() const noexcept

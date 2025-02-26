@@ -4,18 +4,24 @@
 
 #include "Core/Draw/Base/Drawable.h"
 
-Technique::Technique(std::string name, bool startActive) noexcept : name(name), isActive(startActive) 
+Technique::Technique(std::string name, size_t channel, bool startActive) noexcept 
+	: name(name), channel(channel), isActive(startActive)
 {
 
 }
 
-void Technique::Submit(const Drawable& drawable) const noexcept
+void Technique::Submit(const Drawable& drawable, size_t channelFilter) const noexcept
 {
-	if (isActive)
+	if (isActive && ((channel & channelFilter) != 0))
 	{
 		for (const auto& renderStep : renderSteps)
 			renderStep.Submit(drawable);
 	}
+}
+
+Technique::Technique(size_t channel) : channel{ channel }
+{
+
 }
 
 void Technique::push_back(RenderStep renderStep) noexcept

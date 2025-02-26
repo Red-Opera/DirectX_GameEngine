@@ -9,7 +9,7 @@ namespace Graphic
 	class Stencil : public Render
 	{
 	public:
-		enum class DrawMode { Off, Write, Mask, DepthOff, DepthReversed };
+		enum class DrawMode { Off, Write, Mask, DepthOff, DepthReversed, DepthFirst };
 
 		Stencil(DxGraphic& graphic, DrawMode drawMode) : drawMode(drawMode)
 		{
@@ -43,6 +43,13 @@ namespace Graphic
 
 			else if (drawMode == DrawMode::DepthReversed)
 				depthStencilDESC.DepthFunc = D3D11_COMPARISON_GREATER;
+
+			else if (drawMode == DrawMode::DepthFirst)
+			{
+				depthStencilDESC.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+				depthStencilDESC.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+
+			}
 
 			GetDevice(graphic)->CreateDepthStencilState(&depthStencilDESC, &stencil);
 		}
@@ -82,6 +89,9 @@ namespace Graphic
 
 				case Graphic::Stencil::DrawMode::DepthReversed:
 					return "DepthReversed"s;
+
+				case Graphic::Stencil::DrawMode::DepthFirst:
+					return "DepthFirst"s;
 				}
 
 				return "ERROR"s;

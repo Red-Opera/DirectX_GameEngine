@@ -5,6 +5,7 @@
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/TransformConstantBufferScaling.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
+#include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 
 #include <filesystem>
@@ -22,7 +23,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 	}
 
 	{
-		Technique light{ "Light" };
+		Technique light{ "Light", RenderingChannel::main };
 		RenderStep renderStep("lambertian");
 
 		std::string shaderCodeName = "Shader/LitTexture";
@@ -157,7 +158,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 
 	// Outline
 	{
-		Technique outline("Outline", false);
+		Technique outline{ "Outline", RenderingChannel::main, false };
 		{
 			RenderStep mask("outlineMask");
 
@@ -201,6 +202,21 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 		}
 	
 		techniques.push_back(std::move(outline));
+	}
+
+	// ±×¸²ÀÚ ¸Ê Technique
+	{
+		Technique shadowMap{ "ShadowMap", RenderingChannel::shadow, true };
+		{
+			RenderStep draw("ShadowMap");
+	
+			draw.AddRender(InputLayout::GetRender(graphic, vertexLayout, *VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")));
+			draw.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+	
+			shadowMap.push_back(std::move(draw));
+		}
+	
+		techniques.push_back(std::move(shadowMap));
 	}
 }
 

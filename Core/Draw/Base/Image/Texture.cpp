@@ -69,7 +69,7 @@ namespace Graphic
         GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&textureDesc, nullptr, &texture));
 
 		// 머터리얼의 정보를 텍스처에 업데이트
-		GetDeviceContext(graphic)->UpdateSubresource(texture.Get(), 0u, nullptr, image->getConst(), image->GetWidth() * sizeof(GraphicResource::Image::Color), 0u);
+		GetDeviceContext(graphic)->UpdateSubresource(texture.Get(), 0u, nullptr, image->GetConst(), image->GetWidth() * sizeof(GraphicResource::Image::Color), 0u);
 
         // 이미지 데이터를 ID3D11Texture2D에 저장하기 위한 셰이더 리소스 뷰를 저장하기 위한 Desc
         D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = { };

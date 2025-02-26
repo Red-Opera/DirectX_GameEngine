@@ -32,7 +32,7 @@ public:
 	Drawable(DxGraphic& graphic, const Material& material, const aiMesh& mesh, float scale = 1.0f) noexcept;
 	Drawable(const Drawable&) = delete;
 
-	void Submit() const noexcept;
+	void Submit(size_t channelFilter) const noexcept;
 	void Accept(TechniqueBase& tech);
 	void SetRenderPipeline(DxGraphic& graphic) const NOEXCEPTRELEASE;
 	UINT GetIndexCount() const NOEXCEPTRELEASE;

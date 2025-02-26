@@ -5,6 +5,7 @@
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
 #include "Core/RenderingPipeline/Vertex.h"
+#include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 
 CameraIndicator::CameraIndicator(DxGraphic& graphic)
@@ -66,7 +67,7 @@ CameraIndicator::CameraIndicator(DxGraphic& graphic)
 	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	{
-		Technique line;
+		Technique line{ RenderingChannel::main };
 		RenderStep only("lambertian");
 
 		auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");

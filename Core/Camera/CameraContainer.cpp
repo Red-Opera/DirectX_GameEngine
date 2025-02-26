@@ -47,14 +47,14 @@ void CameraContainer::SetRenderPipeline(DxGraphic& graphic)
 	graphic.SetCamera((*this)->GetMatrix());
 }
 
-void CameraContainer::AddCamera(std::unique_ptr<Camera> camera)
+void CameraContainer::AddCamera(std::shared_ptr<Camera> camera)
 {
 	cameras.push_back(std::move(camera));
 }
 
 Camera* CameraContainer::operator->()
 {
-	return cameras[active].get();
+	return &GetActiveCamera();
 }
 
 void CameraContainer::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
@@ -63,13 +63,18 @@ void CameraContainer::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGr
 		camera->LinkTechniques(renderGraph);
 }
 
-void CameraContainer::Submit() const
+void CameraContainer::Submit(size_t channel) const
 {
 	for (size_t i = 0; i < cameras.size(); i++)
 	{
 		if (i != active)
-			cameras[i]->Submit();
+			cameras[i]->Submit(channel);
 	}
+}
+
+Camera& CameraContainer::GetActiveCamera()
+{
+	return *cameras[active];
 }
 
 CameraContainer::~CameraContainer()

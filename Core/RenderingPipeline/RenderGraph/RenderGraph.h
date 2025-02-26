@@ -32,11 +32,15 @@ namespace RenderGraphNameSpace
 
 		RenderQueuePass& GetRenderQueue(const std::string& passName);
 
+		void SaveDepth(DxGraphic& graphic, const std::string& path);
+
 	protected:
 		void SetSinkTarget(const std::string& sinkName, const std::string& target);
 		void AddRenderPass(std::unique_ptr<RenderPass> renderPass);
 		void AddGlobalProvider(std::unique_ptr<PipelineDataProvider>);
 		void AddGlobalConsumer(std::unique_ptr<PipelineDataConsumer>);
+
+		RenderPass& FindRenderPass(const std::string& name);
 
 		void Finalize();
 

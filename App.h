@@ -60,5 +60,7 @@ private:
 
 	ColorCube cube{ wnd.GetDxGraphic(),4.0f };
 	ColorCube cube2{ wnd.GetDxGraphic(),4.0f };
+
+	bool saveDepth = false;
 };
 

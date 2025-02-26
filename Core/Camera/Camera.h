@@ -13,9 +13,10 @@ class DxGraphic;
 class Camera
 {
 public:
-	Camera(DxGraphic& graphic, std::string name, DirectX::XMFLOAT3 initPosition = { -22.0f, 4.0f, 0.0f }, float initPitch = 0.0f, float initYaw = 1.57f) noexcept;
+	Camera(DxGraphic& graphic, std::string name, DirectX::XMFLOAT3 initPosition = { -22.0f, 4.0f, 0.0f }, float initPitch = 0.0f, float initYaw = 1.57f, bool isTethered = false) noexcept;
 
 	DirectX::XMMATRIX GetMatrix() const noexcept;			// 카메라의 Matrix를 반환함
+	DirectX::XMMATRIX GetProjection() const noexcept;
 	
 	void SpawnControlWidgets(DxGraphic& graphic) noexcept;	// 카메라를 조절할 수 있는 ImGui를 생성함
 	void Reset(DxGraphic& graphic) noexcept;				// 카메라 위치 초기화
@@ -23,11 +24,12 @@ public:
 	void Rotate(float dx, float dy) noexcept;
 	void Translate(DirectX::XMFLOAT3 translation) noexcept;
 
+	void SetPosition(const DirectX::XMFLOAT3& position) noexcept;
 	DirectX::XMFLOAT3 GetPosition() const noexcept;			// 카메라 위치를 반환함
 	const std::string& GetName() const noexcept;
 
 	void LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph);
-	void Submit() const;
+	void Submit(size_t channel) const;
 
 	void RenderToGraphic(DxGraphic& graphic) const;
 
@@ -52,4 +54,5 @@ private:
 
 	bool isEnableIndicator = true;
 	bool isEnableFrustumIndicator = true;
+	bool isTethered;
 };

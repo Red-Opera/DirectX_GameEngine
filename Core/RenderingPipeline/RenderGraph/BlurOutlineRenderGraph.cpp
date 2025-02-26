@@ -8,6 +8,8 @@
 #include "Core/RenderingPipeline/RenderingManager/Pass/LambertianRenderPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/OutlineDrawPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/OutlineMaskPass.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/ShadowMapPass.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/SkyboxPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/VerticalBlurPass.h"
 #include "Core/RenderingPipeline/RenderGraph/BlurOutlineRenderingPass.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
@@ -35,7 +37,13 @@ namespace RenderGraphNameSpace
 		}
 
 		{
+			auto pass = std::make_unique<ShadowMapPass>(graphic, "ShadowMap");
+			AddRenderPass(std::move(pass));
+		}
+
+		{
 			auto pass = std::make_unique<LambertianRenderPass>(graphic, "lambertian");
+			pass->SetSinkLinkage("ShadowMap", "ShadowMap.Map");
 			pass->SetSinkLinkage("renderTarget", "clearRenderTarget.buffer");
 			pass->SetSinkLinkage("depthStencil", "clearDepthStencil.buffer");
 
@@ -43,8 +51,16 @@ namespace RenderGraphNameSpace
 		}
 
 		{
-			auto pass = std::make_unique<OutlineMaskPass>(graphic, "outlineMask");
+			auto pass = std::make_unique<SkyboxPass>(graphic, "Skybox");
+			pass->SetSinkLinkage("renderTarget", "lambertian.renderTarget");
 			pass->SetSinkLinkage("depthStencil", "lambertian.depthStencil");
+
+			AddRenderPass(std::move(pass));
+		}
+
+		{
+			auto pass = std::make_unique<OutlineMaskPass>(graphic, "outlineMask");
+			pass->SetSinkLinkage("depthStencil", "Skybox.depthStencil");
 
 			AddRenderPass(std::move(pass));
 		}
@@ -90,7 +106,7 @@ namespace RenderGraphNameSpace
 
 		{
 			auto pass = std::make_unique<VerticalBlurPass>("vertical", graphic);
-			pass->SetSinkLinkage("renderTarget", "lambertian.renderTarget");
+			pass->SetSinkLinkage("renderTarget", "Skybox.renderTarget");
 			pass->SetSinkLinkage("depthStencil", "outlineMask.depthStencil");
 			pass->SetSinkLinkage("scratchIn", "horizontal.scratchOut");
 			pass->SetSinkLinkage("kernel", "$.blurKernel");
@@ -112,7 +128,13 @@ namespace RenderGraphNameSpace
 		Finalize();
 	}
 
-	void BlurOutlineRenderGraph::RenderWidgets(DxGraphic& graphic)
+	void BlurOutlineRenderGraph::RenderWindows(DxGraphic& graphic)
+	{
+		RenderKernelWindow(graphic);
+		dynamic_cast<SkyboxPass&>(FindRenderPass("Skybox")).RenderWidnow();
+	}
+
+	void BlurOutlineRenderGraph::RenderKernelWindow(DxGraphic& graphic)
 	{
 		if (ImGui::Begin("Kernel"))
 		{
@@ -161,6 +183,23 @@ namespace RenderGraphNameSpace
 		}
 
 		ImGui::End();
+	}
+
+	void BlurOutlineRenderGraph::RenderMainCamera(Camera& camera)
+	{
+		dynamic_cast<LambertianRenderPass&>(FindRenderPass("lambertian")).RenderMainCamera(camera);
+		dynamic_cast<SkyboxPass&>(FindRenderPass("Skybox")).RenderMainCamera(camera);
+	}
+
+	void BlurOutlineRenderGraph::RenderShadowCamera(Camera& camera)
+	{
+		dynamic_cast<ShadowMapPass&>(FindRenderPass("ShadowMap")).RenderShadowCamera(camera);
+		dynamic_cast<LambertianRenderPass&>(FindRenderPass("lambertian")).RenderShadowCamera(camera);
+	}
+
+	void BlurOutlineRenderGraph::DumpShadowMap(DxGraphic& grpahic, const std::string& path)
+	{
+		dynamic_cast<ShadowMapPass&>(FindRenderPass("ShadowMap")).DumpShadowMap(grpahic, path);
 	}
 
 	void BlurOutlineRenderGraph::SetKernelGauss(int radius, float sigma) NOEXCEPTRELEASE

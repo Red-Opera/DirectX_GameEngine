@@ -21,10 +21,10 @@ Drawable::Drawable(DxGraphic& graphic, const Material& material, const aiMesh& m
 		AddTechnique(std::move(tech));
 }
 
-void Drawable::Submit() const noexcept
+void Drawable::Submit(size_t channelFilter) const noexcept
 {
 	for (const auto& technique : techniques)
-		technique.Submit(*this);
+		technique.Submit(*this, channelFilter);
 }
 
 void Drawable::Accept(TechniqueBase& tech)

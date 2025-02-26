@@ -1,19 +1,39 @@
 #include "stdafx.h"
 #include "PointLight.h"
 
-PointLight::PointLight(DxGraphic& graphic, float radius) : mesh(graphic, radius), cBuffer(graphic)
+#include "Core/Camera/Camera.h"
+
+#include "Utility/MathInfo.h"
+
+PointLight::PointLight(DxGraphic& graphic, DirectX::XMFLOAT3 position, float radius) : mesh(graphic, radius), cBuffer(graphic)
 {
+	initLightInfo =
+	{
+		position,
+		{ 0.4f, 0.4f, 0.4f },
+		{ 1.0f, 1.0f, 1.0f },
+		3.0f, 1.0f, 0.045f, 0.075f
+	};
+
 	Reset();
+
+	viewCamera = std::make_shared<Camera>(graphic, "Light", lightInfo.position, 0.0f, Math::PI / 2.0f, true);
 }
 
 void PointLight::CreatePositionChangeWindow() noexcept
 {
 	if (ImGui::Begin("Light"))
 	{
+		bool isNotMatch = false;
+		const auto IsNotMatch = [&isNotMatch](bool notMatch) { isNotMatch = isNotMatch || notMatch; };
+
 		ImGui::Text("Position");
-		ImGui::SliderFloat("X", &lightInfo.position.x, -60.0f, 60.0f, "%.1f");
-		ImGui::SliderFloat("Y", &lightInfo.position.y, -60.0f, 60.0f, "%.1f");
-		ImGui::SliderFloat("Z", &lightInfo.position.z, -60.0f, 60.0f, "%.1f");
+		IsNotMatch(ImGui::SliderFloat("X", &lightInfo.position.x, -60.0f, 60.0f, "%.1f"));
+		IsNotMatch(ImGui::SliderFloat("Y", &lightInfo.position.y, -60.0f, 60.0f, "%.1f"));
+		IsNotMatch(ImGui::SliderFloat("Z", &lightInfo.position.z, -60.0f, 60.0f, "%.1f"));
+
+		if (isNotMatch)
+			viewCamera->SetPosition(lightInfo.position);
 
 		ImGui::Text("Intensity/Color");
 		ImGui::SliderFloat("Intensity", &lightInfo.diffuseIntensity, 0.01f, 200.0f, "%.2f", 2);
@@ -34,17 +54,13 @@ void PointLight::CreatePositionChangeWindow() noexcept
 
 void PointLight::Reset() noexcept
 {
-	lightInfo = { 
-		{ 0.0f, 10.0f, 0.0f },
-		{ 0.4f, 0.4f, 0.4f },
-		{ 1.0f, 1.0f, 1.0f },
-		3.0f, 1.0f, 0.045f, 0.075f };
+	lightInfo = initLightInfo;
 }
 
-void PointLight::Submit() const NOEXCEPTRELEASE
+void PointLight::Submit(size_t channel) const NOEXCEPTRELEASE
 {
 	mesh.SetPos(lightInfo.position);
-	mesh.Submit();
+	mesh.Submit(channel);
 }
 
 void PointLight::Update(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept
@@ -60,4 +76,9 @@ void PointLight::Update(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexc
 void PointLight::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
 {
 	mesh.LinkTechniques(renderGraph);
+}
+
+std::shared_ptr<Camera> PointLight::GetLightViewCamera() const noexcept
+{
+	return viewCamera;
 }

@@ -5,6 +5,7 @@
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/TransformConstantBufferScaling.h"
+#include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 
 #include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
@@ -28,18 +29,18 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 	auto transformConstantBuffer = std::make_shared<TransformConstantBuffer>(graphic);
 
 	{
-		Technique tech("Cube");
+		Technique tech("Cube", RenderingChannel::main);
 		{
 			RenderStep cubeRender("lambertian");
 
 			cubeRender.AddRender(Texture::GetRender(graphic, "Images/brickwall.jpg"));
 			cubeRender.AddRender(SamplerState::GetRender(graphic));
 
-			auto vertexShader = VertexShader::GetRender(graphic, "Shader/LitTextureDiffuse.hlsl");
+			auto vertexShader = VertexShader::GetRender(graphic, "Shader/ShadowTest.hlsl");
 			cubeRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), *vertexShader));
 			cubeRender.AddRender(std::move(vertexShader));
 
-			cubeRender.AddRender(PixelShader::GetRender(graphic, "Shader/LitTextureDiffuse.hlsl"));
+			cubeRender.AddRender(PixelShader::GetRender(graphic, "Shader/ShadowTest.hlsl"));
 
 			DynamicConstantBuffer::EditLayout layout;
 			layout.add<DynamicConstantBuffer::float3>("specularColor");
@@ -64,7 +65,7 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 	}
 
 	{
-		Technique tech("Outline");
+		Technique tech("Outline", RenderingChannel::main);
 		{
 			RenderStep outlineMask("outlineMask");
 
@@ -104,6 +105,21 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 		}
 	
 		AddTechnique(std::move(tech));
+	}
+
+	// ±×¸²ÀÚ ¸Ê Technique
+	{
+		Technique shadowMap{ "ShadowMap", RenderingChannel::shadow, true };
+		{
+			RenderStep draw("ShadowMap");
+
+			draw.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), *VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")));
+			draw.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+
+			shadowMap.push_back(std::move(draw));
+		}
+
+		AddTechnique(std::move(shadowMap));
 	}
 }
 

@@ -24,6 +24,7 @@ namespace Graphic
 		{
 			DirectX::XMMATRIX worldViewProjection;
 			DirectX::XMMATRIX transform;
+			DirectX::XMMATRIX model;
 		};
 
 		void UpdateSetRenderPipeline(DxGraphic& graphic, const Transform& transform) NOEXCEPTRELEASE;

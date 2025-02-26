@@ -25,9 +25,9 @@ DirectX::XMMATRIX CameraProjection::GetMatrix() const
 	return DirectX::XMMatrixPerspectiveLH(width, height, nearZ, farZ);
 }
 
-void CameraProjection::Submit() const
+void CameraProjection::Submit(size_t channel) const
 {
-	frust.Submit();
+	frust.Submit(channel);
 }
 
 void CameraProjection::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)

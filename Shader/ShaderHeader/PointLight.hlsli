@@ -1,4 +1,4 @@
-cbuffer LightInfoConstant
+cbuffer LightInfoConstant : register(b0)
 {
     float3 lightViewPosition;
     float3 ambient;             // ¡÷∫Ø±§ ∞≠µµ

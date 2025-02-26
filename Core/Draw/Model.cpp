@@ -37,10 +37,10 @@ Model::Model(DxGraphic& graphic, const std::string& pathString, const float scal
 	root = ConvertSceneGraphNode(nextID, *model->mRootNode, scale);
 }
 
-void Model::Submit() const NOEXCEPTRELEASE
+void Model::Submit(size_t channel) const NOEXCEPTRELEASE
 {
 	//modelHierarchy->ApplyParameter();
-	root->Submit(DirectX::XMMatrixIdentity());
+	root->Submit(channel, DirectX::XMMatrixIdentity());
 }
 
 void Model::Accept(ModelBase& modelBase)

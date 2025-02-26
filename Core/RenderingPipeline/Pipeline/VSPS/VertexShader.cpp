@@ -27,9 +27,6 @@ namespace Graphic
 
         hr = D3DX11CompileFromFileW(StringConverter::ToWide(path).c_str(), nullptr, nullptr, "VS", "vs_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
 
-        if (FAILED(hr))
-            DXTrace(__FILE__, (DWORD)__LINE__, hr, "D3DX11CompileFromFile", true);
-
         if (errorMessage != 0)
         {
             MessageBoxA(0, (char*)errorMessage->GetBufferPointer(), 0, 0);

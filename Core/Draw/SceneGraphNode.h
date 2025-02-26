@@ -17,7 +17,7 @@ class SceneGraphNode
 public:
 	SceneGraphNode(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) NOEXCEPTRELEASE;
 
-	void Submit(DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE;
+	void Submit(size_t channel, DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE;
 	void Accept(ModelBase& modelBase);
 	void Accept(TechniqueBase& techniqueBase);
 

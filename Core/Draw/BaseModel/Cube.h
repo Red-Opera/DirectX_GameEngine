@@ -12,6 +12,43 @@
 class Cube
 {
 public:
+	static TriangleIndexList Create(std::optional<VertexCore::VertexLayout> vertexLayout = { })
+	{
+		using namespace VertexCore;
+		using VertexType = VertexCore::VertexLayout::VertexType;
+
+		if (!vertexLayout)
+		{
+			vertexLayout = VertexCore::VertexLayout{ };
+			vertexLayout->AddType(VertexType::Position3D);
+		}
+
+		constexpr float side = 1.0f / 2.0f;
+
+		VertexBuffer vertices(std::move(*vertexLayout), 8u);
+		vertices[0].GetValue<VertexType::Position3D>() = { -side, -side, -side };
+		vertices[1].GetValue<VertexType::Position3D>() = { side, -side, -side };
+		vertices[2].GetValue<VertexType::Position3D>() = { -side,  side, -side };
+		vertices[3].GetValue<VertexType::Position3D>() = { side,  side, -side };
+		vertices[4].GetValue<VertexType::Position3D>() = { -side, -side,  side };
+		vertices[5].GetValue<VertexType::Position3D>() = { side, -side,  side };
+		vertices[6].GetValue<VertexType::Position3D>() = { -side,  side,  side };
+		vertices[7].GetValue<VertexType::Position3D>() = { side,  side,  side };
+
+		return 
+		{
+			std::move(vertices),
+			{
+				0,2,1, 2,3,1,
+				1,3,5, 3,7,5,
+				2,6,3, 3,6,7,
+				4,5,7, 4,7,6,
+				0,4,2, 2,4,6,
+				0,1,4, 1,5,4
+			}
+		};
+	}
+
 	static TriangleIndexList MakeCubeFrame(VertexCore::VertexLayout vertexLayout)
 	{
 		using namespace VertexCore;

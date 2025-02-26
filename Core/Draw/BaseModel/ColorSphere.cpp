@@ -5,7 +5,9 @@
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "Core/RenderingPipeline/Vertex.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
+#include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/Exception/GraphicsException.h"
+
 
 ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 {
@@ -20,7 +22,7 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	{
-		Technique tech;
+		Technique tech{ RenderingChannel::main };
 		RenderStep sphereRender("lambertian");
 
 		auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");

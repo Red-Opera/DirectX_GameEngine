@@ -17,7 +17,7 @@ public:
 	void SetRotation(DirectX::XMFLOAT3 rotation) noexcept;
 	DirectX::XMMATRIX GetMatrix() const;
 
-	void Submit() const;
+	void Submit(size_t channel) const;
 	void LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph);
 
 	void RenderWidgets(DxGraphic& graphic);

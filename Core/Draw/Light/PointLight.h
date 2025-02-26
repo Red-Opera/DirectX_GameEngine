@@ -8,17 +8,21 @@
 
 namespace RenderGraphNameSpace { class RenderGraph; }
 
+class Camera;
+
 class PointLight
 {
 public:
-	PointLight(DxGraphic& graphic, float radius = 0.5f);
+	PointLight(DxGraphic& graphic, DirectX::XMFLOAT3 position = { 0.0f, 10.0f, 0.0f }, float radius = 0.5f);
 
 	void CreatePositionChangeWindow() noexcept;
 	void Reset() noexcept;
-	void Submit() const NOEXCEPTRELEASE;
+	void Submit(size_t channel) const NOEXCEPTRELEASE;
 	void Update(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept;
 
 	void LinkTechniques(RenderGraphNameSpace::RenderGraph&);
+
+	std::shared_ptr<Camera> GetLightViewCamera() const noexcept;
 
 private:
 	struct PointLightConstantBuffer
@@ -32,7 +36,11 @@ private:
 		float attQuad;
 	};
 
+	std::shared_ptr<Camera> viewCamera;
+
 	PointLightConstantBuffer lightInfo;
+	PointLightConstantBuffer initLightInfo;
+
 	mutable ColorSphere mesh;
 	mutable Graphic::PixelConstantBuffer<PointLightConstantBuffer> cBuffer;
 };

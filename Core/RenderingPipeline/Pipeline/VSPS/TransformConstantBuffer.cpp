@@ -3,8 +3,7 @@
 
 namespace Graphic
 {
-	TransformConstantBuffer::TransformConstantBuffer(DxGraphic& graphic, UINT slot) 
-		: parent(parent)
+	TransformConstantBuffer::TransformConstantBuffer(DxGraphic& graphic, UINT slot)
 	{
 		if (!vertexConstantBufferMatrix)
 			vertexConstantBufferMatrix = std::make_unique<VertexConstantBuffer<Transform>>(graphic, slot);
@@ -35,11 +34,13 @@ namespace Graphic
 		assert(parent != nullptr);
 
 		// 부모의 Transformd에서 카메라 위치를 곱하여 View 위치를 구함
-		const auto viewTransform = parent->GetTransformMatrix() * graphic.GetCamera();
+		const auto model = parent->GetTransformMatrix();
+		const auto viewTransform = model * graphic.GetCamera();
 
 		// 상수 버퍼로 만들 Transform을 만듬
-		return 
+		return
 		{
+			DirectX::XMMatrixTranspose(model),
 			DirectX::XMMatrixTranspose(viewTransform),
 
 			// World * View * Projection

@@ -104,6 +104,11 @@ namespace GraphicResource
 		return (UINT)scratch.GetMetadata().height;
 	}
 
+	UINT Image::GetBytePitch() const noexcept
+	{
+		return (UINT)scratch.GetImage(0, 0, 0)->rowPitch;
+	}
+
 	Image::Color* Image::get() noexcept
 	{
 		return reinterpret_cast<Color*>(scratch.GetPixels());
@@ -114,7 +119,7 @@ namespace GraphicResource
 		return const_cast<Image*>(this)->get();
 	}
 
-	const Image::Color* Image::getConst() const noexcept
+	const Image::Color* Image::GetConst() const noexcept
 	{
 		return const_cast<Image*>(this)->get();
 	}

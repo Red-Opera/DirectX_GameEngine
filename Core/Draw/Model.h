@@ -22,7 +22,7 @@ class Model
 public:
 	Model(DxGraphic& graphic, const std::string& pathString, float scale = 1.0f);
 
-	void Submit() const NOEXCEPTRELEASE;
+	void Submit(size_t size) const NOEXCEPTRELEASE;
 	void Accept(class ModelBase& modelBase);
 
 	void SetRootTransform(DirectX::FXMMATRIX transform) noexcept;

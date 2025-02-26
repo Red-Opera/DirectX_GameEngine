@@ -5,6 +5,7 @@
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
 #include "Core/RenderingPipeline/Vertex.h"
+#include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 
 CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, float nearZ, float farZ)
@@ -44,7 +45,7 @@ CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, floa
 	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	{
-		Technique line;
+		Technique line{ RenderingChannel::main };
 		{
 			RenderStep notOccluded("lambertian");
 

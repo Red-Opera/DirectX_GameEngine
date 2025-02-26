@@ -66,6 +66,21 @@ namespace RenderGraphNameSpace
 		globalDataConsumers.push_back(std::move(input));
 	}
 
+	RenderPass& RenderGraph::FindRenderPass(const std::string& name)
+	{
+		const auto i = std::find_if(renderPasses.begin(), renderPasses.end(), [&name](auto& renderPass) { return renderPass->GetName() == name; });
+
+		if (i == renderPasses.end())
+			throw std::runtime_error(name + "라는 이름의 Pass가 존재하지 않음");
+
+		return **i;
+	}
+
+	void RenderGraph::SaveDepth(DxGraphic& graphic, const std::string& path)
+	{
+		masterDepth->ToImage(graphic).Save(path);
+	}
+
 	void RenderGraph::AddGlobalProvider(std::unique_ptr<PipelineDataProvider> output)
 	{
 		globalDataProviders.push_back(std::move(output));
@@ -122,6 +137,14 @@ namespace RenderGraphNameSpace
 		for (auto& passInput : pass.GetSinks())
 		{
 			const auto& inputSourcePassName = passInput->GetPassName();
+
+			if (inputSourcePassName.empty())
+			{
+				std::ostringstream output;
+				output << pass.GetName() << "라는 이름의 Pass는 " << passInput->GetRegisteredName() << "가 존재하지 않음";
+
+				throw RENDER_GRAPHIC_EXCEPTION(output.str());
+			}
 
 			if (inputSourcePassName == "$")
 			{

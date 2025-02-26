@@ -12,7 +12,7 @@ SceneGraphNode::SceneGraphNode(int id, const std::string& name, std::vector<Mesh
 	DirectX::XMStoreFloat4x4(&this->worldTransform, DirectX::XMMatrixIdentity());
 }
 
-void SceneGraphNode::Submit(DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
+void SceneGraphNode::Submit(size_t channel, DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
 {
 	// 부모를 걸쳐 변한 transform 값을 이 오브젝트를 곱하여 이 오브젝트의 World Transform 값을 구함
 	const auto thisWorldTransform =
@@ -22,11 +22,11 @@ void SceneGraphNode::Submit(DirectX::FXMMATRIX parentWorldTransform) const NOEXC
 
 	// Mesh를 그림
 	for (const auto meshPtr : meshPtrs)
-		meshPtr->Submit(thisWorldTransform);
+		meshPtr->Submit(channel, thisWorldTransform);
 
 	// 자식도 이 노드처럼 그리도록 지시
 	for (const auto& child : childPtrs)
-		child->Submit(thisWorldTransform);
+		child->Submit(channel, thisWorldTransform);
 }
 
 void SceneGraphNode::Accept(ModelBase& modelBase)

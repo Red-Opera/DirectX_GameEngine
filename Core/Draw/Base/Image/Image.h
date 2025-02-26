@@ -92,10 +92,11 @@ namespace GraphicResource
 
 		UINT GetWidth() const noexcept;
 		UINT GetHeight() const noexcept;
+		UINT GetBytePitch() const noexcept;
 
 		Color* get() noexcept;
 		const Color* get() const noexcept;
-		const Color* getConst() const noexcept;
+		const Color* GetConst() const noexcept;
 
 		static Image FromFile(const std::string& name);
 

@@ -1,7 +1,9 @@
-#include "ShaderHeader/PointLight.hlsl"
-#include "ShaderHeader/LightShader.hlsl"
-#include "ShaderHeader/LightVector.hlsl"
-#include "ShaderHeader/Transform.hlsl"
+#include "ShaderHeader/PointLight.hlsli"
+#include "ShaderHeader/LightShader.hlsli"
+#include "ShaderHeader/LightVector.hlsli"
+#include "ShaderHeader/Transform.hlsli"
+#include "ShaderHeader/ShadowVS.hlsli"
+#include "ShaderHeader/ShadowStaticPS.hlsli"
 
 struct VertexOut
 {
@@ -10,10 +12,11 @@ struct VertexOut
     float3 tangent : Tangent;
     float3 biTangent : Bitangent;
     float2 textureCoord : TEXCOORD;
+    float4 shadowHomoPosition : ShadowPosition;
     float4 position : SV_Position;
 }; 
 
-cbuffer ObjectColor
+cbuffer ObjectColor : register(b1)
 {
     bool useGlassAlpha;     // Alpha 사용 여부
     bool useSpecularMap;    // Specular 사용 여부
@@ -24,11 +27,11 @@ cbuffer ObjectColor
     float normalMapPower;   // Normal 맵 강도
 };
 
-Texture2D tex;
-Texture2D specularTexture;
-Texture2D normalMap;
+Texture2D tex : register(t0);
+Texture2D specularTexture : register(t1);
+Texture2D normalMap : register(t2);
 
-SamplerState state;
+SamplerState state : register(s0);
 
 VertexOut VS(float3 localPosition : Position, float3 normal : Normal, float3 tangent : Tangent, float3 biTangent : Bitangent, float2 textureCoord : TEXCOORD)
 {
@@ -42,11 +45,17 @@ VertexOut VS(float3 localPosition : Position, float3 normal : Normal, float3 tan
     
     vertexOut.textureCoord = textureCoord;
     
+    vertexOut.shadowHomoPosition = GetShadowHomoSpace(localPosition, model);
+    
     return vertexOut;
 }
 
-float4 PS(float3 viewPosition : Position, float3 viewNormal : Normal, float3 viewTangent : Tangent, float3 viewBiTangent : Bitangent, float2 textureCoord : TEXCOORD) : SV_Target
+float4 PS(float3 viewPosition : Position, float3 viewNormal : Normal, float3 viewTangent : Tangent, float3 viewBiTangent : Bitangent, float2 textureCoord : TEXCOORD, float4 shadowPosition : ShadowPosition) : SV_Target
 {
+    
+    float3 diffuse;
+    float3 specularRefeflect;
+    
     float4 sampleTexture = tex.Sample(state, textureCoord); // 텍스쳐의 색을 가져옴
     
     // 알파를 사용하는 경우
@@ -59,38 +68,47 @@ float4 PS(float3 viewPosition : Position, float3 viewNormal : Normal, float3 vie
         viewNormal = -viewNormal;
 #endif
     
-    viewNormal = normalize(viewNormal);
-    
-    if (useNormalMap)
+    const float shadow = GetShadow(shadowPosition);
+    if (shadow != 0.0f)
     {
-        const float3 mappedNormal = GetViewNormal(normalize(viewTangent), normalize(viewBiTangent), viewNormal, textureCoord, normalMap, state);
-        viewNormal = lerp(viewNormal, mappedNormal, normalMapPower);
+        viewNormal = normalize(viewNormal);
+        
+        if (useNormalMap)
+        {
+            const float3 mappedNormal = GetViewNormal(normalize(viewTangent), normalize(viewBiTangent), viewNormal, textureCoord, normalMap, state);
+            viewNormal = lerp(viewNormal, mappedNormal, normalMapPower);
+        }
+        
+        // 정점에서 빛의 거리와 방향을 구함
+        const LightVector lightVector = GetLightVector(lightViewPosition, viewPosition);
+
+        float3 specularReflectionColor; // Speular가 반사하는 색깔
+        float specularPower = specularGlass;
+        const float4 specularSample = specularTexture.Sample(state, textureCoord);
+        
+        // Specular Map을 사용할 경우
+        if (useSpecularMap)
+            specularReflectionColor = specularSample.rgb;
+        else
+            specularReflectionColor = specularColor;
+        
+        // 반짝임을 사용하는 경우
+        if (useGlassAlpha)
+            specularPower = pow(2.0f, specularSample.a * 13.0f);
+        
+        // 상쇠된 빛의 강도를 구하고 분산광을 거리에 따른 빛의 강도를 구함
+        const float attResult = GetAttenuate(attConst, attLin, attQuad, lightVector.distance);
+        diffuse = GetDiffuse(diffuseColor, diffuseIntensity, attResult, lightVector.vertexToLightDir, viewNormal);
+        
+        // 반사광의 specular를 구함
+        specularRefeflect = GetSpecular(diffuseColor * diffuseIntensity * specularReflectionColor, specularPower, viewNormal, lightVector.vertexToLight, viewPosition, attResult, specularPower);
+    
+        diffuse *= shadow;
+        specularRefeflect *= shadow;
     }
     
-    // 정점에서 빛의 거리와 방향을 구함
-    const LightVector lightVector = GetLightVector(lightViewPosition, viewPosition);
-
-    float3 specularReflectionColor;             // Speular가 반사하는 색깔
-    float specularPower = specularGlass;
-    const float4 specularSample = specularTexture.Sample(state, textureCoord);
-    
-    // Specular Map을 사용할 경우
-    if (useSpecularMap)
-        specularReflectionColor = specularSample.rgb;
-    
     else
-        specularReflectionColor = specularColor;
-    
-    // 반짝임을 사용하는 경우
-    if (useGlassAlpha)
-        specularPower = pow(2.0f, specularSample.a * 13.0f);
-    
-    // 상쇠된 빛의 강도를 구하고 분산광을 거리에 따른 빛의 강도를 구함
-    const float attResult = GetAttenuate(attConst, attLin, attQuad, lightVector.distance);
-    const float3 diffuse = GetDiffuse(diffuseColor, diffuseIntensity, attResult, lightVector.vertexToLightDir, viewNormal);
-    
-    // 반사광의 specular를 구함
-    const float3 specularRefeflect = GetSpecular(diffuseColor * diffuseIntensity * specularReflectionColor, specularPower, viewNormal, lightVector.vertexToLight, viewPosition, attResult, specularPower);
+        diffuse = specularRefeflect = 0.0f;
     
     // 주변광과 분산광을 합친 후 1.0이 넘어간 경우 최대 1.0으로 제한함
     return float4(saturate((diffuse + ambient) * sampleTexture.rgb + specularRefeflect), 1.0f);

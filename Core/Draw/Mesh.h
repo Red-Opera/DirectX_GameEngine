@@ -15,7 +15,7 @@ class Mesh : public Drawable
 public:
 	Mesh(DxGraphic& graphic, const Material& material, const aiMesh& mesh, float scale = 1.0f) NOEXCEPTRELEASE;
 
-	void Submit(DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE;
+	void Submit(size_t channel, DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE;
 
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;	// Mesh의 World 행렬을 반환함
 

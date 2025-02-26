@@ -114,6 +114,10 @@ void DxGraphic::BeginFrame(float red, float green, float blue) noexcept
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
     }
+
+    ID3D11ShaderResourceView* const nullTexture = nullptr;
+    deviceContext->PSSetShaderResources(0, 1, &nullTexture);
+    deviceContext->PSSetShaderResources(3, 1, &nullTexture);
 }
 
 void DxGraphic::EndFrame()

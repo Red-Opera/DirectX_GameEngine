@@ -120,6 +120,15 @@
       <AdditionalDependencies>legacy_stdio_definitions.lib;d3d11.lib;d3dx10.lib;d3dx11.lib;D3DCompiler.lib;dxerr.lib;dxgi.lib;dxguid.lib;DirectXTEx.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Lib\x64;Utility\DirectXTex\bin\Debug</AdditionalLibraryDirectories>
     </Link>
+    <FxCompile>
+      <EntryPointName>PS</EntryPointName>
+    </FxCompile>
+    <FxCompile>
+      <ShaderType>Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -150,6 +159,7 @@
     <ClInclude Include="Core\Draw\Model.h" />
     <ClInclude Include="Core\Draw\ModelBase.h" />
     <ClInclude Include="Core\Draw\SceneGraphNode.h" />
+    <ClInclude Include="Core\Draw\TextureCube.h" />
     <ClInclude Include="Core\DxGraphicResource.h" />
     <ClInclude Include="Core\Exception\ModelException.h" />
     <ClInclude Include="Core\Exception\RenderGraphCompileException.h" />
@@ -157,12 +167,17 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\Stencil.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\Rasterizer\Rasterizer.h" />
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\Rasterizer\ShadowRasterizer.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\NullPixelShader.h" />
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowCameraConstantBuffer.h" />
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowSamplerState.h" />
+    <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBufferScaling.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\BlurOutlineRenderGraph.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\BlurOutlineRenderingPass.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\PipelineDataConsumer.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\PipelineDataProvider.h" />
+    <ClInclude Include="Core\RenderingPipeline\RenderingChannel.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Buffer\BufferPassClear.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Buffer\BufferResource.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\CameraWireFramePass.h" />
@@ -176,6 +191,8 @@
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderJob.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\Base\RenderQueuePass.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\RenderGraph.h" />
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\ShadowMapPass.h" />
+    <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\SkyboxPass.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\VerticalBlurPass.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStep.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStepLinkBase.h" />
@@ -215,9 +232,10 @@
     <ClInclude Include="Core\Draw\Mesh.h" />
     <ClInclude Include="Core\Draw\TestPlane.h" />
     <ClInclude Include="Core\Draw\BaseModel\Cube.h" />
-    <ClInclude Include="Core\Draw\TestTextureCube.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <None Include="Shader\ShaderHeader\ShadowVS.hlsli" />
+    <None Include="Shader\ShaderHeader\ShadowDynamicPS.hlsli">
+      <FileType>Document</FileType>
+    </None>
     <ClInclude Include="Test.h" />
     <ClInclude Include="Utility\DirectXTex\include\BC.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -282,13 +300,18 @@
     <ClCompile Include="Core\Draw\Base\Material.cpp" />
     <ClCompile Include="Core\Draw\Model.cpp" />
     <ClCompile Include="Core\Draw\SceneGraphNode.cpp" />
+    <ClCompile Include="Core\Draw\TextureCube.cpp" />
     <ClCompile Include="Core\DxGraphicResource.cpp" />
     <ClCompile Include="Core\Exception\ModelException.cpp" />
     <ClCompile Include="Core\Exception\RenderGraphCompileException.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\Rasterizer\Rasterizer.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\Rasterizer\ShadowRasterizer.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\NullPixelShader.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowCameraConstantBuffer.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\ShadowSamplerState.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBufferScaling.cpp" />
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\BlurOutlineRenderGraph.cpp" />
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\PipelineDataConsumer.cpp" />
@@ -316,9 +339,6 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\VertexShader.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\VertexBuffer.cpp" />
     <ClCompile Include="Core\Draw\TestPlane.cpp" />
-    <ClCompile Include="Core\Draw\TestTextureCube.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.cpp" />
     <ClCompile Include="Test.cpp" />
     <ClCompile Include="Utility\Json\ScriptCommander.cpp" />
@@ -328,6 +348,7 @@
     <FxCompile Include="Shader\LitTextureDiffuseMaskSpecular.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shader\PostProcessing\ScreenBlur.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
@@ -339,23 +360,21 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shader\PostProcessing\OutlineBlur.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shader\Test1_VS.cso">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    <None Include="Shader\ShaderHeader\ShadowStaticPS.hlsli">
+      <FileType>Document</FileType>
+    </None>
+    <FxCompile Include="Shader\ShadowTest.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
-    </FxCompile>
-    <FxCompile Include="Shader\Test2_VS.cso">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shader\Test_PS.cso">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
-    </FxCompile>
+    <FxCompile Include="Shader\Skybox.hlsl" />
     <FxCompile Include="Shader\_Sample_BlendedLitShader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -369,11 +388,13 @@
     <FxCompile Include="Shader\ColorShader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shader\LitTexture.hlsl">
       <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <ClCompile Include="Core\Draw\Light\PointLight.cpp" />
     <ClCompile Include="Core\Draw\TestObject.cpp" />
@@ -494,47 +515,54 @@
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp" />
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp" />
     <ClCompile Include="Core\Window.cpp" />
-    <FxCompile Include="Shader\ShaderHeader\LightShader.hlsl">
+    <None Include="Shader\ShaderHeader\LightShader.hlsli">
+      <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shader\ShaderHeader\LightVector.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shader\ShaderHeader\PointLight.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+    </None>
+    <None Include="Shader\ShaderHeader\LightVector.hlsli">
+      <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </EntryPointName>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Shader\ShaderHeader\Transform.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+    </None>
+    <None Include="Shader\ShaderHeader\PointLight.hlsli">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+    </None>
+    <None Include="Shader\ShaderHeader\Transform.hlsli">
+      <FileType>Document</FileType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+    </None>
     <FxCompile Include="Shader\LitTextureDiffuse.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shader\LitTextureDiffuseSpecular.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shader\LitTextureDiffuseMaskSpecularNormal.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shader\LitTextureDiffuseNormal.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shader\LitTextureDiffuseSpecularNormal.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Shader\xLitTextureLitDiffuseNormal.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,7 +570,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shader\_Sample_ColorShader.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">PS</EntryPointName>
     </FxCompile>
     <FxCompile Include="Shader\_Sample_Texture.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
