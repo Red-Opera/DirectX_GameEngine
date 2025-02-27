@@ -32,8 +32,6 @@ namespace RenderGraphNameSpace
 
 		RenderQueuePass& GetRenderQueue(const std::string& passName);
 
-		void SaveDepth(DxGraphic& graphic, const std::string& path);
-
 	protected:
 		void SetSinkTarget(const std::string& sinkName, const std::string& target);
 		void AddRenderPass(std::unique_ptr<RenderPass> renderPass);
@@ -44,6 +42,9 @@ namespace RenderGraphNameSpace
 
 		void Finalize();
 
+		std::shared_ptr<Graphic::RenderTarget> backBufferTarget;
+		std::shared_ptr<Graphic::DepthStencil> masterDepth;
+
 	private:
 		void LinkSinks(RenderPass& pass);
 		void LinkGlobalSinks();
@@ -51,9 +52,6 @@ namespace RenderGraphNameSpace
 		std::vector<std::unique_ptr<RenderPass>> renderPasses;
 		std::vector<std::unique_ptr<PipelineDataProvider>> globalDataProviders;
 		std::vector<std::unique_ptr<PipelineDataConsumer>> globalDataConsumers;
-
-		std::shared_ptr<Graphic::RenderTarget> backBufferTarget;
-		std::shared_ptr<Graphic::DepthStencil> masterDepth;
 
 		bool isFinalized = false;
 	};

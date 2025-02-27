@@ -13,7 +13,8 @@ namespace Graphic
 
 	void ShadowCameraConstantBuffer::Update(DxGraphic& graphic)
 	{
-		const Transform transform{ DirectX::XMMatrixTranspose(camera->GetMatrix() * camera->GetProjection()) };
+		const auto position = camera->GetPosition();
+		const Transform transform{ DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(-position.x, -position.y, -position.z)) };
 
 		vertexConstantBuffer->Update(graphic, transform);
 	}

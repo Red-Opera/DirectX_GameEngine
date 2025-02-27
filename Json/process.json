@@ -2,10 +2,8 @@
   "enabled": true,
   "commands": [
     {
-      "command": "Export",
-      "params": {
-        "dest": "C:\\Users\\hyuns\\OneDrive\\바탕 화면"
-      }
+      "command": "run-tests",
+      "params": { }
     }
   ]
 }

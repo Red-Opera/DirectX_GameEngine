@@ -52,7 +52,7 @@ private:
 	static constexpr float moveSpeed = 12.0f;		// 카메라 이동 속도
 	static constexpr float rotationSpeed = 0.0004f;	// 카메라 회전 속도
 
-	bool isEnableIndicator = true;
-	bool isEnableFrustumIndicator = true;
+	bool isEnableIndicator = false;
+	bool isEnableFrustumIndicator = false;
 	bool isTethered;
 };

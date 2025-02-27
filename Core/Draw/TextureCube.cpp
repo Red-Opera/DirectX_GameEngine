@@ -4,6 +4,8 @@
 #include "Base/Image/Image.h"
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
+#include "Core/RenderingPipeline/RenderTarget.h"
+#include "Core/RenderingPipeline/Pipeline/OM/DepthStencil.h"
 
 #include <vector>
 
@@ -60,6 +62,107 @@ namespace Graphic
 	{
 		CREATEINFOMANAGERNOHR(graphic);
 		
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+	}
+
+	DepthTextureCube::DepthTextureCube(DxGraphic& graphic, UINT size, UINT slot)
+		: slot(slot)
+	{
+		CREATEINFOMANAGER(graphic);
+
+		D3D11_TEXTURE2D_DESC textureDesc;
+		textureDesc.Width = size;
+		textureDesc.Height = size;
+
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 6;
+
+		textureDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+		hr = GetDevice(graphic)->CreateTexture2D(&textureDesc, nullptr, &texture);
+		GRAPHIC_THROW_INFO(hr);
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc = { };
+		shaderResourceViewDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+		shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+		hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), &shaderResourceViewDesc, &textureView);
+		GRAPHIC_THROW_INFO(hr);
+
+		for (UINT face = 0; face < 6; face++)
+			depthStencil.push_back(std::make_shared<OutputOnlyDepthStencil>(graphic, texture, face));
+	}
+
+	std::shared_ptr<OutputOnlyDepthStencil> DepthTextureCube::GetDepthStencil(UINT index) const
+	{
+		return depthStencil[index];
+	}
+
+	void DepthTextureCube::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	{
+		CREATEINFOMANAGERNOHR(graphic);
+
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+	}
+
+	RenderTargetTextureCube::RenderTargetTextureCube(DxGraphic& graphic, UINT width, UINT height, UINT slot, DXGI_FORMAT format)
+		:slot(slot)
+	{
+		CREATEINFOMANAGER(graphic);
+
+		D3D11_TEXTURE2D_DESC textureDESC = { };
+		textureDESC.Width = width;
+		textureDESC.Height = height;
+		textureDESC.MipLevels = 1;
+		textureDESC.ArraySize = 6;
+		textureDESC.Format = format;
+
+		textureDESC.SampleDesc.Count = 1;
+		textureDESC.SampleDesc.Quality = 0;
+
+		textureDESC.Usage = D3D11_USAGE_DEFAULT;
+
+		textureDESC.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		textureDESC.CPUAccessFlags = 0;
+		textureDESC.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+		
+		hr = GetDevice(graphic)->CreateTexture2D(&textureDESC, nullptr, &texture);
+		GRAPHIC_THROW_INFO(hr);
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDESC = { };
+		shaderResourceViewDESC.Format = textureDESC.Format;
+		shaderResourceViewDESC.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+		shaderResourceViewDESC.Texture2D.MostDetailedMip = 0;
+		shaderResourceViewDESC.Texture2D.MipLevels = 1;
+
+		hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), &shaderResourceViewDESC, &textureView);
+		GRAPHIC_THROW_INFO(hr);
+
+		for (UINT face = 0; face < 6; face++)
+			renderTarget.push_back(std::make_shared<OutputOnlyRenderTarget>(graphic, texture.Get(), face));
+	}
+
+	std::shared_ptr<OutputOnlyRenderTarget> RenderTargetTextureCube::GetRenderTarget(size_t index) const
+	{
+		return renderTarget[index];
+	}
+
+	void RenderTargetTextureCube::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	{
+		CREATEINFOMANAGERNOHR(graphic);
+
 		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
 	}
 }

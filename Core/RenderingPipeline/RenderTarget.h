@@ -2,6 +2,8 @@
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/RenderingManager/Buffer/BufferResource.h"
 
+#include <optional>
+
 class DxGraphic;
 class Image;
 
@@ -23,8 +25,11 @@ namespace Graphic
 		UINT GetWidth() const noexcept;
 		UINT GetHeight() const noexcept;
 
+		GraphicResource::Image ToImage(DxGraphic& graphic) const;
+		void CreateDumpy(DxGraphic& graphic, const std::string& path) const;
+
 	protected:
-		RenderTarget(DxGraphic& graphic, ID3D11Texture2D* texture);
+		RenderTarget(DxGraphic& graphic, ID3D11Texture2D* texture, std::optional<UINT> face);
 		RenderTarget(DxGraphic& graphic, UINT width, UINT height);
 
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> targetView;
@@ -34,6 +39,8 @@ namespace Graphic
 
 	private:
 		void RenderAsBuffer(DxGraphic& graphic, ID3D11DepthStencilView* depthStencilView) NOEXCEPTRELEASE;
+
+		std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> CreateStaging(DxGraphic& graphic) const;
 	};
 
 	class ShaderInputRenderTarget : public RenderTarget
@@ -44,7 +51,6 @@ namespace Graphic
 		// RenderTarget을(를) 통해 상속됨
 		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
 
-		GraphicResource::Image ToImage(DxGraphic& graphic) const;
 
 	private:
 		UINT slot;
@@ -53,13 +59,10 @@ namespace Graphic
 
 	class OutputOnlyRenderTarget : public RenderTarget
 	{
-		friend DxGraphic;
-
 	public:
+		OutputOnlyRenderTarget(DxGraphic& graphic, ID3D11Texture2D* texture, std::optional<UINT> face = { });
+
 		// RenderTarget을(를) 통해 상속됨
 		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
-
-	private:
-		OutputOnlyRenderTarget(DxGraphic& graphic, ID3D11Texture2D* texture);
 	};
 }

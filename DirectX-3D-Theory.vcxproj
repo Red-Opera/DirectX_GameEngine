@@ -113,6 +113,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>./;Utility/;Utility\DirectXTex\include</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996; 6031;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -214,6 +215,7 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\ConstantBufferEx.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\DynamicConstantBuffer.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.h" />
+    <ClInclude Include="Core\RenderingPipeline\Viewport.h" />
     <ClInclude Include="Core\TestModelBase.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.h" />
     <ClInclude Include="DX3DApp.h" />
@@ -232,11 +234,13 @@
     <ClInclude Include="Core\Draw\Mesh.h" />
     <ClInclude Include="Core\Draw\TestPlane.h" />
     <ClInclude Include="Core\Draw\BaseModel\Cube.h" />
+    <None Include="Json\exe.args.json" />
     <None Include="Shader\ShaderHeader\ShadowVS.hlsli" />
     <None Include="Shader\ShaderHeader\ShadowDynamicPS.hlsli">
       <FileType>Document</FileType>
     </None>
     <ClInclude Include="Test.h" />
+    <ClInclude Include="Utility\Cnpy\cnpy.h" />
     <ClInclude Include="Utility\DirectXTex\include\BC.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
@@ -341,6 +345,9 @@
     <ClCompile Include="Core\Draw\TestPlane.cpp" />
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.cpp" />
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Utility\Cnpy\cnpy.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Utility\Json\ScriptCommander.cpp" />
     <ClCompile Include="Utility\MathInfo.cpp" />
     <ClCompile Include="Utility\StringConverter.cpp" />
@@ -369,10 +376,15 @@
     <None Include="Shader\ShaderHeader\ShadowStaticPS.hlsli">
       <FileType>Document</FileType>
     </None>
+    <FxCompile Include="Shader\ShadowPS.hlsl" />
     <FxCompile Include="Shader\ShadowTest.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shader\ShadowVS.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shader\Skybox.hlsl" />
     <FxCompile Include="Shader\_Sample_BlendedLitShader.hlsl">

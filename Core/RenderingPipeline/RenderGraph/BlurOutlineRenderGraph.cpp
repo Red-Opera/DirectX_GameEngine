@@ -130,6 +130,7 @@ namespace RenderGraphNameSpace
 
 	void BlurOutlineRenderGraph::RenderWindows(DxGraphic& graphic)
 	{
+		RenderShadowWindow(graphic);
 		RenderKernelWindow(graphic);
 		dynamic_cast<SkyboxPass&>(FindRenderPass("Skybox")).RenderWidnow();
 	}
@@ -180,6 +181,17 @@ namespace RenderGraphNameSpace
 				else if (kernelType == KernelType::Box)
 					SetKernelBox(radius);
 			}
+		}
+
+		ImGui::End();
+	}
+
+	void BlurOutlineRenderGraph::RenderShadowWindow(DxGraphic& graphic)
+	{
+		if (ImGui::Begin("Shadow"))
+		{
+			if (ImGui::Button("Dump Cube Map"))
+				DumpShadowMap(graphic, "Temp/Dump/");
 		}
 
 		ImGui::End();

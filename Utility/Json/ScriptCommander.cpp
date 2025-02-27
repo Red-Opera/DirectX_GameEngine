@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ScriptCommander.h"
+#include "Test.h"
 
 #include "Core/Draw/Base/Image/TexturePreprocessor.h"
 #include "Utility/Json/json.hpp"
@@ -105,6 +106,15 @@ ScriptCommander::ScriptCommander(const std::vector<std::string>& args)
 				else if (commandName == "Export")
 				{
 					Export(params.at("dest"));
+					abort = true;
+				}
+
+				else if (commandName == "run-tests")
+				{
+					Test();
+					TestDynamicMeshLoading();
+					TestScaleMatrixTranslation();
+					TestNumpy();
 					abort = true;
 				}
 

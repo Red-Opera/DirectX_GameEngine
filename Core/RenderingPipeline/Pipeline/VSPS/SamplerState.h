@@ -9,7 +9,7 @@ namespace Graphic
 		// 이방성 필터링, 바이리니어 필터링, 포인트 필터링
 		enum class TextureFilter { Anisotropic, Bilinear, Point, };
 
-		SamplerState(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect);
+		SamplerState(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect, UINT slot);
 
 		// Bindable을(를) 통해 상속됨
 		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
@@ -17,9 +17,10 @@ namespace Graphic
 		static std::shared_ptr<SamplerState> GetRender(
 			DxGraphic& graphic, 
 			TextureFilter textureFilter = TextureFilter::Anisotropic,
-			bool useReflect = false);
+			bool useReflect = false,
+			UINT slot = 0u);
 
-		static std::string CreateID(TextureFilter textureFilter, bool useReflect);
+		static std::string CreateID(TextureFilter textureFilter, bool useReflect, UINT slot);
 
 		std::string GetID() const noexcept override;
 
@@ -28,5 +29,6 @@ namespace Graphic
 
 		TextureFilter textureFilter;	// 텍스터 필터링 타입
 		bool useReflect;				// 반사 사용 여부
+		UINT slot;
 	};
 }

@@ -375,6 +375,12 @@
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Pass\SkyboxPass.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\RenderingPipeline\Viewport.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Cnpy\cnpy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DX3DApp.cpp">
@@ -734,6 +740,9 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Utility\Cnpy\cnpy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\_Sample_Shader.fx" />
@@ -756,6 +765,8 @@
     <FxCompile Include="Shader\LitTextureDiffuseMaskSpecular.hlsl" />
     <FxCompile Include="Shader\ShadowTest.hlsl" />
     <FxCompile Include="Shader\Skybox.hlsl" />
+    <FxCompile Include="Shader\ShadowVS.hlsl" />
+    <FxCompile Include="Shader\ShadowPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc">
@@ -787,5 +798,6 @@
       <Filter>헤더 파일</Filter>
     </None>
     <None Include="Shader\ShaderHeader\ShadowVS.hlsli" />
+    <None Include="Json\exe.args.json" />
   </ItemGroup>
 </Project>

@@ -21,6 +21,7 @@ namespace Graphic
 		void RenderAsBuffer(DxGraphic& graphic, RenderTarget* renderTarget) NOEXCEPTRELEASE;
 
 		GraphicResource::Image ToImage(DxGraphic& graphic, bool linearlize = true) const;
+		void CreateDumpy(DxGraphic& graphic, const std::string& path) const;
 
 		UINT GetWidth() const;
 		UINT GetHeight() const;
@@ -29,11 +30,15 @@ namespace Graphic
 
 	protected:
 		DepthStencil(DxGraphic& graphic, UINT width, UINT height, bool canRenderShaderInput, Usage usage);
+		DepthStencil(DxGraphic& graphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face);
 
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 
 		UINT width;
 		UINT height;
+
+	private:
+		std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> CreateStaging(DxGraphic& graphic) const;
 	};
 
 	class ShaderInputDepthStencil : public DepthStencil
@@ -56,6 +61,7 @@ namespace Graphic
 	public:
 		OutputOnlyDepthStencil(DxGraphic& graphic);
 		OutputOnlyDepthStencil(DxGraphic& graphic, UINT width, UINT height);
+		OutputOnlyDepthStencil(DxGraphic& grapphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face);
 
 		// DepthStencil을(를) 통해 상속됨
 		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;

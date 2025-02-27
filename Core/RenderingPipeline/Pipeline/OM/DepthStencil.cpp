@@ -6,6 +6,8 @@
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
 
+#include "Utility/Cnpy/cnpy.h"
+
 #include <stdexcept>
 
 namespace Graphic
@@ -22,6 +24,8 @@ namespace Graphic
 
             throw std::runtime_error("해당 DepthStencil의 사용 여부는 존재하지 않음");
         }
+
+        return DXGI_FORMAT::DXGI_FORMAT_YUY2;
     }
 
     DXGI_FORMAT GetUsageType(DepthStencil::Usage usage)
@@ -36,6 +40,8 @@ namespace Graphic
 
             throw std::runtime_error("해당 DepthStencil의 사용 여부는 존재하지 않음");
         }
+
+        return DXGI_FORMAT::DXGI_FORMAT_YUY2;
     }
 
     DXGI_FORMAT GetUsageColorType(DepthStencil::Usage usage)
@@ -50,6 +56,8 @@ namespace Graphic
 
             throw std::runtime_error("해당 DepthStencil의 사용 여부는 존재하지 않음");
         }
+
+        return DXGI_FORMAT::DXGI_FORMAT_YUY2;
     }
 
     DepthStencil::DepthStencil(DxGraphic& graphic, UINT width, UINT height, bool canRenderShaderInput, Usage usage)
@@ -82,6 +90,67 @@ namespace Graphic
         GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDESC, &depthStencilView));
     }
 
+    DepthStencil::DepthStencil(DxGraphic& graphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face)
+    {
+        CREATEINFOMANAGER(graphic);
+
+        D3D11_TEXTURE2D_DESC textureDESC = { };
+		texture->GetDesc(&textureDESC);
+		width = textureDESC.Width;
+		height = textureDESC.Height;
+
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDESC;
+		depthStencilViewDESC.Format = DXGI_FORMAT_D32_FLOAT;
+		depthStencilViewDESC.Flags = 0;
+		depthStencilViewDESC.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+		depthStencilViewDESC.Texture2D.MipSlice = 0;
+		depthStencilViewDESC.Texture2DArray.ArraySize = 1;
+		depthStencilViewDESC.Texture2DArray.FirstArraySlice = face;
+
+		hr = GetDevice(graphic)->CreateDepthStencilView(texture.Get(), &depthStencilViewDESC, &depthStencilView);
+		GRAPHIC_THROW_INFO(hr);
+    }
+
+    std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> DepthStencil::CreateStaging(DxGraphic& graphic) const
+    {
+        CREATEINFOMANAGER(graphic);
+
+        D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDESC{ };
+        depthStencilView->GetDesc(&depthStencilViewDESC);
+
+        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+        depthStencilView->GetResource(&resource);
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+        resource.As(&texture);
+
+        D3D11_TEXTURE2D_DESC textureDESC;
+        texture->GetDesc(&textureDESC);
+
+        D3D11_TEXTURE2D_DESC tempTextureDESC = textureDESC;
+        tempTextureDESC.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        tempTextureDESC.Usage = D3D11_USAGE_STAGING;
+        tempTextureDESC.BindFlags = 0;
+        tempTextureDESC.MiscFlags = 0;
+        tempTextureDESC.ArraySize = 1;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
+        hr = GetDevice(graphic)->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
+        GRAPHIC_THROW_INFO(hr);
+
+        if (depthStencilViewDESC.ViewDimension == D3D11_DSV_DIMENSION::D3D11_DSV_DIMENSION_TEXTURE2DARRAY)
+        {
+            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), depthStencilViewDESC.Texture2DArray.FirstArraySlice, nullptr));
+        }
+
+        else
+        {
+            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->CopyResource(textureTemp.Get(), texture.Get()));
+        }
+
+        return { std::move(textureTemp), textureDESC };
+    }
+
     void DepthStencil::RenderAsBuffer(DxGraphic& graphic) NOEXCEPTRELEASE
     {
         CREATEINFOMANAGERNOHR(graphic);
@@ -103,30 +172,15 @@ namespace Graphic
     GraphicResource::Image DepthStencil::ToImage(DxGraphic& graphic, bool linearlize) const
     {
         CREATEINFOMANAGER(graphic);
-        
-        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
-        depthStencilView->GetResource(&resource);
-
-        Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-        resource.As(&texture);
-
-        D3D11_TEXTURE2D_DESC textureDESC;
-        texture->GetDesc(&textureDESC);
-        textureDESC.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-        textureDESC.Usage = D3D11_USAGE_STAGING;
-        textureDESC.BindFlags = 0;
-
-        Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&textureDESC, nullptr, &textureTemp));
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->CopyResource(textureTemp.Get(), texture.Get()));
+        auto [textureTemp, textureDESC] = CreateStaging(graphic);
 
         const auto width = GetWidth();
         const auto height = GetHeight();
         GraphicResource::Image image{ width, height };
 
         D3D11_MAPPED_SUBRESOURCE mapped = { };
-        GRAPHIC_THROW_INFO(GetDeviceContext(graphic)->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped));
+        hr = GetDeviceContext(graphic)->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
+        GRAPHIC_THROW_INFO(hr);
 
         auto bytes = static_cast<const char*>(mapped.pData);
 
@@ -189,6 +243,40 @@ namespace Graphic
         return image;
     }
 
+    void DepthStencil::CreateDumpy(DxGraphic& graphic, const std::string& path) const
+    {
+        CREATEINFOMANAGER(graphic);
+
+        auto [textureTemp, textureDESC] = CreateStaging(graphic);
+
+        const auto width = GetWidth();
+        const auto height = GetHeight();
+
+        std::vector<float> arr;
+        arr.reserve(width * height);
+
+        D3D11_MAPPED_SUBRESOURCE mapped = { };
+        hr = GetDeviceContext(graphic)->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
+        GRAPHIC_THROW_INFO(hr);
+
+        auto bytes = static_cast<const char*>(mapped.pData);
+
+        if (textureDESC.Format != DXGI_FORMAT::DXGI_FORMAT_R32_TYPELESS)
+            throw std::runtime_error{ "더미 값으로 저장하기 위한 Depth Stencil 버퍼로 사용하는 포맷이 DXGI_FORMAT_R32_TYPELESS가 아님" };
+
+        for (UINT y = 0; y < height; y++)
+        {
+            auto row = reinterpret_cast<const float*>(bytes + mapped.RowPitch * size_t(y));
+
+            for (UINT x = 0; x < width; x++)
+                arr.push_back(row[x]);
+        }
+
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->Unmap(textureTemp.Get(), 0));
+
+        cnpy::npy_save(path, arr.data(), { height, width });
+    }
+
     UINT DepthStencil::GetWidth() const
     {
         return width;
@@ -244,6 +332,11 @@ namespace Graphic
         : DepthStencil(graphic, width, height, false, Usage::DepthStencil)
     {
 
+    }
+
+    OutputOnlyDepthStencil::OutputOnlyDepthStencil(DxGraphic& grapphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face)
+		: DepthStencil(grapphic, std::move(texture), face)
+    {
     }
 
     void OutputOnlyDepthStencil::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE

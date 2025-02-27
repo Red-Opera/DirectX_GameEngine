@@ -13,6 +13,7 @@
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
 #include "Utility/MathInfo.h"
+#include "Utility/Cnpy/cnpy.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -366,4 +367,10 @@ void D3DTestScratchPad(Window& wnd)
 
 	RenderWithVS("Test2_VS.cso");
 	RenderWithVS("Test1_VS.cso");
+}
+
+void TestNumpy()
+{
+	auto v = std::vector{ 0,1,2,4,5,6 };
+	cnpy::npy_save("test.npy", v.data(), { 3,2 });
 }

@@ -14,7 +14,7 @@ namespace RenderGraphNameSpace
 		RenderingPass(std::string name, std::vector<std::shared_ptr<Graphic::Render>> renders = { });
 
 		void AddRender(std::shared_ptr<Graphic::Render> render) noexcept;
-		void RenderAll(DxGraphic& graphic) const noexcept;
+		void RenderAll(DxGraphic& graphic) const NOEXCEPTRELEASE;
 
 		void Finalize() override;
 

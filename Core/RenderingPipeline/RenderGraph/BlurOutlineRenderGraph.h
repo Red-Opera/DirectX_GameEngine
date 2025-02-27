@@ -28,6 +28,7 @@ namespace RenderGraphNameSpace
 		void RenderMainCamera(Camera& camera);
 		void RenderShadowCamera(Camera& camera);
 		void DumpShadowMap(DxGraphic& grpahic, const std::string& path);
+		void SaveShadowDepth(DxGraphic& graphic, const std::string& path);
 
 	private:
 		enum class KernelType { Gauss, Box } kernelType = KernelType::Gauss;
@@ -36,6 +37,7 @@ namespace RenderGraphNameSpace
 		void SetKernelBox(int radius) NOEXCEPTRELEASE;
 
 		void RenderKernelWindow(DxGraphic& graphic);
+		void RenderShadowWindow(DxGraphic& graphic);
 
 		std::shared_ptr<Graphic::CachingPixelConstantBufferEx> blurKernel;
 		std::shared_ptr<Graphic::CachingPixelConstantBufferEx> blurDirection;

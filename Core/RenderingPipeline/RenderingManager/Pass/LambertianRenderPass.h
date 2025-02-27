@@ -8,6 +8,7 @@
 
 #include "Core/Camera/Camera.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ShadowCameraConstantBuffer.h"
+#include "Core/RenderingPipeline/Pipeline/VSPS/SamplerState.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ShadowSamplerState.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
 
@@ -31,6 +32,7 @@ namespace RenderGraphNameSpace
 			AddDataConsumer(DirectBufferDataConsumer<Graphic::DepthStencil>::Create("depthStencil", depthStencil));
 			AddRenderSink<Graphic::Render>("ShadowMap");
 			AddRender(std::make_shared<Graphic::ShadowSamplerState>(graphic));
+			AddRender(std::make_shared<Graphic::SamplerState>(graphic, Graphic::SamplerState::TextureFilter::Anisotropic, false, 2));
 
 			AddDataProvider(DirectBufferPipelineDataProvider<Graphic::RenderTarget>::Create("renderTarget", renderTarget));
 			AddDataProvider(DirectBufferPipelineDataProvider<Graphic::DepthStencil>::Create("depthStencil", depthStencil));

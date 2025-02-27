@@ -20,7 +20,7 @@ namespace RenderGraphNameSpace
 		renders.push_back(std::move(render));
 	}
 
-	void RenderingPass::RenderAll(DxGraphic& graphic) const noexcept
+	void RenderingPass::RenderAll(DxGraphic& graphic) const NOEXCEPTRELEASE
 	{
 		RenderBufferResources(graphic);
 

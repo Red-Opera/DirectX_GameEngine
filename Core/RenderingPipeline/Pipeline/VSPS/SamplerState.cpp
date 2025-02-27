@@ -7,8 +7,8 @@
 
 namespace Graphic
 {
-	SamplerState::SamplerState(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect)
-		: textureFilter(textureFilter), useReflect(useReflect)
+	SamplerState::SamplerState(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect, UINT slot)
+		: textureFilter(textureFilter), useReflect(useReflect), slot(slot)
 	{
 		CREATEINFOMANAGER(graphic);
 
@@ -48,22 +48,22 @@ namespace Graphic
 		CREATEINFOMANAGERNOHR(graphic);
 
 		// SamplerState를 렌더링 파이프 라인에 입력
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetSamplers(0, 1, samplerState.GetAddressOf()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetSamplers(slot, 1, samplerState.GetAddressOf()));
 	}
 
-	std::shared_ptr<SamplerState> SamplerState::GetRender(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect)
+	std::shared_ptr<SamplerState> SamplerState::GetRender(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect, UINT slot)
 	{
-		return RenderManager::GetRender<SamplerState>(graphic, textureFilter, useReflect);
+		return RenderManager::GetRender<SamplerState>(graphic, textureFilter, useReflect, slot);
 	}
 
-	std::string SamplerState::CreateID(TextureFilter textureFilter, bool useReflect)
+	std::string SamplerState::CreateID(TextureFilter textureFilter, bool useReflect, UINT slot)
 	{
 		using namespace std::string_literals;
-		return typeid(SamplerState).name() + "#"s + std::to_string((int)textureFilter) + (useReflect ? "R"s : "w"s);
+		return typeid(SamplerState).name() + "#"s + std::to_string((int)textureFilter) + (useReflect ? "R"s : "w"s) + "@"s + std::to_string(slot);
 	}
 
 	std::string SamplerState::GetID() const noexcept
 	{
-		return CreateID(textureFilter, useReflect);
+		return CreateID(textureFilter, useReflect, slot);
 	}
 }

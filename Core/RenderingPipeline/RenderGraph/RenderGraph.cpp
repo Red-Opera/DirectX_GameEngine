@@ -76,11 +76,6 @@ namespace RenderGraphNameSpace
 		return **i;
 	}
 
-	void RenderGraph::SaveDepth(DxGraphic& graphic, const std::string& path)
-	{
-		masterDepth->ToImage(graphic).Save(path);
-	}
-
 	void RenderGraph::AddGlobalProvider(std::unique_ptr<PipelineDataProvider> output)
 	{
 		globalDataProviders.push_back(std::move(output));
