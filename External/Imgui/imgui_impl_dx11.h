@@ -9,7 +9,7 @@
 // https://github.com/ocornut/imgui
 
 #pragma once
-#include "resource.h"
+#include "Core/WindowResources/icon/resource.h"
 #include "Core/Win.h"
 #include "Core/DxGraphic.h"
 #include "imgui.h"

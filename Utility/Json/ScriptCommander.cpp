@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "ScriptCommander.h"
-#include "Test.h"
 
 #include "Core/Draw/Base/Image/TexturePreprocessor.h"
+#include "Core/RenderingPipeline/Test.h"
 #include "Utility/Json/json.hpp"
 
 #include <filesystem>

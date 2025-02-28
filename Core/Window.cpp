@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Window.h"
-#include "resource.h"
+#include "Core/WindowResources/icon/resource.h"
 
 #include "External/Imgui/imgui_impl_win32.h"
 using namespace std;

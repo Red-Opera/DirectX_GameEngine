@@ -39,7 +39,7 @@
     <ClInclude Include="Core\Win.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="Core\WindowResources\icon\resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="App.h">
@@ -195,7 +195,7 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Test.h">
+    <ClInclude Include="Core\RenderingPipeline\Test.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\Stencil.h">
@@ -845,7 +845,7 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="Core\RenderingPipeline\Test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\BaseModel\ColorCube.cpp">
@@ -1009,12 +1009,12 @@
     <FxCompile Include="Shader\ShadowPS.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc">
+    <ResourceCompile Include="Core\WindowResources\icon\Resource.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Icon.ico">
+    <Image Include="Core\WindowResources\icon\Icon.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

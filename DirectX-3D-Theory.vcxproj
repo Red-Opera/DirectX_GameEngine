@@ -336,7 +336,7 @@
     <ClInclude Include="External\Imgui\imstb_rectpack.h" />
     <ClInclude Include="External\Imgui\imstb_textedit.h" />
     <ClInclude Include="External\Imgui\imstb_truetype.h" />
-    <ClInclude Include="Test.h" />
+    <ClInclude Include="Core\RenderingPipeline\Test.h" />
     <ClInclude Include="External\Cnpy\cnpy.h" />
     <ClInclude Include="External\DirectXTex\include\BC.h" />
     <ClInclude Include="External\DirectXTex\include\BCDirectCompute.h" />
@@ -347,7 +347,7 @@
     <ClInclude Include="External\DirectXTex\include\filters.h" />
     <ClInclude Include="External\DirectXTex\include\scoped.h" />
     <ClInclude Include="Utility\Imgui\ImguiManager.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="Core\WindowResources\icon\resource.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBuffer.h" />
     <ClInclude Include="Core\Draw\Base\TriangleIndexList.h" />
     <ClInclude Include="Core\Draw\Base\Image\Texture.h" />
@@ -435,7 +435,7 @@
     <ClCompile Include="External\Imgui\imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Core\RenderingPipeline\Test.cpp" />
     <ClCompile Include="External\Cnpy\cnpy.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -663,10 +663,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <ResourceCompile Include="Core\WindowResources\icon\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Icon.ico" />
+    <Image Include="Core\WindowResources\icon\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="External\Assimp\assimp-vc143-mt.lib">

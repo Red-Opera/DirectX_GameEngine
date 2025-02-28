@@ -2,11 +2,11 @@
 
 #include "stdafx.h"
 #include "App.h"
-#include "Test.h"
 
 #include "Core/TestModelBase.h"
 #include "Core/Camera/Camera.h"
 #include "Core/RenderingPipeline/RenderingChannel.h"
+#include "Core/RenderingPipeline/Test.h"
 
 #include <iomanip>
 
