@@ -4,7 +4,7 @@
 #include "BaseModel/Plane.h"
 
 #include "Core/RenderingPipeline/RenderingPipeline.h"
-#include "Utility/Imgui/imgui.h"
+#include "External/Imgui/imgui.h"
 
 TestPlane::TestPlane(DxGraphic& graphic, float size, DirectX::XMFLOAT4 color) : matConst({ color })
 {

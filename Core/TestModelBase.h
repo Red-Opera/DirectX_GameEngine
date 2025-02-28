@@ -9,9 +9,9 @@
 
 #include "Utility/StringConverter.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <External/Assimp/Importer.hpp>
+#include <External/Assimp/scene.h>
+#include <External/Assimp/postprocess.h>
 
 class TB : public TechniqueBase
 {

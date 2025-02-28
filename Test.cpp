@@ -12,12 +12,12 @@
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
+#include "External/Assimp/Importer.hpp"
+#include "External/Assimp/scene.h"
+#include "External/Assimp/postprocess.h"
+#include "External/Cnpy/cnpy.h"
 #include "Utility/MathInfo.h"
-#include "Utility/Cnpy/cnpy.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include <algorithm>
 #include <array>
 #include <cstring>

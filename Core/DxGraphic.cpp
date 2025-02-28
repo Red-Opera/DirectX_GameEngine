@@ -6,8 +6,9 @@
 #include "Exception/GraphicsException.h"
 #include "RenderingPipeline/Pipeline/OM/DepthStencil.h"
 #include "RenderingPipeline/RenderTarget.h"
-#include "Utility/Imgui/imgui_impl_dx11.h"
-#include "Utility/Imgui/imgui_impl_win32.h"
+
+#include "External/Imgui/imgui_impl_dx11.h"
+#include "External/Imgui/imgui_impl_win32.h"
 
 #include <array>
 using namespace std;

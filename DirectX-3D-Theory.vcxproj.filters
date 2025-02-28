@@ -108,33 +108,6 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\SamplerState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Imgui\imconfig.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\imgui.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\imgui_impl_dx11.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\imgui_impl_win32.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\imgui_internal.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\imstb_rectpack.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\imstb_textedit.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\imstb_truetype.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\Usage\ImguiManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Camera\Camera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -183,28 +156,28 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\Rasterizer\Rasterizer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\BC.h">
+    <ClInclude Include="External\DirectXTex\include\BC.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\BCDirectCompute.h">
+    <ClInclude Include="External\DirectXTex\include\BCDirectCompute.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\DDS.h">
+    <ClInclude Include="External\DirectXTex\include\DDS.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\DirectXTex.h">
+    <ClInclude Include="External\DirectXTex\include\DirectXTex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\DirectXTexP.h">
+    <ClInclude Include="External\DirectXTex\include\DirectXTexP.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\filters.h">
+    <ClInclude Include="External\DirectXTex\include\filters.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\scoped.h">
+    <ClInclude Include="External\DirectXTex\include\scoped.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\d3dx12.h">
+    <ClInclude Include="External\DirectXTex\include\d3dx12.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Utility\StringConverter.h">
@@ -378,7 +351,274 @@
     <ClInclude Include="Core\RenderingPipeline\Viewport.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Utility\Cnpy\cnpy.h">
+    <ClInclude Include="External\Cnpy\cnpy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Imgui\ImguiManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Base64.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\BaseImporter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Bitmap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\BlobIOSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\ByteSwapper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\camera.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\cexport.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\cfileio.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\cimport.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\ColladaMetaData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\color4.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\matrix3x3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\commonMetaData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\config.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\CreateAnimMesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\DefaultIOStream.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\DefaultIOSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\DefaultLogger.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\defs.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Exceptional.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Exporter.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\fast_atof.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\GenericProperty.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\GltfMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Hash.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Importer.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\importerdesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\IOStream.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\IOStreamBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\IOSystem.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\light.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\LineSplitter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\LogAux.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Logger.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\LogStream.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\material.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\MathFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\matrix4x4.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\MemoryIOWrapper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\mesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\metadata.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\NullLogger.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\ObjMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\ParsingUtils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\pbrmaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\postprocess.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Profiler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\ProgressHandler.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\qnan.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\quaternion.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\RemoveComments.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\scene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\SceneCombiner.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\SGSpatialSort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\SkeletonMeshBuilder.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\SmallVector.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\SmoothingGroups.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\SpatialSort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\StandardShapes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\StreamReader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\StreamWriter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\StringComparison.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\StringUtils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Subdivision.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\texture.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\TinyFormatter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\types.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\vector2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\vector3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\version.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Vertex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\XmlParser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\XMLTools.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\ZipArchiveIOSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\aabb.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\ai_assert.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\anim.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Compiler\poppack1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Compiler\pstdint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Assimp\Compiler\pushpack1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imconfig.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imgui.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imgui_impl_dx11.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imgui_impl_win32.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imgui_internal.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imstb_rectpack.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imstb_textedit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\imstb_truetype.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -522,27 +762,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter8_TexutreAndOverviewOfResources\T8-7_TextureSampling.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_demo.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_draw.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_impl_dx11.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_impl_win32.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_widgets.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\Usage\ImguiManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Camera\Camera.cpp">
@@ -740,7 +959,28 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Utility\Cnpy\cnpy.cpp">
+    <ClCompile Include="External\Cnpy\cnpy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Imgui\ImguiManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_demo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_draw.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_impl_dx11.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_impl_win32.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_widgets.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -779,16 +1019,14 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Utility\assimp\assimp-vc143-mt.lib" />
+    <Library Include="External\Assimp\assimp-vc143-mt.lib" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Utility\assimp\assimp-vc143-mt.dll" />
-    <None Include="cpp.hint" />
-    <None Include="Utility\DirectXTex\include\DirectXTex.inl">
+    <None Include="External\Assimp\assimp-vc143-mt.dll" />
+    <None Include="External\DirectXTex\include\DirectXTex.inl">
       <Filter>헤더 파일</Filter>
     </None>
     <None Include="Json\process.json" />
-    <None Include="Utility\Imgui\Usage\imgui_default.ini" />
     <None Include="Shader\ShaderHeader\LightShader.hlsli" />
     <None Include="Shader\ShaderHeader\LightVector.hlsli" />
     <None Include="Shader\ShaderHeader\PointLight.hlsli" />
@@ -799,5 +1037,32 @@
     </None>
     <None Include="Shader\ShaderHeader\ShadowVS.hlsli" />
     <None Include="Json\exe.args.json" />
+    <None Include="Utility\Imgui\imgui.ini" />
+    <None Include="Utility\Imgui\imgui_default.ini" />
+    <None Include="External\Assimp\config.h.in" />
+    <None Include="External\Assimp\material.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="External\Assimp\color4.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="External\Assimp\matrix3x3.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="External\Assimp\matrix4x4.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="External\Assimp\quaternion.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="External\Assimp\SmoothingGroups.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="External\Assimp\vector2.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
+    <None Include="External\Assimp\vector3.inl">
+      <Filter>헤더 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

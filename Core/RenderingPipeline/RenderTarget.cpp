@@ -5,7 +5,7 @@
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Pipeline/OM/DepthStencil.h"
 
-#include "Utility/Cnpy/cnpy.h"
+#include "External/Cnpy/cnpy.h"
 
 #include <array>
 #include <stdexcept>

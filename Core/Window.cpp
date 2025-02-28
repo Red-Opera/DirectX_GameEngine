@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Window.h"
 #include "resource.h"
-#include "Utility/Imgui/imgui_impl_win32.h"
+
+#include "External/Imgui/imgui_impl_win32.h"
 using namespace std;
 
 string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept

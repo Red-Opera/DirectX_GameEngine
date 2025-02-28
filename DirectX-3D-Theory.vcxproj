@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(WindowsSDK_IncludePath);C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Include;Utility\DirectXTex\include</IncludePath>
-    <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
-    <ReferencePath>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Lib\x64;D:\Development\Game\Assimp\lib\x64;$(ReferencePath)</ReferencePath>
-    <LibraryPath>Utility\DirectXTex\bin\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(WindowsSDK_IncludePath);External\Microsoft DirectX SDK(201006)\Include;External\DirectXTex\include;External\Assimp</IncludePath>
+    <ExecutablePath>External\Microsoft DirectX SDK(201006)\Utilities\bin\x64;$(ExecutablePath)</ExecutablePath>
+    <ReferencePath>External\Microsoft DirectX SDK(201006)\Lib\x64;External\Assimp\lib\x64;$(ReferencePath)</ReferencePath>
+    <LibraryPath>Extrenal/DirectXTex/bin/Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -112,14 +112,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>./;Utility/;Utility\DirectXTex\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;Utility/;Extrenal/DirectXTex/include/</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996; 6031;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>legacy_stdio_definitions.lib;d3d11.lib;d3dx10.lib;d3dx11.lib;D3DCompiler.lib;dxerr.lib;dxgi.lib;dxguid.lib;DirectXTEx.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft DirectX SDK(201006)\Lib\x64;Utility\DirectXTex\bin\Debug</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>External\Microsoft DirectX SDK(201006)\Lib\x64;External\DirectXTex\bin\Debug;External/Assimp</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <EntryPointName>PS</EntryPointName>
@@ -234,38 +234,119 @@
     <ClInclude Include="Core\Draw\Mesh.h" />
     <ClInclude Include="Core\Draw\TestPlane.h" />
     <ClInclude Include="Core\Draw\BaseModel\Cube.h" />
+    <None Include="External\Assimp\color4.inl" />
+    <None Include="External\Assimp\config.h.in" />
+    <None Include="External\Assimp\material.inl" />
+    <None Include="External\Assimp\matrix3x3.inl" />
+    <None Include="External\Assimp\matrix4x4.inl" />
+    <None Include="External\Assimp\quaternion.inl" />
+    <None Include="External\Assimp\SmoothingGroups.inl" />
+    <None Include="External\Assimp\vector2.inl" />
+    <None Include="External\Assimp\vector3.inl" />
     <None Include="Json\exe.args.json" />
     <None Include="Shader\ShaderHeader\ShadowVS.hlsli" />
     <None Include="Shader\ShaderHeader\ShadowDynamicPS.hlsli">
       <FileType>Document</FileType>
     </None>
+    <ClInclude Include="External\Assimp\aabb.h" />
+    <ClInclude Include="External\Assimp\ai_assert.h" />
+    <ClInclude Include="External\Assimp\anim.h" />
+    <ClInclude Include="External\Assimp\Base64.hpp" />
+    <ClInclude Include="External\Assimp\BaseImporter.h" />
+    <ClInclude Include="External\Assimp\Bitmap.h" />
+    <ClInclude Include="External\Assimp\BlobIOSystem.h" />
+    <ClInclude Include="External\Assimp\ByteSwapper.h" />
+    <ClInclude Include="External\Assimp\camera.h" />
+    <ClInclude Include="External\Assimp\cexport.h" />
+    <ClInclude Include="External\Assimp\cfileio.h" />
+    <ClInclude Include="External\Assimp\cimport.h" />
+    <ClInclude Include="External\Assimp\ColladaMetaData.h" />
+    <ClInclude Include="External\Assimp\color4.h" />
+    <ClInclude Include="External\Assimp\commonMetaData.h" />
+    <ClInclude Include="External\Assimp\Compiler\poppack1.h" />
+    <ClInclude Include="External\Assimp\Compiler\pstdint.h" />
+    <ClInclude Include="External\Assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="External\Assimp\config.h" />
+    <ClInclude Include="External\Assimp\CreateAnimMesh.h" />
+    <ClInclude Include="External\Assimp\DefaultIOStream.h" />
+    <ClInclude Include="External\Assimp\DefaultIOSystem.h" />
+    <ClInclude Include="External\Assimp\DefaultLogger.hpp" />
+    <ClInclude Include="External\Assimp\defs.h" />
+    <ClInclude Include="External\Assimp\Exceptional.h" />
+    <ClInclude Include="External\Assimp\Exporter.hpp" />
+    <ClInclude Include="External\Assimp\fast_atof.h" />
+    <ClInclude Include="External\Assimp\GenericProperty.h" />
+    <ClInclude Include="External\Assimp\GltfMaterial.h" />
+    <ClInclude Include="External\Assimp\Hash.h" />
+    <ClInclude Include="External\Assimp\Importer.hpp" />
+    <ClInclude Include="External\Assimp\importerdesc.h" />
+    <ClInclude Include="External\Assimp\IOStream.hpp" />
+    <ClInclude Include="External\Assimp\IOStreamBuffer.h" />
+    <ClInclude Include="External\Assimp\IOSystem.hpp" />
+    <ClInclude Include="External\Assimp\light.h" />
+    <ClInclude Include="External\Assimp\LineSplitter.h" />
+    <ClInclude Include="External\Assimp\LogAux.h" />
+    <ClInclude Include="External\Assimp\Logger.hpp" />
+    <ClInclude Include="External\Assimp\LogStream.hpp" />
+    <ClInclude Include="External\Assimp\material.h" />
+    <ClInclude Include="External\Assimp\MathFunctions.h" />
+    <ClInclude Include="External\Assimp\matrix3x3.h" />
+    <ClInclude Include="External\Assimp\matrix4x4.h" />
+    <ClInclude Include="External\Assimp\MemoryIOWrapper.h" />
+    <ClInclude Include="External\Assimp\mesh.h" />
+    <ClInclude Include="External\Assimp\metadata.h" />
+    <ClInclude Include="External\Assimp\NullLogger.hpp" />
+    <ClInclude Include="External\Assimp\ObjMaterial.h" />
+    <ClInclude Include="External\Assimp\ParsingUtils.h" />
+    <ClInclude Include="External\Assimp\pbrmaterial.h" />
+    <ClInclude Include="External\Assimp\postprocess.h" />
+    <ClInclude Include="External\Assimp\Profiler.h" />
+    <ClInclude Include="External\Assimp\ProgressHandler.hpp" />
+    <ClInclude Include="External\Assimp\qnan.h" />
+    <ClInclude Include="External\Assimp\quaternion.h" />
+    <ClInclude Include="External\Assimp\RemoveComments.h" />
+    <ClInclude Include="External\Assimp\scene.h" />
+    <ClInclude Include="External\Assimp\SceneCombiner.h" />
+    <ClInclude Include="External\Assimp\SGSpatialSort.h" />
+    <ClInclude Include="External\Assimp\SkeletonMeshBuilder.h" />
+    <ClInclude Include="External\Assimp\SmallVector.h" />
+    <ClInclude Include="External\Assimp\SmoothingGroups.h" />
+    <ClInclude Include="External\Assimp\SpatialSort.h" />
+    <ClInclude Include="External\Assimp\StandardShapes.h" />
+    <ClInclude Include="External\Assimp\StreamReader.h" />
+    <ClInclude Include="External\Assimp\StreamWriter.h" />
+    <ClInclude Include="External\Assimp\StringComparison.h" />
+    <ClInclude Include="External\Assimp\StringUtils.h" />
+    <ClInclude Include="External\Assimp\Subdivision.h" />
+    <ClInclude Include="External\Assimp\texture.h" />
+    <ClInclude Include="External\Assimp\TinyFormatter.h" />
+    <ClInclude Include="External\Assimp\types.h" />
+    <ClInclude Include="External\Assimp\vector2.h" />
+    <ClInclude Include="External\Assimp\vector3.h" />
+    <ClInclude Include="External\Assimp\version.h" />
+    <ClInclude Include="External\Assimp\Vertex.h" />
+    <ClInclude Include="External\Assimp\XmlParser.h" />
+    <ClInclude Include="External\Assimp\XMLTools.h" />
+    <ClInclude Include="External\Assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="External\Imgui\imconfig.h" />
+    <ClInclude Include="External\Imgui\imgui.h" />
+    <ClInclude Include="External\Imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="External\Imgui\imgui_impl_win32.h" />
+    <ClInclude Include="External\Imgui\imgui_internal.h" />
+    <ClInclude Include="External\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="External\Imgui\imstb_textedit.h" />
+    <ClInclude Include="External\Imgui\imstb_truetype.h" />
     <ClInclude Include="Test.h" />
-    <ClInclude Include="Utility\Cnpy\cnpy.h" />
-    <ClInclude Include="Utility\DirectXTex\include\BC.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\BCDirectCompute.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\d3dx12.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\DDS.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\DirectXTex.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\DirectXTexP.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\filters.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\DirectXTex\include\scoped.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Utility\Imgui\Usage\ImguiManager.h" />
+    <ClInclude Include="External\Cnpy\cnpy.h" />
+    <ClInclude Include="External\DirectXTex\include\BC.h" />
+    <ClInclude Include="External\DirectXTex\include\BCDirectCompute.h" />
+    <ClInclude Include="External\DirectXTex\include\d3dx12.h" />
+    <ClInclude Include="External\DirectXTex\include\DDS.h" />
+    <ClInclude Include="External\DirectXTex\include\DirectXTex.h" />
+    <ClInclude Include="External\DirectXTex\include\DirectXTexP.h" />
+    <ClInclude Include="External\DirectXTex\include\filters.h" />
+    <ClInclude Include="External\DirectXTex\include\scoped.h" />
+    <ClInclude Include="Utility\Imgui\ImguiManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBuffer.h" />
     <ClInclude Include="Core\Draw\Base\TriangleIndexList.h" />
@@ -277,14 +358,6 @@
     <ClInclude Include="Core\Window.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\VertexShader.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\IA\VertexBuffer.h" />
-    <ClInclude Include="Utility\Imgui\imconfig.h" />
-    <ClInclude Include="Utility\Imgui\imgui.h" />
-    <ClInclude Include="Utility\Imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="Utility\Imgui\imgui_impl_win32.h" />
-    <ClInclude Include="Utility\Imgui\imgui_internal.h" />
-    <ClInclude Include="Utility\Imgui\imstb_rectpack.h" />
-    <ClInclude Include="Utility\Imgui\imstb_textedit.h" />
-    <ClInclude Include="Utility\Imgui\imstb_truetype.h" />
     <ClInclude Include="Utility\Json\ScriptCommander.h" />
     <ClInclude Include="Utility\LogSystem\PerformanceLog.h" />
     <ClInclude Include="Utility\MathInfo.h" />
@@ -344,10 +417,29 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\VertexBuffer.cpp" />
     <ClCompile Include="Core\Draw\TestPlane.cpp" />
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.cpp" />
-    <ClCompile Include="Test.cpp" />
-    <ClCompile Include="Utility\Cnpy\cnpy.cpp">
+    <ClCompile Include="External\Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_demo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_impl_dx11.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_impl_win32.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="External\Cnpy\cnpy.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utility\Imgui\ImguiManager.cpp" />
     <ClCompile Include="Utility\Json\ScriptCommander.cpp" />
     <ClCompile Include="Utility\MathInfo.cpp" />
     <ClCompile Include="Utility\StringConverter.cpp" />
@@ -425,25 +517,6 @@
     <ClCompile Include="Theory\Chapter7_Lighting\T7-7_MidArrangement.cpp" />
     <ClCompile Include="Theory\Chapter7_Lighting\T7-8_MaterialSetting.cpp" />
     <ClCompile Include="Theory\Chapter7_Lighting\T7-9_DirectionLight.cpp" />
-    <ClCompile Include="Utility\Imgui\Usage\ImguiManager.cpp" />
-    <ClCompile Include="Utility\Imgui\imgui.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_demo.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_draw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_impl_dx11.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_impl_win32.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="Utility\Imgui\imgui_widgets.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClInclude Include="Core\Exception\WindowException.h" />
     <ClCompile Include="Core\Draw\Base\Drawable.cpp" />
     <ClCompile Include="DX3DApp.cpp" />
@@ -596,18 +669,16 @@
     <Image Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="Utility\assimp\assimp-vc143-mt.lib">
+    <Library Include="External\Assimp\assimp-vc143-mt.lib">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </Library>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
     <None Include="Json\process.json" />
-    <None Include="Utility\assimp\assimp-vc143-mt.dll" />
-    <None Include="Utility\DirectXTex\include\DirectXTex.inl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="Utility\Imgui\Usage\imgui_default.ini" />
+    <None Include="External\Assimp\assimp-vc143-mt.dll" />
+    <None Include="External\DirectXTex\include\DirectXTex.inl" />
+    <None Include="Utility\Imgui\imgui.ini" />
+    <None Include="Utility\Imgui\imgui_default.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

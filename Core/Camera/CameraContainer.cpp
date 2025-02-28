@@ -4,7 +4,7 @@
 
 #include "Core/DxGraphic.h"
 #include "Core/RenderingPipeline/RenderGraph/RenderGraph.h"
-#include "Utility/Imgui/imgui.h"
+#include "External/Imgui/imgui.h"
 
 void CameraContainer::CreateWindow(DxGraphic& graphic)
 {

@@ -10,7 +10,7 @@
 
 #include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
 
-#include "Utility/Imgui/imgui.h"
+#include "External/Imgui/imgui.h"
 
 ColorCube::ColorCube(DxGraphic& graphic, float size)
 {

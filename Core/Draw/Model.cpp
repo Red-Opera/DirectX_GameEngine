@@ -7,9 +7,9 @@
 #include "Core/Exception/ModelException.h"
 #include "Utility/MathInfo.h"
 
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <External/Assimp/Importer.hpp>
+#include <External/Assimp/scene.h>
+#include <External/Assimp/postprocess.h>
 
 Model::Model(DxGraphic& graphic, const std::string& pathString, const float scale)
 {

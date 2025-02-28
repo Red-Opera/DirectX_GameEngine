@@ -7,7 +7,7 @@
 #include "Core/RenderingPipeline/RenderManager.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 
-#include <assimp/scene.h>
+#include <External/Assimp/scene.h>
 
 using namespace Graphic;
 

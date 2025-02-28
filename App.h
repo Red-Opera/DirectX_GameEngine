@@ -9,7 +9,7 @@
 #include "Core/RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
 
 #include "Utility/GameTimer.h"
-#include "Utility/Imgui/Usage/ImguiManager.h"
+#include "Utility/Imgui/ImguiManager.h"
 #include "Utility/Json/ScriptCommander.h"
 #include "Utility/MathInfo.h"
 

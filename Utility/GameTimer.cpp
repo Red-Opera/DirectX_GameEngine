@@ -97,7 +97,7 @@ float GameTimer::CheckTime()
 	__int64 currentTime;
 	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 
-	float totalTime = (currentTime - beforeTimePoint) * secondsPerFrame;
+	float totalTime = (float)((currentTime - beforeTimePoint) * secondsPerFrame);
 	beforeTimePoint = currentTime;
 
 	return totalTime;

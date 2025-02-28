@@ -3,7 +3,7 @@
 #include "Mesh.h"
 #include "ModelBase.h"
 
-#include "Utility/Imgui/imgui.h"
+#include "External/Imgui/imgui.h"
 
 SceneGraphNode::SceneGraphNode(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) NOEXCEPTRELEASE
 	: id(id), meshPtrs(std::move(meshPtrs)), name(name)

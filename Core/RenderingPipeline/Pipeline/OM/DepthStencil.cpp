@@ -6,7 +6,7 @@
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
 
-#include "Utility/Cnpy/cnpy.h"
+#include "External/Cnpy/cnpy.h"
 
 #include <stdexcept>
 

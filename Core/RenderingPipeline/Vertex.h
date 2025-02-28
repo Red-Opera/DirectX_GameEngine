@@ -6,11 +6,12 @@
 #include <DirectXMath.h>
 #include <minwindef.h>
 
-#include <assimp/scene.h>
 #include <utility>
 
 #include "Core/DxGraphic.h"
 #include "Core/Draw/Base/ColorInfo.h"
+
+#include "External/Assimp/scene.h"
 
 #define CREATE_GET_VERTEX_INFO(aiMeshMember) \
 static Type get(const aiMesh& mesh, size_t i) noexcept { return *reinterpret_cast<const Type*>(&mesh.aiMeshMember[i]);}
