@@ -1029,7 +1029,7 @@
     <Image Include="Core\WindowResources\icon\Icon.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="Images\Engine\FileIcon.png">
+    <Image Include="Images\Engine\FileIcon\FileIcon.png">
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="Images\Engine\FolderIcon.png">
@@ -1075,6 +1075,27 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="Images\Engine\GoParentFolder.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FileIcon\cpp.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FileIcon\cs.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FileIcon\txt.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FileIcon\hlsl.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FileIcon\json.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FileIcon\obj.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FileIcon\png.png">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

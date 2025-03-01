@@ -8,11 +8,12 @@
 #include "External/Imgui/imgui.h"
 #include "External/Imgui/imgui_internal.h"
 
-#include <d3d11.h>
+#include <algorithm>
 #include <filesystem>
 #include <vector>
 #include <string>
 
+#include <d3d11.h>
 #include <wrl/client.h>
 #include <DirectXTex.h>
 
@@ -29,8 +30,36 @@ namespace Engine
 			folderTree = CreateFileSystem();
 
 			LoadIconTexture(graphic, "Images/Engine/FolderIcon.png", IconType::folder);
-			LoadIconTexture(graphic, "Images/Engine/FileIcon.png", IconType::file);
 			LoadIconTexture(graphic, "Images/Engine/GoParentFolder.png", IconType::ParentFolder);
+
+            // 파일 폴더 이미지 경로
+            std::string folderPath = "Images/Engine/FileIcon";
+
+            try 
+            {
+                if (std::filesystem::exists(folderPath) && std::filesystem::is_directory(folderPath))
+                {
+                    for (const auto& entry : std::filesystem::directory_iterator(folderPath))
+                    {
+                        if (std::filesystem::is_regular_file(entry.path()))
+                        {
+                            std::string path = entry.path().string();
+                            path = path.replace(path.find("\\"), 1, "/");
+
+                            // 이미지 로드
+                            LoadIconTexture(graphic, path, IconType::file);
+                        }
+                    }
+                }
+
+                else
+                    throw ENGINE_UI_EXCEPTION("해당 경로는 폴더가 아님.");
+            }
+
+            catch (const std::filesystem::filesystem_error& e)
+            {
+                throw ENGINE_UI_EXCEPTION(e.what());
+            }
 		}
 	}
 
@@ -128,7 +157,7 @@ namespace Engine
             if (ImGui::BeginChild("View", ImVec2(0, 0), true))
             {
                 const int columns = 4;
-                ImGui::Columns(columns, nullptr, true);
+                ImGui::Columns(columns, nullptr, false);
 
                 // 폴더 출력
                 for (const auto& child : itemTree->chlidren)
@@ -163,9 +192,18 @@ namespace Engine
                 // 파일 출력
                 for (const auto& child : itemTree->chlidren)
                 {
+                    // 파일 확장자만 추출 (마지막 . 이후 문자열, . 제외)
+                    std::string fileName = child->name;
+                    size_t dotPos = fileName.rfind('.');  // 마지막 .의 위치 찾기
+
+                    std::string fileExtension;
+
+                    if (dotPos != std::string::npos)  // .이 있는 경우
+                        fileExtension = fileName.substr(dotPos + 1);  // . 이후 부분 추출 (점 제외)
+
                     if (!child->isFolder)
                     {
-                        ImGui::Image(reinterpret_cast<ImTextureID>(fileIconTexture.Get()), ImVec2(64, 64));
+                        ImGui::Image(reinterpret_cast<ImTextureID>(GetFileTextureResourceView(fileExtension)), ImVec2(64, 64));
 
                         if (ImGui::Selectable(child->name.c_str(), selectedName == child->name))
                             selectedName = child->name;
@@ -197,7 +235,28 @@ namespace Engine
 		}
 	}
 
-	void EngineUI::LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType)
+    ID3D11ShaderResourceView* EngineUI::GetFileTextureResourceView(std::string fileName)
+    {
+        // 대문자를 모두 소문자로
+        std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
+
+        if (fileName.compare("cso") == 0 || fileName.compare("fx") == 0 || fileName.compare("hlsli") == 0)
+            fileName = "hlsl";
+
+        else if (fileName.compare("jpg") == 0 || fileName.compare("bmp") == 0 || fileName.compare("jpge") == 0)
+            fileName = "png";
+
+        else if (fileName.compare("fbx") == 0 || fileName.compare("stl") == 0 || fileName.compare("gltf") == 0 || fileName.compare("mtl") == 0)
+            fileName = "obj";
+
+        // 해당 확장명으로 이미지 파일이 없는 경우
+        if (fileIconTextures.find(fileName) == fileIconTextures.end())
+            return fileIconTextures["other"].Get();
+
+        return fileIconTextures[fileName].Get();
+    }
+
+    void EngineUI::LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType)
 	{
 		using namespace Graphic;
 		using namespace DirectX;
@@ -222,9 +281,25 @@ namespace Engine
 			hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
 			break;
 
-		case Engine::EngineUI::IconType::file:
-			hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, fileIconTexture.GetAddressOf());
-			break;
+        case Engine::EngineUI::IconType::file:
+        {
+            Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> newIconTexture;
+
+            hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, newIconTexture.GetAddressOf());
+            GRAPHIC_THROW_INFO(hr);
+
+            // 파일명 추출 (확장자 없이)
+            std::string fileNameString = std::filesystem::path(fileName).stem().string();
+
+            if (fileNameString.compare("FileIcon") == 0)
+                fileNameString = "other";
+
+            // fileIconTextures에 저장
+            fileIconTextures[fileNameString] = newIconTexture;
+
+            break;
+        }
+
 
 		case Engine::EngineUI::IconType::ParentFolder:
 			hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());

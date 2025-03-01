@@ -677,7 +677,14 @@
     <Image Include="Images\brickwall_normal.jpg" />
     <Image Include="Images\brickwall_normal_obj.png" />
     <Image Include="Images\cube.png" />
-    <Image Include="Images\Engine\FileIcon.png" />
+    <Image Include="Images\Engine\FileIcon\cpp.png" />
+    <Image Include="Images\Engine\FileIcon\cs.png" />
+    <Image Include="Images\Engine\FileIcon\FileIcon.png" />
+    <Image Include="Images\Engine\FileIcon\hlsl.png" />
+    <Image Include="Images\Engine\FileIcon\json.png" />
+    <Image Include="Images\Engine\FileIcon\obj.png" />
+    <Image Include="Images\Engine\FileIcon\png.png" />
+    <Image Include="Images\Engine\FileIcon\txt.png" />
     <Image Include="Images\Engine\FolderIcon.png" />
     <Image Include="Images\Engine\GoParentFolder.png" />
     <Image Include="Images\images.png" />

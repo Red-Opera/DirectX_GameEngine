@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 class DxGraphic;
 namespace Graphic { class Render; }
@@ -22,13 +23,10 @@ namespace Engine
 
 		static std::unique_ptr<EngineUI> instance;
 
-		static EngineUI& GetInstance(DxGraphic& graphic)
+		static void GetInstance(DxGraphic& graphic)
 		{
 			if (!instance)
-			{
 				instance = std::make_unique<EngineUI>(graphic);
-			}
-			return *instance;
 		}
 
 		EngineUI(DxGraphic& graphic);
@@ -58,15 +56,17 @@ namespace Engine
 			bool isFolder;
 		};
 
+		ID3D11ShaderResourceView* GetFileTextureResourceView(std::string fileName);
 		void LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType);
 
 		// 헬퍼 함수: 현재 폴더의 전체 경로 문자열 생성
 		std::string GetRelativePath(const std::shared_ptr<FileItemTree>& tree);
 
 		std::shared_ptr<FileItemTree> folderTree;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> fileIconTexture;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> folderIconTexture;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> goParentFolderTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> folderIconTexture;			// 폴더 이미지를 저장하는 변수
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> goParentFolderTexture;		// 상위 폴더로 이동하기 버튼 이미지 변수
+
+		std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> fileIconTextures;
 
 		std::string selectedName;
 	};
