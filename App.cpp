@@ -5,6 +5,7 @@
 
 #include "Core/TestModelBase.h"
 #include "Core/Camera/Camera.h"
+#include "Core/EngineUI/EngineUI.h"
 #include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/Test.h"
 
@@ -16,6 +17,8 @@ App::App(const std::string& commandLine)
 	: wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), 
 	  light(wnd.GetDxGraphic(), { 0.0f, 10.0f, 0.0f })
 {
+	Engine::EngineUI;
+
 	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
 	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.GetLightViewCamera());
@@ -79,8 +82,8 @@ void App::DoFrame(float deltaTime)
 	ostringstream out;
 	out << "Play Time : " << setprecision(1) << fixed << t << "s";
 	wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
-	light.Update(wnd.GetDxGraphic(), cameras->GetMatrix());
 
+	light.Update(wnd.GetDxGraphic(), cameras->GetMatrix());
 	renderGraph.RenderMainCamera(cameras.GetActiveCamera());
 
 	light.Submit(RenderingChannel::main);
@@ -123,6 +126,9 @@ void App::DoFrame(float deltaTime)
 	cube.SpawnControlWindow(wnd.GetDxGraphic(), "Cube 1");
 	cube2.SpawnControlWindow(wnd.GetDxGraphic(), "Cube 2");
 	renderGraph.RenderWindows(wnd.GetDxGraphic());
+
+	Engine::EngineUI::instance->RenderFolderView();
+	Engine::EngineUI::instance->RenderInspector();
 		  
 	wnd.SetTitle(out.str());		// 제목 동기화
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용

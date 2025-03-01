@@ -162,6 +162,8 @@
     <ClInclude Include="Core\Draw\SceneGraphNode.h" />
     <ClInclude Include="Core\Draw\TextureCube.h" />
     <ClInclude Include="Core\DxGraphicResource.h" />
+    <ClInclude Include="Core\EngineUI\EngineUI.h" />
+    <ClInclude Include="Core\Exception\EngineUIException.h" />
     <ClInclude Include="Core\Exception\ModelException.h" />
     <ClInclude Include="Core\Exception\RenderGraphCompileException.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.h" />
@@ -379,6 +381,8 @@
     <ClCompile Include="Core\Draw\SceneGraphNode.cpp" />
     <ClCompile Include="Core\Draw\TextureCube.cpp" />
     <ClCompile Include="Core\DxGraphicResource.cpp" />
+    <ClCompile Include="Core\EngineUI\EngineUI.cpp" />
+    <ClCompile Include="Core\Exception\EngineUIException.cpp" />
     <ClCompile Include="Core\Exception\ModelException.cpp" />
     <ClCompile Include="Core\Exception\RenderGraphCompileException.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.cpp" />
