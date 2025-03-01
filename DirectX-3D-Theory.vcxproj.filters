@@ -1029,6 +1029,54 @@
     <Image Include="Core\WindowResources\icon\Icon.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+    <Image Include="Images\Engine\FileIcon.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\FolderIcon.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\apple.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\brickwall.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\brickwall_normal.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\brickwall_normal_obj.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\cube.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\images.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\kappa50.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\SpaceBox\0.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\SpaceBox\1.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\SpaceBox\2.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\SpaceBox\3.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\SpaceBox\4.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\SpaceBox\5.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="Images\Engine\GoParentFolder.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="External\Assimp\assimp-vc143-mt.lib" />
@@ -1076,5 +1124,6 @@
     <None Include="External\Assimp\vector3.inl">
       <Filter>헤더 파일</Filter>
     </None>
+    <None Include="Reference.txt" />
   </ItemGroup>
 </Project>

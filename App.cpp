@@ -17,7 +17,7 @@ App::App(const std::string& commandLine)
 	: wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), 
 	  light(wnd.GetDxGraphic(), { 0.0f, 10.0f, 0.0f })
 {
-	Engine::EngineUI;
+	Engine::EngineUI& ui = Engine::EngineUI::GetInstance(wnd.GetDxGraphic());
 
 	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
 	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));

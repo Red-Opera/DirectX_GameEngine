@@ -7,6 +7,7 @@
 #include "Core/Draw/BaseModel/ColorCube.h"
 
 #include "Core/RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
+#include "Core/EngineUI/EngineUI.h"
 
 #include "Utility/GameTimer.h"
 #include "Utility/Imgui/ImguiManager.h"

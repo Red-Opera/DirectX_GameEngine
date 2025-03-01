@@ -236,6 +236,7 @@
     <ClInclude Include="Core\Draw\Mesh.h" />
     <ClInclude Include="Core\Draw\TestPlane.h" />
     <ClInclude Include="Core\Draw\BaseModel\Cube.h" />
+    <None Include="Reference.txt" />
     <None Include="External\Assimp\color4.inl" />
     <None Include="External\Assimp\config.h.in" />
     <None Include="External\Assimp\material.inl" />
@@ -671,6 +672,22 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Core\WindowResources\icon\Icon.ico" />
+    <Image Include="Images\apple.png" />
+    <Image Include="Images\brickwall.jpg" />
+    <Image Include="Images\brickwall_normal.jpg" />
+    <Image Include="Images\brickwall_normal_obj.png" />
+    <Image Include="Images\cube.png" />
+    <Image Include="Images\Engine\FileIcon.png" />
+    <Image Include="Images\Engine\FolderIcon.png" />
+    <Image Include="Images\Engine\GoParentFolder.png" />
+    <Image Include="Images\images.png" />
+    <Image Include="Images\kappa50.png" />
+    <Image Include="Images\SpaceBox\0.png" />
+    <Image Include="Images\SpaceBox\1.png" />
+    <Image Include="Images\SpaceBox\2.png" />
+    <Image Include="Images\SpaceBox\3.png" />
+    <Image Include="Images\SpaceBox\4.png" />
+    <Image Include="Images\SpaceBox\5.png" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="External\Assimp\assimp-vc143-mt.lib">
