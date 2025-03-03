@@ -139,7 +139,7 @@ namespace GraphicResource
 		if (!std::filesystem::exists(tempDDSFolder))
 		{
 			std::filesystem::create_directories(tempDDSFolder);
-			hr = S_FALSE;
+			hr = E_FAIL;
 		}
 
 		// 이미 DDS로 캐시 텍스처가 있으면 그 이미지 사용
