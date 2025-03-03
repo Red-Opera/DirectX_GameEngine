@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cassert>
 #include <filesystem>
+#include <fstream>
 #include <sstream>
 
 using namespace std;
@@ -126,9 +127,50 @@ namespace GraphicResource
 
 	Image Image::FromFile(const std::string& name)
 	{
+		// DDS 파일 변환 후 저장할 위치, DDS 파일의 전체 경로
+		std::wstring tempDDSFolder = L"Temp/TextureCache/";
+		std::wstring tempDDSPath = tempDDSFolder + StringConverter::ToWString((StringConverter::GetFileName(name))) + L".dds";
+
 		// 이미지 파일을 로드함
 		DirectX::ScratchImage scratch;
-		HRESULT hr = DirectX::LoadFromWICFile(StringConverter::ToWide(name).c_str(), DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, scratch);
+		HRESULT hr;
+
+		// 임시 폴더가 존재하는지 확인하고 없으면 생성
+		if (!std::filesystem::exists(tempDDSFolder))
+		{
+			std::filesystem::create_directories(tempDDSFolder);
+			hr = S_FALSE;
+		}
+
+		// 이미 DDS로 캐시 텍스처가 있으면 그 이미지 사용
+		else
+			hr = LoadTempDDSTexture(tempDDSPath, scratch);
+
+		// 캐시 텍스처가 없어 새로 만들어야 하는 경우
+		if (FAILED(hr))
+		{
+			hr = DirectX::LoadFromWICFile(StringConverter::ToWide(name).c_str(), DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, scratch);
+
+			// 새로 만든 이미지를 저장함
+			if (SUCCEEDED(hr))
+			{
+				HRESULT saveHr = SaveToDDSFile(
+					scratch.GetImages(),
+					scratch.GetImageCount(),
+					scratch.GetMetadata(),
+					DDS_FLAGS_NONE,
+					tempDDSPath.c_str()
+				);
+
+				if (FAILED(saveHr))
+				{
+					std::stringstream out;
+					out << "[" << StringConverter::ToString(tempDDSPath) << "]의 경로로 저장할 수 없음!";
+
+					throw Image::Exception(__LINE__, __FILE__, out.str());
+				}
+			}
+		}
 
 		if (FAILED(hr))
 		{
@@ -195,7 +237,75 @@ namespace GraphicResource
 
 	bool Image::HasAlpha() const noexcept
 	{
-		return !scratch.IsAlphaAllOpaque();
+		const uint8_t* data = scratch.GetPixels();
+		size_t size = GetWidth() * GetHeight();
+
+		for (size_t i = 0; i < size; i++)
+		{
+			if (data[i * 4 + 3] != 255)
+				return true;
+		}
+
+		return false;
+	}
+
+	HRESULT Image::LoadTempDDSTexture(const std::wstring& filePath, DirectX::ScratchImage& image)
+	{
+		HANDLE hFile = CreateFileW(filePath.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+		if (hFile == INVALID_HANDLE_VALUE)
+			return E_FAIL;
+
+		DWORD fileSize = GetFileSize(hFile, nullptr);
+
+		if (fileSize == INVALID_FILE_SIZE)
+		{
+			CloseHandle(hFile);
+			
+			std::stringstream out;
+			out << "[" << StringConverter::ToString(filePath) << "] 경로의 파일은 잘못된 파일 사이즈";
+
+			throw Exception(__LINE__, __FILE__, out.str());
+
+			return E_FAIL;
+		}
+
+		HANDLE hMapping = CreateFileMapping(hFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
+
+		if (!hMapping)
+		{
+			CloseHandle(hFile);
+
+			std::stringstream out;
+			out << "[" << StringConverter::ToString(filePath) << "] 경로의 파일 맵핑 실패!";
+
+			throw Exception(__LINE__, __FILE__, out.str());
+
+			return E_FAIL;
+		}
+
+		LPVOID data = MapViewOfFile(hMapping, FILE_MAP_READ, 0, 0, fileSize);
+
+		if (!hMapping || data == nullptr)
+		{
+			CloseHandle(hFile);
+			CloseHandle(hMapping);
+
+			std::stringstream out;
+			out << "[" << StringConverter::ToString(filePath) << "] 경로의 파일 파일 읽기 실패";
+
+			throw Exception(__LINE__, __FILE__, out.str());
+
+			return E_FAIL;
+		}
+
+		HRESULT hr = LoadFromDDSMemory(reinterpret_cast<const std::byte*>(data), fileSize, DDS_FLAGS_NONE, nullptr, image);
+
+		UnmapViewOfFile(data);
+		CloseHandle(hMapping);
+		CloseHandle(hFile);
+
+		return hr;
 	}
 
 	Image::Image(DirectX::ScratchImage scratch) noexcept : scratch(std::move(scratch))

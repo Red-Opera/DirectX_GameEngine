@@ -106,6 +106,8 @@ namespace GraphicResource
 	private:
 		Image(DirectX::ScratchImage scratch) noexcept;
 
+		static HRESULT LoadTempDDSTexture(const std::wstring& filePath, DirectX::ScratchImage& image);
+
 		static constexpr DXGI_FORMAT format = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		DirectX::ScratchImage scratch;

@@ -18,6 +18,12 @@ namespace Graphic
 		std::string GetID() const noexcept override;
 
 	protected:
+		HRESULT LoadCacheShader(const std::wstring& cacheShaderPath);
+		HRESULT SaveCacheShader(const std::wstring& tempShaderPath);
+		void GetCompileShader(DxGraphic& graphic, const std::string& path);
+
+		bool IsShaderCacheVaild(const std::wstring& shaderPath, const std::wstring& cachePath);
+
 		std::string path;
 		Microsoft::WRL::ComPtr<ID3DBlob> shaderCode;				// 컴파일된 셰이더 코드
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> pixelShader;		// Pixel Shader

@@ -76,23 +76,24 @@ namespace Engine
 		}
 
 		// 최상위 폴더부터 Tree를 만듬
-		return BuildFileItemTree(rootPath);
+        std::filesystem::directory_entry entry(rootPath);
+		return BuildFileItemTree(entry);
 	}
 
-	std::shared_ptr<EngineUI::FileItemTree> EngineUI::BuildFileItemTree(const std::filesystem::path& rootPath)
+	std::shared_ptr<EngineUI::FileItemTree> EngineUI::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
     {
 		// 해당 위치에서 현재 파일 정보를 가져옴
 		auto itemTree = std::make_shared<FileItemTree>();
-		itemTree->name = rootPath.filename().string();
-		itemTree->isFolder = fileSystem::is_directory(rootPath);
+		itemTree->name = rootPath.path().filename().string();
+		itemTree->isFolder = rootPath.is_directory();
 
 		// 해당 파일이 폴더인 경우
 		if (itemTree->isFolder)
 		{
 			// 모든 자식들도 자식을 찾고 자신의 자식들을 트리에 넣음
-			for (const auto& child : fileSystem::directory_iterator(rootPath))
+			for (const auto& child : fileSystem::directory_iterator(rootPath.path()))
 			{
-				std::shared_ptr<FileItemTree> newFileItem = BuildFileItemTree(child.path());
+				std::shared_ptr<FileItemTree> newFileItem = BuildFileItemTree(child);
 
                 newFileItem->parent = itemTree;
 				itemTree->chlidren.push_back(newFileItem);

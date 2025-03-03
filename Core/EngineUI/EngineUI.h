@@ -35,8 +35,8 @@ namespace Engine
 		EngineUI& operator=(const EngineUI&) = delete;
 		EngineUI& operator=(EngineUI&&) = delete;
 
-		std::shared_ptr<FileItemTree> CreateFileSystem();										// 프로젝트 구조 반영한 파일 시스템 생성 시작 메소드
-		std::shared_ptr<FileItemTree> BuildFileItemTree(const std::filesystem::path& rootPath);	// 프로젝트 구조 반영하여 파일 트리를 만드는 메소드
+		std::shared_ptr<FileItemTree> CreateFileSystem();													// 프로젝트 구조 반영한 파일 시스템 생성 시작 메소드
+		std::shared_ptr<FileItemTree> BuildFileItemTree(const std::filesystem::directory_entry& rootPath);	// 프로젝트 구조 반영하여 파일 트리를 만드는 메소드
 
 		void RenderFolderView(std::shared_ptr<FileItemTree> itemTree = { });
 		void RenderInspector();
