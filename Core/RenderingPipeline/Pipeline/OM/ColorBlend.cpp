@@ -81,7 +81,7 @@ namespace Graphic
 
 	void ColorBlend::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGERNOHR(graphic);
 
 		const float* transparencyDatas = transparency ? transparency->data() : nullptr;
 

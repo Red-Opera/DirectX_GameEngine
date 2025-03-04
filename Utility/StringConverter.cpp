@@ -49,6 +49,19 @@ bool StringConverter::IsStringContain(std::string_view text, std::string_view fi
 	return std::search(text.begin(), text.end(), findText.begin(), findText.end()) != text.end();
 }
 
+std::string StringConverter::GetAbsolutePath(const std::filesystem::path& relativePath)
+{
+	// 첫 번째 //까지 제거
+	std::string relativePathStr = relativePath.string();
+
+	size_t pos = relativePathStr.find("/");
+
+	if (pos != std::string::npos)
+		relativePathStr = relativePathStr.substr(pos + 1);
+
+	return std::filesystem::absolute(relativePathStr).string();
+}
+
 std::string StringConverter::GetFileName(std::string filePath)
 {
 	std::filesystem::path path(filePath);

@@ -12,7 +12,7 @@ namespace Graphic
 
 	void SkyboxTransformConstantBuffer::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGERNOHR(graphic);
 
 		GRAPHIC_THROW_INFO_ONLY(UpdateRender(graphic, GetTransform(graphic)));
 	}

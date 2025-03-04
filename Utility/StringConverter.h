@@ -4,6 +4,7 @@
 #include <iterator>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 class StringConverter
 {
@@ -33,6 +34,7 @@ public:
 	static std::vector<std::string> SplitString(const std::string& text, const std::string& delim);
 	static bool IsStringContain(std::string_view text, std::string_view findText);
 
+	static std::string GetAbsolutePath(const std::filesystem::path& path);
 	static std::string GetFileName(std::string filePath);
 	static std::wstring ToWString(const std::string& value);
 	static std::string ToString(const std::wstring& value);

@@ -30,7 +30,7 @@ namespace Graphic
 	public:
 		DepthTextureCube(DxGraphic& graphic, UINT size, UINT slot = 0);
 
-		std::shared_ptr<OutputOnlyDepthStencil> GetDepthStencil(UINT index) const;
+		std::shared_ptr<OutputOnlyDepthStencil> GetDepthStencil(size_t index) const;
 
 		// Render을(를) 통해 상속됨
 		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;

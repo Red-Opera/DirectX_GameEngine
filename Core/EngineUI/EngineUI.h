@@ -61,6 +61,15 @@ namespace Engine
 
 		// 헬퍼 함수: 현재 폴더의 전체 경로 문자열 생성
 		std::string GetRelativePath(const std::shared_ptr<FileItemTree>& tree);
+		std::string GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree);
+
+		void RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree);
+		void RenderParentFolderButton();
+		void RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree);
+		void RenderFolderItem(const std::shared_ptr<FileItemTree>& child);
+		void RenderFileItem(const std::shared_ptr<FileItemTree>& child);
+
+		void OpenFile(const std::shared_ptr<FileItemTree>& child);
 
 		std::shared_ptr<FileItemTree> folderTree;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> folderIconTexture;			// 폴더 이미지를 저장하는 변수

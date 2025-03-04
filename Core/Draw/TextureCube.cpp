@@ -103,7 +103,7 @@ namespace Graphic
 			depthStencil.push_back(std::make_shared<OutputOnlyDepthStencil>(graphic, texture, face));
 	}
 
-	std::shared_ptr<OutputOnlyDepthStencil> DepthTextureCube::GetDepthStencil(UINT index) const
+	std::shared_ptr<OutputOnlyDepthStencil> DepthTextureCube::GetDepthStencil(size_t index) const
 	{
 		return depthStencil[index];
 	}

@@ -43,7 +43,7 @@ namespace Graphic
 
     void VertexShader::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGERNOHR(graphic);
 
         // Vertex Shader 단계를 렌더링 파이프라인 단계에 묶음
         GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->VSSetShader(vertexShader.Get(), nullptr, 0));

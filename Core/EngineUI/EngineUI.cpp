@@ -8,6 +8,8 @@
 #include "External/Imgui/imgui.h"
 #include "External/Imgui/imgui_internal.h"
 
+#include "Utility/StringConverter.h"
+
 #include <algorithm>
 #include <filesystem>
 #include <vector>
@@ -105,119 +107,24 @@ namespace Engine
 
     void EngineUI::RenderFolderView(std::shared_ptr<FileItemTree> itemTree)
     {
-        if (ImGui::Begin("Folder View"))
+        if (!ImGui::Begin("Folder View"))
         {
-            // [0] 현재 경로를 상단 왼쪽에 출력
-            std::shared_ptr<FileItemTree> currentFolder = itemTree ? itemTree : folderTree;
-            std::string currentPath = GetRelativePath(currentFolder);
-
-            ImGui::Text("Current Path : %s", currentPath.c_str());
-
-            // [1] 상위 폴더로 이동 버튼 (상단 오른쪽, 수동 비활성화 처리)
-            {
-                ImVec2 iconSize(32.0f, 32.0f);
-
-                // 전체 내용 영역의 폭을 이용해 버튼의 x 위치 계산
-                float totalWidth = ImGui::GetWindowContentRegionWidth();
-                float buttonPosX = totalWidth - iconSize.x;
-
-                if (buttonPosX < 0.0f)
-                    buttonPosX = 0.0f;
-
-                ImGui::SameLine(buttonPosX);
-
-                bool canGoParent = (folderTree && folderTree->parent != nullptr);
-
-                if (!canGoParent)
-                {
-                    ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-                    ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-                }
-
-                if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(goParentFolderTexture.Get()), iconSize))
-                {
-                    if (canGoParent)
-                        folderTree = folderTree->parent;
-                }
-
-                if (ImGui::IsItemHovered())
-                    ImGui::SetTooltip("Go to parent folder");
-
-                if (!canGoParent)
-                {
-                    ImGui::PopStyleVar();
-                    ImGui::PopItemFlag();
-                }
-            }
-
-            // [2] 현재 폴더 트리 지정 (없으면 folderTree 사용)
-            if (!itemTree)
-                itemTree = folderTree;
-
-            // [3] 폴더/파일 목록 표시 (가로 우선 배치)
-            if (ImGui::BeginChild("View", ImVec2(0, 0), true))
-            {
-                const int columns = 4;
-                ImGui::Columns(columns, nullptr, false);
-
-                // 폴더 출력
-                for (const auto& child : itemTree->chlidren)
-                {
-                    if (child->isFolder)
-                    {
-                        ImGui::PushID(child->name.c_str());
-
-                        // 폴더 아이콘 그리기 및 더블 클릭 처리 (아이콘 영역만 감지)
-                        ImVec2 startPos = ImGui::GetCursorScreenPos();
-                        ImGui::Image(reinterpret_cast<ImTextureID>(folderIconTexture.Get()), ImVec2(64, 64));
-
-                        ImGui::SetCursorScreenPos(startPos);
-
-                        if (ImGui::InvisibleButton("##folder_image_button", ImVec2(64, 64)))
-                            selectedName = child->name;
-
-                        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-                            folderTree = child;
-
-                        // 아이콘 아래에 폴더 이름 출력
-                        ImGui::SetCursorScreenPos(ImVec2(startPos.x, startPos.y + 64));
-                        ImGui::TextWrapped("%s", child->name.c_str());
-
-                        ImGui::PopID();
-
-                        // 행 우선: 각 아이템 후 무조건 다음 열로 이동
-                        ImGui::NextColumn();
-                    }
-                }
-
-                // 파일 출력
-                for (const auto& child : itemTree->chlidren)
-                {
-                    // 파일 확장자만 추출 (마지막 . 이후 문자열, . 제외)
-                    std::string fileName = child->name;
-                    size_t dotPos = fileName.rfind('.');  // 마지막 .의 위치 찾기
-
-                    std::string fileExtension;
-
-                    if (dotPos != std::string::npos)  // .이 있는 경우
-                        fileExtension = fileName.substr(dotPos + 1);  // . 이후 부분 추출 (점 제외)
-
-                    if (!child->isFolder)
-                    {
-                        ImGui::Image(reinterpret_cast<ImTextureID>(GetFileTextureResourceView(fileExtension)), ImVec2(64, 64));
-
-                        if (ImGui::Selectable(child->name.c_str(), selectedName == child->name))
-                            selectedName = child->name;
-
-                        ImGui::NextColumn();
-                    }
-                }
-
-                ImGui::Columns(1);
-            }
-
-            ImGui::EndChild();
+            ImGui::End();
+            return;
         }
+
+        // [0] 현재 경로 출력
+        RenderCurrentPath(itemTree);
+
+        // [1] 상위 폴더 이동 버튼 출력
+        RenderParentFolderButton();
+
+        // itemTree가 nullptr이면 folderTree 사용
+        if (!itemTree)
+            itemTree = folderTree;
+
+        // [2] 폴더와 파일 목록 출력
+        RenderFolderAndFileItems(itemTree);
 
         ImGui::End();
     }
@@ -330,6 +237,154 @@ namespace Engine
         }
 
         return path;
+    }
+
+    std::string EngineUI::GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree)
+    {
+		if (!tree)
+			return "";
+
+        std::string absolutePath = fileSystem::current_path().string() + "\\" + GetRelativePath(tree);
+
+		absolutePath = absolutePath.replace(absolutePath.find("/"), 1, "\\");
+
+		return absolutePath;
+    }
+
+    void EngineUI::RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree)
+    {
+        // itemTree가 nullptr이면 기본 folderTree 사용
+        std::shared_ptr<FileItemTree> currentFolder = itemTree ? itemTree : folderTree;
+        std::string currentPath = GetRelativePath(currentFolder);
+
+        ImGui::Text("Current Path : %s", currentPath.c_str());
+    }
+
+    void EngineUI::RenderParentFolderButton()
+    {
+        ImVec2 iconSize(32.0f, 32.0f);
+
+        float totalWidth = ImGui::GetWindowContentRegionWidth();
+        float buttonPosX = totalWidth - iconSize.x;
+
+        if (buttonPosX < 0.0f)
+            buttonPosX = 0.0f;
+
+        ImGui::SameLine(buttonPosX);
+
+        bool canGoParent = (folderTree && folderTree->parent != nullptr);
+
+        if (!canGoParent)
+        {
+            ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+            ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+        }
+
+        if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(goParentFolderTexture.Get()), iconSize))
+        {
+            if (canGoParent)
+                folderTree = folderTree->parent;
+        }
+
+        if (ImGui::IsItemHovered())
+            ImGui::SetTooltip("Go to parent folder");
+
+        if (!canGoParent)
+        {
+            ImGui::PopStyleVar();
+            ImGui::PopItemFlag();
+        }
+    }
+
+    void EngineUI::RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree)
+    {
+        ImGui::BeginChild("View", ImVec2(0, 0), true);  // if문 제거
+        {
+            const int columns = 4;
+            ImGui::Columns(columns, nullptr, false);
+
+            // 폴더 아이템 출력
+            for (const auto& child : itemTree->chlidren)
+            {
+                if (child->isFolder)
+                {
+                    RenderFolderItem(child);
+                    ImGui::NextColumn();
+                }
+            }
+
+            // 파일 아이템 출력
+            for (const auto& child : itemTree->chlidren)
+            {
+                if (!child->isFolder)
+                {
+                    RenderFileItem(child);
+                    ImGui::NextColumn();
+                }
+            }
+
+            ImGui::Columns(1);
+        }
+
+        ImGui::EndChild();
+    }
+
+    void EngineUI::RenderFolderItem(const std::shared_ptr<FileItemTree>& child)
+    {
+        ImGui::PushID(child->name.c_str());
+
+        // 폴더 아이콘 및 더블클릭으로 폴더 이동 처리
+        ImVec2 startPos = ImGui::GetCursorScreenPos();
+
+        ImGui::Image(reinterpret_cast<ImTextureID>(folderIconTexture.Get()), ImVec2(64, 64));
+        ImGui::SetCursorScreenPos(startPos);
+
+        if (ImGui::InvisibleButton("##folder_image_button", ImVec2(64, 64)))
+            selectedName = child->name;
+
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            folderTree = child;
+
+        // 폴더 이름 출력
+        ImGui::SetCursorScreenPos(ImVec2(startPos.x, startPos.y + 64));
+        ImGui::TextWrapped("%s", child->name.c_str());
+        ImGui::PopID();
+    }
+
+    void EngineUI::RenderFileItem(const std::shared_ptr<FileItemTree>& child)
+    {
+        // 파일 확장자 추출
+        std::string fileName = child->name;
+        size_t dotPos = fileName.rfind('.');
+
+        std::string fileExtension;
+
+        if (dotPos != std::string::npos)
+            fileExtension = fileName.substr(dotPos + 1);
+
+        ImGui::Image(reinterpret_cast<ImTextureID>(GetFileTextureResourceView(fileExtension)), ImVec2(64, 64));
+
+        if (ImGui::Selectable(child->name.c_str(), selectedName == child->name))
+            selectedName = child->name;
+
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+			OpenFile(child);
+    }
+
+    void EngineUI::OpenFile(const std::shared_ptr<FileItemTree>& child)
+    {
+#ifdef _WIN32
+        std::filesystem::path relativePath = GetRelativePath(child);
+
+        // 절대 경로로 변환
+        std::string absolutePath = StringConverter::GetAbsolutePath(relativePath);
+
+        ShellExecuteA(nullptr, "open", absolutePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+#else
+		// 리눅스에서 파일 열기
+		std::string command = "xdg-open " + path;
+		system(command.c_str());
+#endif
     }
 
 	void EngineUI::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE

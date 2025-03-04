@@ -28,7 +28,7 @@ namespace Graphic
 
 	void NullPixelShader::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGERNOHR(graphic);
 
 		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShader(nullptr, nullptr, 0u));
 	}
