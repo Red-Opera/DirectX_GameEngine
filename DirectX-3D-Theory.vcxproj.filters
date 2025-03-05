@@ -995,6 +995,9 @@
     <ClCompile Include="Core\Exception\EngineUIException.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="External\Imgui\imgui_tables.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\_Sample_Shader.fx" />

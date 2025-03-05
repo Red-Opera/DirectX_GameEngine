@@ -1,43 +1,44 @@
-#include "stdafx.h"
-#include "EngineUI.h"
 
-#include "Core/Exception/GraphicsException.h"
-#include "Core/Exception/ExceptionInfo.h"
-#include "Core/Exception/EngineUIException.h"
-#include "Core/DxGraphic.h"
-#include "External/Imgui/imgui.h"
-#include "External/Imgui/imgui_internal.h"
+    #include "stdafx.h"
+    #include "EngineUI.h"
 
-#include "Utility/StringConverter.h"
+    #include "Core/Exception/GraphicsException.h"
+    #include "Core/Exception/ExceptionInfo.h"
+    #include "Core/Exception/EngineUIException.h"
+    #include "Core/DxGraphic.h"
+    #include "External/Imgui/imgui.h"
+    #include "External/Imgui/imgui_internal.h"
 
-#include <algorithm>
-#include <filesystem>
-#include <vector>
-#include <string>
+    #include "Utility/StringConverter.h"
 
-#include <d3d11.h>
-#include <wrl/client.h>
-#include <DirectXTex.h>
+    #include <algorithm>
+    #include <filesystem>
+    #include <vector>
+    #include <string>
+
+    #include <d3d11.h>
+    #include <wrl/client.h>
+    #include <DirectXTex.h>
 
 namespace Engine
 {
-	namespace fileSystem = std::filesystem;
+    namespace fileSystem = std::filesystem;
 
-	std::unique_ptr<EngineUI> EngineUI::instance = nullptr;
+    std::unique_ptr<EngineUI> EngineUI::instance = nullptr;
 
-	EngineUI::EngineUI(DxGraphic& graphic) : selectedName("")
-	{
-		if (!folderTree)
-		{
-			folderTree = CreateFileSystem();
+    EngineUI::EngineUI(DxGraphic& graphic) : selectedName("")
+    {
+        if (!folderTree)
+        {
+            folderTree = CreateFileSystem();
 
-			LoadIconTexture(graphic, "Images/Engine/FolderIcon.png", IconType::folder);
-			LoadIconTexture(graphic, "Images/Engine/GoParentFolder.png", IconType::ParentFolder);
+            LoadIconTexture(graphic, "Images/Engine/FolderIcon.png", IconType::folder);
+            LoadIconTexture(graphic, "Images/Engine/GoParentFolder.png", IconType::ParentFolder);
 
             // 파일 폴더 이미지 경로
             std::string folderPath = "Images/Engine/FileIcon";
 
-            try 
+            try
             {
                 if (std::filesystem::exists(folderPath) && std::filesystem::is_directory(folderPath))
                 {
@@ -62,47 +63,47 @@ namespace Engine
             {
                 throw ENGINE_UI_EXCEPTION(e.what());
             }
-		}
-	}
+        }
+    }
 
-	std::shared_ptr<EngineUI::FileItemTree> EngineUI::CreateFileSystem()
-	{
-		// 프로젝트 폴더(최상위 폴더)를 가져옴
-		fileSystem::path rootPath = fileSystem::current_path();
-
-		if (!fileSystem::exists(rootPath))
-		{
-			std::string errorMessage = "[" + rootPath.string() + "] 위치에 프로젝트 폴더가 존재하지 않습니다.";
-
-			throw ENGINE_UI_EXCEPTION(errorMessage.c_str());
-		}
-
-		// 최상위 폴더부터 Tree를 만듬
-        std::filesystem::directory_entry entry(rootPath);
-		return BuildFileItemTree(entry);
-	}
-
-	std::shared_ptr<EngineUI::FileItemTree> EngineUI::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
+    std::shared_ptr<EngineUI::FileItemTree> EngineUI::CreateFileSystem()
     {
-		// 해당 위치에서 현재 파일 정보를 가져옴
-		auto itemTree = std::make_shared<FileItemTree>();
-		itemTree->name = rootPath.path().filename().string();
-		itemTree->isFolder = rootPath.is_directory();
+        // 프로젝트 폴더(최상위 폴더)를 가져옴
+        fileSystem::path rootPath = fileSystem::current_path();
 
-		// 해당 파일이 폴더인 경우
-		if (itemTree->isFolder)
-		{
-			// 모든 자식들도 자식을 찾고 자신의 자식들을 트리에 넣음
-			for (const auto& child : fileSystem::directory_iterator(rootPath.path()))
-			{
-				std::shared_ptr<FileItemTree> newFileItem = BuildFileItemTree(child);
+        if (!fileSystem::exists(rootPath))
+        {
+            std::string errorMessage = "[" + rootPath.string() + "] 위치에 프로젝트 폴더가 존재하지 않습니다.";
+
+            throw ENGINE_UI_EXCEPTION(errorMessage.c_str());
+        }
+
+        // 최상위 폴더부터 Tree를 만듬
+        std::filesystem::directory_entry entry(rootPath);
+        return BuildFileItemTree(entry);
+    }
+
+    std::shared_ptr<EngineUI::FileItemTree> EngineUI::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
+    {
+        // 해당 위치에서 현재 파일 정보를 가져옴
+        auto itemTree = std::make_shared<FileItemTree>();
+        itemTree->name = rootPath.path().filename().string();
+        itemTree->isFolder = rootPath.is_directory();
+
+        // 해당 파일이 폴더인 경우
+        if (itemTree->isFolder)
+        {
+            // 모든 자식들도 자식을 찾고 자신의 자식들을 트리에 넣음
+            for (const auto& child : fileSystem::directory_iterator(rootPath.path()))
+            {
+                std::shared_ptr<FileItemTree> newFileItem = BuildFileItemTree(child);
 
                 newFileItem->parent = itemTree;
-				itemTree->chlidren.push_back(newFileItem);
-			}
-		}
+                itemTree->chlidren.push_back(newFileItem);
+            }
+        }
 
-		return itemTree;
+        return itemTree;
     }
 
     void EngineUI::RenderFolderView(std::shared_ptr<FileItemTree> itemTree)
@@ -129,19 +130,19 @@ namespace Engine
         ImGui::End();
     }
 
-	void EngineUI::RenderInspector()
-	{
-		if (ImGui::Begin("Inspector"))
-		{
-			if (!selectedName.empty())
-				ImGui::Text("Selected Item : %s", selectedName.c_str());
+    void EngineUI::RenderInspector()
+    {
+        if (ImGui::Begin("Inspector"))
+        {
+            if (!selectedName.empty())
+                ImGui::Text("Selected Item : %s", selectedName.c_str());
 
-			else
-				ImGui::Text("No items selected.");
+            else
+                ImGui::Text("No items selected.");
 
-			ImGui::End();
-		}
-	}
+            ImGui::End();
+        }
+    }
 
     ID3D11ShaderResourceView* EngineUI::GetFileTextureResourceView(std::string fileName)
     {
@@ -165,29 +166,29 @@ namespace Engine
     }
 
     void EngineUI::LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType)
-	{
-		using namespace Graphic;
-		using namespace DirectX;
+    {
+        using namespace Graphic;
+        using namespace DirectX;
 
-		CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(graphic);
 
-		ScratchImage image;
-		hr = LoadFromWICFile(std::wstring(fileName.begin(), fileName.end()).c_str(), WIC_FLAGS_NONE, nullptr, image); // PNG 파일 로드 (WIC 사용)
+        ScratchImage image;
+        hr = LoadFromWICFile(std::wstring(fileName.begin(), fileName.end()).c_str(), WIC_FLAGS_NONE, nullptr, image); // PNG 파일 로드 (WIC 사용)
 
-		GRAPHIC_THROW_INFO(hr);
-		
-		const TexMetadata& metadata = image.GetMetadata();
+        GRAPHIC_THROW_INFO(hr);
 
-		Microsoft::WRL::ComPtr<ID3D11Resource> texture;
-		hr = CreateTexture(GetDevice(graphic), image.GetImages(), image.GetImageCount(), metadata, texture.GetAddressOf());
+        const TexMetadata& metadata = image.GetMetadata();
 
-		GRAPHIC_THROW_INFO(hr);
+        Microsoft::WRL::ComPtr<ID3D11Resource> texture;
+        hr = CreateTexture(GetDevice(graphic), image.GetImages(), image.GetImageCount(), metadata, texture.GetAddressOf());
 
-		switch (iconType)
-		{
-		case Engine::EngineUI::IconType::folder:
-			hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
-			break;
+        GRAPHIC_THROW_INFO(hr);
+
+        switch (iconType)
+        {
+        case Engine::EngineUI::IconType::folder:
+            hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
+            break;
 
         case Engine::EngineUI::IconType::file:
         {
@@ -209,18 +210,18 @@ namespace Engine
         }
 
 
-		case Engine::EngineUI::IconType::ParentFolder:
-			hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());
-			break;
+        case Engine::EngineUI::IconType::ParentFolder:
+            hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());
+            break;
 
-		default:
-			ENGINE_UI_EXCEPTION("해당 Icon 파일 타입은 존재하지 않음");
-			hr = S_FALSE;
-			break;
-		}
+        default:
+            ENGINE_UI_EXCEPTION("해당 Icon 파일 타입은 존재하지 않음");
+            hr = S_FALSE;
+            break;
+        }
 
-		GRAPHIC_THROW_INFO(hr);
-	}
+        GRAPHIC_THROW_INFO(hr);
+    }
 
     std::string EngineUI::GetRelativePath(const std::shared_ptr<FileItemTree>& tree)
     {
@@ -241,14 +242,14 @@ namespace Engine
 
     std::string EngineUI::GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree)
     {
-		if (!tree)
-			return "";
+        if (!tree)
+            return "";
 
         std::string absolutePath = fileSystem::current_path().string() + "\\" + GetRelativePath(tree);
 
-		absolutePath = absolutePath.replace(absolutePath.find("/"), 1, "\\");
+        absolutePath = absolutePath.replace(absolutePath.find("/"), 1, "\\");
 
-		return absolutePath;
+        return absolutePath;
     }
 
     void EngineUI::RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree)
@@ -264,7 +265,7 @@ namespace Engine
     {
         ImVec2 iconSize(32.0f, 32.0f);
 
-        float totalWidth = ImGui::GetWindowContentRegionWidth();
+        float totalWidth = ImGui::GetContentRegionAvail().x;
         float buttonPosX = totalWidth - iconSize.x;
 
         if (buttonPosX < 0.0f)
@@ -275,12 +276,9 @@ namespace Engine
         bool canGoParent = (folderTree && folderTree->parent != nullptr);
 
         if (!canGoParent)
-        {
-            ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
-            ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
-        }
+            ImGui::BeginDisabled();
 
-        if (ImGui::ImageButton(reinterpret_cast<ImTextureID>(goParentFolderTexture.Get()), iconSize))
+        if (ImGui::ImageButton("goParentFolderButton", reinterpret_cast<ImTextureID>(goParentFolderTexture.Get()), iconSize))
         {
             if (canGoParent)
                 folderTree = folderTree->parent;
@@ -290,10 +288,7 @@ namespace Engine
             ImGui::SetTooltip("Go to parent folder");
 
         if (!canGoParent)
-        {
-            ImGui::PopStyleVar();
-            ImGui::PopItemFlag();
-        }
+            ImGui::EndDisabled();
     }
 
     void EngineUI::RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree)
@@ -367,8 +362,8 @@ namespace Engine
         if (ImGui::Selectable(child->name.c_str(), selectedName == child->name))
             selectedName = child->name;
 
-		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
-			OpenFile(child);
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+            OpenFile(child);
     }
 
     void EngineUI::OpenFile(const std::shared_ptr<FileItemTree>& child)
@@ -381,14 +376,14 @@ namespace Engine
 
         ShellExecuteA(nullptr, "open", absolutePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 #else
-		// 리눅스에서 파일 열기
-		std::string command = "xdg-open " + path;
-		system(command.c_str());
+        // 리눅스에서 파일 열기
+        std::string command = "xdg-open " + path;
+        system(command.c_str());
 #endif
     }
 
-	void EngineUI::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
-	{
+    void EngineUI::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    {
 
-	}
+    }
 }

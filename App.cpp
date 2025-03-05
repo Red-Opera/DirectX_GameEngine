@@ -204,7 +204,7 @@ void App::CreateSimulationWindow() noexcept
 {
 	if (ImGui::Begin("Simulation Speed"))
 	{
-		ImGui::SliderFloat("Speed", &objectSpeed, 0.0f, 6.0f, "%.4f", 3.2f);
+		ImGui::SliderFloat("Speed", &objectSpeed, 0.0f, 6.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::Text("Status: %s", wnd.keyBoard.IsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");
 	}

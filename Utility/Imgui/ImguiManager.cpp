@@ -2,6 +2,8 @@
 #include "ImguiManager.h"
 
 #include "External/Imgui/imgui.h"
+#include "External/Imgui/imgui_impl_dx11.h"
+#include "External/Imgui/imgui_impl_win32.h"
 
 #include <filesystem>
 
@@ -19,5 +21,6 @@ ImguiManager::ImguiManager()
 
 ImguiManager::~ImguiManager()
 {
+	ImGui_ImplDX11_Shutdown();
 	ImGui::DestroyContext();
 }

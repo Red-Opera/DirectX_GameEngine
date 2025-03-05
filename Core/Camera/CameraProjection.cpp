@@ -40,12 +40,11 @@ void CameraProjection::RenderWidgets(DxGraphic& graphic)
 	bool isNotMatch = false;
 	const auto MatchCheck = [&isNotMatch](bool notMatch) { isNotMatch = isNotMatch || notMatch; };
 
-
 	ImGui::Text("Projection");
-	MatchCheck(ImGui::SliderFloat("Width", &width, 0.01f, 4.0f, "%.2f", 1.5f));
-	MatchCheck(ImGui::SliderFloat("Height", &height, 0.01f, 4.0f, "%.2f", 1.5f));
-	MatchCheck(ImGui::SliderFloat("Near Z", &nearZ, 0.01f, farZ - 0.01f, "%.2f", 4.0f));
-	MatchCheck(ImGui::SliderFloat("Far Z", &farZ, nearZ + 0.01f, 400.0f, "%.2f", 4.0f));
+	MatchCheck(ImGui::SliderFloat("Width", &width, 0.01f, 4.0f, "%.2f"));
+	MatchCheck(ImGui::SliderFloat("Height", &height, 0.01f, 4.0f, "%.2f"));
+	MatchCheck(ImGui::SliderFloat("Near Z", &nearZ, 0.01f, farZ - 0.01f, "%.2f"));
+	MatchCheck(ImGui::SliderFloat("Far Z", &farZ, nearZ + 0.01f, 400.0f, "%.2f"));
 
 	if (isNotMatch)
 		frust.SetVertices(graphic, width, height, nearZ, farZ);

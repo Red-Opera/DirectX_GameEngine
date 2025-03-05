@@ -5,6 +5,8 @@
 #include "External/Imgui/imgui_impl_win32.h"
 using namespace std;
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
 	// 에러 메세지를 반환하기 위한 문자열
@@ -284,6 +286,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 		return true;
+
 	const auto imGuiIO = ImGui::GetIO();
 
 	switch (msg)
