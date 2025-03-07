@@ -4,6 +4,12 @@
 //
 #define IDI_ICON1						101
 
+#define IDR_MYMENU 102
+#define ID_FILE_OPEN 40001
+#define ID_FILE_EXIT 40002
+#define ID_EDIT_UNDO 40003
+#define ID_VIEW_FULLSCREEN 40004
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

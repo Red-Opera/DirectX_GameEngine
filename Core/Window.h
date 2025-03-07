@@ -62,7 +62,7 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 
-	void SetTitle(const std::string& title);
+	static void SetTitle(HWND hWnd, const std::string title);
 
 	// 커서 관련 메소드
 	void EnableCursor() noexcept;				// 커서를 사용할 수 있도록 설정하는 메소드
@@ -70,6 +70,7 @@ public:
 	bool GetCursorEnabled() const noexcept;		// 커서 사용할 수 있는 여부를 반환하는 메소드
 
 	static std::optional<int> ProcessMessages() noexcept;
+	static void ShowGameFrame(HWND hWnd) noexcept;
 
 	int GetClientWidht() { return width; }			// 클라이언트 창 너비
 	int GetClientHeight() { return height; }		// 클라이언트 창 높이
@@ -141,4 +142,7 @@ private:
 
 	std::vector<BYTE> rawBuffer;
 	std::string commandLine;
+
+
+	static std::string currentSceneName;
 };

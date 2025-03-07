@@ -1,11 +1,16 @@
 #include "stdafx.h"
 #include "Window.h"
-#include "Core/WindowResources/icon/resource.h"
 
+#include "Core/WindowResources/icon/resource.h"
 #include "External/Imgui/imgui_impl_win32.h"
+
+#include <iomanip>
+
 using namespace std;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+string Window::currentSceneName = "";
 
 string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
@@ -93,7 +98,7 @@ Window::WindowClass::WindowClass() noexcept
 	wcex.hIcon = static_cast<HICON>(LoadImage(hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 256, 256, 0));
 	wcex.hCursor = nullptr;
 	wcex.hbrBackground = nullptr;
-	wcex.lpszMenuName = nullptr;
+	wcex.lpszMenuName = MAKEINTRESOURCE(IDR_MYMENU);
 	wcex.lpszClassName = GetName();
 	wcex.hIconSm = static_cast<HICON>(LoadImage(hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 256, 256, 0));
 
@@ -117,7 +122,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 
 Window::Window(int width, int height, const char* name) : width(width), height(height)
 {
-	RECT rect;
+	RECT rect { };
 
 	rect.left = 100;
 	rect.right = rect.left + width;
@@ -127,8 +132,12 @@ Window::Window(int width, int height, const char* name) : width(width), height(h
 	if (AdjustWindowRect(&rect, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
 		throw LASTEXCEPT();
 
+	currentSceneName = name;
+
+	string windowName = std::string(WindowClass::GetName()) + "(Scene Name : " + name + ")";
+
 	hWnd = CreateWindow(
-		WindowClass::GetName(), name,
+		WindowClass::GetName(), windowName.c_str(),
 		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
 		CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top,
 		nullptr, nullptr, WindowClass::GetInstance(), this
@@ -158,7 +167,7 @@ Window::~Window()
 	DestroyWindow(hWnd);
 }
 
-void Window::SetTitle(const string& title)
+void Window::SetTitle(HWND hWnd, const string title)
 {
 	if (SetWindowText(hWnd, title.c_str()) == 0)
 		throw LASTEXCEPT();
@@ -252,6 +261,26 @@ void Window::EnableImGuiMouse() noexcept
 void Window::DisableImGuiMouse() noexcept
 {
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+}
+
+void Window::ShowGameFrame(HWND hWnd) noexcept  
+{  
+   float frameTime = 1000.0f / ImGui::GetIO().Framerate;  
+   float fps = ImGui::GetIO().Framerate;  
+
+   std::stringstream ss;  
+   ss << std::fixed << std::setprecision(1) << frameTime << " ms / frame (" << fps << " FPS)";  
+
+   // 오른쪽 정렬을 위해 공백 추가  
+   std::string title = ss.str();  
+   int padding = 50 - title.length(); // 원하는 길이에서 제목 길이를 뺀 값  
+
+   if (padding > 0)  
+       title.insert(0, padding, ' ');  
+
+   title.insert(0, std::string(WindowClass::GetName()) + " (Scene Name : " + currentSceneName + ")");
+
+   SetTitle(hWnd, title);  
 }
 
 LRESULT Window::WndMessageSetting(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
@@ -502,6 +531,32 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 			mouse.OnRawDelta(rawInput.data.mouse.lLastX, rawInput.data.mouse.lLastY);
 
 		break;
+	}
+
+	// =================================
+	//	상단 바관련 이벤트
+	// =================================
+
+	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))
+		{
+		case ID_FILE_OPEN:
+			MessageBox(hWnd, "파일 열기", "메뉴", MB_OK);
+			break;
+
+		case ID_FILE_EXIT:
+			PostQuitMessage(0);
+			break;
+
+		case ID_EDIT_UNDO:
+			MessageBox(hWnd, "뒤로 클릭", "메뉴", MB_OK);
+			break;
+
+		case ID_VIEW_FULLSCREEN:
+			MessageBox(hWnd, "전체화면", "메뉴", MB_OK);
+			break;
+		}
 	}
 
 		return 0;

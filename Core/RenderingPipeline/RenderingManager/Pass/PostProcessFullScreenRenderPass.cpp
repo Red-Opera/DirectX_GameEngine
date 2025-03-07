@@ -6,7 +6,7 @@
 namespace RenderGraphNameSpace
 {
 	PostProcessFullScreenRenderPass::PostProcessFullScreenRenderPass(const std::string name, DxGraphic& graphic) NOEXCEPTRELEASE
-		: RenderingPass(std::move(name))
+		: RenderingPass(name)
 	{
 		VertexCore::VertexLayout layout;
 		layout.AddType(VertexCore::VertexLayout::Position2D);

@@ -14,7 +14,7 @@
 using namespace std;
 
 App::App(const std::string& commandLine) 
-	: wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), 
+	: wnd(WINWIDTH, WINHEIGHT, "Sponza"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), 
 	  light(wnd.GetDxGraphic(), { 0.0f, 10.0f, 0.0f })
 {
 	Engine::FolderViewInspector::GetInstance(wnd.GetDxGraphic());
@@ -78,9 +78,8 @@ int App::Run()
 void App::DoFrame(float deltaTime)
 {
 	const float t = timer.TotalTime();
+	Window::ShowGameFrame(wnd.GetHWnd());
 
-	ostringstream out;
-	out << "Play Time : " << setprecision(1) << fixed << t << "s";
 	wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
 
 	light.Update(wnd.GetDxGraphic(), cameras->GetMatrix());
@@ -129,8 +128,7 @@ void App::DoFrame(float deltaTime)
 
 	Engine::FolderViewInspector::instance->RenderFolderView();
 	Engine::FolderViewInspector::instance->RenderInspector();
-		  
-	wnd.SetTitle(out.str());		// 제목 동기화
+
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 
 	renderGraph.Reset();
@@ -205,7 +203,6 @@ void App::CreateSimulationWindow() noexcept
 	if (ImGui::Begin("Simulation Speed"))
 	{
 		ImGui::SliderFloat("Speed", &objectSpeed, 0.0f, 6.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::Text("Status: %s", wnd.keyBoard.IsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");
 	}
 	ImGui::End();
