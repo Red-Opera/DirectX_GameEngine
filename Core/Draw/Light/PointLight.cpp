@@ -10,7 +10,7 @@ PointLight::PointLight(DxGraphic& graphic, DirectX::XMFLOAT3 position, float rad
 	initLightInfo =
 	{
 		position,
-		{ 0.05f, 0.05f, 0.05f },
+		{ 0.25f, 0.25f, 0.25f },
 		{ 1.0f, 1.0f, 1.0f },
 		3.0f, 1.0f, 0.025f, 0.030f
 	};

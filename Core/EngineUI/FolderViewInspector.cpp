@@ -1,32 +1,31 @@
+#include "stdafx.h"
+#include "FolderViewInspector.h"
 
-    #include "stdafx.h"
-    #include "EngineUI.h"
+#include "Core/Exception/GraphicsException.h"
+#include "Core/Exception/ExceptionInfo.h"
+#include "Core/Exception/EngineUIException.h"
+#include "Core/DxGraphic.h"
+#include "External/Imgui/imgui.h"
+#include "External/Imgui/imgui_internal.h"
 
-    #include "Core/Exception/GraphicsException.h"
-    #include "Core/Exception/ExceptionInfo.h"
-    #include "Core/Exception/EngineUIException.h"
-    #include "Core/DxGraphic.h"
-    #include "External/Imgui/imgui.h"
-    #include "External/Imgui/imgui_internal.h"
+#include "Utility/StringConverter.h"
 
-    #include "Utility/StringConverter.h"
+#include <algorithm>
+#include <filesystem>
+#include <vector>
+#include <string>
 
-    #include <algorithm>
-    #include <filesystem>
-    #include <vector>
-    #include <string>
-
-    #include <d3d11.h>
-    #include <wrl/client.h>
-    #include <DirectXTex.h>
+#include <d3d11.h>
+#include <wrl/client.h>
+#include <DirectXTex.h>
 
 namespace Engine
 {
     namespace fileSystem = std::filesystem;
 
-    std::unique_ptr<EngineUI> EngineUI::instance = nullptr;
+    std::unique_ptr<FolderViewInspector> FolderViewInspector::instance = nullptr;
 
-    EngineUI::EngineUI(DxGraphic& graphic) : selectedName("")
+    FolderViewInspector::FolderViewInspector(DxGraphic& graphic) : selectedName("")
     {
         if (!folderTree)
         {
@@ -66,7 +65,7 @@ namespace Engine
         }
     }
 
-    std::shared_ptr<EngineUI::FileItemTree> EngineUI::CreateFileSystem()
+    std::shared_ptr<FolderViewInspector::FileItemTree> FolderViewInspector::CreateFileSystem()
     {
         // 프로젝트 폴더(최상위 폴더)를 가져옴
         fileSystem::path rootPath = fileSystem::current_path();
@@ -83,7 +82,7 @@ namespace Engine
         return BuildFileItemTree(entry);
     }
 
-    std::shared_ptr<EngineUI::FileItemTree> EngineUI::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
+    std::shared_ptr<FolderViewInspector::FileItemTree> FolderViewInspector::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
     {
         // 해당 위치에서 현재 파일 정보를 가져옴
         auto itemTree = std::make_shared<FileItemTree>();
@@ -106,7 +105,7 @@ namespace Engine
         return itemTree;
     }
 
-    void EngineUI::RenderFolderView(std::shared_ptr<FileItemTree> itemTree)
+    void FolderViewInspector::RenderFolderView(std::shared_ptr<FileItemTree> itemTree)
     {
         if (!ImGui::Begin("Folder View"))
         {
@@ -130,7 +129,7 @@ namespace Engine
         ImGui::End();
     }
 
-    void EngineUI::RenderInspector()
+    void FolderViewInspector::RenderInspector()
     {
         if (ImGui::Begin("Inspector"))
         {
@@ -144,7 +143,7 @@ namespace Engine
         }
     }
 
-    ID3D11ShaderResourceView* EngineUI::GetFileTextureResourceView(std::string fileName)
+    ID3D11ShaderResourceView* FolderViewInspector::GetFileTextureResourceView(std::string fileName)
     {
         // 대문자를 모두 소문자로
         std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
@@ -165,7 +164,7 @@ namespace Engine
         return fileIconTextures[fileName].Get();
     }
 
-    void EngineUI::LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType)
+    void FolderViewInspector::LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType)
     {
         using namespace Graphic;
         using namespace DirectX;
@@ -186,11 +185,11 @@ namespace Engine
 
         switch (iconType)
         {
-        case Engine::EngineUI::IconType::folder:
+        case Engine::FolderViewInspector::IconType::folder:
             hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
             break;
 
-        case Engine::EngineUI::IconType::file:
+        case Engine::FolderViewInspector::IconType::file:
         {
             Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> newIconTexture;
 
@@ -210,7 +209,7 @@ namespace Engine
         }
 
 
-        case Engine::EngineUI::IconType::ParentFolder:
+        case Engine::FolderViewInspector::IconType::ParentFolder:
             hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());
             break;
 
@@ -223,7 +222,7 @@ namespace Engine
         GRAPHIC_THROW_INFO(hr);
     }
 
-    std::string EngineUI::GetRelativePath(const std::shared_ptr<FileItemTree>& tree)
+    std::string FolderViewInspector::GetRelativePath(const std::shared_ptr<FileItemTree>& tree)
     {
         if (!tree)
             return "";
@@ -240,7 +239,7 @@ namespace Engine
         return path;
     }
 
-    std::string EngineUI::GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree)
+    std::string FolderViewInspector::GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree)
     {
         if (!tree)
             return "";
@@ -252,7 +251,7 @@ namespace Engine
         return absolutePath;
     }
 
-    void EngineUI::RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree)
+    void FolderViewInspector::RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree)
     {
         // itemTree가 nullptr이면 기본 folderTree 사용
         std::shared_ptr<FileItemTree> currentFolder = itemTree ? itemTree : folderTree;
@@ -261,7 +260,7 @@ namespace Engine
         ImGui::Text("Current Path : %s", currentPath.c_str());
     }
 
-    void EngineUI::RenderParentFolderButton()
+    void FolderViewInspector::RenderParentFolderButton()
     {
         ImVec2 iconSize(32.0f, 32.0f);
 
@@ -291,7 +290,7 @@ namespace Engine
             ImGui::EndDisabled();
     }
 
-    void EngineUI::RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree)
+    void FolderViewInspector::RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree)
     {
         ImGui::BeginChild("View", ImVec2(0, 0), true);  // if문 제거
         {
@@ -324,7 +323,7 @@ namespace Engine
         ImGui::EndChild();
     }
 
-    void EngineUI::RenderFolderItem(const std::shared_ptr<FileItemTree>& child)
+    void FolderViewInspector::RenderFolderItem(const std::shared_ptr<FileItemTree>& child)
     {
         ImGui::PushID(child->name.c_str());
 
@@ -346,7 +345,7 @@ namespace Engine
         ImGui::PopID();
     }
 
-    void EngineUI::RenderFileItem(const std::shared_ptr<FileItemTree>& child)
+    void FolderViewInspector::RenderFileItem(const std::shared_ptr<FileItemTree>& child)
     {
         // 파일 확장자 추출
         std::string fileName = child->name;
@@ -366,7 +365,7 @@ namespace Engine
             OpenFile(child);
     }
 
-    void EngineUI::OpenFile(const std::shared_ptr<FileItemTree>& child)
+    void FolderViewInspector::OpenFile(const std::shared_ptr<FileItemTree>& child)
     {
 #ifdef _WIN32
         std::filesystem::path relativePath = GetRelativePath(child);
@@ -382,7 +381,7 @@ namespace Engine
 #endif
     }
 
-    void EngineUI::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    void FolderViewInspector::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
     {
 
     }

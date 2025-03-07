@@ -5,7 +5,7 @@
 
 #include "Core/TestModelBase.h"
 #include "Core/Camera/Camera.h"
-#include "Core/EngineUI/EngineUI.h"
+#include "Core/EngineUI/FolderViewInspector.h"
 #include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/Test.h"
 
@@ -17,7 +17,7 @@ App::App(const std::string& commandLine)
 	: wnd(WINWIDTH, WINHEIGHT, "Make Box Game"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), 
 	  light(wnd.GetDxGraphic(), { 0.0f, 10.0f, 0.0f })
 {
-	Engine::EngineUI::GetInstance(wnd.GetDxGraphic());
+	Engine::FolderViewInspector::GetInstance(wnd.GetDxGraphic());
 
 	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
 	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
@@ -127,8 +127,8 @@ void App::DoFrame(float deltaTime)
 	cube2.SpawnControlWindow(wnd.GetDxGraphic(), "Cube 2");
 	renderGraph.RenderWindows(wnd.GetDxGraphic());
 
-	Engine::EngineUI::instance->RenderFolderView();
-	Engine::EngineUI::instance->RenderInspector();
+	Engine::FolderViewInspector::instance->RenderFolderView();
+	Engine::FolderViewInspector::instance->RenderInspector();
 		  
 	wnd.SetTitle(out.str());		// 제목 동기화
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용

@@ -181,6 +181,11 @@ namespace Graphic
         return height;
     }
 
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> Graphic::RenderTarget::GetTargetView() const noexcept
+    {
+		return targetView;
+    }
+
     ShaderInputRenderTarget::ShaderInputRenderTarget(DxGraphic& graphic, UINT width, UINT height, UINT slot)
         : RenderTarget(graphic, width, height), slot(slot)
     {

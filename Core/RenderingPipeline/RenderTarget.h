@@ -24,6 +24,7 @@ namespace Graphic
 
 		UINT GetWidth() const noexcept;
 		UINT GetHeight() const noexcept;
+		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetTargetView() const noexcept;
 
 		GraphicResource::Image ToImage(DxGraphic& graphic) const;
 		void CreateDumpy(DxGraphic& graphic, const std::string& path) const;

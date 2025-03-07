@@ -7,7 +7,8 @@
 #include "Core/Draw/BaseModel/ColorCube.h"
 
 #include "Core/RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
-#include "Core/EngineUI/EngineUI.h"
+#include "Core/EngineUI/FolderViewInspector.h"
+#include "Core/EngineUI/SceneView.h"
 
 #include "Utility/GameTimer.h"
 #include "Utility/Imgui/ImguiManager.h"
@@ -61,6 +62,8 @@ private:
 
 	ColorCube cube{ wnd.GetDxGraphic(),4.0f };
 	ColorCube cube2{ wnd.GetDxGraphic(),4.0f };
+
+	Graphic::SceneView sceneView{ wnd.GetDxGraphic(), wnd.GetDxGraphic().GetWidth(), wnd.GetDxGraphic().GetHeight() };
 
 	bool saveDepth = false;
 };

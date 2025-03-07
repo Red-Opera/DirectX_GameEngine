@@ -100,6 +100,9 @@ DxGraphic::DxGraphic(HWND hWnd)
 
     // ImGui를 초기 설정함
     ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
+
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
 void DxGraphic::SetProjection(DirectX::XMMATRIX projection) noexcept
@@ -260,7 +263,7 @@ void DxGraphic::SwapChainSettings(HWND hWnd)
     // 스왑 체인 설정
     swapChainDesc.SampleDesc = msaaDesc;
     swapChainDesc.BufferDesc = backBufferDesc;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;    // 후면 버퍼에 렌더하기 위해 값을 설정
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;    // 후면 버퍼에 렌더하기 위해 값을 설정
     swapChainDesc.BufferCount = 1;                                  // 더블 버퍼링을 하기 위해 1로
     swapChainDesc.OutputWindow = hWnd;                              // 출력할 창 설정
     swapChainDesc.Windowed = true;                                  // 창 모드 여부 O
@@ -305,6 +308,17 @@ void DxGraphic::CreateRenderTargetView()
     viewport.TopLeftX = 0.0f;
     viewport.TopLeftY = 0.0f;
     deviceContext->RSSetViewports(1u, &viewport);
+
+    // 셰이더 리소스 뷰 생성
+    D3D11_TEXTURE2D_DESC temp = { };
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    backBuffer.Get()->GetDesc(&temp);
+	srvDesc.Format = temp.Format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = 1;
+
+    GRAPHIC_THROW_INFO(device->CreateShaderResourceView(backBuffer.Get(), &srvDesc, &shaderResourceView));
 }
 
 void DxGraphic::DrawTestTriangle(float angle, float x, float z)
