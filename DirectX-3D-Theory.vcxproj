@@ -163,6 +163,7 @@
     <ClInclude Include="Core\Draw\TextureCube.h" />
     <ClInclude Include="Core\DxGraphicResource.h" />
     <ClInclude Include="Core\EngineUI\FolderViewInspector.h" />
+    <ClInclude Include="Core\EngineUI\MenuBar.h" />
     <ClInclude Include="Core\EngineUI\SceneView.h" />
     <ClInclude Include="Core\Exception\EngineUIException.h" />
     <ClInclude Include="Core\Exception\ModelException.h" />
@@ -384,6 +385,7 @@
     <ClCompile Include="Core\Draw\TextureCube.cpp" />
     <ClCompile Include="Core\DxGraphicResource.cpp" />
     <ClCompile Include="Core\EngineUI\FolderViewInspector.cpp" />
+    <ClCompile Include="Core\EngineUI\MenuBar.cpp" />
     <ClCompile Include="Core\EngineUI\SceneView.cpp" />
     <ClCompile Include="Core\Exception\EngineUIException.cpp" />
     <ClCompile Include="Core\Exception\ModelException.cpp" />

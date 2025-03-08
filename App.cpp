@@ -6,6 +6,7 @@
 #include "Core/TestModelBase.h"
 #include "Core/Camera/Camera.h"
 #include "Core/EngineUI/FolderViewInspector.h"
+#include "Core/EngineUI/MenuBar.h"
 #include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/Test.h"
 
@@ -18,6 +19,7 @@ App::App(const std::string& commandLine)
 	  light({ 0.0f, 10.0f, 0.0f })
 {
 	Engine::FolderViewInspector::GetInstance();
+	Engine::MenuBar::GetInstance();
 
 	cameras.AddCamera(std::make_unique<Camera>("A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
 	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
@@ -128,6 +130,7 @@ void App::DoFrame(float deltaTime)
 
 	Engine::FolderViewInspector::instance->RenderFolderView();
 	Engine::FolderViewInspector::instance->RenderInspector();
+	Engine::MenuBar::menuBar->RenderMenuBar();
 
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 

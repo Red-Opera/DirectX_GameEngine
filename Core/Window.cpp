@@ -99,7 +99,7 @@ Window::WindowClass::WindowClass() noexcept
 	wcex.hIcon = static_cast<HICON>(LoadImage(hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 256, 256, 0));
 	wcex.hCursor = nullptr;
 	wcex.hbrBackground = nullptr;
-	wcex.lpszMenuName = MAKEINTRESOURCE(IDR_MYMENU);
+	wcex.lpszMenuName = nullptr;
 	wcex.lpszClassName = GetName();
 	wcex.hIconSm = static_cast<HICON>(LoadImage(hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 256, 256, 0));
 
@@ -538,32 +538,6 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 			mouse.OnRawDelta(rawInput.data.mouse.lLastX, rawInput.data.mouse.lLastY);
 
 		break;
-	}
-
-	// =================================
-	//	상단 바관련 이벤트
-	// =================================
-
-	case WM_COMMAND:
-	{
-		switch (LOWORD(wParam))
-		{
-		case ID_FILE_OPEN:
-			MessageBox(hWnd, "파일 열기", "메뉴", MB_OK);
-			break;
-
-		case ID_FILE_EXIT:
-			PostQuitMessage(0);
-			break;
-
-		case ID_EDIT_UNDO:
-			MessageBox(hWnd, "뒤로 클릭", "메뉴", MB_OK);
-			break;
-
-		case ID_VIEW_FULLSCREEN:
-			MessageBox(hWnd, "전체화면", "메뉴", MB_OK);
-			break;
-		}
 	}
 
 		return 0;
