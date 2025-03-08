@@ -16,21 +16,21 @@ namespace Graphic
 	public:
 		enum class Usage { DepthStencil, ShadowDepth, };
 
-		void RenderAsBuffer(DxGraphic& graphic) NOEXCEPTRELEASE override;
-		void RenderAsBuffer(DxGraphic& graphic, BufferResource* bufferResource) NOEXCEPTRELEASE override;
-		void RenderAsBuffer(DxGraphic& graphic, RenderTarget* renderTarget) NOEXCEPTRELEASE;
+		void RenderAsBuffer() NOEXCEPTRELEASE override;
+		void RenderAsBuffer(BufferResource* bufferResource) NOEXCEPTRELEASE override;
+		void RenderAsBuffer(RenderTarget* renderTarget) NOEXCEPTRELEASE;
 
-		GraphicResource::Image ToImage(DxGraphic& graphic, bool linearlize = true) const;
-		void CreateDumpy(DxGraphic& graphic, const std::string& path) const;
+		GraphicResource::Image ToImage(bool linearlize = true) const;
+		void CreateDumpy(const std::string& path) const;
 
 		UINT GetWidth() const;
 		UINT GetHeight() const;
 
-		void Clear(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void Clear() NOEXCEPTRELEASE override;
 
 	protected:
-		DepthStencil(DxGraphic& graphic, UINT width, UINT height, bool canRenderShaderInput, Usage usage);
-		DepthStencil(DxGraphic& graphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face);
+		DepthStencil(UINT width, UINT height, bool canRenderShaderInput, Usage usage);
+		DepthStencil(Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face);
 
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 
@@ -38,17 +38,17 @@ namespace Graphic
 		UINT height;
 
 	private:
-		std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> CreateStaging(DxGraphic& graphic) const;
+		std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> CreateStaging() const;
 	};
 
 	class ShaderInputDepthStencil : public DepthStencil
 	{
 	public:
-		ShaderInputDepthStencil(DxGraphic& graphic, UINT slot, Usage usage = Usage::DepthStencil);
-		ShaderInputDepthStencil(DxGraphic& graphic, UINT width, UINT height, UINT slot, Usage usage = Usage::DepthStencil);
+		ShaderInputDepthStencil(UINT slot, Usage usage = Usage::DepthStencil);
+		ShaderInputDepthStencil(UINT width, UINT height, UINT slot, Usage usage = Usage::DepthStencil);
 
 		// DepthStencil을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	private:
 		UINT slot;
@@ -59,11 +59,11 @@ namespace Graphic
 	class OutputOnlyDepthStencil : public DepthStencil
 	{
 	public:
-		OutputOnlyDepthStencil(DxGraphic& graphic);
-		OutputOnlyDepthStencil(DxGraphic& graphic, UINT width, UINT height);
-		OutputOnlyDepthStencil(DxGraphic& grapphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face);
+		OutputOnlyDepthStencil();
+		OutputOnlyDepthStencil(UINT width, UINT height);
+		OutputOnlyDepthStencil(Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face);
 
 		// DepthStencil을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 	};
 }

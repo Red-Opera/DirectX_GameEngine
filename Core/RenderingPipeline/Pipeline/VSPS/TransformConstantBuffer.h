@@ -10,10 +10,10 @@ namespace Graphic
 	class TransformConstantBuffer : public RenderInstance
 	{
 	public:
-		TransformConstantBuffer(DxGraphic& graphic, UINT slot = 0u);
+		TransformConstantBuffer(UINT slot = 0u);
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 		void InitializeParentReference(const Drawable& parent) noexcept override;
 
 		// RenderInstance을(를) 통해 상속됨
@@ -27,8 +27,8 @@ namespace Graphic
 			DirectX::XMMATRIX model;
 		};
 
-		void UpdateSetRenderPipeline(DxGraphic& graphic, const Transform& transform) NOEXCEPTRELEASE;
-		Transform GetTransform(DxGraphic& graphic) NOEXCEPTRELEASE;
+		void UpdateSetRenderPipeline(const Transform& transform) NOEXCEPTRELEASE;
+		Transform GetTransform() NOEXCEPTRELEASE;
 
 		static std::unique_ptr<VertexConstantBuffer<Transform>> vertexConstantBufferMatrix;
 		const Drawable* parent = nullptr;

@@ -16,9 +16,9 @@
 
 namespace RenderGraphNameSpace
 {
-	RenderGraph::RenderGraph(DxGraphic& graphic)
-		: backBufferTarget(graphic.GetRenderTarget()),
-		masterDepth(std::make_shared<Graphic::OutputOnlyDepthStencil>(graphic))
+	RenderGraph::RenderGraph()
+		: backBufferTarget(Window::GetDxGraphic().GetRenderTarget()),
+		masterDepth(std::make_shared<Graphic::OutputOnlyDepthStencil>())
 	{
 		AddGlobalProvider(DirectBufferPipelineDataProvider<Graphic::RenderTarget>::Create("backbuffer", backBufferTarget));
 		AddGlobalProvider(DirectBufferPipelineDataProvider<Graphic::DepthStencil>::Create("masterDepth", masterDepth));
@@ -81,12 +81,12 @@ namespace RenderGraphNameSpace
 		globalDataProviders.push_back(std::move(output));
 	}
 
-	void RenderGraph::Execute(DxGraphic& graphic) NOEXCEPTRELEASE
+	void RenderGraph::Execute() NOEXCEPTRELEASE
 	{
 		assert(isFinalized);
 
 		for (auto& pass : renderPasses)
-			pass->Execute(graphic);
+			pass->Execute();
 	}
 
 	void RenderGraph::Reset() noexcept

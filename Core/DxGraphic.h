@@ -101,6 +101,9 @@ public:
 	bool					GetMsaaUsage() const noexcept { return isMSAAUsage; }
 	UINT					GetMsaaQuality() const noexcept { return msaaQuality; }
 
+	void CreateSwapChain();
+	void CreateRenderTargetView();
+
 	DirectX::XMMATRIX GetCamera() { return camera; }
 
 	// Set Method
@@ -129,8 +132,6 @@ private:
 	HRESULT CreateDevice();
 	void CheckMSAAQuality();
 	void SwapChainSettings(HWND hWnd);
-	void CreateSwapChain();
-	void CreateRenderTargetView();
 
 	bool		isMSAAUsage;		// 4X MSAA 사용 여부
 	UINT		msaaQuality;		// 4X MSAA의 품질 수준

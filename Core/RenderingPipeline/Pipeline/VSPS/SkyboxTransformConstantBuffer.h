@@ -13,16 +13,16 @@ namespace Graphic
 	class SkyboxTransformConstantBuffer : public Render
 	{
 	public:
-		SkyboxTransformConstantBuffer(DxGraphic& graphic, UINT slot = 0u);
+		SkyboxTransformConstantBuffer(UINT slot = 0u);
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:
 		struct Transform { DirectX::XMMATRIX viewProjection; };
 
-		void UpdateRender(DxGraphic& graphic, const Transform& transform) NOEXCEPTRELEASE;
-		Transform GetTransform(DxGraphic& graphic) NOEXCEPTRELEASE;
+		void UpdateRender(const Transform& transform) NOEXCEPTRELEASE;
+		Transform GetTransform() NOEXCEPTRELEASE;
 
 	private:
 		std::unique_ptr<VertexConstantBuffer<Transform>> vertexConstantBuffer;

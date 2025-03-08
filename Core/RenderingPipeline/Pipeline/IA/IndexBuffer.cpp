@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "IndexBuffer.h"
 
+#include "Core/Window.h"
 #include "Core/RenderingPipeline/RenderManager.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -8,14 +9,14 @@ using namespace std;
 
 namespace Graphic
 {
-	IndexBuffer::IndexBuffer(DxGraphic& graphic, const vector<unsigned short>& indices) : IndexBuffer(graphic, "?", indices)
+	IndexBuffer::IndexBuffer(const vector<unsigned short>& indices) : IndexBuffer("?", indices)
 	{
 
 	}
 
-	IndexBuffer::IndexBuffer(DxGraphic& graphic, std::string path, const std::vector<USHORT>& indices) : indexCount((UINT)indices.size()), path(path)
+	IndexBuffer::IndexBuffer(std::string path, const std::vector<USHORT>& indices) : indexCount((UINT)indices.size()), path(path)
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		D3D11_BUFFER_DESC indexBufferDesc;
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -28,15 +29,15 @@ namespace Graphic
 		D3D11_SUBRESOURCE_DATA initData = {};
 		initData.pSysMem = indices.data();
 
-		hr = GetDevice(graphic)->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer);
+		hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer);
 		GRAPHIC_THROW_INFO(hr);
 	}
 
-	void IndexBuffer::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void IndexBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0));
 	}
 
 	UINT IndexBuffer::GetIndexCount() const noexcept
@@ -44,11 +45,11 @@ namespace Graphic
 		return indexCount;
 	}
 
-	std::shared_ptr<IndexBuffer> IndexBuffer::GetRender(DxGraphic& graphic, const std::string& path, const std::vector<USHORT>& indices)
+	std::shared_ptr<IndexBuffer> IndexBuffer::GetRender(const std::string& path, const std::vector<USHORT>& indices)
 	{
 		assert(path != "?");
 
-		return RenderManager::GetRender<IndexBuffer>(graphic, path, indices);
+		return RenderManager::GetRender<IndexBuffer>(path, indices);
 	}
 
 	std::string IndexBuffer::GetID() const noexcept

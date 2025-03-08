@@ -5,7 +5,7 @@
 class ColorSphere : public Drawable
 {
 public:
-	ColorSphere(DxGraphic& graphic, float radius);
+	ColorSphere(float radius);
 
 	void SetPos(DirectX::XMFLOAT3 position) noexcept;
 	

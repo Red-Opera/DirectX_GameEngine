@@ -5,7 +5,7 @@
 
 #include "Utility/MathInfo.h"
 
-PointLight::PointLight(DxGraphic& graphic, DirectX::XMFLOAT3 position, float radius) : mesh(graphic, radius), cBuffer(graphic)
+PointLight::PointLight(DirectX::XMFLOAT3 position, float radius) : mesh(radius), cBuffer()
 {
 	initLightInfo =
 	{
@@ -17,7 +17,7 @@ PointLight::PointLight(DxGraphic& graphic, DirectX::XMFLOAT3 position, float rad
 
 	Reset();
 
-	viewCamera = std::make_shared<Camera>(graphic, "Light", lightInfo.position, 0.0f, Math::PI / 2.0f, true);
+	viewCamera = std::make_shared<Camera>("Light", lightInfo.position, 0.0f, Math::PI / 2.0f, true);
 }
 
 void PointLight::CreatePositionChangeWindow() noexcept
@@ -63,14 +63,14 @@ void PointLight::Submit(size_t channel) const NOEXCEPTRELEASE
 	mesh.Submit(channel);
 }
 
-void PointLight::Update(DxGraphic& graphic, DirectX::FXMMATRIX view) const noexcept
+void PointLight::Update(DirectX::FXMMATRIX view) const noexcept
 {
 	auto dataCopy = lightInfo;
 	const auto position = DirectX::XMLoadFloat3(&lightInfo.position);
 	DirectX::XMStoreFloat3(&dataCopy.position, DirectX::XMVector3Transform(position, view));
 
-	cBuffer.Update(graphic, dataCopy);
-	cBuffer.SetRenderPipeline(graphic);
+	cBuffer.Update(dataCopy);
+	cBuffer.SetRenderPipeline();
 }
 
 void PointLight::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)

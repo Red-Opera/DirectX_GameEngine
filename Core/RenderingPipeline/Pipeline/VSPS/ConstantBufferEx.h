@@ -4,36 +4,36 @@
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
+#include "Core/Window.h"
 
 namespace Graphic
 {
 	class ConstantBufferEx : public Render
 	{
 	public:
-		void Update(DxGraphic& graphic, const DynamicConstantBuffer::Buffer& buffer)
+		void Update(const DynamicConstantBuffer::Buffer& buffer)
 		{
 			assert(&buffer.GetLayout() == &GetLayout());
-			CREATEINFOMANAGER(graphic);
+			CREATEINFOMANAGER(Window::GetDxGraphic());
 
 			D3D11_MAPPED_SUBRESOURCE map;
 
-			hr = GetDeviceContext(graphic)->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+			hr = GetDeviceContext(Window::GetDxGraphic())->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 			GRAPHIC_THROW_INFO(hr);
 
 			memcpy(map.pData, buffer.data(), buffer.size());
-			GetDeviceContext(graphic)->Unmap(constantBuffer.Get(), 0);
+			GetDeviceContext(Window::GetDxGraphic())->Unmap(constantBuffer.Get(), 0);
 		}
 
 		virtual const DynamicConstantBuffer::LayoutType& GetLayout() const noexcept = 0;
 
 	protected:
 		ConstantBufferEx(
-			DxGraphic& graphic,
 			const DynamicConstantBuffer::LayoutType& layoutIn,
 			UINT slot,
 			const DynamicConstantBuffer::Buffer* buffer) : slot(slot)
 		{
-			CREATEINFOMANAGER(graphic);
+			CREATEINFOMANAGER(Window::GetDxGraphic());
 
 			D3D11_BUFFER_DESC constantBufferDesc;
 			constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -48,13 +48,13 @@ namespace Graphic
 				D3D11_SUBRESOURCE_DATA initData = {};
 				initData.pSysMem = buffer->data();
 
-				hr = GetDevice(graphic)->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer);
+				hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer);
 				GRAPHIC_THROW_INFO(hr);
 			}
 
 			else
 			{
-				hr = GetDevice(graphic)->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer);
+				hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer);
 				GRAPHIC_THROW_INFO(hr);
 			}
 		}
@@ -70,11 +70,11 @@ namespace Graphic
 		using ConstantBufferEx::ConstantBufferEx;
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override 
+		void SetRenderPipeline() NOEXCEPTRELEASE override 
 		{ 
-			CREATEINFOMANAGERNOHR(graphic);
+			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
 		}
 	};
 
@@ -84,11 +84,11 @@ namespace Graphic
 		using ConstantBufferEx::ConstantBufferEx;
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override
+		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
-			CREATEINFOMANAGERNOHR(graphic);
+			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
 		}
 	};
 
@@ -97,15 +97,15 @@ namespace Graphic
 	class CachingConstantBufferEx : public T
 	{
 	public:
-		CachingConstantBufferEx(DxGraphic& graphic, const DynamicConstantBuffer::CompleteLayout& layout, UINT slot)
-			: T(graphic, *layout.GetLayout(), slot, nullptr), 
+		CachingConstantBufferEx(const DynamicConstantBuffer::CompleteLayout& layout, UINT slot)
+			: T(*layout.GetLayout(), slot, nullptr), 
 			  buffer(DynamicConstantBuffer::Buffer(layout))
 		{
 		
 		}
 		
-		CachingConstantBufferEx(DxGraphic& graphic, const DynamicConstantBuffer::Buffer& buffer, UINT slot)
-			: T(graphic, buffer.GetLayout(), slot, &buffer),
+		CachingConstantBufferEx(const DynamicConstantBuffer::Buffer& buffer, UINT slot)
+			: T(buffer.GetLayout(), slot, &buffer),
 			  buffer(buffer)
 		{
 		
@@ -127,15 +127,15 @@ namespace Graphic
 			IsNotMatch = true;
 		}
 		
-		void SetRenderPipeline(DxGraphic& graphic) noexcept override
+		void SetRenderPipeline() noexcept override
 		{
 			if (IsNotMatch)
 			{
-				T::Update(graphic, buffer);
+				T::Update(buffer);
 				IsNotMatch = false;
 			}
 		
-			T::SetRenderPipeline(graphic);
+			T::SetRenderPipeline();
 		}
 		
 		void Accept(TechniqueBase& tech) override

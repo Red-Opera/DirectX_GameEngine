@@ -5,7 +5,7 @@
 class CameraIndicator : public Drawable
 {
 public:
-	CameraIndicator(DxGraphic& graphic);
+	CameraIndicator();
 
 	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
 	void SetRotation(DirectX::XMFLOAT3 rotation) noexcept;

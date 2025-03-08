@@ -22,12 +22,12 @@ namespace RenderGraphNameSpace
 	class BlurOutlineRenderGraph : public RenderGraph
 	{
 	public:
-		BlurOutlineRenderGraph(DxGraphic& graphic);
-		void RenderWindows(DxGraphic& graphic);
+		BlurOutlineRenderGraph();
+		void RenderWindows();
 
 		void RenderMainCamera(Camera& camera);
 		void RenderShadowCamera(Camera& camera);
-		void DumpShadowMap(DxGraphic& grpahic, const std::string& path);
+		void DumpShadowMap(const std::string& path);
 
 	private:
 		enum class KernelType { Gauss, Box } kernelType = KernelType::Gauss;
@@ -35,8 +35,8 @@ namespace RenderGraphNameSpace
 		void SetKernelGauss(int radius, float sigma) NOEXCEPTRELEASE;
 		void SetKernelBox(int radius) NOEXCEPTRELEASE;
 
-		void RenderKernelWindow(DxGraphic& graphic);
-		void RenderShadowWindow(DxGraphic& graphic);
+		void RenderKernelWindow();
+		void RenderShadowWindow();
 
 		std::shared_ptr<Graphic::CachingPixelConstantBufferEx> blurKernel;
 		std::shared_ptr<Graphic::CachingPixelConstantBufferEx> blurDirection;

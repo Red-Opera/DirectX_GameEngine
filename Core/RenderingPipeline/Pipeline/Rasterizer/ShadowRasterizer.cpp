@@ -7,25 +7,25 @@
 
 namespace Graphic
 {
-	ShadowRasterizer::ShadowRasterizer(DxGraphic& graphic, int depthBias, float slopeBias, float clamp)
+	ShadowRasterizer::ShadowRasterizer(int depthBias, float slopeBias, float clamp)
 	{
-		ChangeDepthBias(graphic, depthBias, slopeBias, clamp);
+		ChangeDepthBias(depthBias, slopeBias, clamp);
 	}
 
-	void ShadowRasterizer::ChangeDepthBias(DxGraphic& graphic, int depthBias, float slopeBias, float clamp)
+	void ShadowRasterizer::ChangeDepthBias(int depthBias, float slopeBias, float clamp)
 	{
 		this->depthBias = depthBias;
 		this->slopeBias = slopeBias;
 		this->clamp = clamp;
 
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		D3D11_RASTERIZER_DESC rasterizerDESC = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT{});
 		rasterizerDESC.DepthBias = depthBias;
 		rasterizerDESC.SlopeScaledDepthBias = slopeBias;
 		rasterizerDESC.DepthBiasClamp = clamp;
 
-		hr = GetDevice(graphic)->CreateRasterizerState(&rasterizerDESC, &rasterizerState);
+		hr = GetDevice(Window::GetDxGraphic())->CreateRasterizerState(&rasterizerDESC, &rasterizerState);
 		GRAPHIC_THROW_INFO(hr);
 	}
 
@@ -44,10 +44,10 @@ namespace Graphic
 		return clamp;
 	}
 
-	void ShadowRasterizer::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void ShadowRasterizer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->RSSetState(rasterizerState.Get()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()));
 	}
 }

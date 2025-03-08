@@ -20,14 +20,14 @@ namespace Graphic
 class Material
 {
 public:
-	Material(DxGraphic& graphic, const aiMaterial& material, const std::filesystem::path& path) NOEXCEPTRELEASE;
+	Material(const aiMaterial& material, const std::filesystem::path& path) NOEXCEPTRELEASE;
 
 	VertexCore::VertexBuffer GetVertex(const aiMesh& mesh) const noexcept;
 	std::vector<unsigned short> GetIndex(const aiMesh& mesh) const noexcept;
 
-	std::shared_ptr<Graphic::VertexBuffer> CreateVertexBuffer(DxGraphic& graphic, const aiMesh& mesh, float scale = 1.0f) const NOEXCEPTRELEASE;
+	std::shared_ptr<Graphic::VertexBuffer> CreateVertexBuffer(const aiMesh& mesh, float scale = 1.0f) const NOEXCEPTRELEASE;
 
-	std::shared_ptr<Graphic::IndexBuffer> CreateIndexBuffer(DxGraphic& graphic, const aiMesh& mesh) const NOEXCEPTRELEASE;
+	std::shared_ptr<Graphic::IndexBuffer> CreateIndexBuffer(const aiMesh& mesh) const NOEXCEPTRELEASE;
 
 	std::vector<Technique> GetTechnique() const noexcept;
 

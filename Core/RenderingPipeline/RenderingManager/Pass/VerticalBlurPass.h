@@ -17,9 +17,9 @@ namespace RenderGraphNameSpace
 	class VerticalBlurPass : public PostProcessFullScreenRenderPass
 	{
 	public:
-		VerticalBlurPass(std::string name, DxGraphic& graphic);
+		VerticalBlurPass(std::string name);
 
-		void Execute(DxGraphic& graphic) const NOEXCEPTRELEASE override;
+		void Execute() const NOEXCEPTRELEASE override;
 
 	private:
 		std::shared_ptr<Graphic::CachingPixelConstantBufferEx> direction;

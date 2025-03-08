@@ -75,7 +75,8 @@ public:
 	int GetClientWidht() { return width; }			// 클라이언트 창 너비
 	int GetClientHeight() { return height; }		// 클라이언트 창 높이
 
-	DxGraphic& GetDxGraphic();	// 그래픽 관련 클래스를 얻는 메소드
+	static void SetDxGraphic(std::unique_ptr<DxGraphic> graphic);	// 그래픽 관련 클래스를 설정하는 메소드
+	static DxGraphic& GetDxGraphic();								// 그래픽 관련 클래스를 얻는 메소드
 	HWND GetHWnd() const { return hWnd; }
 
 	// =================================
@@ -138,7 +139,8 @@ private:
 	int height;							// 클라이언트 창 높이
 
 	HWND hWnd;
-	std::unique_ptr<DxGraphic> graphic; // DierctX 3D 그래픽 클래스
+
+	static std::unique_ptr<DxGraphic> graphic; // DierctX 3D 그래픽 클래스
 
 	std::vector<BYTE> rawBuffer;
 	std::string commandLine;

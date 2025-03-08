@@ -13,29 +13,29 @@ using namespace Graphic;
 
 namespace RenderGraphNameSpace
 {
-	HorizontalBlurPass::HorizontalBlurPass(std::string name, DxGraphic& graphic, unsigned int width, unsigned int height)
-		: PostProcessFullScreenRenderPass(std::move(name), graphic)
+	HorizontalBlurPass::HorizontalBlurPass(std::string name, unsigned int width, unsigned int height)
+		: PostProcessFullScreenRenderPass(std::move(name))
 	{
-		AddRender(PixelShader::GetRender(graphic, "Shader/PostProcessing/OutlineBlur.hlsl"));
-		AddRender(ColorBlend::GetRender(graphic, false));
-		AddRender(SamplerState::GetRender(graphic, SamplerState::TextureFilter::Point));
+		AddRender(PixelShader::GetRender("Shader/PostProcessing/OutlineBlur.hlsl"));
+		AddRender(ColorBlend::GetRender(false));
+		AddRender(SamplerState::GetRender(SamplerState::TextureFilter::Point));
 
 		AddRenderSink<RenderTarget>("scratchIn");
 		AddRenderSink<CachingPixelConstantBufferEx>("kernel");
 		AddDataConsumer(DirectRenderPipelineDataConsumer<CachingPixelConstantBufferEx>::Create("direction", direction));
 
-		renderTarget = std::make_shared<ShaderInputRenderTarget>(graphic, width / 2, height / 2, 0u);
+		renderTarget = std::make_shared<ShaderInputRenderTarget>(width / 2, height / 2, 0u);
 		AddDataProvider(DirectRenderPipelineDataProvider<RenderTarget>::Create("scratchOut", renderTarget));
 	}
 
-	void HorizontalBlurPass::Execute(DxGraphic& graphic) const NOEXCEPTRELEASE
+	void HorizontalBlurPass::Execute() const NOEXCEPTRELEASE
 	{
 		auto buffer = direction->GetBuffer();
 		buffer["isHorizontal"] = true;
 
 		direction->SetBuffer(buffer);
-		direction->SetRenderPipeline(graphic);
+		direction->SetRenderPipeline();
 
-		PostProcessFullScreenRenderPass::Execute(graphic);
+		PostProcessFullScreenRenderPass::Execute();
 	}
 }

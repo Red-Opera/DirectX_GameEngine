@@ -50,20 +50,18 @@ private:
 
 	std::string commandLine;
 	ScriptCommander scriptCommander;
-	RenderGraphNameSpace::BlurOutlineRenderGraph renderGraph{ wnd.GetDxGraphic() };
+	RenderGraphNameSpace::BlurOutlineRenderGraph renderGraph{ };
 
 	//Model wall { wnd.GetDxGraphic(), "Model/Sample/brick_wall/brick_wall.obj", 6.0f };
-	Model gobber{ wnd.GetDxGraphic(),"Model/Sample/gobber/GoblinX.obj", 4.0f };
-	Model nano { wnd.GetDxGraphic(),"Model/Sample/nano_textured/nanosuit.obj", 1.0f };
-	Model sponza { wnd.GetDxGraphic(),"Model/Sample/sponza/sponza.obj", 1.0f / 20.0f };
+	Model gobber{ "Model/Sample/gobber/GoblinX.obj", 4.0f };
+	Model nano { "Model/Sample/nano_textured/nanosuit.obj", 1.0f };
+	Model sponza { "Model/Sample/sponza/sponza.obj", 1.0f / 20.0f };
 	//TestPlane texturePlane{ wnd.GetDxGraphic(), 6.0f };
 	//TestPlane bluePlane{ wnd.GetDxGraphic(), 6.0f, {0.3f, 0.3f, 1.0f, 0.0f} };
 	//TestPlane redPlane{ wnd.GetDxGraphic(), 6.0f, {1.0f, 0.3f, 0.3f, 0.0f} };
 
-	ColorCube cube{ wnd.GetDxGraphic(),4.0f };
-	ColorCube cube2{ wnd.GetDxGraphic(),4.0f };
-
-	Graphic::SceneView sceneView{ wnd.GetDxGraphic(), wnd.GetDxGraphic().GetWidth(), wnd.GetDxGraphic().GetHeight() };
+	ColorCube cube{ 4.0f };
+	ColorCube cube2{ 4.0f };
 
 	bool saveDepth = false;
 };

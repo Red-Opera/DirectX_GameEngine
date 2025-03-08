@@ -1,19 +1,20 @@
 #include "stdafx.h"
 #include "NullPixelShader.h"
 
+#include "Core/Window.h"
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderManager.h"
 
 namespace Graphic
 {
-	NullPixelShader::NullPixelShader(DxGraphic& graphic)
+	NullPixelShader::NullPixelShader()
 	{
 
 	}
 
-	std::shared_ptr<NullPixelShader> NullPixelShader::GetRender(DxGraphic& graphic)
+	std::shared_ptr<NullPixelShader> NullPixelShader::GetRender()
 	{
-		return RenderManager::GetRender<NullPixelShader>(graphic);
+		return RenderManager::GetRender<NullPixelShader>();
 	}
 
 	std::string NullPixelShader::CreateID()
@@ -26,11 +27,11 @@ namespace Graphic
 		return CreateID();
 	}
 
-	void NullPixelShader::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void NullPixelShader::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShader(nullptr, nullptr, 0u));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShader(nullptr, nullptr, 0u));
 	}
 
 }

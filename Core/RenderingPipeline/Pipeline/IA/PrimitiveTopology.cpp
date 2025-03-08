@@ -1,23 +1,25 @@
 #include "stdafx.h"
 #include "PrimitiveTopology.h"
 
+#include "Core/Window.h"
+
 namespace Graphic
 {
-	PrimitiveTopology::PrimitiveTopology(DxGraphic& graphic, D3D11_PRIMITIVE_TOPOLOGY topology) : topology(topology)
+	PrimitiveTopology::PrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology) : topology(topology)
 	{
 
 	}
 
-	void PrimitiveTopology::SetRenderPipeline(DxGraphic& grahpic) NOEXCEPTRELEASE
+	void PrimitiveTopology::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(grahpic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(grahpic)->IASetPrimitiveTopology(topology));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetPrimitiveTopology(topology));
 	}
 
-	std::shared_ptr<PrimitiveTopology> PrimitiveTopology::GetRender(DxGraphic& graphic, D3D11_PRIMITIVE_TOPOLOGY topology)
+	std::shared_ptr<PrimitiveTopology> PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY topology)
 	{
-		return RenderManager::GetRender<PrimitiveTopology>(graphic, topology);
+		return RenderManager::GetRender<PrimitiveTopology>(topology);
 	}
 
 	std::string PrimitiveTopology::CreateID(D3D11_PRIMITIVE_TOPOLOGY topology)

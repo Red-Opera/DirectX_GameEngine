@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "Camera.h"
 
+#include "Core/Window.h"
 #include "Core/DxGraphic.h"
 
-Camera::Camera(DxGraphic& graphic, std::string name, DirectX::XMFLOAT3 initPosition, float initPitch, float initYaw, bool isTethered) noexcept
-	: name(std::move(name)), initPosition(initPosition), initPitch(initPitch), initYaw(initYaw), projection(graphic, 1.0f, 9.0f / 16.0f, 0.5f, 400.0f), 
-	  indicator(graphic), isTethered(isTethered)
+Camera::Camera(std::string name, DirectX::XMFLOAT3 initPosition, float initPitch, float initYaw, bool isTethered) noexcept
+	: name(std::move(name)), initPosition(initPosition), initPitch(initPitch), initYaw(initYaw), projection(1.0f, 9.0f / 16.0f, 0.5f, 400.0f), 
+	  indicator(), isTethered(isTethered)
 {
 	if (isTethered)
 	{
@@ -15,7 +16,7 @@ Camera::Camera(DxGraphic& graphic, std::string name, DirectX::XMFLOAT3 initPosit
 		projection.SetPosition(position);
 	}
 
-	Reset(graphic);
+	Reset();
 }
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
@@ -36,7 +37,7 @@ DirectX::XMMATRIX Camera::GetProjection() const noexcept
 	return projection.GetMatrix();
 }
 
-void Camera::SpawnControlWidgets(DxGraphic& graphic) noexcept
+void Camera::SpawnControlWidgets() noexcept
 {
 	bool isRotationIsNotMatch = false;
 	bool isPositionIsNotMatch = false;
@@ -54,13 +55,13 @@ void Camera::SpawnControlWidgets(DxGraphic& graphic) noexcept
 	IsNotMatch(ImGui::SliderAngle("Pitch", &pitch, 0.995f * -90.0f, 0.995f * 90.0f), isRotationIsNotMatch);
 	IsNotMatch(ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f), isRotationIsNotMatch);
 
-	projection.RenderWidgets(graphic);
+	projection.RenderWidgets();
 
 	ImGui::Checkbox("Enable Camera Indicator", &isEnableIndicator);
 	ImGui::Checkbox("Enable Frustum Indicator", &isEnableFrustumIndicator);
 
 	if (ImGui::Button("Reset"))
-		Reset(graphic);
+		Reset();
 
 	if (isRotationIsNotMatch)
 	{
@@ -76,7 +77,7 @@ void Camera::SpawnControlWidgets(DxGraphic& graphic) noexcept
 	}
 }
 
-void Camera::Reset(DxGraphic& graphic) noexcept
+void Camera::Reset() noexcept
 {
 	if (!isTethered)
 	{
@@ -93,7 +94,7 @@ void Camera::Reset(DxGraphic& graphic) noexcept
 	indicator.SetRotation(angle);
 	projection.SetRotation(angle);
 
-	projection.Reset(graphic);
+	projection.Reset();
 }
 
 void Camera::Rotate(float dx, float dy) noexcept
@@ -156,8 +157,8 @@ void Camera::Submit(size_t channel) const
 		projection.Submit(channel);
 }
 
-void Camera::RenderToGraphic(DxGraphic& graphic) const
+void Camera::RenderToGraphic() const
 {
-	graphic.SetCamera(GetMatrix());
-	graphic.SetProjection(projection.GetMatrix());
+	Window::GetDxGraphic().SetCamera(GetMatrix());
+	Window::GetDxGraphic().SetProjection(projection.GetMatrix());
 }

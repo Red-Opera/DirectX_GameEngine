@@ -7,7 +7,7 @@
 class ColorCube : public Drawable
 {
 public:
-	ColorCube(DxGraphic& graphic, float size);
+	ColorCube(float size);
 
 	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
 	void SetRotation(float roll, float pitch, float yaw) noexcept;
@@ -15,7 +15,7 @@ public:
 	// Drawable을(를) 통해 상속됨
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;
 
-	void SpawnControlWindow(DxGraphic& graphic, const char* name) noexcept;
+	void SpawnControlWindow(const char* name) noexcept;
 
 private:
 	DirectX::XMFLOAT3 position = { 1.0f, 1.0f, 1.0f };

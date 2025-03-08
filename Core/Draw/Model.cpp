@@ -11,7 +11,7 @@
 #include <External/Assimp/scene.h>
 #include <External/Assimp/postprocess.h>
 
-Model::Model(DxGraphic& graphic, const std::string& pathString, const float scale)
+Model::Model(const std::string& pathString, const float scale)
 {
 	Assimp::Importer importer;
 
@@ -25,12 +25,12 @@ Model::Model(DxGraphic& graphic, const std::string& pathString, const float scal
 	materials.reserve(model->mNumMaterials);
 
 	for (size_t i = 0; i < model->mNumMaterials; i++)
-		materials.emplace_back(graphic, *model->mMaterials[i], pathString);
+		materials.emplace_back(*model->mMaterials[i], pathString);
 
 	for (size_t i = 0; i < model->mNumMeshes; i++)
 	{
 		const auto& mesh = *model->mMeshes[i];
-		meshPtrs.push_back(std::make_unique<Mesh>(graphic, materials[mesh.mMaterialIndex], mesh, scale));
+		meshPtrs.push_back(std::make_unique<Mesh>(materials[mesh.mMaterialIndex], mesh, scale));
 	}
 
 	int nextID = 0;

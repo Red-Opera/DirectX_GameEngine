@@ -14,7 +14,7 @@ namespace RenderGraphNameSpace
 		RenderingPass(std::string name, std::vector<std::shared_ptr<Graphic::Render>> renders = { });
 
 		void AddRender(std::shared_ptr<Graphic::Render> render) noexcept;
-		void RenderAll(DxGraphic& graphic) const NOEXCEPTRELEASE;
+		void RenderAll() const NOEXCEPTRELEASE;
 
 		void Finalize() override;
 
@@ -31,7 +31,7 @@ namespace RenderGraphNameSpace
 		std::shared_ptr<Graphic::DepthStencil> depthStencil;
 
 	private:
-		void RenderBufferResources(DxGraphic& graphic) const NOEXCEPTRELEASE;
+		void RenderBufferResources() const NOEXCEPTRELEASE;
 
 		std::vector<std::shared_ptr<Graphic::Render>> renders;
 	};

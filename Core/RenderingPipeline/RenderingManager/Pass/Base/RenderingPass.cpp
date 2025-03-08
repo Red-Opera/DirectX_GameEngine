@@ -20,12 +20,12 @@ namespace RenderGraphNameSpace
 		renders.push_back(std::move(render));
 	}
 
-	void RenderingPass::RenderAll(DxGraphic& graphic) const NOEXCEPTRELEASE
+	void RenderingPass::RenderAll() const NOEXCEPTRELEASE
 	{
-		RenderBufferResources(graphic);
+		RenderBufferResources();
 
 		for (auto& render : renders)
-			render->SetRenderPipeline(graphic);
+			render->SetRenderPipeline();
 	}
 
 	void RenderingPass::Finalize()
@@ -36,12 +36,12 @@ namespace RenderGraphNameSpace
 			throw RENDER_GRAPHIC_EXCEPTION("Rendering Pass [" + GetName() + "]가 Render Target 또는 Depth Stencil 중 하나가 필요함");
 	}
 
-	void RenderingPass::RenderBufferResources(DxGraphic& graphic) const NOEXCEPTRELEASE
+	void RenderingPass::RenderBufferResources() const NOEXCEPTRELEASE
 	{
 		if (renderTarget != nullptr)
-			renderTarget->RenderAsBuffer(graphic, depthStencil.get());
+			renderTarget->RenderAsBuffer(depthStencil.get());
 
 		else
-			depthStencil->RenderAsBuffer(graphic);
+			depthStencil->RenderAsBuffer();
 	}
 }

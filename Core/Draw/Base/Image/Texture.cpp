@@ -5,15 +5,16 @@
 
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderManager.h"
+#include "Core/Window.h"
 
 
 std::unordered_map<std::string, std::unique_ptr<GraphicResource::Image>> Graphic::Texture::imageCache;
 
 namespace Graphic
 {
-    Texture::Texture(DxGraphic& graphic, const std::string& path, UINT slot) : slot(slot), path(path)
+    Texture::Texture(const std::string& path, UINT slot) : slot(slot), path(path)
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
         GraphicResource::Image* image = nullptr;
 
@@ -46,10 +47,10 @@ namespace Graphic
         textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;// 텍스처의 한 픽셀 정보
 
         // MSAA를 사용할 경우
-        if (graphic.GetMsaaUsage())
+        if (Window::GetDxGraphic().GetMsaaUsage())
         {
             textureDesc.SampleDesc.Count = 4;
-            textureDesc.SampleDesc.Quality = graphic.GetMsaaQuality() - 1;
+            textureDesc.SampleDesc.Quality = Window::GetDxGraphic().GetMsaaQuality() - 1;
         }
 
         // MSAA를 사용하지 않을 경우
@@ -66,10 +67,10 @@ namespace Graphic
 
         // D3D11_TEXTURE2D_DESC를 통해서 Texture2D를 생성함
         Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&textureDesc, nullptr, &texture));
+        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture));
 
 		// 머터리얼의 정보를 텍스처에 업데이트
-		GetDeviceContext(graphic)->UpdateSubresource(texture.Get(), 0u, nullptr, image->GetConst(), image->GetWidth() * sizeof(GraphicResource::Image::Color), 0u);
+		GetDeviceContext(Window::GetDxGraphic())->UpdateSubresource(texture.Get(), 0u, nullptr, image->GetConst(), image->GetWidth() * sizeof(GraphicResource::Image::Color), 0u);
 
         // 이미지 데이터를 ID3D11Texture2D에 저장하기 위한 셰이더 리소스 뷰를 저장하기 위한 Desc
         D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = { };
@@ -78,23 +79,23 @@ namespace Graphic
         viewDesc.Texture2D.MostDetailedMip = 0;
         viewDesc.Texture2D.MipLevels = -1;
 
-        hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), &viewDesc, &textureView);
+        hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &viewDesc, &textureView);
         GRAPHIC_THROW_INFO(hr);
 
 		// 밉맵 생성
-		GetDeviceContext(graphic)->GenerateMips(textureView.Get());
+		GetDeviceContext(Window::GetDxGraphic())->GenerateMips(textureView.Get());
     }
 
-    void Texture::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    void Texture::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
     }
 
-    std::shared_ptr<Texture> Texture::GetRender(DxGraphic& graphic, const std::string& path, UINT slot)
+    std::shared_ptr<Texture> Texture::GetRender(const std::string& path, UINT slot)
     {
-        return RenderManager::GetRender<Texture>(graphic, path, slot);
+        return RenderManager::GetRender<Texture>(path, slot);
     }
 
     std::string Texture::CreateID(const std::string& path, UINT slot)

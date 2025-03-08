@@ -11,11 +11,11 @@
 
 using namespace Graphic;
 
-Drawable::Drawable(DxGraphic& graphic, const Material& material, const aiMesh& mesh, float scale) noexcept
+Drawable::Drawable(const Material& material, const aiMesh& mesh, float scale) noexcept
 {
-	vertexBuffer = material.CreateVertexBuffer(graphic, mesh, scale);
-	indexBuffer = material.CreateIndexBuffer(graphic, mesh);
-	primitiveTopology = Graphic::PrimitiveTopology::GetRender(graphic);
+	vertexBuffer = material.CreateVertexBuffer(mesh, scale);
+	indexBuffer = material.CreateIndexBuffer(mesh);
+	primitiveTopology = Graphic::PrimitiveTopology::GetRender();
 
 	for (auto& tech : material.GetTechnique())
 		AddTechnique(std::move(tech));
@@ -33,11 +33,11 @@ void Drawable::Accept(TechniqueBase& tech)
 		technique.Accept(tech);
 }
 
-void Drawable::SetRenderPipeline(DxGraphic& graphic) const NOEXCEPTRELEASE
+void Drawable::SetRenderPipeline() const NOEXCEPTRELEASE
 {
-	primitiveTopology->SetRenderPipeline(graphic);
-	indexBuffer->SetRenderPipeline(graphic);
-	vertexBuffer->SetRenderPipeline(graphic);
+	primitiveTopology->SetRenderPipeline();
+	indexBuffer->SetRenderPipeline();
+	vertexBuffer->SetRenderPipeline();
 }
 
 UINT Drawable::GetIndexCount() const NOEXCEPTRELEASE

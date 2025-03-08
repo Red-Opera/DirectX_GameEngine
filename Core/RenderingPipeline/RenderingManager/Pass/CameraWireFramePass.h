@@ -14,7 +14,7 @@ namespace RenderGraphNameSpace
 	class CameraWireFramePass : public RenderQueuePass
 	{
 	public:
-		CameraWireFramePass(DxGraphic& graphic, std::string name) : RenderQueuePass(std::move(name))
+		CameraWireFramePass(std::string name) : RenderQueuePass(std::move(name))
 		{
 			using namespace Graphic;
 
@@ -23,7 +23,7 @@ namespace RenderGraphNameSpace
 			AddDataProvider(DirectBufferPipelineDataProvider<RenderTarget>::Create("renderTarget", renderTarget));
 			AddDataProvider(DirectBufferPipelineDataProvider<DepthStencil>::Create("depthStencil", depthStencil));
 
-			AddRender(Stencil::GetRender(graphic, Stencil::DrawMode::DepthReversed));
+			AddRender(Stencil::GetRender(Stencil::DrawMode::DepthReversed));
 		}
 	};
 }

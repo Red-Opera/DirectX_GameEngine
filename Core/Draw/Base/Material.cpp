@@ -10,7 +10,7 @@
 
 #include <filesystem>
 
-Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::filesystem::path& path) NOEXCEPTRELEASE
+Material::Material(const aiMaterial& material, const std::filesystem::path& path) NOEXCEPTRELEASE
 	: modelPath(path.string())
 {
 	using namespace Graphic;
@@ -48,7 +48,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 				shaderCodeName += "Diffuse";
 				vertexLayout.AddType(VertexCore::VertexLayout::Texture2D);
 
-				auto texture = Texture::GetRender(graphic, rootPath + textureName.C_Str());
+				auto texture = Texture::GetRender(rootPath + textureName.C_Str());
 
 				if (texture->HasAlpha())
 				{
@@ -62,7 +62,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 			else
 				layout.add<DynamicConstantBuffer::float3>("materialColor");
 
-			renderStep.AddRender(Rasterizer::GetRender(graphic, hasAlpha));
+			renderStep.AddRender(Rasterizer::GetRender(hasAlpha));
 		}
 
 		// Specular
@@ -74,7 +74,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 				shaderCodeName += "Specular";
 				vertexLayout.AddType(VertexCore::VertexLayout::Texture2D);
 
-				auto texture = Texture::GetRender(graphic, rootPath + textureName.C_Str(), 1);
+				auto texture = Texture::GetRender(rootPath + textureName.C_Str(), 1);
 
 				hasGlassAlpha = texture->HasAlpha();
 				renderStep.AddRender(std::move(texture));
@@ -99,7 +99,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 				vertexLayout.AddType(VertexCore::VertexLayout::Tangent);
 				vertexLayout.AddType(VertexCore::VertexLayout::BiTangent);
 
-				renderStep.AddRender(Texture::GetRender(graphic, rootPath + textureName.C_Str(), 2));
+				renderStep.AddRender(Texture::GetRender(rootPath + textureName.C_Str(), 2));
 
 				layout.add<DynamicConstantBuffer::Bool>("useNormalMap");
 				layout.add<DynamicConstantBuffer::float1>("normalMapPower");
@@ -107,15 +107,15 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 		}
 
 		{
-			renderStep.AddRender(std::make_shared<TransformConstantBuffer>(graphic, 0u));
+			renderStep.AddRender(std::make_shared<TransformConstantBuffer>(0u));
 
-			auto vertexShader = VertexShader::GetRender(graphic, shaderCodeName + ".hlsl");
-			renderStep.AddRender(InputLayout::GetRender(graphic, vertexLayout, *vertexShader));
+			auto vertexShader = VertexShader::GetRender(shaderCodeName + ".hlsl");
+			renderStep.AddRender(InputLayout::GetRender(vertexLayout, *vertexShader));
 			renderStep.AddRender(std::move(vertexShader));
-			renderStep.AddRender(PixelShader::GetRender(graphic, shaderCodeName + ".hlsl"));
+			renderStep.AddRender(PixelShader::GetRender(shaderCodeName + ".hlsl"));
 
 			if (hasTexture)
-				renderStep.AddRender(Graphic::SamplerState::GetRender(graphic));
+				renderStep.AddRender(Graphic::SamplerState::GetRender());
 
 			DynamicConstantBuffer::Buffer buffer{ std::move(layout) };
 
@@ -149,7 +149,7 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 
 			buffer["useNormalMap"].SetValue(true);
 			buffer["normalMapPower"].SetValue(1.0f);
-			renderStep.AddRender(std::make_unique<Graphic::CachingPixelConstantBufferEx>(graphic, std::move(buffer), 1u));
+			renderStep.AddRender(std::make_unique<Graphic::CachingPixelConstantBufferEx>(std::move(buffer), 1u));
 		}
 
 		light.push_back(std::move(renderStep));
@@ -164,13 +164,12 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 
 			mask.AddRender(
 				InputLayout::GetRender(
-					graphic, 
 					vertexLayout, 
-					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
+					*VertexShader::GetRender("Shader/ColorShader.hlsl")
 				)
 			);
 
-			mask.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+			mask.AddRender(std::make_shared<TransformConstantBuffer>());
 	
 			outline.push_back(std::move(mask));
 		}
@@ -185,18 +184,17 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 				auto buffer = DynamicConstantBuffer::Buffer(std::move(layout));
 				buffer["materialColor"] = DirectX::XMFLOAT3{ 1.0f, 0.4f, 0.4f };
 	
-				draw.AddRender(std::make_shared<Graphic::CachingPixelConstantBufferEx>(graphic, buffer, 1u));
+				draw.AddRender(std::make_shared<Graphic::CachingPixelConstantBufferEx>(buffer, 1u));
 			}
 	
 			draw.AddRender(
 				InputLayout::GetRender(
-					graphic,
 					vertexLayout,
-					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
+					*VertexShader::GetRender("Shader/ColorShader.hlsl")
 				)
 			);
 
-			draw.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+			draw.AddRender(std::make_shared<TransformConstantBuffer>());
 	
 			outline.push_back(std::move(draw));
 		}
@@ -210,8 +208,8 @@ Material::Material(DxGraphic& graphic, const aiMaterial& material, const std::fi
 		{
 			RenderStep draw("ShadowMap");
 	
-			draw.AddRender(InputLayout::GetRender(graphic, vertexLayout, *VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")));
-			draw.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+			draw.AddRender(InputLayout::GetRender(vertexLayout, *VertexShader::GetRender("Shader/ColorShader.hlsl")));
+			draw.AddRender(std::make_shared<TransformConstantBuffer>());
 	
 			shadowMap.push_back(std::move(draw));
 		}
@@ -243,7 +241,7 @@ std::vector<unsigned short> Material::GetIndex(const aiMesh& mesh) const noexcep
 	return indices;
 }
 
-std::shared_ptr<Graphic::VertexBuffer> Material::CreateVertexBuffer(DxGraphic& graphic, const aiMesh& mesh, float scale) const NOEXCEPTRELEASE
+std::shared_ptr<Graphic::VertexBuffer> Material::CreateVertexBuffer(const aiMesh& mesh, float scale) const NOEXCEPTRELEASE
 {
 	auto vertexBuffer = GetVertex(mesh);
 
@@ -259,12 +257,12 @@ std::shared_ptr<Graphic::VertexBuffer> Material::CreateVertexBuffer(DxGraphic& g
 		}
 	}
 
-	return Graphic::VertexBuffer::GetRender(graphic, CreateMeshTag(mesh), std::move(vertexBuffer));
+	return Graphic::VertexBuffer::GetRender(CreateMeshTag(mesh), std::move(vertexBuffer));
 }
 
-std::shared_ptr<Graphic::IndexBuffer> Material::CreateIndexBuffer(DxGraphic& graphic, const aiMesh& mesh) const NOEXCEPTRELEASE
+std::shared_ptr<Graphic::IndexBuffer> Material::CreateIndexBuffer(const aiMesh& mesh) const NOEXCEPTRELEASE
 {
-	return Graphic::IndexBuffer::GetRender(graphic, CreateMeshTag(mesh), GetIndex(mesh));
+	return Graphic::IndexBuffer::GetRender(CreateMeshTag(mesh), GetIndex(mesh));
 }
 
 std::vector<Technique> Material::GetTechnique() const noexcept

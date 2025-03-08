@@ -12,13 +12,13 @@ namespace Graphic
 	class ShadowCameraConstantBuffer : public Render
 	{
 	public:
-		ShadowCameraConstantBuffer(DxGraphic& graphic, UINT slot = 1u);
+		ShadowCameraConstantBuffer(UINT slot = 1u);
 
-		void Update(DxGraphic& graphic);
+		void Update();
 		void SetCamera(const Camera* camera) noexcept;
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:
 		struct Transform { DirectX::XMMATRIX viewProjection; };

@@ -9,13 +9,12 @@ namespace Graphic
 		// 이방성 필터링, 바이리니어 필터링, 포인트 필터링
 		enum class TextureFilter { Anisotropic, Bilinear, Point, };
 
-		SamplerState(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect, UINT slot);
+		SamplerState(TextureFilter textureFilter, bool useReflect, UINT slot);
 
 		// Bindable을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 		static std::shared_ptr<SamplerState> GetRender(
-			DxGraphic& graphic, 
 			TextureFilter textureFilter = TextureFilter::Anisotropic,
 			bool useReflect = false,
 			UINT slot = 0u);

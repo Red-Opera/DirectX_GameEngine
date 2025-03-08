@@ -8,7 +8,7 @@
 #include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 
-CameraIndicator::CameraIndicator(DxGraphic& graphic)
+CameraIndicator::CameraIndicator()
 {
 	using namespace Graphic;
 
@@ -62,19 +62,19 @@ CameraIndicator::CameraIndicator(DxGraphic& graphic)
 		indices.push_back(5);
 	}
 
-	vertexBuffer = VertexBuffer::GetRender(graphic, geometryTag, vertices);
-	indexBuffer = IndexBuffer::GetRender(graphic, geometryTag, indices);
-	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	vertexBuffer = VertexBuffer::GetRender(geometryTag, vertices);
+	indexBuffer = IndexBuffer::GetRender(geometryTag, indices);
+	primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	{
 		Technique line{ RenderingChannel::main };
 		RenderStep only("lambertian");
 
-		auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");
-		only.AddRender(InputLayout::GetRender(graphic, vertices.GetVertexLayout(), *vertexShader));
+		auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
+		only.AddRender(InputLayout::GetRender(vertices.GetVertexLayout(), *vertexShader));
 		only.AddRender(std::move(vertexShader));
 
-		only.AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
+		only.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
 
 		struct PSColorConstant
 		{
@@ -82,9 +82,9 @@ CameraIndicator::CameraIndicator(DxGraphic& graphic)
 			float padding;
 		} colorConst;
 
-		only.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(graphic, colorConst, 1u));
-		only.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
-		only.AddRender(Rasterizer::GetRender(graphic, false));
+		only.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(colorConst, 1u));
+		only.AddRender(std::make_shared<TransformConstantBuffer>());
+		only.AddRender(Rasterizer::GetRender(false));
 
 		line.push_back(std::move(only));
 		AddTechnique(std::move(line));

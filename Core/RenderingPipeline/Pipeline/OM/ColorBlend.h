@@ -10,17 +10,17 @@ namespace Graphic
 	class ColorBlend : public Render
 	{
 	public:
-		ColorBlend(DxGraphic& graphic, bool blending, std::optional<float> transparency = {});
+		ColorBlend(bool blending, std::optional<float> transparency = {});
 
 		void SetTransparency(float transparency) NOEXCEPTRELEASE;
 		float GetTransparency() const NOEXCEPTRELEASE;
 
-		static std::shared_ptr<ColorBlend> GetRender(DxGraphic& graphic, bool blending, std::optional<float> transparency = {});
+		static std::shared_ptr<ColorBlend> GetRender(bool blending, std::optional<float> transparency = {});
 		static std::string CreateID(bool blending, std::optional<float> transparency = {});
 		std::string GetID() const noexcept override;
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;

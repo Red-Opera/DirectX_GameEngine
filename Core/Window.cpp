@@ -11,6 +11,7 @@ using namespace std;
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 string Window::currentSceneName = "";
+std::unique_ptr<DxGraphic> Window::graphic;
 
 string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
@@ -148,7 +149,10 @@ Window::Window(int width, int height, const char* name) : width(width), height(h
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	ImGui_ImplWin32_Init(hWnd);
+
 	graphic = make_unique<DxGraphic>(hWnd);
+	graphic->CreateSwapChain();
+	graphic->CreateRenderTargetView();
 
 	RAWINPUTDEVICE rawDevice;
 	rawDevice.usUsagePage = 0x01;
@@ -216,12 +220,15 @@ optional<int> Window::ProcessMessages() noexcept
 	return {};
 }
 
+void Window::SetDxGraphic(std::unique_ptr<DxGraphic> graphic)
+{
+	Window::graphic = std::move(graphic);
+}
+
 DxGraphic& Window::GetDxGraphic()
 {
 	if (!graphic) 
-	{
 		throw NOGRAPHICEXEPT();
-	}
 
 	return *graphic;
 }
@@ -273,7 +280,7 @@ void Window::ShowGameFrame(HWND hWnd) noexcept
 
    // 오른쪽 정렬을 위해 공백 추가  
    std::string title = ss.str();  
-   int padding = 50 - title.length(); // 원하는 길이에서 제목 길이를 뺀 값  
+   int padding = 50 - (int)title.length(); // 원하는 길이에서 제목 길이를 뺀 값  
 
    if (padding > 0)  
        title.insert(0, padding, ' ');  

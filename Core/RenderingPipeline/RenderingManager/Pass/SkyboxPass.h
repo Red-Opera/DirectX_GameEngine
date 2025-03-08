@@ -28,7 +28,7 @@ namespace RenderGraphNameSpace
 	class SkyboxPass : public RenderingPass
 	{
 	public:
-		SkyboxPass(DxGraphic& graphic, std::string name)
+		SkyboxPass(std::string name)
 			: RenderingPass(std::move(name))
 		{
 			using namespace Graphic;
@@ -36,33 +36,33 @@ namespace RenderGraphNameSpace
 			AddDataConsumer(DirectBufferDataConsumer<RenderTarget>::Create("renderTarget", renderTarget));
 			AddDataConsumer(DirectBufferDataConsumer<DepthStencil>::Create("depthStencil", depthStencil));
 
-			AddRender(std::make_shared<TextureCube>(graphic, "Images/SpaceBox"));
-			AddRender(Stencil::GetRender(graphic, Stencil::DrawMode::DepthFirst));
-			AddRender(Rasterizer::GetRender(graphic, true));
-			AddRender(std::make_shared<SkyboxTransformConstantBuffer>(graphic));
-			AddRender(PixelShader::GetRender(graphic, "Shader/Skybox.hlsl"));
-			AddRender(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+			AddRender(std::make_shared<TextureCube>("Images/SpaceBox"));
+			AddRender(Stencil::GetRender(Stencil::DrawMode::DepthFirst));
+			AddRender(Rasterizer::GetRender(true));
+			AddRender(std::make_shared<SkyboxTransformConstantBuffer>());
+			AddRender(PixelShader::GetRender("Shader/Skybox.hlsl"));
+			AddRender(PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 			{
-				auto vertexShaderCode = VertexShader::GetRender(graphic, "Shader/Skybox.hlsl");
+				auto vertexShaderCode = VertexShader::GetRender("Shader/Skybox.hlsl");
 
 				{
 					auto cube = Cube::Create();
 
 					const auto geometryTag = "$Skybox";
-					cubeVertexBuffer = VertexBuffer::GetRender(graphic, geometryTag, std::move(cube.vertices));
-					cubeIndexBuffer = IndexBuffer::GetRender(graphic, geometryTag, std::move(cube.indices));
+					cubeVertexBuffer = VertexBuffer::GetRender(geometryTag, std::move(cube.vertices));
+					cubeIndexBuffer = IndexBuffer::GetRender(geometryTag, std::move(cube.indices));
 					cubeIndexCount = (UINT)cube.indices.size();
 
-					AddRender(InputLayout::GetRender(graphic, cube.vertices.GetVertexLayout(), *vertexShaderCode));
+					AddRender(InputLayout::GetRender(cube.vertices.GetVertexLayout(), *vertexShaderCode));
 				}
 
 				{
 					auto sphere = Sphere::Make();
 
 					const auto geometryTag = "$SkySphere";
-					sphereVertexBuffer = VertexBuffer::GetRender(graphic, geometryTag, std::move(sphere.vertices));
-					sphereIndexBuffer = IndexBuffer::GetRender(graphic, geometryTag, std::move(sphere.indices));
+					sphereVertexBuffer = VertexBuffer::GetRender(geometryTag, std::move(sphere.vertices));
+					sphereIndexBuffer = IndexBuffer::GetRender(geometryTag, std::move(sphere.indices));
 					sphereIndexCount = (UINT)sphere.indices.size();
 				}
 				
@@ -73,28 +73,28 @@ namespace RenderGraphNameSpace
 			AddDataProvider(DirectBufferPipelineDataProvider<DepthStencil>::Create("depthStencil", depthStencil));
 		}
 
-		void Execute(DxGraphic& graphic) const NOEXCEPTRELEASE override
+		void Execute() const NOEXCEPTRELEASE override
 		{
 			assert(mainCamera != nullptr);
-			mainCamera->RenderToGraphic(graphic);
+			mainCamera->RenderToGraphic();
 
 			UINT indexCount;
 
 			if (isSphere)
 			{
-				sphereVertexBuffer->SetRenderPipeline(graphic);
-				sphereIndexBuffer->SetRenderPipeline(graphic);
+				sphereVertexBuffer->SetRenderPipeline();
+				sphereIndexBuffer->SetRenderPipeline();
 				indexCount = sphereIndexCount;
 			}
 			else
 			{
-				cubeVertexBuffer->SetRenderPipeline(graphic);
-				cubeIndexBuffer->SetRenderPipeline(graphic);
+				cubeVertexBuffer->SetRenderPipeline();
+				cubeIndexBuffer->SetRenderPipeline();
 				indexCount = cubeIndexCount;
 			}
 
-			RenderAll(graphic);
-			graphic.DrawIndexed(indexCount);
+			RenderAll();
+			Window::GetDxGraphic().DrawIndexed(indexCount);
 		}
 
 		void RenderWidnow()

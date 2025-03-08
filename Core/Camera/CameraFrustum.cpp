@@ -8,7 +8,7 @@
 #include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 
-CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, float nearZ, float farZ)
+CameraFrustum::CameraFrustum(float width, float height, float nearZ, float farZ)
 {
 	using namespace Graphic;
 
@@ -40,20 +40,20 @@ CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, floa
 		indices.push_back(7);
 	};
 
-	SetVertices(graphic, width, height, nearZ, farZ);
-	indexBuffer = IndexBuffer::GetRender(graphic, "$Frustum", indices);
-	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	SetVertices(width, height, nearZ, farZ);
+	indexBuffer = IndexBuffer::GetRender("$Frustum", indices);
+	primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	{
 		Technique line{ RenderingChannel::main };
 		{
 			RenderStep notOccluded("lambertian");
 
-			auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");
-			notOccluded.AddRender(InputLayout::GetRender(graphic, vertexBuffer->GetVertexLayout(), *vertexShader));
+			auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
+			notOccluded.AddRender(InputLayout::GetRender(vertexBuffer->GetVertexLayout(), *vertexShader));
 			notOccluded.AddRender(std::move(vertexShader));
 
-			notOccluded.AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
+			notOccluded.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
 
 			struct PSColorConstant
 			{
@@ -61,9 +61,9 @@ CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, floa
 				float padding;
 			} colorConst;
 
-			notOccluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(graphic, colorConst, 1u));
-			notOccluded.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
-			notOccluded.AddRender(Rasterizer::GetRender(graphic, false));
+			notOccluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(colorConst, 1u));
+			notOccluded.AddRender(std::make_shared<TransformConstantBuffer>());
+			notOccluded.AddRender(Rasterizer::GetRender(false));
 
 			line.push_back(std::move(notOccluded));
 		}
@@ -71,11 +71,11 @@ CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, floa
 		{
 			RenderStep occluded("wireframe");
 
-			auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");
-			occluded.AddRender(InputLayout::GetRender(graphic, vertexBuffer->GetVertexLayout(), *vertexShader));
+			auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
+			occluded.AddRender(InputLayout::GetRender(vertexBuffer->GetVertexLayout(), *vertexShader));
 			occluded.AddRender(std::move(vertexShader));
 
-			occluded.AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
+			occluded.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
 
 			struct PSColorConstant
 			{
@@ -83,9 +83,9 @@ CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, floa
 				float padding;
 			} colorConst;
 
-			occluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(graphic, colorConst, 1u));
-			occluded.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
-			occluded.AddRender(Rasterizer::GetRender(graphic, false));
+			occluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(colorConst, 1u));
+			occluded.AddRender(std::make_shared<TransformConstantBuffer>());
+			occluded.AddRender(Rasterizer::GetRender(false));
 
 			line.push_back(std::move(occluded));
 		}
@@ -94,7 +94,7 @@ CameraFrustum::CameraFrustum(DxGraphic& graphic, float width, float height, floa
 	}
 }
 
-void CameraFrustum::SetVertices(DxGraphic& graphic, float width, float height, float nearZ, float farZ)
+void CameraFrustum::SetVertices(float width, float height, float nearZ, float farZ)
 {
 	VertexCore::VertexLayout layout;
 	layout.AddType(VertexCore::VertexLayout::Position3D);
@@ -119,7 +119,7 @@ void CameraFrustum::SetVertices(DxGraphic& graphic, float width, float height, f
 		vertices.emplace_back(DirectX::XMFLOAT3{ -farX,-farY, farZ });
 	}
 
-	vertexBuffer = std::make_shared<Graphic::VertexBuffer>(graphic, vertices);
+	vertexBuffer = std::make_shared<Graphic::VertexBuffer>(vertices);
 }
 
 void CameraFrustum::SetPosition(DirectX::XMFLOAT3 position) noexcept

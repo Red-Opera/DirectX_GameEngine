@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "TransformConstantBuffer.h"
 
+#include "Core/Window.h"
+
 namespace Graphic
 {
-	TransformConstantBuffer::TransformConstantBuffer(DxGraphic& graphic, UINT slot)
+	TransformConstantBuffer::TransformConstantBuffer(UINT slot)
 	{
 		if (!vertexConstantBufferMatrix)
-			vertexConstantBufferMatrix = std::make_unique<VertexConstantBuffer<Transform>>(graphic, slot);
+			vertexConstantBufferMatrix = std::make_unique<VertexConstantBuffer<Transform>>(slot);
 	}
 
 	void TransformConstantBuffer::InitializeParentReference(const Drawable& parent) noexcept
@@ -14,28 +16,28 @@ namespace Graphic
 		this->parent = &parent;
 	}
 
-	void TransformConstantBuffer::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void TransformConstantBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(UpdateSetRenderPipeline(graphic, GetTransform(graphic)));
+		GRAPHIC_THROW_INFO_ONLY(UpdateSetRenderPipeline(GetTransform()));
 	}
 
-	void TransformConstantBuffer::UpdateSetRenderPipeline(DxGraphic& graphic, const Transform& transform) NOEXCEPTRELEASE
+	void TransformConstantBuffer::UpdateSetRenderPipeline(const Transform& transform) NOEXCEPTRELEASE
 	{
 		assert(parent != nullptr);
 
-		vertexConstantBufferMatrix->Update(graphic, transform);
-		vertexConstantBufferMatrix->SetRenderPipeline(graphic);
+		vertexConstantBufferMatrix->Update(transform);
+		vertexConstantBufferMatrix->SetRenderPipeline();
 	}
 
-	TransformConstantBuffer::Transform TransformConstantBuffer::GetTransform(DxGraphic& graphic) NOEXCEPTRELEASE
+	TransformConstantBuffer::Transform TransformConstantBuffer::GetTransform() NOEXCEPTRELEASE
 	{
 		assert(parent != nullptr);
 
 		// 부모의 Transformd에서 카메라 위치를 곱하여 View 위치를 구함
 		const auto model = parent->GetTransformMatrix();
-		const auto viewTransform = model * graphic.GetCamera();
+		const auto viewTransform = model * Window::GetDxGraphic().GetCamera();
 
 		// 상수 버퍼로 만들 Transform을 만듬
 		return
@@ -44,7 +46,7 @@ namespace Graphic
 			DirectX::XMMatrixTranspose(viewTransform),
 
 			// World * View * Projection
-			DirectX::XMMatrixTranspose(viewTransform * graphic.GetProjection())
+			DirectX::XMMatrixTranspose(viewTransform * Window::GetDxGraphic().GetProjection())
 		};
 	}
 

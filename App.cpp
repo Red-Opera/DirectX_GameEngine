@@ -15,12 +15,12 @@ using namespace std;
 
 App::App(const std::string& commandLine) 
 	: wnd(WINWIDTH, WINHEIGHT, "Sponza"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), 
-	  light(wnd.GetDxGraphic(), { 0.0f, 10.0f, 0.0f })
+	  light({ 0.0f, 10.0f, 0.0f })
 {
-	Engine::FolderViewInspector::GetInstance(wnd.GetDxGraphic());
+	Engine::FolderViewInspector::GetInstance();
 
-	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
-	cameras.AddCamera(std::make_unique<Camera>(wnd.GetDxGraphic(), "B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
+	cameras.AddCamera(std::make_unique<Camera>("A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
+	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.GetLightViewCamera());
 
 	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
@@ -82,7 +82,7 @@ void App::DoFrame(float deltaTime)
 
 	wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
 
-	light.Update(wnd.GetDxGraphic(), cameras->GetMatrix());
+	light.Update(cameras->GetMatrix());
 	renderGraph.RenderMainCamera(cameras.GetActiveCamera());
 
 	light.Submit(RenderingChannel::main);
@@ -99,11 +99,11 @@ void App::DoFrame(float deltaTime)
 	gobber.Submit(RenderingChannel::shadow);
 	nano.Submit(RenderingChannel::shadow);
 
-	renderGraph.Execute(wnd.GetDxGraphic());
+	renderGraph.Execute();
 
 	if (saveDepth)
 	{
-		renderGraph.DumpShadowMap(wnd.GetDxGraphic(), "depth.png");
+		renderGraph.DumpShadowMap("depth.png");
 		saveDepth = false;
 	}
 
@@ -115,16 +115,16 @@ void App::DoFrame(float deltaTime)
 	nanoBase.CreateWindow(nano);
 
 	CreateSimulationWindow();
-	cameras.CreateWindow(wnd.GetDxGraphic());
+	cameras.CreateWindow();
 	light.CreatePositionChangeWindow();
 	CreateDemoWindows();
 	//wall.ShowWindow(wnd.GetDxGraphic(), "Wall");
 	//texturePlane.SpawnControlWindow(wnd.GetDxGraphic());
 	//gobber.ShowWindow(wnd.GetDxGraphic(), "Gobber");
 	//nano.ShowWindow(wnd.GetDxGraphic(), "Nano");
-	cube.SpawnControlWindow(wnd.GetDxGraphic(), "Cube 1");
-	cube2.SpawnControlWindow(wnd.GetDxGraphic(), "Cube 2");
-	renderGraph.RenderWindows(wnd.GetDxGraphic());
+	cube.SpawnControlWindow("Cube 1");
+	cube2.SpawnControlWindow("Cube 2");
+	renderGraph.RenderWindows();
 
 	Engine::FolderViewInspector::instance->RenderFolderView();
 	Engine::FolderViewInspector::instance->RenderInspector();

@@ -4,6 +4,7 @@
 
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/RenderManager.h"
+#include "Core/Window.h"
 
 namespace Graphic
 {
@@ -11,9 +12,9 @@ namespace Graphic
 	class ConstantBuffer : public Render
 	{
 	public:
-		ConstantBuffer(DxGraphic& graphic, const BufferType& bufferList, UINT slot = 0u) : slot(slot)
+		ConstantBuffer(const BufferType& bufferList, UINT slot = 0u) : slot(slot)
 		{
-			CREATEINFOMANAGER(graphic);
+			CREATEINFOMANAGER(Window::GetDxGraphic());
 
 			// 상수 버퍼 생성 
 			D3D11_BUFFER_DESC constantBufferDesc;
@@ -27,13 +28,13 @@ namespace Graphic
 			D3D11_SUBRESOURCE_DATA initData = {};
 			initData.pSysMem = &bufferList;
 
-			hr = GetDevice(graphic)->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer);
+			hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer);
 			GRAPHIC_THROW_INFO(hr);
 		}
 
-		ConstantBuffer(DxGraphic& graphic, UINT slot = 0u) : slot(slot)
+		ConstantBuffer(UINT slot = 0u) : slot(slot)
 		{
-			CREATEINFOMANAGER(graphic);
+			CREATEINFOMANAGER(Window::GetDxGraphic());
 
 			D3D11_BUFFER_DESC constantBufferDesc;
 			constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -43,21 +44,21 @@ namespace Graphic
 			constantBufferDesc.MiscFlags = 0;
 			constantBufferDesc.StructureByteStride = 0;
 
-			hr = GetDevice(graphic)->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer);
+			hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer);
 			GRAPHIC_THROW_INFO(hr);
 		}
 
-		void Update(DxGraphic& graphic, const BufferType& consts)
+		void Update(const BufferType& consts)
 		{
-			CREATEINFOMANAGER(graphic);
+			CREATEINFOMANAGER(Window::GetDxGraphic());
 
 			D3D11_MAPPED_SUBRESOURCE map;
 
-			hr = GetDeviceContext(graphic)->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+			hr = GetDeviceContext(Window::GetDxGraphic())->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 			GRAPHIC_THROW_INFO(hr);
 
 			memcpy(map.pData, &consts, sizeof(consts));
-			GetDeviceContext(graphic)->Unmap(constantBuffer.Get(), 0);
+			GetDeviceContext(Window::GetDxGraphic())->Unmap(constantBuffer.Get(), 0);
 		}
 
 	protected:
@@ -78,21 +79,21 @@ namespace Graphic
 	public:
 		using ConstantBuffer<BufferType>::ConstantBuffer;
 
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override
+		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
-			CREATEINFOMANAGERNOHR(graphic);
+			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
 		}
 
-		static std::shared_ptr<VertexConstantBuffer> GetRender(DxGraphic& graphic, const BufferType& constBuffers, UINT slot = 0)
+		static std::shared_ptr<VertexConstantBuffer> GetRender(const BufferType& constBuffers, UINT slot = 0)
 		{
-			return RenderManager::GetRender<VertexConstantBuffer>(graphic, constBuffers, slot);
+			return RenderManager::GetRender<VertexConstantBuffer>(constBuffers, slot);
 		}
 
-		static std::shared_ptr<VertexConstantBuffer> GetRender(DxGraphic& graphic, UINT slot = 0)
+		static std::shared_ptr<VertexConstantBuffer> GetRender(UINT slot = 0)
 		{
-			return RenderManager::GetRender<VertexConstantBuffer>(graphic, slot);
+			return RenderManager::GetRender<VertexConstantBuffer>(slot);
 		}
 
 		static std::string CreateID(const BufferType&, UINT slot) { return CreateID(slot); }
@@ -119,21 +120,21 @@ namespace Graphic
 	public:
 		using ConstantBuffer<BufferType>::ConstantBuffer;
 
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override
+		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
-			CREATEINFOMANAGERNOHR(graphic);
+			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
 		}
 
-		static std::shared_ptr<PixelConstantBuffer> GetRender(DxGraphic& graphic, const BufferType& constBuffers, UINT slot = 0)
+		static std::shared_ptr<PixelConstantBuffer> GetRender(const BufferType& constBuffers, UINT slot = 0)
 		{
-			return RenderManager::GetRender<PixelConstantBuffer>(graphic, constBuffers, slot);
+			return RenderManager::GetRender<PixelConstantBuffer>(constBuffers, slot);
 		}
 
-		static std::shared_ptr<PixelConstantBuffer> GetRender(DxGraphic& graphic, UINT slot = 0)
+		static std::shared_ptr<PixelConstantBuffer> GetRender(UINT slot = 0)
 		{
-			return RenderManager::GetRender<PixelConstantBuffer>(graphic, slot);
+			return RenderManager::GetRender<PixelConstantBuffer>(slot);
 		}
 
 		static std::string CreateID(const BufferType&, UINT slot) { return CreateID(slot); }

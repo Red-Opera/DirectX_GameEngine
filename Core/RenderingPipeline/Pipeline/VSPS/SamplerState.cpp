@@ -1,16 +1,17 @@
 #include "stdafx.h"
 #include "SamplerState.h"
 
+#include "Core/Window.h"
 #include "Core/Exception/GraphicsException.h"
 
 #include "Core/RenderingPipeline/RenderManager.h"
 
 namespace Graphic
 {
-	SamplerState::SamplerState(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect, UINT slot)
+	SamplerState::SamplerState(TextureFilter textureFilter, bool useReflect, UINT slot)
 		: textureFilter(textureFilter), useReflect(useReflect), slot(slot)
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
 		samplerDesc.Filter = [textureFilter]()			// 확대(MAG) 축소(MIN)할 때 사용할 필터링 방법
@@ -39,21 +40,21 @@ namespace Graphic
 		//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;					// 텍스처의 최대 LOD 레벨
 
 		// Sampler State를 생성함
-		hr = GetDevice(graphic)->CreateSamplerState(&samplerDesc, &samplerState);
+		hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
 		GRAPHIC_THROW_INFO(hr);
 	}
 
-	void SamplerState::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void SamplerState::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
 		// SamplerState를 렌더링 파이프 라인에 입력
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetSamplers(slot, 1, samplerState.GetAddressOf()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(slot, 1, samplerState.GetAddressOf()));
 	}
 
-	std::shared_ptr<SamplerState> SamplerState::GetRender(DxGraphic& graphic, TextureFilter textureFilter, bool useReflect, UINT slot)
+	std::shared_ptr<SamplerState> SamplerState::GetRender(TextureFilter textureFilter, bool useReflect, UINT slot)
 	{
-		return RenderManager::GetRender<SamplerState>(graphic, textureFilter, useReflect, slot);
+		return RenderManager::GetRender<SamplerState>(textureFilter, useReflect, slot);
 	}
 
 	std::string SamplerState::CreateID(TextureFilter textureFilter, bool useReflect, UINT slot)

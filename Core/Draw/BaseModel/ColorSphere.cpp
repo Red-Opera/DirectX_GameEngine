@@ -9,7 +9,7 @@
 #include "Core/Exception/GraphicsException.h"
 
 
-ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
+ColorSphere::ColorSphere(float radius)
 {
 	using namespace Graphic;
 
@@ -17,19 +17,19 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 	model.Transform(DirectX::XMMatrixScaling(radius, radius, radius));
 
 	const auto objectTag = "$sphere." + std::to_string(radius);
-	vertexBuffer = std::make_shared<VertexBuffer>(graphic, objectTag, model.vertices);
-	indexBuffer = std::make_shared<IndexBuffer>(graphic, objectTag, model.indices);
-	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	vertexBuffer = std::make_shared<VertexBuffer>(objectTag, model.vertices);
+	indexBuffer = std::make_shared<IndexBuffer>(objectTag, model.indices);
+	primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	{
 		Technique tech{ RenderingChannel::main };
 		RenderStep sphereRender("lambertian");
 
-		auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl");
-		sphereRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), *vertexShader));
+		auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
+		sphereRender.AddRender(InputLayout::GetRender(model.vertices.GetVertexLayout(), *vertexShader));
 		sphereRender.AddRender(std::move(vertexShader));
 
-		sphereRender.AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
+		sphereRender.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
 
 		struct PixelShaderLightConstant
 		{
@@ -37,11 +37,11 @@ ColorSphere::ColorSphere(DxGraphic& graphic, float radius)
 			float padding;
 		} pixelConstant;
 
-		sphereRender.AddRender(PixelConstantBuffer<PixelShaderLightConstant>::GetRender(graphic, pixelConstant, 1u));
+		sphereRender.AddRender(PixelConstantBuffer<PixelShaderLightConstant>::GetRender(pixelConstant, 1u));
 
-		sphereRender.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+		sphereRender.AddRender(std::make_shared<TransformConstantBuffer>());
 		
-		sphereRender.AddRender(Rasterizer::GetRender(graphic, false));
+		sphereRender.AddRender(Rasterizer::GetRender(false));
 
 		tech.push_back(std::move(sphereRender));
 		AddTechnique(std::move(tech));

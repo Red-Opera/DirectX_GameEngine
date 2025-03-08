@@ -8,11 +8,11 @@ namespace Graphic
 	class PrimitiveTopology : public Render
 	{
 	public:
-		PrimitiveTopology(DxGraphic& graphic, D3D11_PRIMITIVE_TOPOLOGY topology);
+		PrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology);
 
-		void SetRenderPipeline(DxGraphic& grahpic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
-		static std::shared_ptr<PrimitiveTopology> GetRender(DxGraphic& graphic, D3D11_PRIMITIVE_TOPOLOGY topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		static std::shared_ptr<PrimitiveTopology> GetRender(D3D11_PRIMITIVE_TOPOLOGY topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		static std::string CreateID(D3D11_PRIMITIVE_TOPOLOGY topology);
 		std::string GetID() const noexcept override;
 

@@ -31,7 +31,7 @@ public:
 	void Accept(TechniqueBase& tech);
 	void Link(RenderGraphNameSpace::RenderGraph& renderGraph);
 
-	void SetRenderPipeline(DxGraphic& graphic) const NOEXCEPTRELEASE;
+	void SetRenderPipeline() const NOEXCEPTRELEASE;
 
 	void InitializeParentReference(const class Drawable& parent) noexcept;
 

@@ -5,6 +5,7 @@
 #include "Core/Exception/ExceptionInfo.h"
 #include "Core/Exception/EngineUIException.h"
 #include "Core/DxGraphic.h"
+#include "Core/Window.h"
 #include "External/Imgui/imgui.h"
 #include "External/Imgui/imgui_internal.h"
 
@@ -25,14 +26,14 @@ namespace Engine
 
     std::unique_ptr<FolderViewInspector> FolderViewInspector::instance = nullptr;
 
-    FolderViewInspector::FolderViewInspector(DxGraphic& graphic) : selectedName("")
+    FolderViewInspector::FolderViewInspector() : selectedName("")
     {
         if (!folderTree)
         {
             folderTree = CreateFileSystem();
 
-            LoadIconTexture(graphic, "Images/Engine/FolderIcon.png", IconType::folder);
-            LoadIconTexture(graphic, "Images/Engine/GoParentFolder.png", IconType::ParentFolder);
+            LoadIconTexture("Images/Engine/FolderIcon.png", IconType::folder);
+            LoadIconTexture("Images/Engine/GoParentFolder.png", IconType::ParentFolder);
 
             // 파일 폴더 이미지 경로
             std::string folderPath = "Images/Engine/FileIcon";
@@ -49,7 +50,7 @@ namespace Engine
                             path = path.replace(path.find("\\"), 1, "/");
 
                             // 이미지 로드
-                            LoadIconTexture(graphic, path, IconType::file);
+                            LoadIconTexture(path, IconType::file);
                         }
                     }
                 }
@@ -164,12 +165,12 @@ namespace Engine
         return fileIconTextures[fileName].Get();
     }
 
-    void FolderViewInspector::LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType)
+    void FolderViewInspector::LoadIconTexture(std::string fileName, IconType iconType)
     {
         using namespace Graphic;
         using namespace DirectX;
 
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
         ScratchImage image;
         hr = LoadFromWICFile(std::wstring(fileName.begin(), fileName.end()).c_str(), WIC_FLAGS_NONE, nullptr, image); // PNG 파일 로드 (WIC 사용)
@@ -179,21 +180,21 @@ namespace Engine
         const TexMetadata& metadata = image.GetMetadata();
 
         Microsoft::WRL::ComPtr<ID3D11Resource> texture;
-        hr = CreateTexture(GetDevice(graphic), image.GetImages(), image.GetImageCount(), metadata, texture.GetAddressOf());
+        hr = CreateTexture(GetDevice(Window::GetDxGraphic()), image.GetImages(), image.GetImageCount(), metadata, texture.GetAddressOf());
 
         GRAPHIC_THROW_INFO(hr);
 
         switch (iconType)
         {
         case Engine::FolderViewInspector::IconType::folder:
-            hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
+            hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
             break;
 
         case Engine::FolderViewInspector::IconType::file:
         {
             Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> newIconTexture;
 
-            hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, newIconTexture.GetAddressOf());
+            hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, newIconTexture.GetAddressOf());
             GRAPHIC_THROW_INFO(hr);
 
             // 파일명 추출 (확장자 없이)
@@ -208,9 +209,8 @@ namespace Engine
             break;
         }
 
-
         case Engine::FolderViewInspector::IconType::ParentFolder:
-            hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());
+            hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());
             break;
 
         default:
@@ -381,7 +381,7 @@ namespace Engine
 #endif
     }
 
-    void FolderViewInspector::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    void FolderViewInspector::SetRenderPipeline() NOEXCEPTRELEASE
     {
 
     }

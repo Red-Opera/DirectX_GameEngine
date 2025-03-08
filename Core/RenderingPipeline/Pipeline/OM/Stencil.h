@@ -3,6 +3,7 @@
 #include "../Core/RenderingPipeline/Render.h"
 
 #include "Core/RenderingPipeline/RenderingPipeline.h"
+#include "Core/Window.h"
 
 namespace Graphic
 {
@@ -11,7 +12,7 @@ namespace Graphic
 	public:
 		enum class DrawMode { Off, Write, Mask, DepthOff, DepthReversed, DepthFirst };
 
-		Stencil(DxGraphic& graphic, DrawMode drawMode) : drawMode(drawMode)
+		Stencil(DrawMode drawMode) : drawMode(drawMode)
 		{
 			D3D11_DEPTH_STENCIL_DESC depthStencilDESC = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT() };
 
@@ -51,20 +52,20 @@ namespace Graphic
 
 			}
 
-			GetDevice(graphic)->CreateDepthStencilState(&depthStencilDESC, &stencil);
+			GetDevice(Window::GetDxGraphic())->CreateDepthStencilState(&depthStencilDESC, &stencil);
 		}
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override
+		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
-			CREATEINFOMANAGERNOHR(graphic);
+			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->OMSetDepthStencilState(stencil.Get(), 0xFF));
+			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetDepthStencilState(stencil.Get(), 0xFF));
 		}
 
-		static std::shared_ptr<Stencil> GetRender(DxGraphic& graphic, DrawMode drawMode)
+		static std::shared_ptr<Stencil> GetRender(DrawMode drawMode)
 		{
-			return RenderManager::GetRender<Stencil>(graphic, drawMode);
+			return RenderManager::GetRender<Stencil>(drawMode);
 		}
 
 		static std::string CreateID(DrawMode drawMode)

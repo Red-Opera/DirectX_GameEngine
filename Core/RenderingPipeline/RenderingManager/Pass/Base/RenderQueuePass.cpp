@@ -13,11 +13,11 @@ namespace RenderGraphNameSpace
 		renderJobs.clear();
 	}
 
-	void RenderQueuePass::Execute(DxGraphic& graphic) const NOEXCEPTRELEASE
+	void RenderQueuePass::Execute() const NOEXCEPTRELEASE
 	{
-		RenderAll(graphic);
+		RenderAll();
 
 		for (const auto& job : renderJobs)
-			job.Excute(graphic);
+			job.Excute();
 	}
 }

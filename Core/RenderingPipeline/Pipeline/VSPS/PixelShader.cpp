@@ -3,6 +3,7 @@
 
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderManager.h"
+#include "Core/Window.h"
 
 #include "Utility/StringConverter.h"
 
@@ -14,9 +15,9 @@ using namespace std;
 
 namespace Graphic
 {
-    PixelShader::PixelShader(DxGraphic& graphic, const string& path) : path(path)
+    PixelShader::PixelShader(const string& path) : path(path)
     {
-        GetCompileShader(graphic, path);
+        GetCompileShader(path);
     }
 
     ID3DBlob* PixelShader::GetShaderCode() const noexcept
@@ -24,16 +25,16 @@ namespace Graphic
         return shaderCode.Get();
     }
 
-    void PixelShader::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    void PixelShader::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShader(pixelShader.Get(), nullptr, 0));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShader(pixelShader.Get(), nullptr, 0));
     }
 
-    std::shared_ptr<PixelShader> PixelShader::GetRender(DxGraphic& graphic, const std::string& path)
+    std::shared_ptr<PixelShader> PixelShader::GetRender(const std::string& path)
     {
-        return RenderManager::GetRender<PixelShader>(graphic, path);
+        return RenderManager::GetRender<PixelShader>(path);
     }
 
     std::string PixelShader::CreateID(const std::string& path)
@@ -66,9 +67,9 @@ namespace Graphic
         return S_OK;
     }
 
-    void PixelShader::GetCompileShader(DxGraphic& graphic, const std::string& path)
+    void PixelShader::GetCompileShader(const std::string& path)
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
         std::wstring widePath = StringConverter::ToWide(path);
         std::wstring tempPath = L"Temp/ShaderCompile/";
@@ -118,7 +119,7 @@ namespace Graphic
             GRAPHIC_THROW_INFO(hr);
         }
 
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreatePixelShader(
+        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreatePixelShader(
             shaderCode->GetBufferPointer(),
             shaderCode->GetBufferSize(),
             nullptr,

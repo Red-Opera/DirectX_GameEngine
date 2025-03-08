@@ -16,12 +16,12 @@ namespace Graphic
     class SceneView : public Render
     {
     public:
-        SceneView(DxGraphic& graphic, UINT width, UINT height);
+        SceneView(UINT width, UINT height);
 
-        void Render(DxGraphic& graphic);
+        void Render();
 
         // Render을(를) 통해 상속됨
-        void SetRenderPipeline(DxGraphic& graphic) override;
+        void SetRenderPipeline() override;
 
     private:
         Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTargetTexture = nullptr;

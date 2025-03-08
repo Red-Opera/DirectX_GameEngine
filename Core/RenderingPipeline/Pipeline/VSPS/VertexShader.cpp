@@ -3,6 +3,7 @@
 
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderManager.h"
+#include "Core/Window.h"
 
 #include "Utility/StringConverter.h"
 
@@ -11,9 +12,9 @@ using namespace std;
 
 namespace Graphic
 {
-    VertexShader::VertexShader(DxGraphic& graphic, const string& path) : path(path)
+    VertexShader::VertexShader(const string& path) : path(path)
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
         DWORD shaderFlags = 0;
 
@@ -33,7 +34,7 @@ namespace Graphic
             ReleaseCOM(errorMessage);
         }
 
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader));
+        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader));
     }
 
     ID3DBlob* VertexShader::GetShaderCode() const noexcept
@@ -41,17 +42,17 @@ namespace Graphic
         return shaderCode.Get();
     }
 
-    void VertexShader::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    void VertexShader::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
         // Vertex Shader 단계를 렌더링 파이프라인 단계에 묶음
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->VSSetShader(vertexShader.Get(), nullptr, 0));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetShader(vertexShader.Get(), nullptr, 0));
     }
 
-    std::shared_ptr<VertexShader> VertexShader::GetRender(DxGraphic& graphic, const std::string& path)
+    std::shared_ptr<VertexShader> VertexShader::GetRender(const std::string& path)
     {
-        return RenderManager::GetRender<VertexShader>(graphic, path);
+        return RenderManager::GetRender<VertexShader>(path);
     }
 
     std::string VertexShader::CreateID(const std::string& path)

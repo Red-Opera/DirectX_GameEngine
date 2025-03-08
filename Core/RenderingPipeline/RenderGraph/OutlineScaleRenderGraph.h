@@ -9,6 +9,6 @@ namespace RenderGraphNameSpace
 	class OutlineScaleRenderGraph : public RenderGraph
 	{
 	public:
-		OutlineScaleRenderGraph(DxGraphic& graphic);
+		OutlineScaleRenderGraph();
 	};
 }

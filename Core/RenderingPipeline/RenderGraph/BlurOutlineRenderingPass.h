@@ -19,26 +19,26 @@ namespace RenderGraphNameSpace
 	class BlurOutlineRenderingPass : public RenderQueuePass
 	{
 	public:
-		BlurOutlineRenderingPass(DxGraphic& graphic, std::string name, unsigned int width, unsigned int height)
+		BlurOutlineRenderingPass(std::string name, unsigned int width, unsigned int height)
 			: RenderQueuePass(std::move(name))
 		{
 			using namespace Graphic;
 
-			renderTarget = std::make_unique<ShaderInputRenderTarget>(graphic, width / 2, height / 2, 0);
+			renderTarget = std::make_unique<ShaderInputRenderTarget>(width / 2, height / 2, 0);
 
-			AddRender(VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
-			AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader.hlsl"));
-			AddRender(Stencil::GetRender(graphic, Stencil::DrawMode::Mask));
-			AddRender(ColorBlend::GetRender(graphic, false));
+			AddRender(VertexShader::GetRender("Shader/ColorShader.hlsl"));
+			AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
+			AddRender(Stencil::GetRender(Stencil::DrawMode::Mask));
+			AddRender(ColorBlend::GetRender(false));
 
 			AddDataProvider(DirectRenderPipelineDataProvider<Graphic::RenderTarget>::Create("scratchOut", renderTarget));
 		}
 
-		void Execute(DxGraphic& graphic) const NOEXCEPTRELEASE override
+		void Execute() const NOEXCEPTRELEASE override
 		{
-			renderTarget->Clear(graphic);
+			renderTarget->Clear();
 
-			RenderQueuePass::Execute(graphic);
+			RenderQueuePass::Execute();
 		}
 	};
 }

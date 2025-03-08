@@ -7,7 +7,7 @@ template<class T>
 class TestObject : public Drawable
 {
 public:
-	TestObject(DxGraphic& graphic, std::mt19937& random,
+	TestObject(std::mt19937& random,
 		std::uniform_real_distribution<float>& adist,
 		std::uniform_real_distribution<float>& ddist,
 		std::uniform_real_distribution<float>& odist,

@@ -5,9 +5,9 @@
 class CameraFrustum : public Drawable
 {
 public:
-	CameraFrustum(DxGraphic& graphic, float width, float height, float nearZ, float farZ);
+	CameraFrustum(float width, float height, float nearZ, float farZ);
 
-	void SetVertices(DxGraphic& graphic, float width, float height, float nearZ, float farZ);
+	void SetVertices(float width, float height, float nearZ, float farZ);
 	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
 	void SetRotation(DirectX::XMFLOAT3 rotation) noexcept;
 

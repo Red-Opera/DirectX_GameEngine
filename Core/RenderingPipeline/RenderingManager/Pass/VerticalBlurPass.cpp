@@ -12,15 +12,15 @@ using namespace Graphic;
 
 namespace RenderGraphNameSpace
 {
-	VerticalBlurPass::VerticalBlurPass(std::string name, DxGraphic& graphic)
-		: PostProcessFullScreenRenderPass(std::move(name), graphic)
+	VerticalBlurPass::VerticalBlurPass(std::string name)
+		: PostProcessFullScreenRenderPass(std::move(name))
 	{
 		using namespace Graphic;
 
-		AddRender(PixelShader::GetRender(graphic, "Shader/PostProcessing/OutlineBlur.hlsl"));
-		AddRender(ColorBlend::GetRender(graphic, true));
-		AddRender(Stencil::GetRender(graphic, Stencil::DrawMode::Mask));
-		AddRender(SamplerState::GetRender(graphic, SamplerState::TextureFilter::Bilinear, true));
+		AddRender(PixelShader::GetRender("Shader/PostProcessing/OutlineBlur.hlsl"));
+		AddRender(ColorBlend::GetRender(true));
+		AddRender(Stencil::GetRender(Stencil::DrawMode::Mask));
+		AddRender(SamplerState::GetRender(SamplerState::TextureFilter::Bilinear, true));
 
 		AddRenderSink<RenderTarget>("scratchIn");
 		AddRenderSink<CachingPixelConstantBufferEx>("kernel");
@@ -33,14 +33,14 @@ namespace RenderGraphNameSpace
 		AddDataProvider(DirectBufferPipelineDataProvider<DepthStencil>::Create("depthStencil", depthStencil));
 	}
 
-	void VerticalBlurPass::Execute(DxGraphic& graphic) const NOEXCEPTRELEASE
+	void VerticalBlurPass::Execute() const NOEXCEPTRELEASE
 	{
 		auto buffer = direction->GetBuffer();
 		buffer["isHorizontal"] = false;
 
 		direction->SetBuffer(buffer);
-		direction->SetRenderPipeline(graphic);
+		direction->SetRenderPipeline();
 
-		PostProcessFullScreenRenderPass::Execute(graphic);
+		PostProcessFullScreenRenderPass::Execute();
 	}
 }

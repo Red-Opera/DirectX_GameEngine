@@ -4,9 +4,10 @@
 
 #include "Core/DxGraphic.h"
 #include "Core/RenderingPipeline/RenderGraph/RenderGraph.h"
+#include "Core/Window.h"
 #include "External/Imgui/imgui.h"
 
-void CameraContainer::CreateWindow(DxGraphic& graphic)
+void CameraContainer::CreateWindow()
 {
 	if (ImGui::Begin("Cameras"))
 	{
@@ -36,15 +37,15 @@ void CameraContainer::CreateWindow(DxGraphic& graphic)
 			ImGui::EndCombo();
 		}
 
-		GetControlTargetCamera().SpawnControlWidgets(graphic);
+		GetControlTargetCamera().SpawnControlWidgets();
 	}
 
 	ImGui::End();
 }
 
-void CameraContainer::SetRenderPipeline(DxGraphic& graphic)
+void CameraContainer::SetRenderPipeline()
 {
-	graphic.SetCamera((*this)->GetMatrix());
+	Window::GetDxGraphic().SetCamera((*this)->GetMatrix());
 }
 
 void CameraContainer::AddCamera(std::shared_ptr<Camera> camera)

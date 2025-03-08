@@ -19,8 +19,7 @@
 
 namespace RenderGraphNameSpace
 {
-	BlurOutlineRenderGraph::BlurOutlineRenderGraph(DxGraphic& graphic)
-		: RenderGraph(graphic)
+	BlurOutlineRenderGraph::BlurOutlineRenderGraph() : RenderGraph()
 	{
 		{
 			auto pass = std::make_unique<BufferPassClear>("clearRenderTarget");
@@ -37,12 +36,12 @@ namespace RenderGraphNameSpace
 		}
 
 		{
-			auto pass = std::make_unique<ShadowMapPass>(graphic, "ShadowMap");
+			auto pass = std::make_unique<ShadowMapPass>("ShadowMap");
 			AddRenderPass(std::move(pass));
 		}
 
 		{
-			auto pass = std::make_unique<LambertianRenderPass>(graphic, "lambertian");
+			auto pass = std::make_unique<LambertianRenderPass>("lambertian");
 			pass->SetSinkLinkage("ShadowMap", "ShadowMap.Map");
 			pass->SetSinkLinkage("renderTarget", "clearRenderTarget.buffer");
 			pass->SetSinkLinkage("depthStencil", "clearDepthStencil.buffer");
@@ -51,7 +50,7 @@ namespace RenderGraphNameSpace
 		}
 
 		{
-			auto pass = std::make_unique<SkyboxPass>(graphic, "Skybox");
+			auto pass = std::make_unique<SkyboxPass>("Skybox");
 			pass->SetSinkLinkage("renderTarget", "lambertian.renderTarget");
 			pass->SetSinkLinkage("depthStencil", "lambertian.depthStencil");
 
@@ -59,7 +58,7 @@ namespace RenderGraphNameSpace
 		}
 
 		{
-			auto pass = std::make_unique<OutlineMaskPass>(graphic, "outlineMask");
+			auto pass = std::make_unique<OutlineMaskPass>("outlineMask");
 			pass->SetSinkLinkage("depthStencil", "Skybox.depthStencil");
 
 			AddRenderPass(std::move(pass));
@@ -73,7 +72,7 @@ namespace RenderGraphNameSpace
 				layout["sampleCoefficients"].set<DynamicConstantBuffer::float1>(maxRadius * 2 + 1);
 
 				DynamicConstantBuffer::Buffer buffer{ std::move(layout) };
-				blurKernel = std::make_shared<Graphic::CachingPixelConstantBufferEx>(graphic, buffer, 0);
+				blurKernel = std::make_shared<Graphic::CachingPixelConstantBufferEx>(buffer, 0);
 
 				SetKernelGauss(radius, sigma);
 				AddGlobalProvider(DirectRenderPipelineDataProvider<Graphic::CachingPixelConstantBufferEx>::Create("blurKernel", blurKernel));
@@ -84,19 +83,19 @@ namespace RenderGraphNameSpace
 				layout.add<DynamicConstantBuffer::Bool>("isHorizontal");
 
 				DynamicConstantBuffer::Buffer buffer{ std::move(layout) };
-				blurDirection = std::make_shared<Graphic::CachingPixelConstantBufferEx>(graphic, buffer, 1);
+				blurDirection = std::make_shared<Graphic::CachingPixelConstantBufferEx>(buffer, 1);
 
 				AddGlobalProvider(DirectRenderPipelineDataProvider<Graphic::CachingPixelConstantBufferEx>::Create("blurDirection", blurDirection));
 			}
 		}
 
 		{
-			auto pass = std::make_unique<BlurOutlineRenderingPass>(graphic, "outlineDraw", graphic.GetWidth(), graphic.GetHeight());
+			auto pass = std::make_unique<BlurOutlineRenderingPass>("outlineDraw", Window::GetDxGraphic().GetWidth(), Window::GetDxGraphic().GetHeight());
 			AddRenderPass(std::move(pass));
 		}
 
 		{
-			auto pass = std::make_unique<HorizontalBlurPass>("horizontal", graphic, graphic.GetWidth(), graphic.GetHeight());
+			auto pass = std::make_unique<HorizontalBlurPass>("horizontal", Window::GetDxGraphic().GetWidth(), Window::GetDxGraphic().GetHeight());
 			pass->SetSinkLinkage("scratchIn", "outlineDraw.scratchOut");
 			pass->SetSinkLinkage("kernel", "$.blurKernel");
 			pass->SetSinkLinkage("direction", "$.blurDirection");
@@ -105,7 +104,7 @@ namespace RenderGraphNameSpace
 		}
 
 		{
-			auto pass = std::make_unique<VerticalBlurPass>("vertical", graphic);
+			auto pass = std::make_unique<VerticalBlurPass>("vertical");
 			pass->SetSinkLinkage("renderTarget", "Skybox.renderTarget");
 			pass->SetSinkLinkage("depthStencil", "outlineMask.depthStencil");
 			pass->SetSinkLinkage("scratchIn", "horizontal.scratchOut");
@@ -116,7 +115,7 @@ namespace RenderGraphNameSpace
 		}
 
 		{
-			auto pass = std::make_unique<CameraWireFramePass>(graphic, "wireframe");
+			auto pass = std::make_unique<CameraWireFramePass>("wireframe");
 			pass->SetSinkLinkage("renderTarget", "vertical.renderTarget");
 			pass->SetSinkLinkage("depthStencil", "vertical.depthStencil");
 
@@ -128,14 +127,14 @@ namespace RenderGraphNameSpace
 		Finalize();
 	}
 
-	void BlurOutlineRenderGraph::RenderWindows(DxGraphic& graphic)
+	void BlurOutlineRenderGraph::RenderWindows()
 	{
-		RenderShadowWindow(graphic);
-		RenderKernelWindow(graphic);
+		RenderShadowWindow();
+		RenderKernelWindow();
 		dynamic_cast<SkyboxPass&>(FindRenderPass("Skybox")).RenderWidnow();
 	}
 
-	void BlurOutlineRenderGraph::RenderKernelWindow(DxGraphic& graphic)
+	void BlurOutlineRenderGraph::RenderKernelWindow()
 	{
 		if (ImGui::Begin("Kernel"))
 		{
@@ -186,12 +185,12 @@ namespace RenderGraphNameSpace
 		ImGui::End();
 	}
 
-	void BlurOutlineRenderGraph::RenderShadowWindow(DxGraphic& graphic)
+	void BlurOutlineRenderGraph::RenderShadowWindow()
 	{
 		if (ImGui::Begin("Shadow"))
 		{
 			if (ImGui::Button("Dump Cube Map"))
-				DumpShadowMap(graphic, "Temp/Dump/");
+				DumpShadowMap("Temp/Dump/");
 		}
 
 		ImGui::End();
@@ -209,9 +208,9 @@ namespace RenderGraphNameSpace
 		dynamic_cast<LambertianRenderPass&>(FindRenderPass("lambertian")).RenderShadowCamera(camera);
 	}
 
-	void BlurOutlineRenderGraph::DumpShadowMap(DxGraphic& grpahic, const std::string& path)
+	void BlurOutlineRenderGraph::DumpShadowMap(const std::string& path)
 	{
-		dynamic_cast<ShadowMapPass&>(FindRenderPass("ShadowMap")).DumpShadowMap(grpahic, path);
+		dynamic_cast<ShadowMapPass&>(FindRenderPass("ShadowMap")).DumpShadowMap(path);
 	}
 
 	void BlurOutlineRenderGraph::SetKernelGauss(int radius, float sigma) NOEXCEPTRELEASE

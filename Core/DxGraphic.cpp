@@ -3,6 +3,7 @@
 #include "dxerr.h"
 #include "dxgi.h"
 
+#include "Core/Window.h"
 #include "Exception/GraphicsException.h"
 #include "RenderingPipeline/Pipeline/OM/DepthStencil.h"
 #include "RenderingPipeline/RenderTarget.h"
@@ -92,11 +93,9 @@ DxGraphic::DxGraphic(HWND hWnd)
     width = WINWIDTH;
     height = WINHEIGHT;
 
-	CreateDevice();
+    CreateDevice();
     CheckMSAAQuality();
     SwapChainSettings(hWnd);
-    CreateSwapChain();
-    CreateRenderTargetView();
 
     // ImGui를 초기 설정함
     ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
@@ -298,7 +297,7 @@ void DxGraphic::CreateRenderTargetView()
     // 교환 사슬의 버퍼를 가져옴 (0번째 후면 버퍼를 ID3D11Texture2D 형식으로 3번째 인수로 반환)
     GRAPHIC_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
 
-    renderTarget = std::shared_ptr<Graphic::RenderTarget>{ new Graphic::OutputOnlyRenderTarget(*this, backBuffer.Get()) };
+    renderTarget = std::shared_ptr<Graphic::RenderTarget>{ new Graphic::OutputOnlyRenderTarget(backBuffer.Get()) };
 
     D3D11_VIEWPORT viewport;
     viewport.Width = (float)width;

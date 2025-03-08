@@ -4,27 +4,27 @@
 
 namespace Graphic
 {
-	SkyboxTransformConstantBuffer::SkyboxTransformConstantBuffer(DxGraphic& graphic, UINT slot)
-		: vertexConstantBuffer{ std::make_unique<VertexConstantBuffer<Transform>>(graphic, slot) }
+	SkyboxTransformConstantBuffer::SkyboxTransformConstantBuffer(UINT slot)
+		: vertexConstantBuffer{ std::make_unique<VertexConstantBuffer<Transform>>(slot) }
 	{
 
 	}
 
-	void SkyboxTransformConstantBuffer::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void SkyboxTransformConstantBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(UpdateRender(graphic, GetTransform(graphic)));
+		GRAPHIC_THROW_INFO_ONLY(UpdateRender(GetTransform()));
 	}
 
-	void SkyboxTransformConstantBuffer::UpdateRender(DxGraphic& graphic, const Transform& transform) NOEXCEPTRELEASE
+	void SkyboxTransformConstantBuffer::UpdateRender(const Transform& transform) NOEXCEPTRELEASE
 	{
-		vertexConstantBuffer->Update(graphic, transform);
-		vertexConstantBuffer->SetRenderPipeline(graphic);
+		vertexConstantBuffer->Update(transform);
+		vertexConstantBuffer->SetRenderPipeline();
 	}
 
-	SkyboxTransformConstantBuffer::Transform SkyboxTransformConstantBuffer::GetTransform(DxGraphic& graphic) NOEXCEPTRELEASE
+	SkyboxTransformConstantBuffer::Transform SkyboxTransformConstantBuffer::GetTransform() NOEXCEPTRELEASE
 	{
-		return { DirectX::XMMatrixTranspose(graphic.GetCamera() * graphic.GetProjection()) };
+		return { DirectX::XMMatrixTranspose(Window::GetDxGraphic().GetCamera() * Window::GetDxGraphic().GetProjection())};
 	}
 }

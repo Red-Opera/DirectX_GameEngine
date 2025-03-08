@@ -13,7 +13,7 @@ struct aiMesh;
 class Mesh : public Drawable
 {
 public:
-	Mesh(DxGraphic& graphic, const Material& material, const aiMesh& mesh, float scale = 1.0f) NOEXCEPTRELEASE;
+	Mesh(const Material& material, const aiMesh& mesh, float scale = 1.0f) NOEXCEPTRELEASE;
 
 	void Submit(size_t channel, DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE;
 

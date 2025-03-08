@@ -24,10 +24,10 @@ namespace RenderGraphNameSpace
 	class RenderGraph
 	{
 	public:
-		RenderGraph(DxGraphic& graphic);
+		RenderGraph();
 		~RenderGraph();
 
-		void Execute(DxGraphic& graphic) NOEXCEPTRELEASE;
+		void Execute() NOEXCEPTRELEASE;
 		void Reset() noexcept;
 
 		RenderQueuePass& GetRenderQueue(const std::string& passName);

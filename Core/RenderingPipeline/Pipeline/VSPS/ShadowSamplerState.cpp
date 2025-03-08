@@ -6,12 +6,12 @@
 
 namespace Graphic
 {
-	ShadowSamplerState::ShadowSamplerState(DxGraphic& graphic)
+	ShadowSamplerState::ShadowSamplerState()
 	{
 		for (size_t i = 0; i < 4; i++)
 		{
 			currentSampler = i;
-			samplers[i] = CreateSampler(graphic, IsUseBilinear(), IsUseHardwarePCF());
+			samplers[i] = CreateSampler(IsUseBilinear(), IsUseHardwarePCF());
 		}
 
 		SetBilinear(true);
@@ -38,11 +38,11 @@ namespace Graphic
 		return currentSampler & 0b10;
 	}
 
-	void ShadowSamplerState::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void ShadowSamplerState::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetSamplers(GetCurrentSlot(), 1, samplers[currentSampler].GetAddressOf()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(GetCurrentSlot(), 1, samplers[currentSampler].GetAddressOf()));
 	}
 
 	UINT ShadowSamplerState::GetCurrentSlot() const
@@ -55,9 +55,9 @@ namespace Graphic
 		return (bilin ? 0b01 : 0) + (isUseHardwarePCF ? 0b10 : 0);
 	}
 
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> ShadowSamplerState::CreateSampler(DxGraphic& graphic, bool bilin, bool isUseHardwarePCF)
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> ShadowSamplerState::CreateSampler(bool bilin, bool isUseHardwarePCF)
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
 
@@ -77,7 +77,7 @@ namespace Graphic
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 
 		// Sampler State를 생성함
-		hr = GetDevice(graphic)->CreateSamplerState(&samplerDesc, &samplerState);
+		hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
 		GRAPHIC_THROW_INFO(hr);
 
 		return std::move(samplerState);

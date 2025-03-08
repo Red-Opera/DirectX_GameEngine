@@ -50,10 +50,10 @@ void RenderStep::Link(RenderGraphNameSpace::RenderGraph& renderGraph)
 	renderQueuePass = &renderGraph.GetRenderQueue(targetPassName);
 }
 
-void RenderStep::SetRenderPipeline(DxGraphic& graphic) const NOEXCEPTRELEASE
+void RenderStep::SetRenderPipeline() const NOEXCEPTRELEASE
 {
 	for (const auto& renderStep : renders)
-		renderStep->SetRenderPipeline(graphic);
+		renderStep->SetRenderPipeline();
 }
 
 void RenderStep::InitializeParentReference(const Drawable& parent) noexcept

@@ -6,7 +6,7 @@
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "External/Imgui/imgui.h"
 
-TestPlane::TestPlane(DxGraphic& graphic, float size, DirectX::XMFLOAT4 color) : matConst({ color })
+TestPlane::TestPlane(float size, DirectX::XMFLOAT4 color) : matConst({ color })
 {
 	//using VertexCore::VertexLayout;
 	//using namespace Graphic;
@@ -15,24 +15,24 @@ TestPlane::TestPlane(DxGraphic& graphic, float size, DirectX::XMFLOAT4 color) : 
 	//model.Transform(DirectX::XMMatrixScaling(size, size, 1.0f));
 	//
 	//const auto geometryTag = "$plane." + std::to_string(size);
-	//AddRender(VertexBuffer::GetRender(graphic, geometryTag, model.vertices));
-	//AddRender(IndexBuffer::GetRender(graphic, geometryTag, model.indices));
+	//AddRender(VertexBuffer::GetRender(geometryTag, model.vertices));
+	//AddRender(IndexBuffer::GetRender(geometryTag, model.indices));
 	//
-	//auto vertexShader = VertexShader::GetRender(graphic, "Shader/ColorShader2.hlsl");
+	//auto vertexShader = VertexShader::GetRender("Shader/ColorShader2.hlsl");
 	//auto VSShaderCode = vertexShader->GetShaderCode();
 	//AddRender(std::move(vertexShader));
 	//
-	//AddRender(PixelShader::GetRender(graphic, "Shader/ColorShader2.hlsl"));
+	//AddRender(PixelShader::GetRender("Shader/ColorShader2.hlsl"));
 	//AddRender(std::make_shared<PixelConstantBuffer<PSMaterialConstant>>(graphic, matConst, 1u));
 	//
-	//AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), VSShaderCode));
+	//AddRender(InputLayout::GetRender(model.vertices.GetVertexLayout(), VSShaderCode));
 	//
-	//AddRender(PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	//AddRender(PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	//
 	//AddRender(std::make_shared<TransformConstantBuffer>(graphic, *this, 0u));
 	//
-	//AddRender(ColorBlend::GetRender(graphic, true, 0.5f));
-	//AddRender(Rasterizer::GetRender(graphic, true));
+	//AddRender(ColorBlend::GetRender(true, 0.5f));
+	//AddRender(Rasterizer::GetRender(true));
 }
 
 void TestPlane::SetPosition(DirectX::XMFLOAT3 position) noexcept
@@ -53,7 +53,7 @@ DirectX::XMMATRIX TestPlane::GetTransformMatrix() const noexcept
 		   DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 }
 
-void TestPlane::SpawnControlWindow(DxGraphic& graphic, const std::string& name) noexcept
+void TestPlane::SpawnControlWindow(const std::string& name) noexcept
 {
 	//if (ImGui::Begin(name.c_str()))
 	//{

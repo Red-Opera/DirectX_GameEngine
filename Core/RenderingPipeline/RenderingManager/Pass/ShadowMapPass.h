@@ -28,19 +28,19 @@ namespace RenderGraphNameSpace
 	class ShadowMapPass : public RenderQueuePass
 	{
 	public:
-		ShadowMapPass(DxGraphic& graphic, std::string name)
+		ShadowMapPass(std::string name)
 			: RenderQueuePass(std::move(name))
 		{
 			using namespace Graphic;
 
-			depthTextureCube = std::make_unique<DepthTextureCube>(graphic, size, 3);
+			depthTextureCube = std::make_unique<DepthTextureCube>(size, 3);
 
-			AddRender(VertexShader::GetRender(graphic, "Shader/ShadowVS.hlsl"));
-			AddRender(NullPixelShader::GetRender(graphic));
-			AddRender(Stencil::GetRender(graphic, Stencil::DrawMode::Off));
-			AddRender(ColorBlend::GetRender(graphic, false));
-			AddRender(std::make_shared<Viewport>(graphic, (float)size, (float)size));
-			AddRender(std::make_shared<Graphic::ShadowRasterizer>(graphic, 50, 2.0f, 0.1f));
+			AddRender(VertexShader::GetRender("Shader/ShadowVS.hlsl"));
+			AddRender(NullPixelShader::GetRender());
+			AddRender(Stencil::GetRender(Stencil::DrawMode::Off));
+			AddRender(ColorBlend::GetRender(false));
+			AddRender(std::make_shared<Viewport>((float)size, (float)size));
+			AddRender(std::make_shared<Graphic::ShadowRasterizer>(50, 2.0f, 0.1f));
 
 			AddDataProvider(DirectRenderPipelineDataProvider<Graphic::DepthTextureCube>::Create("Map", depthTextureCube));
 
@@ -67,33 +67,33 @@ namespace RenderGraphNameSpace
 			SetDepthStencil(depthTextureCube->GetDepthStencil(0));
 		}
 
-		void Execute(DxGraphic& graphic) const NOEXCEPTRELEASE override
+		void Execute() const NOEXCEPTRELEASE override
 		{
 			XMFLOAT3 cameraPosition = shadowCamera->GetPosition();
 			const auto position = XMLoadFloat3(&cameraPosition);
 
-			graphic.SetProjection(XMLoadFloat4x4(&projection));
+			Window::GetDxGraphic().SetProjection(XMLoadFloat4x4(&projection));
 
 			for (size_t i = 0; i < 6; i++)
 			{
 				auto depth = depthTextureCube->GetDepthStencil(i);
-				depth->Clear(graphic);
+				depth->Clear();
 
 				SetDepthStencil(std::move(depth));
 				
 				const auto lookAt = position + XMLoadFloat3(&cameraDirections[i]);
-				graphic.SetCamera(XMMatrixLookAtLH(position, lookAt, XMLoadFloat3(&cameraUp[i])));
+				Window::GetDxGraphic().SetCamera(XMMatrixLookAtLH(position, lookAt, XMLoadFloat3(&cameraUp[i])));
 
-				RenderQueuePass::Execute(graphic);
+				RenderQueuePass::Execute();
 			}
 		}
 
-		void DumpShadowMap(DxGraphic& graphic, const std::string& path) const
+		void DumpShadowMap(const std::string& path) const
 		{
 			for (size_t i = 0; i < 6; i++)
 			{
 				auto depth = depthTextureCube->GetDepthStencil(i);
-				depth->ToImage(graphic).Save(path + std::to_string(i) + ".png");
+				depth->ToImage().Save(path + std::to_string(i) + ".png");
 			}
 		}
 

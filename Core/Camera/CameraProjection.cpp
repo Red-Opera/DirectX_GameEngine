@@ -3,8 +3,8 @@
 
 #include "Core/DxGraphic.h"
 
-CameraProjection::CameraProjection(DxGraphic& graphic, float width, float height, float nearZ, float farZ)
-	: width(width), height(height), nearZ(nearZ), farZ(farZ), frust(graphic, width, height, nearZ, farZ),
+CameraProjection::CameraProjection(float width, float height, float nearZ, float farZ)
+	: width(width), height(height), nearZ(nearZ), farZ(farZ), frust(width, height, nearZ, farZ),
 	  initWidth(width), initHeight(height), initNearZ(nearZ), initFarZ(farZ)
 {
 
@@ -35,7 +35,7 @@ void CameraProjection::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderG
 	frust.LinkTechniques(renderGraph);
 }
 
-void CameraProjection::RenderWidgets(DxGraphic& graphic)
+void CameraProjection::RenderWidgets()
 {
 	bool isNotMatch = false;
 	const auto MatchCheck = [&isNotMatch](bool notMatch) { isNotMatch = isNotMatch || notMatch; };
@@ -47,15 +47,15 @@ void CameraProjection::RenderWidgets(DxGraphic& graphic)
 	MatchCheck(ImGui::SliderFloat("Far Z", &farZ, nearZ + 0.01f, 400.0f, "%.2f"));
 
 	if (isNotMatch)
-		frust.SetVertices(graphic, width, height, nearZ, farZ);
+		frust.SetVertices(width, height, nearZ, farZ);
 }
 
-void CameraProjection::Reset(DxGraphic& graphic)
+void CameraProjection::Reset()
 {
 	width = initWidth;
 	height = initHeight;
 	nearZ = initNearZ;
 	farZ = initFarZ;
 
-	frust.SetVertices(graphic, width, height, nearZ, farZ);
+	frust.SetVertices(width, height, nearZ, farZ);
 }

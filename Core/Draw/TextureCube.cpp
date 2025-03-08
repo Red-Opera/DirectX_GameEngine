@@ -11,10 +11,10 @@
 
 namespace Graphic
 {
-	TextureCube::TextureCube(DxGraphic& graphic, const std::string& path, UINT slot)
+	TextureCube::TextureCube(const std::string& path, UINT slot)
 		: path(path), slot(slot)
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		std::vector<GraphicResource::Image> images;
 
@@ -44,7 +44,7 @@ namespace Graphic
 		}
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-		hr = GetDevice(graphic)->CreateTexture2D(&textureDesc, initData, &texture);
+		hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, initData, &texture);
 
 		GRAPHIC_THROW_INFO(hr);
 
@@ -54,21 +54,21 @@ namespace Graphic
 		shaderResourceViewDesc.TextureCube.MostDetailedMip = 0;
 		shaderResourceViewDesc.TextureCube.MipLevels = 1;
 
-		hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), &shaderResourceViewDesc, &textureView);
+		hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &shaderResourceViewDesc, &textureView);
 		GRAPHIC_THROW_INFO(hr);
 	}
 
-	void TextureCube::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void TextureCube::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 		
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
 	}
 
-	DepthTextureCube::DepthTextureCube(DxGraphic& graphic, UINT size, UINT slot)
+	DepthTextureCube::DepthTextureCube(UINT size, UINT slot)
 		: slot(slot)
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		D3D11_TEXTURE2D_DESC textureDesc;
 		textureDesc.Width = size;
@@ -87,7 +87,7 @@ namespace Graphic
 		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-		hr = GetDevice(graphic)->CreateTexture2D(&textureDesc, nullptr, &texture);
+		hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture);
 		GRAPHIC_THROW_INFO(hr);
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc = { };
@@ -96,11 +96,11 @@ namespace Graphic
 		shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
 		shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
-		hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), &shaderResourceViewDesc, &textureView);
+		hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &shaderResourceViewDesc, &textureView);
 		GRAPHIC_THROW_INFO(hr);
 
 		for (UINT face = 0; face < 6; face++)
-			depthStencil.push_back(std::make_shared<OutputOnlyDepthStencil>(graphic, texture, face));
+			depthStencil.push_back(std::make_shared<OutputOnlyDepthStencil>(texture, face));
 	}
 
 	std::shared_ptr<OutputOnlyDepthStencil> DepthTextureCube::GetDepthStencil(size_t index) const
@@ -108,17 +108,17 @@ namespace Graphic
 		return depthStencil[index];
 	}
 
-	void DepthTextureCube::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void DepthTextureCube::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
 	}
 
-	RenderTargetTextureCube::RenderTargetTextureCube(DxGraphic& graphic, UINT width, UINT height, UINT slot, DXGI_FORMAT format)
+	RenderTargetTextureCube::RenderTargetTextureCube(UINT width, UINT height, UINT slot, DXGI_FORMAT format)
 		:slot(slot)
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		D3D11_TEXTURE2D_DESC textureDESC = { };
 		textureDESC.Width = width;
@@ -138,7 +138,7 @@ namespace Graphic
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 		
-		hr = GetDevice(graphic)->CreateTexture2D(&textureDESC, nullptr, &texture);
+		hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDESC, nullptr, &texture);
 		GRAPHIC_THROW_INFO(hr);
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDESC = { };
@@ -147,11 +147,11 @@ namespace Graphic
 		shaderResourceViewDESC.Texture2D.MostDetailedMip = 0;
 		shaderResourceViewDESC.Texture2D.MipLevels = 1;
 
-		hr = GetDevice(graphic)->CreateShaderResourceView(texture.Get(), &shaderResourceViewDESC, &textureView);
+		hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &shaderResourceViewDESC, &textureView);
 		GRAPHIC_THROW_INFO(hr);
 
 		for (UINT face = 0; face < 6; face++)
-			renderTarget.push_back(std::make_shared<OutputOnlyRenderTarget>(graphic, texture.Get(), face));
+			renderTarget.push_back(std::make_shared<OutputOnlyRenderTarget>(texture.Get(), face));
 	}
 
 	std::shared_ptr<OutputOnlyRenderTarget> RenderTargetTextureCube::GetRenderTarget(size_t index) const
@@ -159,10 +159,10 @@ namespace Graphic
 		return renderTarget[index];
 	}
 
-	void RenderTargetTextureCube::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void RenderTargetTextureCube::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
 	}
 }

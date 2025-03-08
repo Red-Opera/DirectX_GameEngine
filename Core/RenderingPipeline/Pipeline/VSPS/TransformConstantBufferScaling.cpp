@@ -5,8 +5,8 @@
 
 namespace Graphic
 {
-	TransformConstantBufferScaling::TransformConstantBufferScaling(DxGraphic& graphic, float scale)
-		: TransformConstantBuffer(graphic), buffer(CreateVertexLayout())
+	TransformConstantBufferScaling::TransformConstantBufferScaling(float scale)
+		: TransformConstantBuffer(), buffer(CreateVertexLayout())
 	{
 		buffer["scale"] = scale;
 	}
@@ -16,16 +16,16 @@ namespace Graphic
 		techniqueBase.VisitBuffer(buffer);
 	}
 
-	void TransformConstantBufferScaling::SetRenderPipeline(DxGraphic& graphic) noexcept
+	void TransformConstantBufferScaling::SetRenderPipeline() noexcept
 	{
 		const float scale = buffer["scale"];
 		const auto scaleMatrix = DirectX::XMMatrixScaling(scale, scale, scale);
-		auto transform = GetTransform(graphic);
+		auto transform = GetTransform();
 
 		transform.transform = transform.transform * scaleMatrix;
 		transform.worldViewProjection = transform.worldViewProjection * scaleMatrix;
 
-		UpdateSetRenderPipeline(graphic, transform);
+		UpdateSetRenderPipeline(transform);
 	}
 
 	std::unique_ptr<RenderInstance> TransformConstantBufferScaling::Instance() const noexcept

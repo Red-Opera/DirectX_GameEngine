@@ -13,7 +13,7 @@ namespace RenderGraphNameSpace
 	public:
 		RenderJob(const RenderStep* renderStep, const Drawable* drawable);
 
-		void Excute(DxGraphic& graphic) const NOEXCEPTRELEASE;
+		void Excute() const NOEXCEPTRELEASE;
 
 	private:
 		const class Drawable* drawable;

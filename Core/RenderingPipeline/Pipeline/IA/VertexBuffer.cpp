@@ -2,18 +2,19 @@
 #include "VertexBuffer.h"
 
 #include "Core/RenderingPipeline/RenderManager.h"
+#include "Core/Window.h"
 
 namespace Graphic
 {
-	VertexBuffer::VertexBuffer(DxGraphic& graphic, const VertexCore::VertexBuffer& vertexBuffer) : VertexBuffer(graphic, "?", vertexBuffer)
+	VertexBuffer::VertexBuffer(const VertexCore::VertexBuffer& vertexBuffer) : VertexBuffer("?", vertexBuffer)
     {
         
     }
 
-    VertexBuffer::VertexBuffer(DxGraphic& graphic, const std::string& path, const VertexCore::VertexBuffer& vertexBuffer) 
+    VertexBuffer::VertexBuffer(const std::string& path, const VertexCore::VertexBuffer& vertexBuffer) 
         : stride((UINT)vertexBuffer.GetVertexLayout().size()), path(path), vertexLayout(vertexBuffer.GetVertexLayout())
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
         D3D11_BUFFER_DESC vertexBufferDesc;
         vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -26,17 +27,17 @@ namespace Graphic
         D3D11_SUBRESOURCE_DATA initData = { };
         initData.pSysMem = vertexBuffer.data();
 
-        hr = GetDevice(graphic)->CreateBuffer(&vertexBufferDesc, &initData, &(this->vertexBuffer));
+        hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&vertexBufferDesc, &initData, &(this->vertexBuffer));
         GRAPHIC_THROW_INFO(hr);
     }
 
-	void VertexBuffer::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void VertexBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
 		const UINT offset = 0;
 
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset));
 	}
 
     const VertexCore::VertexLayout& VertexBuffer::GetVertexLayout() const noexcept
@@ -44,11 +45,11 @@ namespace Graphic
         return vertexLayout;
     }
 
-    std::shared_ptr<VertexBuffer> VertexBuffer::GetRender(DxGraphic& graphic, const std::string& path, const VertexCore::VertexBuffer& vertexBuffer)
+    std::shared_ptr<VertexBuffer> VertexBuffer::GetRender(const std::string& path, const VertexCore::VertexBuffer& vertexBuffer)
     {
         assert(path != "?");
 
-        return RenderManager::GetRender<VertexBuffer>(graphic, path, vertexBuffer);
+        return RenderManager::GetRender<VertexBuffer>(path, vertexBuffer);
     }
 
     std::string VertexBuffer::GetID() const noexcept

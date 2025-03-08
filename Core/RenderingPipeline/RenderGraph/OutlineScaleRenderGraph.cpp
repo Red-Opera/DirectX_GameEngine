@@ -8,8 +8,8 @@
 
 namespace RenderGraphNameSpace
 {
-	OutlineScaleRenderGraph::OutlineScaleRenderGraph(DxGraphic& graphic)
-		: RenderGraph(graphic)
+	OutlineScaleRenderGraph::OutlineScaleRenderGraph()
+		: RenderGraph()
 	{
 		{
 			auto pass = std::make_unique<BufferPassClear>("clearRenderTarget");
@@ -24,20 +24,20 @@ namespace RenderGraphNameSpace
 		}
 
 		{
-			auto pass = std::make_unique<LambertianRenderPass>(graphic, "lambertian");
+			auto pass = std::make_unique<LambertianRenderPass>("lambertian");
 			pass->SetSinkLinkage("renderTarget", "clearRenderTarget.renderTarget");
 			pass->SetSinkLinkage("depthStencil", "clearDepthStencil.depthStencil");
 			AddRenderPass(std::move(pass));
 		}
 
 		{
-			auto pass = std::make_unique<OutlineMaskPass>(graphic, "outlineMask");
+			auto pass = std::make_unique<OutlineMaskPass>("outlineMask");
 			pass->SetSinkLinkage("depthStencil", "lambertian.depthStencil");
 			AddRenderPass(std::move(pass));
 		}
 
 		{
-			auto pass = std::make_unique<OutlineDrawPass>(graphic, "outlineDraw");
+			auto pass = std::make_unique<OutlineDrawPass>("outlineDraw");
 			pass->SetSinkLinkage("renderTarget", "lambertian.renderTarget");
 			pass->SetSinkLinkage("depthStencil", "outlineMask.depthStencil");
 			AddRenderPass(std::move(pass));

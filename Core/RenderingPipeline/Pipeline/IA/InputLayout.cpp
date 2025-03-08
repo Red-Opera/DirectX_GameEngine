@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "InputLayout.h"
 
+#include "Core/Window.h"
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/VertexShader.h"
 #include "Core/RenderingPipeline/Vertex.h"
@@ -10,13 +11,13 @@ using namespace std;
 
 namespace Graphic
 {
-	InputLayout::InputLayout(DxGraphic& graphic, VertexCore::VertexLayout vertexLayout, const VertexShader& vertexShader) : vertexLayout(std::move(vertexLayout))
+	InputLayout::InputLayout(VertexCore::VertexLayout vertexLayout, const VertexShader& vertexShader) : vertexLayout(std::move(vertexLayout))
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 		const auto inputElement = this->vertexLayout.GetInputElement();
 		const auto shaderCode = vertexShader.GetShaderCode();
 
-		hr = GetDevice(graphic)->CreateInputLayout(
+		hr = GetDevice(Window::GetDxGraphic())->CreateInputLayout(
 			inputElement.data(),
 			(UINT)inputElement.size(),
 			shaderCode->GetBufferPointer(),
@@ -26,16 +27,16 @@ namespace Graphic
 		GRAPHIC_THROW_INFO(hr);
 	}
 
-	void InputLayout::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void InputLayout::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->IASetInputLayout(inputLayout.Get()));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetInputLayout(inputLayout.Get()));
 	}
 
-	std::shared_ptr<InputLayout> InputLayout::GetRender(DxGraphic& graphic, const VertexCore::VertexLayout& vertexLayout, const VertexShader& vertexShader)
+	std::shared_ptr<InputLayout> InputLayout::GetRender(const VertexCore::VertexLayout& vertexLayout, const VertexShader& vertexShader)
 	{
-		return RenderManager::GetRender<InputLayout>(graphic, vertexLayout, vertexShader);
+		return RenderManager::GetRender<InputLayout>(vertexLayout, vertexShader);
 	}
 
 	std::string InputLayout::CreateID(const VertexCore::VertexLayout& vertexLayout, const VertexShader& vertexShader)

@@ -9,13 +9,13 @@ namespace Graphic
 	class Viewport : public Render
 	{
 	public:
-		Viewport(DxGraphic& graphic)
-			: Viewport(graphic, (float)graphic.GetWidth(), (float)graphic.GetHeight())
+		Viewport()
+			: Viewport((float)Window::GetDxGraphic().GetWidth(), (float)Window::GetDxGraphic().GetHeight())
 		{
 
 		}
 
-		Viewport(DxGraphic& graphic, float width, float height)
+		Viewport(float width, float height)
 		{
 			viewport.Width = width;
 			viewport.Height = height;
@@ -27,11 +27,11 @@ namespace Graphic
 		}
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override
+		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
-			CREATEINFOMANAGERNOHR(graphic);
+			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-			GetDeviceContext(graphic)->RSSetViewports(1u, &viewport);
+			GetDeviceContext(Window::GetDxGraphic())->RSSetViewports(1u, &viewport);
 		}
 
 	private:

@@ -11,8 +11,8 @@ namespace Graphic
 	public:
 		virtual ~BufferResource() = default;
 
-		virtual void RenderAsBuffer(DxGraphic&) NOEXCEPTRELEASE = 0;
-		virtual void RenderAsBuffer(DxGraphic&, BufferResource*) NOEXCEPTRELEASE = 0;
-		virtual void Clear(DxGraphic&) NOEXCEPTRELEASE = 0;
+		virtual void RenderAsBuffer() NOEXCEPTRELEASE = 0;
+		virtual void RenderAsBuffer(BufferResource*) NOEXCEPTRELEASE = 0;
+		virtual void Clear() NOEXCEPTRELEASE = 0;
 	};
 }

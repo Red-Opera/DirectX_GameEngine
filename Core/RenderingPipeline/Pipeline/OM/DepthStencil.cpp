@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DepthStencil.h"
 
+#include "Core/Window.h"
 #include "Core/DxGraphic.h"
 #include "Core/Draw/Base/Image/Image.h"
 #include "Core/Exception/GraphicsException.h"
@@ -60,10 +61,10 @@ namespace Graphic
         return DXGI_FORMAT::DXGI_FORMAT_YUY2;
     }
 
-    DepthStencil::DepthStencil(DxGraphic& graphic, UINT width, UINT height, bool canRenderShaderInput, Usage usage)
+    DepthStencil::DepthStencil(UINT width, UINT height, bool canRenderShaderInput, Usage usage)
         : width(width), height(height)
     {
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
         // 깊이 스텐실 버퍼의 텍스쳐 제작
         Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
@@ -79,7 +80,7 @@ namespace Graphic
 
         descDepth.Usage = D3D11_USAGE_DEFAULT;
         descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL | (canRenderShaderInput ? D3D11_BIND_SHADER_RESOURCE : 0);
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateTexture2D(&descDepth, nullptr, &depthStencil));
+        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateTexture2D(&descDepth, nullptr, &depthStencil));
 
         CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDESC;
         depthStencilViewDESC.Format = GetUsageType(usage);
@@ -87,12 +88,12 @@ namespace Graphic
         depthStencilViewDESC.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
         depthStencilViewDESC.Texture2D.MipSlice = 0;
 
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDESC, &depthStencilView));
+        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDESC, &depthStencilView));
     }
 
-    DepthStencil::DepthStencil(DxGraphic& graphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face)
+    DepthStencil::DepthStencil(Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face)
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
         D3D11_TEXTURE2D_DESC textureDESC = { };
 		texture->GetDesc(&textureDESC);
@@ -107,13 +108,13 @@ namespace Graphic
 		depthStencilViewDESC.Texture2DArray.ArraySize = 1;
 		depthStencilViewDESC.Texture2DArray.FirstArraySlice = face;
 
-		hr = GetDevice(graphic)->CreateDepthStencilView(texture.Get(), &depthStencilViewDESC, &depthStencilView);
+		hr = GetDevice(Window::GetDxGraphic())->CreateDepthStencilView(texture.Get(), &depthStencilViewDESC, &depthStencilView);
 		GRAPHIC_THROW_INFO(hr);
     }
 
-    std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> DepthStencil::CreateStaging(DxGraphic& graphic) const
+    std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> DepthStencil::CreateStaging() const
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDESC{ };
         depthStencilView->GetDesc(&depthStencilViewDESC);
@@ -135,51 +136,51 @@ namespace Graphic
         tempTextureDESC.ArraySize = 1;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
-        hr = GetDevice(graphic)->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
+        hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
         GRAPHIC_THROW_INFO(hr);
 
         if (depthStencilViewDESC.ViewDimension == D3D11_DSV_DIMENSION::D3D11_DSV_DIMENSION_TEXTURE2DARRAY)
         {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), depthStencilViewDESC.Texture2DArray.FirstArraySlice, nullptr));
+            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), depthStencilViewDESC.Texture2DArray.FirstArraySlice, nullptr));
         }
 
         else
         {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->CopyResource(textureTemp.Get(), texture.Get()));
+            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()));
         }
 
         return { std::move(textureTemp), textureDESC };
     }
 
-    void DepthStencil::RenderAsBuffer(DxGraphic& graphic) NOEXCEPTRELEASE
+    void DepthStencil::RenderAsBuffer() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->OMSetRenderTargets(0, nullptr, depthStencilView.Get()));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetRenderTargets(0, nullptr, depthStencilView.Get()));
     }
 
-    void DepthStencil::RenderAsBuffer(DxGraphic& graphic, BufferResource* bufferResource) NOEXCEPTRELEASE
+    void DepthStencil::RenderAsBuffer(BufferResource* bufferResource) NOEXCEPTRELEASE
     {
         assert(dynamic_cast<RenderTarget*>(bufferResource) != nullptr);
-        RenderAsBuffer(graphic, static_cast<RenderTarget*>(bufferResource));
+        RenderAsBuffer(static_cast<RenderTarget*>(bufferResource));
     }
 
-    void DepthStencil::RenderAsBuffer(DxGraphic& graphic, RenderTarget* renderTarget) NOEXCEPTRELEASE
+    void DepthStencil::RenderAsBuffer(RenderTarget* renderTarget) NOEXCEPTRELEASE
     {
-        renderTarget->RenderAsBuffer(graphic, this);
+        renderTarget->RenderAsBuffer(this);
     }
 
-    GraphicResource::Image DepthStencil::ToImage(DxGraphic& graphic, bool linearlize) const
+    GraphicResource::Image DepthStencil::ToImage(bool linearlize) const
     {
-        CREATEINFOMANAGER(graphic);
-        auto [textureTemp, textureDESC] = CreateStaging(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
+        auto [textureTemp, textureDESC] = CreateStaging();
 
         const auto width = GetWidth();
         const auto height = GetHeight();
         GraphicResource::Image image{ width, height };
 
         D3D11_MAPPED_SUBRESOURCE mapped = { };
-        hr = GetDeviceContext(graphic)->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
+        hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
         GRAPHIC_THROW_INFO(hr);
 
         auto bytes = static_cast<const char*>(mapped.pData);
@@ -238,16 +239,16 @@ namespace Graphic
             }
         }
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->Unmap(textureTemp.Get(), 0));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
 
         return image;
     }
 
-    void DepthStencil::CreateDumpy(DxGraphic& graphic, const std::string& path) const
+    void DepthStencil::CreateDumpy(const std::string& path) const
     {
-        CREATEINFOMANAGER(graphic);
+        CREATEINFOMANAGER(Window::GetDxGraphic());
 
-        auto [textureTemp, textureDESC] = CreateStaging(graphic);
+        auto [textureTemp, textureDESC] = CreateStaging();
 
         const auto width = GetWidth();
         const auto height = GetHeight();
@@ -256,7 +257,7 @@ namespace Graphic
         arr.reserve(width * height);
 
         D3D11_MAPPED_SUBRESOURCE mapped = { };
-        hr = GetDeviceContext(graphic)->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
+        hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
         GRAPHIC_THROW_INFO(hr);
 
         auto bytes = static_cast<const char*>(mapped.pData);
@@ -272,7 +273,7 @@ namespace Graphic
                 arr.push_back(row[x]);
         }
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->Unmap(textureTemp.Get(), 0));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
 
         cnpy::npy_save(path, arr.data(), { height, width });
     }
@@ -287,21 +288,21 @@ namespace Graphic
         return height;
     }
 
-    void DepthStencil::Clear(DxGraphic& graphic) NOEXCEPTRELEASE
+    void DepthStencil::Clear() NOEXCEPTRELEASE
     {
-        GetDeviceContext(graphic)->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+        GetDeviceContext(Window::GetDxGraphic())->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
     }
 
-    ShaderInputDepthStencil::ShaderInputDepthStencil(DxGraphic& graphic, UINT slot, Usage usage)
-        : ShaderInputDepthStencil(graphic, graphic.GetWidth(), graphic.GetHeight(), slot, usage)
+    ShaderInputDepthStencil::ShaderInputDepthStencil(UINT slot, Usage usage)
+        : ShaderInputDepthStencil(Window::GetDxGraphic().GetWidth(), Window::GetDxGraphic().GetHeight(), slot, usage)
     {
 
     }
 
-    ShaderInputDepthStencil::ShaderInputDepthStencil(DxGraphic& graphic, UINT width, UINT height, UINT slot, Usage usage)
-        : DepthStencil(graphic, width, height, true, usage), slot(slot)
+    ShaderInputDepthStencil::ShaderInputDepthStencil(UINT width, UINT height, UINT slot, Usage usage)
+        : DepthStencil(width, height, true, usage), slot(slot)
     {
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
         Microsoft::WRL::ComPtr<ID3D11Resource> resource;
         depthStencilView->GetResource(&resource);
@@ -312,34 +313,34 @@ namespace Graphic
         resourceDESC.Texture2D.MostDetailedMip = 0;
         resourceDESC.Texture2D.MipLevels = 1;
 
-        GRAPHIC_THROW_INFO(GetDevice(graphic)->CreateShaderResourceView(resource.Get(), &resourceDESC, &shaderResourceView));
+        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(resource.Get(), &resourceDESC, &shaderResourceView));
     }
 
-    void ShaderInputDepthStencil::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    void ShaderInputDepthStencil::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(graphic);
+        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->PSSetShaderResources(slot, 1u, shaderResourceView.GetAddressOf()));
+        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, shaderResourceView.GetAddressOf()));
     }
 
-    OutputOnlyDepthStencil::OutputOnlyDepthStencil(DxGraphic& graphic)
-        : OutputOnlyDepthStencil(graphic, graphic.GetWidth(), graphic.GetHeight())
-    {
-
-    }
-
-    OutputOnlyDepthStencil::OutputOnlyDepthStencil(DxGraphic& graphic, UINT width, UINT height)
-        : DepthStencil(graphic, width, height, false, Usage::DepthStencil)
+    OutputOnlyDepthStencil::OutputOnlyDepthStencil()
+        : OutputOnlyDepthStencil(Window::GetDxGraphic().GetWidth(), Window::GetDxGraphic().GetHeight())
     {
 
     }
 
-    OutputOnlyDepthStencil::OutputOnlyDepthStencil(DxGraphic& grapphic, Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face)
-		: DepthStencil(grapphic, std::move(texture), face)
+    OutputOnlyDepthStencil::OutputOnlyDepthStencil(UINT width, UINT height)
+        : DepthStencil(width, height, false, Usage::DepthStencil)
+    {
+
+    }
+
+    OutputOnlyDepthStencil::OutputOnlyDepthStencil(Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face)
+		: DepthStencil(std::move(texture), face)
     {
     }
 
-    void OutputOnlyDepthStencil::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+    void OutputOnlyDepthStencil::SetRenderPipeline() NOEXCEPTRELEASE
     {
         assert("OutputOnlyDepthStencil은 Shader Input이 있을 때만 사용할 수 있음" && false);
     }

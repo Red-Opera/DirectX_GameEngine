@@ -15,7 +15,7 @@ namespace Graphic
 	class Render : public DxGraphicResource
 	{
 	public:
-		virtual void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE = 0;
+		virtual void SetRenderPipeline() NOEXCEPTRELEASE = 0;
 		virtual void InitializeParentReference(const Drawable&) noexcept { }
 		virtual void Accept(TechniqueBase&) { }
 

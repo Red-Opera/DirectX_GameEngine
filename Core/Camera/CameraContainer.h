@@ -12,8 +12,8 @@ class DxGraphic;
 class CameraContainer
 {
 public:
-	void CreateWindow(DxGraphic& graphic);
-	void SetRenderPipeline(DxGraphic& graphic);
+	void CreateWindow();
+	void SetRenderPipeline();
 
 	void AddCamera(std::shared_ptr<Camera> camera);
 	Camera* operator->();

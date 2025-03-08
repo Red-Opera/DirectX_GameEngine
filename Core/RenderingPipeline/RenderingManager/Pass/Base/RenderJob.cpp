@@ -3,6 +3,7 @@
 
 #include "Core/Draw/Base/Drawable.h"
 #include "Core/RenderingPipeline/RenderingManager/Technique/RenderStep.h"
+#include "Core/Window.h"
 
 namespace RenderGraphNameSpace
 {
@@ -12,11 +13,11 @@ namespace RenderGraphNameSpace
 
 	}
 
-	void RenderJob::Excute(DxGraphic& graphic) const NOEXCEPTRELEASE
+	void RenderJob::Excute() const NOEXCEPTRELEASE
 	{
-		drawable->SetRenderPipeline(graphic);
-		renderStep->SetRenderPipeline(graphic);
+		drawable->SetRenderPipeline();
+		renderStep->SetRenderPipeline();
 
-		graphic.DrawIndexed(drawable->GetIndexCount());
+		Window::GetDxGraphic().DrawIndexed(drawable->GetIndexCount());
 	}
 }

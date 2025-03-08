@@ -11,7 +11,7 @@ class DxGraphic;
 class CameraProjection
 {
 public:
-	CameraProjection(DxGraphic& graphic, float width, float height, float nearZ, float farZ);
+	CameraProjection(float width, float height, float nearZ, float farZ);
 
 	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
 	void SetRotation(DirectX::XMFLOAT3 rotation) noexcept;
@@ -20,9 +20,9 @@ public:
 	void Submit(size_t channel) const;
 	void LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph);
 
-	void RenderWidgets(DxGraphic& graphic);
+	void RenderWidgets();
 
-	void Reset(DxGraphic& graphic);
+	void Reset();
 
 private:
 	float width, height;

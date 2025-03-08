@@ -7,7 +7,7 @@ namespace Graphic
 	class ShadowSamplerState : public Render
 	{
 	public:
-		ShadowSamplerState(DxGraphic& graphic);
+		ShadowSamplerState();
 
 		void SetBilinear(bool bilin);
 		void SetUseHardwarePCF(bool isUseHardwarePCF);
@@ -16,7 +16,7 @@ namespace Graphic
 		bool IsUseHardwarePCF() const;
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
@@ -28,6 +28,6 @@ namespace Graphic
 		UINT GetCurrentSlot() const;
 
 		static size_t GetShadowSamplerIndex(bool bilin, bool isUseHardwarePCF);
-		static Microsoft::WRL::ComPtr<ID3D11SamplerState> CreateSampler(DxGraphic& graphic, bool bilin, bool isUseHardwarePCF);
+		static Microsoft::WRL::ComPtr<ID3D11SamplerState> CreateSampler(bool bilin, bool isUseHardwarePCF);
 	};
 }

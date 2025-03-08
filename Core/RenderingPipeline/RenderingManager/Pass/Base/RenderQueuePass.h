@@ -16,7 +16,7 @@ namespace RenderGraphNameSpace
 		void Reset() NOEXCEPTRELEASE override;
 
 		// RenderingPass을(를) 통해 상속됨
-		void Execute(DxGraphic& graphic) const NOEXCEPTRELEASE override;
+		void Execute() const NOEXCEPTRELEASE override;
 
 	private:
 		std::vector<RenderJob> renderJobs;

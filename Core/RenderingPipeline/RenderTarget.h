@@ -15,23 +15,23 @@ namespace Graphic
 	class RenderTarget : public Render, public BufferResource
 	{
 	public:
-		void RenderAsBuffer(DxGraphic& graphic) NOEXCEPTRELEASE override;
-		void RenderAsBuffer(DxGraphic& graphic, BufferResource* bufferResource) NOEXCEPTRELEASE override;
-		void RenderAsBuffer(DxGraphic& graphic, DepthStencil* depthStencil) NOEXCEPTRELEASE;
+		void RenderAsBuffer() NOEXCEPTRELEASE override;
+		void RenderAsBuffer(BufferResource* bufferResource) NOEXCEPTRELEASE override;
+		void RenderAsBuffer(DepthStencil* depthStencil) NOEXCEPTRELEASE;
 
-		void Clear(DxGraphic& graphic) NOEXCEPTRELEASE override;
-		void Clear(DxGraphic& graphic, const std::array<float, 4>& color) NOEXCEPTRELEASE;
+		void Clear() NOEXCEPTRELEASE override;
+		void Clear(const std::array<float, 4>& color) NOEXCEPTRELEASE;
 
 		UINT GetWidth() const noexcept;
 		UINT GetHeight() const noexcept;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetTargetView() const noexcept;
 
-		GraphicResource::Image ToImage(DxGraphic& graphic) const;
-		void CreateDumpy(DxGraphic& graphic, const std::string& path) const;
+		GraphicResource::Image ToImage() const;
+		void CreateDumpy(const std::string& path) const;
 
 	protected:
-		RenderTarget(DxGraphic& graphic, ID3D11Texture2D* texture, std::optional<UINT> face);
-		RenderTarget(DxGraphic& graphic, UINT width, UINT height);
+		RenderTarget(ID3D11Texture2D* texture, std::optional<UINT> face);
+		RenderTarget(UINT width, UINT height);
 
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> targetView;
 
@@ -39,18 +39,18 @@ namespace Graphic
 		UINT height;
 
 	private:
-		void RenderAsBuffer(DxGraphic& graphic, ID3D11DepthStencilView* depthStencilView) NOEXCEPTRELEASE;
+		void RenderAsBuffer(ID3D11DepthStencilView* depthStencilView) NOEXCEPTRELEASE;
 
-		std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> CreateStaging(DxGraphic& graphic) const;
+		std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> CreateStaging() const;
 	};
 
 	class ShaderInputRenderTarget : public RenderTarget
 	{
 	public:
-		ShaderInputRenderTarget(DxGraphic& graphic, UINT width, UINT height, UINT slot);
+		ShaderInputRenderTarget(UINT width, UINT height, UINT slot);
 
 		// RenderTarget을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 
 	private:
@@ -61,9 +61,9 @@ namespace Graphic
 	class OutputOnlyRenderTarget : public RenderTarget
 	{
 	public:
-		OutputOnlyRenderTarget(DxGraphic& graphic, ID3D11Texture2D* texture, std::optional<UINT> face = { });
+		OutputOnlyRenderTarget(ID3D11Texture2D* texture, std::optional<UINT> face = { });
 
 		// RenderTarget을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 	};
 }

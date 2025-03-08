@@ -13,8 +13,8 @@
 #include <unordered_map>
 #include <sstream>
 
-Mesh::Mesh(DxGraphic& graphic, const Material& material, const aiMesh& mesh, float scale) NOEXCEPTRELEASE 
-	: Drawable(graphic, material, mesh, scale)
+Mesh::Mesh(const Material& material, const aiMesh& mesh, float scale) NOEXCEPTRELEASE 
+	: Drawable(material, mesh, scale)
 {
 
 }

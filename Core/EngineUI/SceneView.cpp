@@ -3,10 +3,11 @@
 
 #include "Core/DxGraphic.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
+#include "Core/Window.h"
 
 namespace Graphic
 {
-    SceneView::SceneView(DxGraphic& graphic, UINT width, UINT height)
+    SceneView::SceneView(UINT width, UINT height)
     {
         D3D11_TEXTURE2D_DESC desc = {};
         desc.Width = 1000;
@@ -18,22 +19,22 @@ namespace Graphic
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
-        GetDevice(graphic)->CreateTexture2D(&desc, nullptr, &renderTargetTexture);
+        GetDevice(Window::GetDxGraphic())->CreateTexture2D(&desc, nullptr, &renderTargetTexture);
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
         rtvDesc.Format = desc.Format;
         rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-        GetDevice(graphic)->CreateRenderTargetView(renderTargetTexture.Get(), &rtvDesc, &renderTarget);
+        GetDevice(Window::GetDxGraphic())->CreateRenderTargetView(renderTargetTexture.Get(), &rtvDesc, &renderTarget);
 
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
         srvDesc.Format = desc.Format;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MostDetailedMip = 0;
         srvDesc.Texture2D.MipLevels = 1;
-        GetDevice(graphic)->CreateShaderResourceView(renderTargetTexture.Get(), &srvDesc, &renderTargetView);
+        GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(renderTargetTexture.Get(), &srvDesc, &renderTargetView);
 
         // 디바이스 컨텍스트 가져오기
-        auto pContext = GetDeviceContext(graphic);
+        auto pContext = GetDeviceContext(Window::GetDxGraphic());
 
         // 이 뷰의 렌더 타겟을 설정
         ID3D11RenderTargetView* rtView = renderTarget.Get();
@@ -54,9 +55,9 @@ namespace Graphic
         pContext->ClearRenderTargetView(rtView, clearColor);
     }
 
-    void SceneView::Render(DxGraphic& graphic)
+    void SceneView::Render()
     {
-        auto pContext = GetDeviceContext(graphic);
+        auto pContext = GetDeviceContext(Window::GetDxGraphic());
 
         // SceneView용 렌더 타겟 설정
         ID3D11RenderTargetView* rtView = renderTarget.Get();
@@ -68,7 +69,7 @@ namespace Graphic
         ImGui::End();
     }
 
-    void SceneView::SetRenderPipeline(DxGraphic& graphic)
+    void SceneView::SetRenderPipeline()
     {
         
     }

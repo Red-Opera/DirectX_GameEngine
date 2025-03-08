@@ -23,13 +23,13 @@ namespace Engine
 
 		static std::unique_ptr<FolderViewInspector> instance;
 
-		static void GetInstance(DxGraphic& graphic)
+		static void GetInstance()
 		{
 			if (!instance)
-				instance = std::make_unique<FolderViewInspector>(graphic);
+				instance = std::make_unique<FolderViewInspector>();
 		}
 
-		FolderViewInspector(DxGraphic& graphic);
+		FolderViewInspector();
 		FolderViewInspector(const FolderViewInspector&) = delete;
 		FolderViewInspector(FolderViewInspector&&) = delete;
 		FolderViewInspector& operator=(const FolderViewInspector&) = delete;
@@ -42,7 +42,7 @@ namespace Engine
 		void RenderInspector();
 
 		// Render을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 		~FolderViewInspector() = default;
 
@@ -57,7 +57,7 @@ namespace Engine
 		};
 
 		ID3D11ShaderResourceView* GetFileTextureResourceView(std::string fileName);
-		void LoadIconTexture(DxGraphic& graphic, std::string fileName, IconType iconType);
+		void LoadIconTexture(std::string fileName, IconType iconType);
 
 		// 헬퍼 함수: 현재 폴더의 전체 경로 문자열 생성
 		std::string GetRelativePath(const std::shared_ptr<FileItemTree>& tree);

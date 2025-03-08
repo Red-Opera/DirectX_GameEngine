@@ -3,12 +3,13 @@
 
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderManager.h"
+#include "Core/Window.h"
 
 namespace Graphic
 {
-	ColorBlend::ColorBlend(DxGraphic& graphic, bool blending, std::optional<float> transparencyInput) : blending(blending)
+	ColorBlend::ColorBlend(bool blending, std::optional<float> transparencyInput) : blending(blending)
 	{
-		CREATEINFOMANAGER(graphic);
+		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		if (transparencyInput)
 		{
@@ -43,7 +44,7 @@ namespace Graphic
 			}
 		}
 
-		hr = GetDevice(graphic)->CreateBlendState(&blendDesc, &blendState);
+		hr = GetDevice(Window::GetDxGraphic())->CreateBlendState(&blendDesc, &blendState);
 
 		GRAPHIC_THROW_INFO(hr);
 	}
@@ -62,9 +63,9 @@ namespace Graphic
 		return transparency->front();
 	}
 
-	std::shared_ptr<ColorBlend> ColorBlend::GetRender(DxGraphic& graphic, bool blending, std::optional<float> transparency)
+	std::shared_ptr<ColorBlend> ColorBlend::GetRender(bool blending, std::optional<float> transparency)
 	{
-		return RenderManager::GetRender<ColorBlend>(graphic, blending, transparency);
+		return RenderManager::GetRender<ColorBlend>(blending, transparency);
 	}
 
 	std::string ColorBlend::CreateID(bool blending, std::optional<float> transparency)
@@ -79,13 +80,13 @@ namespace Graphic
 		return CreateID(blending, transparency ? transparency->front() : std::optional<float>{ });
 	}
 
-	void ColorBlend::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void ColorBlend::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(graphic);
+		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
 		const float* transparencyDatas = transparency ? transparency->data() : nullptr;
 
 		// 블렌딩 상태를 렌더링 파이프 라인에 입력
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(graphic)->OMSetBlendState(blendState.Get(), transparencyDatas, 0xffffffffu));
+		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetBlendState(blendState.Get(), transparencyDatas, 0xffffffffu));
 	}
 }

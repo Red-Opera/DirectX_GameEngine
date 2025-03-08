@@ -39,10 +39,10 @@ public:
 			};
 
 		if (auto data = buffer["scale"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Scale"), &data, 1.0f, 2.0f, "%.3f", 3.5f));
+			IsNotMatch(ImGui::SliderFloat(Tag("Scale"), &data, 1.0f, 2.0f, "%.3f"));
 
 		if (auto data = buffer["offset"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Offset"), &data, 0.0f, 1.0f, "%.3f", 2.5f));
+			IsNotMatch(ImGui::SliderFloat(Tag("Offset"), &data, 0.0f, 1.0f, "%.3f"));
 
 		if (auto data = buffer["materialColor"]; data.IsExist())
 			IsNotMatch(ImGui::ColorPicker3(Tag("Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(data))));
@@ -51,7 +51,7 @@ public:
 			IsNotMatch(ImGui::ColorPicker3(Tag("Specular Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(data))));
 
 		if (auto data = buffer["specularGlass"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Specular Glass"), &data, 1.0f, 100.0f, "%.1f", 1.5f));
+			IsNotMatch(ImGui::SliderFloat(Tag("Specular Glass"), &data, 1.0f, 100.0f, "%.1f"));
 
 		if (auto data = buffer["specularIntensity"]; data.IsExist())
 			IsNotMatch(ImGui::SliderFloat(Tag("Specular Intensity"), &data, 0.0f, 2.0f));

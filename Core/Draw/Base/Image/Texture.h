@@ -10,12 +10,12 @@ namespace Graphic
 	class Texture : public Render
 	{
 	public:
-		Texture(DxGraphic& graphic,const  std::string& path, UINT slot = 0);
+		Texture(const std::string& path, UINT slot = 0);
 
 		// Bindable을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
-		static std::shared_ptr<Texture> GetRender(DxGraphic& graphic, const std::string& path, UINT slot = 0);
+		static std::shared_ptr<Texture> GetRender(const std::string& path, UINT slot = 0);
 		static std::string CreateID(const std::string& path, UINT slot = 0);
 		std::string GetID() const noexcept override;
 		bool HasAlpha() const noexcept;

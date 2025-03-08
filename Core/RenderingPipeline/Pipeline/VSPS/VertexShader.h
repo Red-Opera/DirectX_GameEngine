@@ -6,14 +6,14 @@ namespace Graphic
 	class VertexShader : public Render
 	{
 	public:
-		VertexShader(DxGraphic& graphic, const std::string& path);
+		VertexShader(const std::string& path);
 
 		ID3DBlob* GetShaderCode() const noexcept;
 
 		// Bindable을(를) 통해 상속됨
-		void SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE override;
+		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
-		static std::shared_ptr<VertexShader> GetRender(DxGraphic& graphic, const std::string& path);
+		static std::shared_ptr<VertexShader> GetRender(const std::string& path);
 		static std::string CreateID(const std::string& path);
 		std::string GetID() const noexcept override;
 

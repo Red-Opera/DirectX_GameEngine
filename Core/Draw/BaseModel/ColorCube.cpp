@@ -12,7 +12,7 @@
 
 #include "External/Imgui/imgui.h"
 
-ColorCube::ColorCube(DxGraphic& graphic, float size)
+ColorCube::ColorCube(float size)
 {
 	using VertexCore::VertexLayout;
 	using namespace Graphic;
@@ -22,25 +22,25 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 	model.SetNormalVector();
 
 	const auto geometryTag = "$cube." + std::to_string(size);
-	vertexBuffer = VertexBuffer::GetRender(graphic, geometryTag, model.vertices);
-	indexBuffer = IndexBuffer::GetRender(graphic, geometryTag, model.indices);
-	primitiveTopology = PrimitiveTopology::GetRender(graphic, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	vertexBuffer = VertexBuffer::GetRender(geometryTag, model.vertices);
+	indexBuffer = IndexBuffer::GetRender(geometryTag, model.indices);
+	primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	auto transformConstantBuffer = std::make_shared<TransformConstantBuffer>(graphic);
+	auto transformConstantBuffer = std::make_shared<TransformConstantBuffer>();
 
 	{
 		Technique tech("Cube", RenderingChannel::main);
 		{
 			RenderStep cubeRender("lambertian");
 
-			cubeRender.AddRender(Texture::GetRender(graphic, "Images/brickwall.jpg"));
-			cubeRender.AddRender(SamplerState::GetRender(graphic));
+			cubeRender.AddRender(Texture::GetRender("Images/brickwall.jpg"));
+			cubeRender.AddRender(SamplerState::GetRender());
 
-			auto vertexShader = VertexShader::GetRender(graphic, "Shader/ShadowTest.hlsl");
-			cubeRender.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), *vertexShader));
+			auto vertexShader = VertexShader::GetRender("Shader/ShadowTest.hlsl");
+			cubeRender.AddRender(InputLayout::GetRender(model.vertices.GetVertexLayout(), *vertexShader));
 			cubeRender.AddRender(std::move(vertexShader));
 
-			cubeRender.AddRender(PixelShader::GetRender(graphic, "Shader/ShadowTest.hlsl"));
+			cubeRender.AddRender(PixelShader::GetRender("Shader/ShadowTest.hlsl"));
 
 			DynamicConstantBuffer::EditLayout layout;
 			layout.add<DynamicConstantBuffer::float3>("specularColor");
@@ -51,9 +51,9 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 			buffer["specularColor"] = DirectX::XMFLOAT3{ 1.0f, 1.0f, 1.0f };
 			buffer["specularPower"] = 0.1f;
 			buffer["specularGlass"] = 20.0f;
-			cubeRender.AddRender(std::make_shared<Graphic::CachingPixelConstantBufferEx>(graphic, buffer, 1u));
+			cubeRender.AddRender(std::make_shared<Graphic::CachingPixelConstantBufferEx>(buffer, 1u));
 
-			cubeRender.AddRender(Rasterizer::GetRender(graphic, false));
+			cubeRender.AddRender(Rasterizer::GetRender(false));
 
 			cubeRender.AddRender(transformConstantBuffer);
 
@@ -71,9 +71,8 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 
 			outlineMask.AddRender(
 				InputLayout::GetRender(
-					graphic,
 					model.vertices.GetVertexLayout(), 
-					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
+					*VertexShader::GetRender("Shader/ColorShader.hlsl")
 				)
 			);
 
@@ -90,16 +89,15 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 	
 			auto buffer = DynamicConstantBuffer::Buffer(std::move(layout));
 			buffer["color"] = DirectX::XMFLOAT4(1.0f, 0.4f, 0.4f, 1.0f);
-			outlineDraw.AddRender(std::make_shared<Graphic::CachingPixelConstantBufferEx>(graphic, buffer, 1u));
+			outlineDraw.AddRender(std::make_shared<Graphic::CachingPixelConstantBufferEx>(buffer, 1u));
 	
 			outlineDraw.AddRender(
 				InputLayout::GetRender(
-					graphic,
 					model.vertices.GetVertexLayout(),
-					*VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")
+					*VertexShader::GetRender("Shader/ColorShader.hlsl")
 			));
 	
-			outlineDraw.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+			outlineDraw.AddRender(std::make_shared<TransformConstantBuffer>());
 			
 			tech.push_back(std::move(outlineDraw));
 		}
@@ -113,8 +111,8 @@ ColorCube::ColorCube(DxGraphic& graphic, float size)
 		{
 			RenderStep draw("ShadowMap");
 
-			draw.AddRender(InputLayout::GetRender(graphic, model.vertices.GetVertexLayout(), *VertexShader::GetRender(graphic, "Shader/ColorShader.hlsl")));
-			draw.AddRender(std::make_shared<TransformConstantBuffer>(graphic));
+			draw.AddRender(InputLayout::GetRender(model.vertices.GetVertexLayout(), *VertexShader::GetRender("Shader/ColorShader.hlsl")));
+			draw.AddRender(std::make_shared<TransformConstantBuffer>());
 
 			shadowMap.push_back(std::move(draw));
 		}
@@ -141,7 +139,7 @@ DirectX::XMMATRIX ColorCube::GetTransformMatrix() const noexcept
 		DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 }
 
-void ColorCube::SpawnControlWindow(DxGraphic& graphic, const char* name) noexcept
+void ColorCube::SpawnControlWindow(const char* name) noexcept
 {
 	if (ImGui::Begin(name))
 	{
@@ -180,7 +178,7 @@ void ColorCube::SpawnControlWindow(DxGraphic& graphic, const char* name) noexcep
 				};
 
 				if (auto data = buffer["scale"]; data.IsExist())
-					IsNotMatch(ImGui::SliderFloat(Tag("Scale"), &data, 1.0f, 2.0f, "%.3f", 3.5f));
+					IsNotMatch(ImGui::SliderFloat(Tag("Scale"), &data, 1.0f, 2.0f, "%.3f"));
 
 				if (auto data = buffer["color"]; data.IsExist())
 					IsNotMatch(ImGui::ColorPicker4(Tag("Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT4&>(data))));
@@ -189,7 +187,7 @@ void ColorCube::SpawnControlWindow(DxGraphic& graphic, const char* name) noexcep
 					IsNotMatch(ImGui::SliderFloat(Tag("Specular Intensity"), &data, 0.0f, 1.0f));
 
 				if (auto data = buffer["specularPower"]; data.IsExist())
-					IsNotMatch(ImGui::SliderFloat(Tag("Glassiness"), &data, 0.0f, 1.0f, "%.1f", 1.5f));
+					IsNotMatch(ImGui::SliderFloat(Tag("Glassiness"), &data, 0.0f, 1.0f, "%.1f"));
 
 				return isNotMatch;
 			}

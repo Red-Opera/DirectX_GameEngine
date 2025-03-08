@@ -297,7 +297,7 @@ void TestDynamicMeshLoading()
 	}
 }
 
-void TestMaterialSystemLoading(DxGraphic& graphic)
+void TestMaterialSystemLoading()
 {
 	std::string path = "Model/Sample/brick_wall/brick_wall.obj";
 	Assimp::Importer imp;
@@ -309,8 +309,8 @@ void TestMaterialSystemLoading(DxGraphic& graphic)
 		aiProcess_CalcTangentSpace
 	);
 
-	Material mat{ graphic,*pScene->mMaterials[1],path };
-	Mesh mesh{ graphic,mat,*pScene->mMeshes[0] };
+	Material mat{ *pScene->mMaterials[1],path };
+	Mesh mesh{ mat,*pScene->mMeshes[0] };
 }
 
 void TestScaleMatrixTranslation()
@@ -330,7 +330,7 @@ void D3DTestScratchPad(Window& wnd)
 
 	const auto RenderWithVS = [&gfx = wnd.GetDxGraphic()](const std::string& vsName)
 		{
-			const auto bitop = Graphic::PrimitiveTopology::GetRender(gfx, D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			const auto bitop = Graphic::PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			const auto layout = VertexLayout{}
 				.AddType(VertexLayout::Position2D)
 				.AddType(VertexLayout::ColorFloat3);
@@ -343,26 +343,26 @@ void D3DTestScratchPad(Window& wnd)
 			vb[2].GetValue<VertexLayout::Position2D>() = dx::XMFLOAT2{ -0.5f,-0.5f };
 			vb[2].GetValue<VertexLayout::ColorFloat3>() = dx::XMFLOAT3{ 0.0f,0.0f,1.0f };
 
-			const auto bivb = Graphic::VertexBuffer::GetRender(gfx, "##?", vb);
+			const auto bivb = Graphic::VertexBuffer::GetRender("##?", vb);
 			const std::vector<unsigned short> idx = { 0,1,2 };
-			const auto biidx = Graphic::IndexBuffer::GetRender(gfx, "##?", idx);
-			const auto bips = Graphic::PixelShader::GetRender(gfx, "Shader/Test_PS.cso");
-			const auto bivs = Graphic::VertexShader::GetRender(gfx, "Shader/" + vsName);
-			const auto bilay = Graphic::InputLayout::GetRender(gfx, layout, *bivs);
-			auto rt = Graphic::ShaderInputRenderTarget{ gfx,1280,720,0 };
+			const auto biidx = Graphic::IndexBuffer::GetRender("##?", idx);
+			const auto bips = Graphic::PixelShader::GetRender("Shader/Test_PS.cso");
+			const auto bivs = Graphic::VertexShader::GetRender("Shader/" + vsName);
+			const auto bilay = Graphic::InputLayout::GetRender(layout, *bivs);
+			auto rt = Graphic::ShaderInputRenderTarget{ 1280,720,0 };
 
-			biidx->SetRenderPipeline(gfx);
-			bivb->SetRenderPipeline(gfx);
-			bitop->SetRenderPipeline(gfx);
-			bips->SetRenderPipeline(gfx);
-			bivs->SetRenderPipeline(gfx);
-			bilay->SetRenderPipeline(gfx);
-			rt.Clear(gfx, { 0.0f,0.0f,0.0f,1.0f });
-			rt.RenderAsBuffer(gfx);
+			biidx->SetRenderPipeline();
+			bivb->SetRenderPipeline();
+			bitop->SetRenderPipeline();
+			bips->SetRenderPipeline();
+			bivs->SetRenderPipeline();
+			bilay->SetRenderPipeline();
+			rt.Clear({ 0.0f,0.0f,0.0f,1.0f });
+			rt.RenderAsBuffer();
 			gfx.DrawIndexed(biidx->GetIndexCount());
-			gfx.GetRenderTarget()->RenderAsBuffer(gfx);
+			gfx.GetRenderTarget()->RenderAsBuffer();
 
-			rt.ToImage(gfx).Save("Test_" + vsName + ".png");
+			rt.ToImage().Save("Test_" + vsName + ".png");
 		};
 
 	RenderWithVS("Test2_VS.cso");

@@ -5,18 +5,18 @@
 
 namespace Graphic
 {
-	ShadowCameraConstantBuffer::ShadowCameraConstantBuffer(DxGraphic& graphic, UINT slot)
-		: vertexConstantBuffer{ std::make_unique<VertexConstantBuffer<Transform>>(graphic, slot) }
+	ShadowCameraConstantBuffer::ShadowCameraConstantBuffer(UINT slot)
+		: vertexConstantBuffer{ std::make_unique<VertexConstantBuffer<Transform>>(slot) }
 	{
 
 	}
 
-	void ShadowCameraConstantBuffer::Update(DxGraphic& graphic)
+	void ShadowCameraConstantBuffer::Update()
 	{
 		const auto position = camera->GetPosition();
 		const Transform transform{ DirectX::XMMatrixTranspose(DirectX::XMMatrixTranslation(-position.x, -position.y, -position.z)) };
 
-		vertexConstantBuffer->Update(graphic, transform);
+		vertexConstantBuffer->Update(transform);
 	}
 
 	void ShadowCameraConstantBuffer::SetCamera(const Camera* camera) noexcept
@@ -24,8 +24,8 @@ namespace Graphic
 		this->camera = camera;
 	}
 
-	void ShadowCameraConstantBuffer::SetRenderPipeline(DxGraphic& graphic) NOEXCEPTRELEASE
+	void ShadowCameraConstantBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		vertexConstantBuffer->SetRenderPipeline(graphic);
+		vertexConstantBuffer->SetRenderPipeline();
 	}
 }
