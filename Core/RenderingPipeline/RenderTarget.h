@@ -25,6 +25,7 @@ namespace Graphic
 		UINT GetWidth() const noexcept;
 		UINT GetHeight() const noexcept;
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView> GetTargetView() const noexcept;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> GetTexture() const noexcept;
 
 		GraphicResource::Image ToImage() const;
 		void CreateDumpy(const std::string& path) const;

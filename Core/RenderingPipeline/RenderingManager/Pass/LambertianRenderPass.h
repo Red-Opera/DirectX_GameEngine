@@ -12,6 +12,9 @@
 #include "Core/RenderingPipeline/Pipeline/VSPS/ShadowSamplerState.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
 
+//#include "Core/Window.h"
+//#include "Core/EngineUI/SceneView.h"
+
 #include <vector>
 
 class DxGraphic;
@@ -47,6 +50,13 @@ namespace RenderGraphNameSpace
 			shadowConstantBuffer->Update();
 			mainCamera->RenderToGraphic();
 			RenderQueuePass::Execute();
+
+			//auto texture = renderTarget->GetTexture();
+			//
+			//Microsoft::WRL::ComPtr<ID3D11Texture2D> dst = Graphic::SceneView::GetScreen();
+			//Window::GetDxGraphic().GetDeviceContext()->CopyResource(dst.Get(), texture.Get());
+			//
+			//Graphic::SceneView::Render();
 		}
 
 		void RenderMainCamera(const Camera& camera) noexcept { mainCamera = &camera; }

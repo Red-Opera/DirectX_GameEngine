@@ -18,14 +18,17 @@ namespace Graphic
     public:
         SceneView(UINT width, UINT height);
 
-        void Render();
+        static void Render();
+
+		static Microsoft::WRL::ComPtr<ID3D11Texture2D> GetScreen() { return renderTargetTexture; }
 
         // Render을(를) 통해 상속됨
         void SetRenderPipeline() override;
 
     private:
-        Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTargetTexture = nullptr;
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> renderTargetView = nullptr;
+        static Microsoft::WRL::ComPtr<ID3D11Texture2D> renderTargetTexture;
+        static Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> renderTargetView;
+
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTarget = nullptr;
     };
 }

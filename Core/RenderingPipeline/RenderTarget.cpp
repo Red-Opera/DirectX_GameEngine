@@ -187,6 +187,46 @@ namespace Graphic
 		return targetView;
     }
 
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> Graphic::RenderTarget::GetTexture() const noexcept
+    {
+        CREATEINFOMANAGER(Window::GetDxGraphic());
+
+        D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDESC{ };
+        targetView->GetDesc(&renderTargetViewDESC);
+
+        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+        targetView->GetResource(&resource);
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+        resource.As(&texture);
+
+        D3D11_TEXTURE2D_DESC textureDESC{ };
+        texture->GetDesc(&textureDESC);
+
+        D3D11_TEXTURE2D_DESC tempTextureDESC = textureDESC;
+        tempTextureDESC.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+        tempTextureDESC.Usage = D3D11_USAGE_STAGING;
+        tempTextureDESC.BindFlags = 0;
+        tempTextureDESC.MiscFlags = 0;
+        tempTextureDESC.ArraySize = 1;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
+        hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
+        GRAPHIC_THROW_INFO(hr);
+
+        if (renderTargetViewDESC.ViewDimension == D3D11_RTV_DIMENSION::D3D11_RTV_DIMENSION_TEXTURE2DARRAY)
+        {
+            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), renderTargetViewDESC.Texture2DArray.FirstArraySlice, nullptr));
+        }
+
+        else
+        {
+            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()));
+        }
+
+        return std::move(textureTemp);
+    }
+
     ShaderInputRenderTarget::ShaderInputRenderTarget(UINT width, UINT height, UINT slot)
         : RenderTarget(width, height), slot(slot)
     {
@@ -293,6 +333,26 @@ namespace Graphic
                     arr.push_back(row[x].g);
                 }
             }
+        }
+
+        else if (textureDESC.Format == DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
+        {
+			elementCount = 4;
+
+			for (UINT y = 0; y < height; y++)
+			{
+				struct Color { uint8_t r, g, b, a; };
+
+				auto row = reinterpret_cast<const Color*>(bytes + mapped.RowPitch * size_t(y));
+
+				for (UINT x = 0; x < width; x++)
+				{
+					arr.push_back(row[x].r / 255.0f);
+					arr.push_back(row[x].g / 255.0f);
+					arr.push_back(row[x].b / 255.0f);
+					arr.push_back(row[x].a / 255.0f);
+				}
+			}
         }
 
         else

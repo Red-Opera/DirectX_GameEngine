@@ -100,6 +100,8 @@ public:
 	DirectX::XMMATRIX		GetProjection() const noexcept { return projection; }
 	bool					GetMsaaUsage() const noexcept { return isMSAAUsage; }
 	UINT					GetMsaaQuality() const noexcept { return msaaQuality; }
+	ComPtr<ID3D11Texture2D>	GetBackBuffer() const noexcept { return backBuffer; }
+	ComPtr<ID3D11DepthStencilView> GetDepthStencilView() const noexcept { return depthStencilView; }
 
 	void CreateSwapChain();
 	void CreateRenderTargetView();
@@ -146,6 +148,8 @@ private:
 	ID3D11ShaderResourceView*	shaderResourceView;		// ·»´õ ´ë»ó¿ë 2Â÷¿ø ÅØ½ºÃ³
 	ComPtr<ID3D11DepthStencilView>	depthStencilView;		// ±íÀÌ ¨¬ ½ºÅÙ½Ç ºä
 	D3D11_VIEWPORT					viewport;				// ºäÆ÷Æ®
+
+	ComPtr<ID3D11Texture2D> backBuffer;
 
 	DirectX::XMMATRIX projection;
 	DirectX::XMMATRIX camera;			

@@ -63,6 +63,8 @@ private:
 	ColorCube cube{ 4.0f };
 	ColorCube cube2{ 4.0f };
 
+	Graphic::SceneView sceneView{ 1000, 1000 };
+
 	bool saveDepth = false;
 };
 

@@ -101,13 +101,20 @@ void App::DoFrame(float deltaTime)
 	gobber.Submit(RenderingChannel::shadow);
 	nano.Submit(RenderingChannel::shadow);
 
-	renderGraph.Execute();
-
 	if (saveDepth)
 	{
 		renderGraph.DumpShadowMap("depth.png");
 		saveDepth = false;
 	}
+
+	renderGraph.Execute();
+
+	// auto deviceContext = wnd.GetDxGraphic().GetDeviceContext();
+	// 
+	// Microsoft::WRL::ComPtr<ID3D11Texture2D> dst = sceneView.GetScreen();
+	// deviceContext->CopyResource(dst.Get(), wnd.GetDxGraphic().GetBackBuffer().Get());
+	// 
+	// Graphic::SceneView::Render();
 
 	static MB sponzaBase{ "Sponza" };
 	static MB gobbarBase{ "Gobbar" };

@@ -292,8 +292,6 @@ void DxGraphic::CreateSwapChain()
 
 void DxGraphic::CreateRenderTargetView()
 {
-    ComPtr<ID3D11Texture2D> backBuffer;
-
     // 교환 사슬의 버퍼를 가져옴 (0번째 후면 버퍼를 ID3D11Texture2D 형식으로 3번째 인수로 반환)
     GRAPHIC_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
 

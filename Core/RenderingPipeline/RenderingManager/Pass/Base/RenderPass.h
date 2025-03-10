@@ -44,9 +44,6 @@ namespace RenderGraphNameSpace
 		void AddDataConsumer(std::unique_ptr<PipelineDataConsumer> input);
 		void AddDataProvider(std::unique_ptr<PipelineDataProvider> output);
 
-		std::shared_ptr<Graphic::RenderTarget> renderTarget;
-		std::shared_ptr<Graphic::DepthStencil> depthStencil;
-
 	private:
 		std::vector<std::unique_ptr<PipelineDataConsumer>> dataConsumers;
 		std::vector<std::unique_ptr<PipelineDataProvider>> dataProviders;

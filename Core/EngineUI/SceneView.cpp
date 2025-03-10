@@ -7,65 +7,74 @@
 
 namespace Graphic
 {
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> SceneView::renderTargetTexture;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SceneView::renderTargetView;
+
     SceneView::SceneView(UINT width, UINT height)
     {
-        D3D11_TEXTURE2D_DESC desc = {};
-        desc.Width = 1000;
-        desc.Height = 1000;
-        desc.MipLevels = 1;
-        desc.ArraySize = 1;
-        desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        desc.SampleDesc.Count = 1;
-        desc.Usage = D3D11_USAGE_DEFAULT;
-        desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        D3D11_TEXTURE2D_DESC mDesc;
 
-        GetDevice(Window::GetDxGraphic())->CreateTexture2D(&desc, nullptr, &renderTargetTexture);
+        mDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        mDesc.Usage = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+        mDesc.CPUAccessFlags = 0;
+        mDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        mDesc.Width = 1280;
+        mDesc.Height = 720;
+        mDesc.ArraySize = 1;
+        mDesc.SampleDesc.Count = 1;
+        mDesc.SampleDesc.Quality = 0;
+        mDesc.MipLevels = 1;
+        mDesc.MiscFlags = 0;
 
-        D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-        rtvDesc.Format = desc.Format;
-        rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-        GetDevice(Window::GetDxGraphic())->CreateRenderTargetView(renderTargetTexture.Get(), &rtvDesc, &renderTarget);
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&mDesc, nullptr, renderTargetTexture.GetAddressOf());
+
+        D3D11_TEXTURE2D_DESC textureDesc;
+        renderTargetTexture.Get()->GetDesc(&textureDesc);
 
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-        srvDesc.Format = desc.Format;
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MostDetailedMip = 0;
+        srvDesc.Format = textureDesc.Format;
         srvDesc.Texture2D.MipLevels = 1;
-        GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(renderTargetTexture.Get(), &srvDesc, &renderTargetView);
+        srvDesc.Texture2D.MostDetailedMip = 0;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION::D3D11_SRV_DIMENSION_TEXTURE2D;
 
-        // 디바이스 컨텍스트 가져오기
-        auto pContext = GetDeviceContext(Window::GetDxGraphic());
-
-        // 이 뷰의 렌더 타겟을 설정
-        ID3D11RenderTargetView* rtView = renderTarget.Get();
-        pContext->OMSetRenderTargets(1, &rtView, nullptr);
-
-        // 뷰포트 설정
-        D3D11_VIEWPORT vp = {};
-        vp.TopLeftX = 0.0f;
-        vp.TopLeftY = 0.0f;
-        vp.Width = 1000.0f;  // 생성 시점의 텍스처 크기
-        vp.Height = 1000.0f;
-        vp.MinDepth = 0.0f;
-        vp.MaxDepth = 1.0f;
-        pContext->RSSetViewports(1, &vp);
-
-        // 배경 Clear
-        const float clearColor[] = { 0.1f, 0.2f, 0.3f, 1.0f };
-        pContext->ClearRenderTargetView(rtView, clearColor);
+        hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(renderTargetTexture.Get(), &srvDesc, renderTargetView.GetAddressOf());
     }
 
     void SceneView::Render()
     {
-        auto pContext = GetDeviceContext(Window::GetDxGraphic());
-
-        // SceneView용 렌더 타겟 설정
-        ID3D11RenderTargetView* rtView = renderTarget.Get();
-        pContext->OMSetRenderTargets(1, &rtView, nullptr);
-
-        // 이제 ImGui로 화면에 표시
         ImGui::Begin("Game Window");
-        ImGui::Image((ImTextureID)(intptr_t)renderTargetView.Get(), ImVec2(1000.0f, 1000.0f));
+
+        // 사용 가능한 영역 크기 가져오기
+        ImVec2 availSize = ImGui::GetContentRegionAvail();
+
+        // renderTargetTexture의 원본 크기(여기서는 1280x720로 고정되어 있음)
+        float textureWidth = 1280.0f;
+        float textureHeight = 720.0f;
+        float textureAspect = textureWidth / textureHeight;
+        float availAspect = availSize.x / availSize.y;
+
+        float drawWidth, drawHeight;
+
+        // 영역의 비율에 따라 크기 조정 (letterbox 방식)
+        if (availAspect > textureAspect)
+        {
+            drawHeight = availSize.y;
+            drawWidth = drawHeight * textureAspect;
+        }
+
+        else
+        {
+            drawWidth = availSize.x;
+            drawHeight = drawWidth / textureAspect;
+        }
+
+        ImGui::Image(
+            (ImTextureID)(intptr_t)renderTargetView.Get(),
+            ImVec2{ drawWidth, drawHeight },
+            ImVec2{ 0, 0 },
+            ImVec2{ 1, 1 }
+        );
+
         ImGui::End();
     }
 
