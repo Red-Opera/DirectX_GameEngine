@@ -153,6 +153,8 @@
     <ClInclude Include="Core\Camera\CameraFrustum.h" />
     <ClInclude Include="Core\Camera\CameraIndicator.h" />
     <ClInclude Include="Core\Camera\CameraProjection.h" />
+    <ClInclude Include="Core\Component\Component.h" />
+    <ClInclude Include="Core\Object\EngineLoop.h" />
     <ClInclude Include="Core\Draw\BaseModel\ColorCube.h" />
     <ClInclude Include="Core\Draw\BaseModel\Plane.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
@@ -168,6 +170,7 @@
     <ClInclude Include="Core\Exception\EngineUIException.h" />
     <ClInclude Include="Core\Exception\ModelException.h" />
     <ClInclude Include="Core\Exception\RenderGraphCompileException.h" />
+    <ClInclude Include="Core\Object\Object.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\Stencil.h" />
@@ -375,6 +378,7 @@
     <ClCompile Include="Core\Camera\CameraFrustum.cpp" />
     <ClCompile Include="Core\Camera\CameraIndicator.cpp" />
     <ClCompile Include="Core\Camera\CameraProjection.cpp" />
+    <ClCompile Include="Core\Component\Component.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorCube.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorSphere.cpp" />
     <ClCompile Include="Core\Camera\Camera.cpp" />
@@ -390,6 +394,7 @@
     <ClCompile Include="Core\Exception\EngineUIException.cpp" />
     <ClCompile Include="Core\Exception\ModelException.cpp" />
     <ClCompile Include="Core\Exception\RenderGraphCompileException.cpp" />
+    <ClCompile Include="Core\Object\Object.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\Rasterizer\Rasterizer.cpp" />
