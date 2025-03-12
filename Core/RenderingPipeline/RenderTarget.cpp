@@ -187,7 +187,7 @@ namespace Graphic
 		return targetView;
     }
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> Graphic::RenderTarget::GetTexture() const noexcept
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> Graphic::RenderTarget::GetTexture() const NOEXCEPTRELEASE
     {
         CREATEINFOMANAGER(Window::GetDxGraphic());
 

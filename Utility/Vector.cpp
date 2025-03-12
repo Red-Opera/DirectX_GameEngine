@@ -49,6 +49,46 @@ XMFLOAT3 operator/(const XMFLOAT3& lhs, const XMFLOAT3& rhs)
 	return XMFLOAT3{ lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z };
 }
 
+Vector4 operator+(const Vector4& lhs, float value)
+{
+	return Vector4{ lhs.x + value, lhs.y + value, lhs.z + value, lhs.w + value };
+}
+
+Vector4 operator+(const Vector4& lhs, const Vector4& rhs)
+{
+	return Vector4{ lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w };
+}
+
+Vector4 operator-(const Vector4& lhs, float value)
+{
+	return Vector4{ lhs.x - value, lhs.y - value, lhs.z - value, lhs.w - value };
+}
+
+Vector4 operator-(const Vector4& lhs, const Vector4& rhs)
+{
+	return Vector4{ lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w };
+}
+
+Vector4 operator*(const Vector4& lhs, float value)
+{
+	return Vector4{ lhs.x * value, lhs.y * value, lhs.z * value, lhs.w * value };
+}
+
+Vector4 operator*(const Vector4& lhs, const Vector4& rhs)
+{
+	return Vector4{ lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w };
+}
+
+Vector4 operator/(const Vector4& lhs, float value)
+{
+	return Vector4{ lhs.x / value, lhs.y / value, lhs.z / value, lhs.w / value };
+}
+
+Vector4 operator/(const Vector4& lhs, const Vector4 rhs)
+{
+	return Vector4{ lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w };
+}
+
 GraphicResource::Image::Color Vector::ConvertColor(DirectX::XMVECTOR vector)
 {
 	using namespace DirectX;
@@ -86,4 +126,235 @@ DirectX::XMFLOAT3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
 DirectX::XMFLOAT3 Vector::GetPosition(const DirectX::XMFLOAT4X4& matrix)
 {
 	return { matrix._41, matrix._42, matrix._43 };
+}
+
+Vector3::Vector3(const Vector2& vector) noexcept : x(vector.x), y(vector.y), z(0.0f)
+{
+
+}
+
+Vector3::Vector3(const Vector4& vector) noexcept : x(vector.x), y(vector.y), z(vector.z)
+{
+
+}
+
+Vector3::Vector3(Vector2&& vector) : x(vector.x), y(vector.y), z(0.0f)
+{
+
+}
+
+Vector3::Vector3(Vector4&& vector) : x(vector.x), y(vector.y), z(vector.z)
+{
+
+}
+
+Vector3& Vector3::operator=(const Vector2& vector) noexcept
+{
+	this->x = vector.x;
+	this->y = vector.y;
+	this->z = 0.0f;
+
+	return *this;
+}
+
+Vector3& Vector3::operator=(const Vector3& vector) noexcept
+{
+	if (this == &vector)
+		return *this;
+
+	this->x = vector.x;
+	this->y = vector.y;
+	this->z = vector.z;
+
+	return *this;
+}
+
+Vector3& Vector3::operator=(const Vector4& vector) noexcept
+{
+	this->x = vector.x;
+	this->y = vector.y;
+	this->z = vector.z;
+
+	return *this;
+}
+
+Vector2::Vector2(const Vector3& vector) noexcept : x(vector.x), y(vector.y)
+{
+
+}
+
+Vector2::Vector2(Vector3&& vector) : x(vector.x), y(vector.y)
+{
+
+}
+
+Vector2::Vector2(const Vector4& vector) noexcept : x(vector.x), y(vector.y)
+{
+
+}
+
+Vector2::Vector2(Vector4&& vector) : x(vector.x), y(vector.y) 
+{
+
+}
+
+Vector2& Vector2::operator=(const Vector2& vector) noexcept
+
+{
+	if (this == &vector)
+		return *this;
+
+	this->x = vector.x;
+	this->y = vector.y;
+
+	return *this;
+}
+
+Vector2& Vector2::operator=(const Vector3& vector) noexcept
+{
+	this->x = vector.x;
+	this->y = vector.y;
+
+	return *this;
+}
+
+Vector2& Vector2::operator=(const Vector4& vector) noexcept
+{
+	this->x = vector.x;
+	this->y = vector.y;
+
+	return *this;
+}
+
+Vector4::Vector4(const Vector3& vector) noexcept : x(vector.x), y(vector.y), z(vector.z), w(0.0f) 
+{
+
+}
+
+Vector4::Vector4(Vector3&& vector) : x(vector.x), y(vector.y), z(vector.z), w(0.0f) 
+{
+
+}
+
+Vector4::Vector4(const Vector2& vector) noexcept : x(vector.x), y(vector.y), z(0.0f), w(0.0f) 
+{
+
+}
+
+Vector4::Vector4(Vector2&& vector) : x(vector.x), y(vector.y), z(0.0f), w(0.0f)
+{
+
+}
+
+Vector4& Vector4::operator=(const Vector2& vector) noexcept
+{
+	this->x = vector.x;
+	this->y = vector.y;
+	this->z = 0.0f;
+	this->w = 0.0f;
+
+	return *this;
+}
+
+Vector4& Vector4::operator=(const Vector3& vector) noexcept
+{
+	this->x = vector.x;
+	this->y = vector.y;
+	this->z = vector.z;
+	this->w = 0.0f;
+
+	return *this;
+}
+
+Vector4& Vector4::operator=(const Vector4& vector) noexcept
+{
+	if (this == &vector)
+		return *this;
+
+	this->x = vector.x;
+	this->y = vector.y;
+	this->z = vector.z;
+	this->w = vector.w;
+
+	return *this;
+}
+
+Vector2 operator+(const Vector2& lhs, float value)
+{
+	return Vector2{ lhs.x + value, lhs.y + value };
+}
+
+Vector2 operator+(const Vector2& lhs, const Vector2& rhs)
+{
+	return Vector2{ lhs.x + rhs.x, lhs.y + rhs.y };
+}
+
+Vector2 operator-(const Vector2& lhs, float value)
+{
+	return Vector2{ lhs.x - value, lhs.y - value };
+}
+
+Vector2 operator-(const Vector2& lhs, const Vector2& rhs)
+{
+	return Vector2{ lhs.x - rhs.x, lhs.y - rhs.y };
+}
+
+Vector2 operator*(const Vector2& lhs, float value)
+{
+	return Vector2{ lhs.x * value, lhs.y * value };
+}
+
+Vector2 operator*(const Vector2& lhs, const Vector2& rhs)
+{
+	return Vector2{ lhs.x * rhs.x, lhs.y * rhs.y };
+}
+
+Vector2 operator/(const Vector2& lhs, float value)
+{
+	return Vector2{ lhs.x / value, lhs.y / value };
+}
+
+Vector2 operator/(const Vector2& lhs, const Vector2& rhs)
+{
+	return Vector2{ lhs.x / rhs.x, lhs.y / rhs.y };
+}
+
+Vector3 operator+(const Vector3& lhs, float value)
+{
+	return Vector3{ lhs.x + value, lhs.y + value, lhs.z + value };
+}
+
+Vector3 operator+(const Vector3& lhs, const Vector3& rhs)
+{
+	return Vector3{ lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z };
+}
+
+Vector3 operator-(const Vector3& lhs, float value)
+{
+	return Vector3{ lhs.x - value, lhs.y - value, lhs.z - value };
+}
+
+Vector3 operator-(const Vector3& lhs, const Vector3& rhs)
+{
+	return Vector3{ lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z };
+}
+
+Vector3 operator*(const Vector3& lhs, float value)
+{
+	return Vector3{ lhs.x * value, lhs.y * value, lhs.z * value };
+}
+
+Vector3 operator*(const Vector3& lhs, const Vector3& rhs)
+{
+	return Vector3{ lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z };
+}
+
+Vector3 operator/(const Vector3& lhs, float value)
+{
+	return Vector3{ lhs.x / value, lhs.y / value, lhs.z / value };
+}
+
+Vector3 operator/(const Vector3& lhs, const Vector3 rhs)
+{
+	return Vector3{ lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z };
 }

@@ -154,6 +154,7 @@
     <ClInclude Include="Core\Camera\CameraIndicator.h" />
     <ClInclude Include="Core\Camera\CameraProjection.h" />
     <ClInclude Include="Core\Component\Component.h" />
+    <ClInclude Include="Core\Component\TransformComponent.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
     <ClInclude Include="Core\Draw\BaseModel\ColorCube.h" />
     <ClInclude Include="Core\Draw\BaseModel\Plane.h" />
@@ -379,6 +380,7 @@
     <ClCompile Include="Core\Camera\CameraIndicator.cpp" />
     <ClCompile Include="Core\Camera\CameraProjection.cpp" />
     <ClCompile Include="Core\Component\Component.cpp" />
+    <ClCompile Include="Core\Component\TransformComponent.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorCube.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorSphere.cpp" />
     <ClCompile Include="Core\Camera\Camera.cpp" />

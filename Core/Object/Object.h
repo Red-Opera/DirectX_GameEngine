@@ -63,7 +63,7 @@ public:
 	void RemoveComponent(std::string componentName);
 
 	// 해당 컴포넌트가 존재하는지 확인하는 함수
-	bool HasComponent (std::string componentName) const;
+	bool HasComponent(std::string componentName) const;
 
 	// 오브젝트 활성화, 비활성화 함수
 	void SetActive(bool isActive) { this->isActive = isActive; }
