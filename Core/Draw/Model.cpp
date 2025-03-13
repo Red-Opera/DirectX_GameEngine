@@ -61,6 +61,7 @@ void Model::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
 
 Model::~Model() noexcept
 {
+
 }
 
 std::unique_ptr<SceneGraphNode> Model::ConvertSceneGraphNode(int& nextID, const aiNode& modelNode, float scale) noexcept

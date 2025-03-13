@@ -34,8 +34,8 @@ public:
 	void SetEnable(bool isActive) { this->isActive = isActive; }
 	bool GetEnable() const { return isActive; }
 
-	virtual std::string GetName() const { return "Component"; }	// 객체의 컴포넌트 이름을 반환하는 함수
-	static std::string GetClassName() { return "Component"; }	// 해당 클래스의 이름을 반환하는 함수
+	virtual std::string GetClassName() const { return "Component"; }	// 객체의 컴포넌트 이름을 반환하는 함수
+	static std::string GetStaticClassName() { return "Component"; }		// 해당 클래스의 이름을 반환하는 함수
 
 protected:
 	std::shared_ptr<class Object> object;

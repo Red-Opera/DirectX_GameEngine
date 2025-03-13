@@ -16,17 +16,19 @@ class Object : public EngineLoop, public std::enable_shared_from_this<Object>
 public:
 	Object();
 
+	std::string GetName() const { return name; }
+
 	// 해당 컴포넌트를 추가하는 함수
 	template <ComponentChild ComponentClass>
 	void AddComponent(std::shared_ptr<ComponentClass> component)
 	{
-		if (components.find(component->GetName()) != components.end())
+		if (components.find(component->GetClassName()) != components.end())
 			return;
 
 		// Component에 Object를 설정함
 		component->SetObject(shared_from_this());
 
-		components[component->GetName()] = *component;
+		components[component->GetClassName()] = *component;
 	}
 
 	// 템플릿을 사용하여 해당 컴포넌트를 반환하는 함수
@@ -35,7 +37,7 @@ public:
 	{
 		for (auto& component : components)
 		{
-			if (component.second.GetName() == ComponentClass::GetName())
+			if (component.second->GetClassName() == ComponentClass::GetStaticClassName())
 				return std::dynamic_pointer_cast<ComponentClass>(component.second);
 		}
 
@@ -50,11 +52,19 @@ public:
 
 		for (auto& component : components)
 		{
-			if (component.second.GetName() == ComponentClass::GetName())
+			if (component.second.GetClassName() == ComponentClass::GetClassName())
 				result.push_back(std::dynamic_pointer_cast<ComponentClass>(component.second));
 		}
 
 		return result;
+	}
+
+	const std::shared_ptr<Component> GetComponent(std::string componentName)
+	{
+		if (components.find(componentName) == components.end())
+			return nullptr;
+
+		return components[componentName];
 	}
 
 	// 모든 컴포넌트를 반환하는 함수
@@ -88,5 +98,6 @@ public:
 private:
 	std::unordered_map<std::string, std::shared_ptr<Component>> components;
 
+	std::string name;
 	bool isActive = true;
 };
