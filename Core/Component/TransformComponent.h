@@ -34,8 +34,8 @@ public:
 	void SetScale(float x, float y, float z) noexcept;
 
 	const Vector3 GetRight() const noexcept;
-	const Vector3 GetUp() const noexcept;
-	const Vector3 GetForward() const noexcept;
+	//const Vector3 GetUp() const noexcept;
+	//const Vector3 GetForward() const noexcept;
 
 	// =============================================
 	// [Local]

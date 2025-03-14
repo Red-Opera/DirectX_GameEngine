@@ -40,6 +40,7 @@ void TransformComponent::SetScale(float x, float y, float z) noexcept
 
 const Vector3 TransformComponent::GetRight() const noexcept
 {
+	// TODO
 	return Vector3();
 }
 
@@ -128,7 +129,7 @@ void TransformComponent::RemoveParent() noexcept
 void TransformComponent::AddChild(std::shared_ptr<TransformComponent> child) noexcept
 {
 	children.push_back(child);
-	childIndex[child->GetObject()->GetName()] = children.size() - 1;
+	childIndex[child->GetObject()->GetName()] = ((UINT)children.size() - (UINT)1);
 
 	child->parent = this->shared_from_this();
 }
@@ -138,7 +139,7 @@ void TransformComponent::AddChild(std::shared_ptr<Object> child) noexcept
 	std::shared_ptr<TransformComponent> childComponent = child->GetComponent<TransformComponent>();
 
 	children.push_back(childComponent);
-	childIndex[child->GetName()] = children.size() - 1;
+	childIndex[child->GetName()] = ((UINT)children.size() - (UINT)1);
 
 	childComponent->parent = this->shared_from_this();
 }
@@ -258,4 +259,8 @@ std::vector<std::shared_ptr<TransformComponent>> TransformComponent::GetChildren
 size_t TransformComponent::GetChildCount() const noexcept
 {
 	return children.size();
+}
+
+void TransformComponent::UpdateTransform() noexcept
+{
 }

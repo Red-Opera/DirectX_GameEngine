@@ -11,8 +11,8 @@ class StringConverter
 public:
 	static std::vector<std::string> TokenizeQuoted(const std::string& input);
 
-	static std::wstring ToWide(const std::string& narrow);
-	static std::string ToNarrow(const std::wstring& wide);
+	static std::wstring ToWString(const std::string& narrow);
+	static std::string ToString(const std::wstring& wide);
 
 	template<class Iter>
 	static void SplitStringIterator(const std::string& text, const std::string& delim, Iter out)
@@ -36,6 +36,4 @@ public:
 
 	static std::string GetAbsolutePath(const std::filesystem::path& path);
 	static std::string GetFileName(std::string filePath);
-	static std::wstring ToWString(const std::string& value);
-	static std::string ToString(const std::wstring& value);
 };

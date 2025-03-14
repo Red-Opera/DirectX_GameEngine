@@ -148,7 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="App.h" />
+    <ClInclude Include="Core\App.h" />
     <ClInclude Include="Core\Camera\CameraContainer.h" />
     <ClInclude Include="Core\Camera\CameraFrustum.h" />
     <ClInclude Include="Core\Camera\CameraIndicator.h" />
@@ -226,7 +226,6 @@
     <ClInclude Include="Core\RenderingPipeline\Viewport.h" />
     <ClInclude Include="Core\TestModelBase.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.h" />
-    <ClInclude Include="DX3DApp.h" />
     <ClInclude Include="Core\InputSystem\KeyBoard.h" />
     <ClInclude Include="Core\InputSystem\Mouse.h" />
     <ClInclude Include="Core\DxGraphic.h" />
@@ -374,7 +373,7 @@
     <ClInclude Include="Utility\Vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
+    <ClCompile Include="Core\App.cpp" />
     <ClCompile Include="Core\Camera\CameraContainer.cpp" />
     <ClCompile Include="Core\Camera\CameraFrustum.cpp" />
     <ClCompile Include="Core\Camera\CameraIndicator.cpp" />
@@ -538,7 +537,7 @@
     <ClCompile Include="Theory\Chapter7_Lighting\T7-9_DirectionLight.cpp" />
     <ClInclude Include="Core\Exception\WindowException.h" />
     <ClCompile Include="Core\Draw\Base\Drawable.cpp" />
-    <ClCompile Include="DX3DApp.cpp" />
+    <ClCompile Include="Core\DX3DApp.cpp" />
     <ClCompile Include="Core\InputSystem\KeyBoard.cpp" />
     <ClCompile Include="Core\InputSystem\Mouse.cpp" />
     <ClCompile Include="Core\DxGraphic.cpp" />

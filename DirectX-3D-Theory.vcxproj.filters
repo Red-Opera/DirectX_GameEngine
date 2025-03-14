@@ -18,9 +18,6 @@
     <ClInclude Include="stdafx.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DX3DApp.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Utility\GameTimer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -42,7 +39,7 @@
     <ClInclude Include="Core\WindowResources\icon\resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="App.h">
+    <ClInclude Include="Core\App.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\DxGraphic.h">
@@ -647,7 +644,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DX3DApp.cpp">
+    <ClCompile Include="Core\DX3DApp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-1_BasicKnowledge.cpp">
@@ -734,7 +731,7 @@
     <ClCompile Include="Core\InputSystem\Mouse.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="App.cpp">
+    <ClCompile Include="Core\App.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\DxGraphic.cpp">

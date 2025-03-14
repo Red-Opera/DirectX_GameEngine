@@ -36,8 +36,6 @@
 
 #include "External/Imgui/imgui.h"
 
-#include <DX3DApp.h>
-
 // Define
 #define HR(x) { HRESULT hr = x; if(FAILED(hr)) { assert(false); } }
 #define ReleaseCOM(x) { if(x) { (x)->Release(); (x) = nullptr; } }

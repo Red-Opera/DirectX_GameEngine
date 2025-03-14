@@ -265,7 +265,7 @@ void DxGraphic::SwapChainSettings(HWND hWnd)
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;    // 후면 버퍼에 렌더하기 위해 값을 설정
     swapChainDesc.BufferCount = 1;                                  // 더블 버퍼링을 하기 위해 1로
     swapChainDesc.OutputWindow = hWnd;                              // 출력할 창 설정
-    swapChainDesc.Windowed = false;                                 // 창 모드 여부 O
+    swapChainDesc.Windowed = true;                                 // 창 모드 여부 O
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;         // 새로운 프레임에 그림
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;   // 화면이 바뀔 때 적절한 해상도로 설정
 }

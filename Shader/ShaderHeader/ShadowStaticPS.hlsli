@@ -23,19 +23,24 @@ float GetShadowDepth(const in float4 shadowPosition)
 
 float GetShadow(const in float4 shadowPosition)
 {
-    float shadow = 0.0f;
-    
-    [unroll]
-    for (int x = -PCF_RANGE; x <= PCF_RANGE; x++)
-    {
-        [unroll]
-        for (int y = -PCF_RANGE; y <= PCF_RANGE; y++)
-        {
-            float3 offset = float3(x, y, 0.0f);
-            
-            shadow += shadowSpecularTexture.SampleCmpLevelZero(shadowSamplerHardware, shadowPosition.xyz + offset, GetShadowDepth(shadowPosition));
-        }
-    }
-        
-    return shadow / ((PCF_RANGE * 2 + 1) * (PCF_RANGE * 2 + 1));
+    return shadowSpecularTexture.SampleCmpLevelZero(shadowSamplerHardware, shadowPosition.xyz, GetShadowDepth(shadowPosition));
 }
+
+//float GetShadow(const in float4 shadowPosition)
+//{
+//    float shadow = 0.0f;
+//    
+//    [unroll]
+//    for (int x = -PCF_RANGE; x <= PCF_RANGE; x++)
+//    {
+//        [unroll]
+//        for (int y = -PCF_RANGE; y <= PCF_RANGE; y++)
+//        {
+//            float3 offset = float3(x, y, 0.0f);
+//            
+//            shadow += shadowSpecularTexture.SampleCmpLevelZero(shadowSamplerHardware, shadowPosition.xyz + offset, GetShadowDepth(shadowPosition));
+//        }
+//    }
+//        
+//    return shadow / ((PCF_RANGE * 2 + 1) * (PCF_RANGE * 2 + 1));
+//}

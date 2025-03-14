@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Core/Window.h"
-#include "Core/Camera/CameraContainer.h"
-#include "Core/Draw/Light/PointLight.h"
-#include "Core/Draw/Model.h"
-#include "Core/Draw/BaseModel/ColorCube.h"
+#include "Window.h"
+#include "Camera/CameraContainer.h"
+#include "Draw/Light/PointLight.h"
+#include "Draw/Model.h"
+#include "Draw/BaseModel/ColorCube.h"
 
-#include "Core/RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
-#include "Core/EngineUI/FolderViewInspector.h"
-#include "Core/EngineUI/SceneView.h"
+#include "RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
+#include "EngineUI/FolderViewInspector.h"
 
 #include "Utility/GameTimer.h"
 #include "Utility/Imgui/ImguiManager.h"
@@ -42,11 +41,7 @@ private:
 	float cameraSpeed = 1.0f;
 
 	std::vector<std::unique_ptr<class Drawable>> drawables;
-	std::vector<class DrawBox*> boxes;
 	float objectSpeed = 1.0f;
-	static constexpr size_t drawableCount = 180;
-
-	std::optional<int> comboBoxIndex;
 
 	std::string commandLine;
 	ScriptCommander scriptCommander;
@@ -62,8 +57,6 @@ private:
 
 	ColorCube cube{ 4.0f };
 	ColorCube cube2{ 4.0f };
-
-	Graphic::SceneView sceneView{ 1000, 1000 };
 
 	bool saveDepth = false;
 };

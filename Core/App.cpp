@@ -31,8 +31,8 @@ App::App(const std::string& commandLine)
 	//gobber.SetRootTransform(DirectX::XMMatrixTranslation(9.2f, 7.0f, 0.0f));
 	//bluePlane.SetPosition(camera.GetPosition());
 	//redPlane.SetPosition(camera.GetPosition());
-	cube.SetPosition({ 4.0f, 0.0f, 0.0f });
-	cube2.SetPosition({ 0.0f, 4.0f, 0.0f });
+	cube.SetPosition({ 14.0f, 0.0f, 0.0f });
+	cube2.SetPosition({ 10.0f, 4.0f, 0.0f });
 
 	nano.SetRootTransform(
 		DirectX::XMMatrixRotationY(Math::PI / 2.f) *
@@ -40,7 +40,7 @@ App::App(const std::string& commandLine)
 	);
 	gobber.SetRootTransform(
 		DirectX::XMMatrixRotationY(-Math::PI / 2.f) *
-		DirectX::XMMatrixTranslation(-8.f, 10.f, 0.f)
+		DirectX::XMMatrixTranslation(-30.f, 10.f, 0.f)
 	);
 
 	cube.LinkTechniques(renderGraph);

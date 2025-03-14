@@ -20,18 +20,24 @@ std::vector<std::string> StringConverter::TokenizeQuoted(const std::string& inpu
 	return tokens;
 }
 
-std::wstring StringConverter::ToWide(const std::string& narrow)
+std::wstring StringConverter::ToWString(const std::string& narrow)
 {
 	wchar_t wide[512];
 	mbstowcs_s(nullptr, wide, narrow.c_str(), _TRUNCATE);
 
+	if (wide[0] == L'\0')
+		return L"";
+
 	return wide;
 }
 
-std::string StringConverter::ToNarrow(const std::wstring& wide)
+std::string StringConverter::ToString(const std::wstring& wide)
 {
 	char narrow[512];
 	wcstombs_s(nullptr, narrow, wide.c_str(), _TRUNCATE);
+
+	if (narrow[0] == '\0')
+		return "";
 
 	return narrow;
 }
@@ -67,14 +73,4 @@ std::string StringConverter::GetFileName(std::string filePath)
 	std::filesystem::path path(filePath);
 	
 	return path.filename().string();
-}
-
-std::wstring StringConverter::ToWString(const std::string& value)
-{
-	return std::wstring().assign(value.begin(), value.end());
-}
-
-std::string StringConverter::ToString(const std::wstring& value)
-{
-	return std::string().assign(value.begin(), value.end());
 }

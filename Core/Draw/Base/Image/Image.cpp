@@ -149,7 +149,7 @@ namespace GraphicResource
 		// 캐시 텍스처가 없어 새로 만들어야 하는 경우
 		if (FAILED(hr))
 		{
-			hr = DirectX::LoadFromWICFile(StringConverter::ToWide(name).c_str(), DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, scratch);
+			hr = DirectX::LoadFromWICFile(StringConverter::ToWString(name).c_str(), DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, scratch);
 
 			// 새로 만든 이미지를 저장함
 			if (SUCCEEDED(hr))
@@ -224,7 +224,7 @@ namespace GraphicResource
 				throw Exception(__LINE__, __FILE__, fileName, "라는 이미지 확장자가 지원되지 않음");
 			};
 
-		HRESULT hr = DirectX::SaveToWICFile(*scratch.GetImage(0, 0, 0), DirectX::WIC_FLAGS_NONE, GetWICCodec(GetCodecID(fileName)), StringConverter::ToWide(fileName).c_str());
+		HRESULT hr = DirectX::SaveToWICFile(*scratch.GetImage(0, 0, 0), DirectX::WIC_FLAGS_NONE, GetWICCodec(GetCodecID(fileName)), StringConverter::ToWString(fileName).c_str());
 
 		if (FAILED(hr))
 		{

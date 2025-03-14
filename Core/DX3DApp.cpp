@@ -1,5 +1,5 @@
 ﻿#include "stdafx.h"
-#include "Core/Window.h"
+#include "Window.h"
 #include "App.h"
 
 LPSTR ConvertPWSTRToLPSTR(PWSTR pwsz)

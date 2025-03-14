@@ -71,9 +71,9 @@ namespace Graphic
     {
         CREATEINFOMANAGER(Window::GetDxGraphic());
 
-        std::wstring widePath = StringConverter::ToWide(path);
+        std::wstring widePath = StringConverter::ToWString(path);
         std::wstring tempPath = L"Temp/ShaderCompile/";
-        std::wstring shaderFileName = StringConverter::ToWide(StringConverter::GetFileName(path));
+        std::wstring shaderFileName = StringConverter::ToWString(StringConverter::GetFileName(path));
         std::wstring compiledShaderPath = tempPath + shaderFileName + L".cso";
 
         namespace fileSystem = std::filesystem;
@@ -104,7 +104,7 @@ namespace Graphic
             ID3D10Blob* compiledShader = 0;
             ID3D10Blob* errorMessage = 0;
 
-            hr = D3DX11CompileFromFileW(StringConverter::ToWide(path).c_str(), nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+            hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
 
             if (FAILED(hr))
                 DXTrace(__FILE__, (DWORD)__LINE__, hr, "D3DX11CompileFromFile", true);
