@@ -12,7 +12,7 @@ public:
 	TriangleIndexList() = default;
 	TriangleIndexList(VertexCore::VertexBuffer vertices, std::vector<unsigned short> indices) : vertices(std::move(vertices)), indices(std::move(indices))
 	{
-		assert("삼각형의 정점 개수가 부족합니다." && this->vertices.size() > 2);
+		assert("삼각형의 정점 개수가 부족합니다." && this->vertices.count() > 2);
 		assert("삼각형의 인덱스가 맞지 않습니다." && this->indices.size() % 3 == 0);
 	}
 

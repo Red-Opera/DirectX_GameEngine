@@ -33,6 +33,10 @@ App::App(const std::string& commandLine)
 	//redPlane.SetPosition(camera.GetPosition());
 	cube.SetPosition({ 14.0f, 0.0f, 0.0f });
 	cube2.SetPosition({ 10.0f, 4.0f, 0.0f });
+	colorCube.SetPosition({ 4.0f, 2.0f, 0.0f });
+	colorCube2.SetPosition({ 0.0f, 6.0f, 0.0f });
+	colorSphere.SetPosition({ -4.0f, 10.0f, 0.0f });
+	colorSphere.SetRotation({ 0.0f, 0.0f, 0.0f });
 
 	nano.SetRootTransform(
 		DirectX::XMMatrixRotationY(Math::PI / 2.f) *
@@ -45,6 +49,10 @@ App::App(const std::string& commandLine)
 
 	cube.LinkTechniques(renderGraph);
 	cube2.LinkTechniques(renderGraph);
+	colorCube.LinkTechniques(renderGraph);
+	colorCube2.LinkTechniques(renderGraph);
+	colorSphere.LinkTechniques(renderGraph);
+	colorSphere2.LinkTechniques(renderGraph);
 	light.LinkTechniques(renderGraph);
 	sponza.LinkTechniques(renderGraph);
 	gobber.LinkTechniques(renderGraph);
@@ -90,6 +98,10 @@ void App::DoFrame(float deltaTime)
 	light.Submit(RenderingChannel::main);
 	cube.Submit(RenderingChannel::main);
 	cube2.Submit(RenderingChannel::main);
+	colorCube.Submit(RenderingChannel::main);
+	colorCube2.Submit(RenderingChannel::main);
+	colorSphere.Submit(RenderingChannel::main);
+	colorSphere2.Submit(RenderingChannel::main);
 	sponza.Submit(RenderingChannel::main);
 	nano.Submit(RenderingChannel::main);
 	gobber.Submit(RenderingChannel::main);
@@ -98,6 +110,10 @@ void App::DoFrame(float deltaTime)
 	sponza.Submit(RenderingChannel::shadow);
 	cube.Submit(RenderingChannel::shadow);
 	cube2.Submit(RenderingChannel::shadow);
+	colorCube.Submit(RenderingChannel::shadow);
+	colorCube2.Submit(RenderingChannel::shadow);
+	colorSphere.Submit(RenderingChannel::shadow);
+	colorSphere2.Submit(RenderingChannel::shadow);
 	gobber.Submit(RenderingChannel::shadow);
 	nano.Submit(RenderingChannel::shadow);
 
@@ -133,6 +149,10 @@ void App::DoFrame(float deltaTime)
 	//nano.ShowWindow(wnd.GetDxGraphic(), "Nano");
 	cube.SpawnControlWindow("Cube 1");
 	cube2.SpawnControlWindow("Cube 2");
+	colorCube.CreateControlWindow("Color Cube");
+	colorCube2.CreateControlWindow("Color Cube 2");
+	colorSphere.CreateControlWindow("Color Sphere");
+	colorSphere2.CreateControlWindow("Color Sphere 2");
 	renderGraph.RenderWindows();
 
 	Engine::FolderViewInspector::instance->RenderFolderView();
@@ -146,7 +166,7 @@ void App::DoFrame(float deltaTime)
 
 void App::KeyBoardInput(float deltaTime)
 {
-	const auto cameraDelta = timer.DeltaTime() * cameraSpeed;
+	auto cameraDelta = timer.DeltaTime() * cameraSpeed;
 
 	while (const auto currentKey = wnd.keyBoard.ReadKey())
 	{
@@ -182,6 +202,9 @@ void App::KeyBoardInput(float deltaTime)
 
 	if (!wnd.GetCursorEnabled())
 	{
+		if (wnd.keyBoard.IsPressed(VK_SHIFT))
+			cameraDelta *= 5.0f;
+
 		if (wnd.keyBoard.IsPressed('W'))
 			cameras->Translate(Vector::forward * cameraDelta);
 
@@ -194,10 +217,10 @@ void App::KeyBoardInput(float deltaTime)
 		if (wnd.keyBoard.IsPressed('D'))
 			cameras->Translate(Vector::right * cameraDelta);
 
-		if (wnd.keyBoard.IsPressed('R'))
+		if (wnd.keyBoard.IsPressed('Q'))
 			cameras->Translate(Vector::up * cameraDelta);
 
-		if (wnd.keyBoard.IsPressed('F'))
+		if (wnd.keyBoard.IsPressed('E'))
 			cameras->Translate(Vector::down * cameraDelta);
 	}
 

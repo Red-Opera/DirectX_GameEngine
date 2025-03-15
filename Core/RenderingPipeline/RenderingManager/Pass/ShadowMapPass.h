@@ -4,7 +4,7 @@
 #include "Base/RenderJob.h"
 	
 #include "Core/Camera/Camera.h"
-#include "Core/Draw/TextureCube.h"
+#include "Core/Draw/BaseModel/TextureCube.h"
 #include "Core/RenderingPipeline/Pipeline/OM/ColorBlend.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/NullPixelShader.h"

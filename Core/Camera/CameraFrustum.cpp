@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "CameraFrustum.h"
 
-#include "Core/Draw/BaseModel/Sphere.h"
+#include "Core/Draw/BaseModel/SphereFrame.h"
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"
 #include "Core/RenderingPipeline/Vertex.h"

@@ -4,7 +4,9 @@
 #include "Camera/CameraContainer.h"
 #include "Draw/Light/PointLight.h"
 #include "Draw/Model.h"
-#include "Draw/BaseModel/ColorCube.h"
+#include "Draw/Object/TextureCubeObject.h"
+#include "Draw/Object/ColorCubeObject.h"
+#include "Draw/Object/ColorSphereObject.h"
 
 #include "RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
 #include "EngineUI/FolderViewInspector.h"
@@ -55,8 +57,14 @@ private:
 	//TestPlane bluePlane{ wnd.GetDxGraphic(), 6.0f, {0.3f, 0.3f, 1.0f, 0.0f} };
 	//TestPlane redPlane{ wnd.GetDxGraphic(), 6.0f, {1.0f, 0.3f, 0.3f, 0.0f} };
 
-	ColorCube cube{ 4.0f };
-	ColorCube cube2{ 4.0f };
+	TextureCubeObject cube{ 4.0f, "Images/brickwall.jpg" };
+	TextureCubeObject cube2{ 4.0f, "Images/brickwall.jpg" };
+
+	ColorCubeObject colorCube{ 4.0f, { 255, 0, 0 } };
+	ColorCubeObject colorCube2{ 4.0f, { 255, 0, 0 }, false };
+
+	ColorSphereObject colorSphere{ 1.0f, { 0, 255, 0 } };
+	ColorSphereObject colorSphere2{ 1.0f, { 0, 255, 0 }, false };
 
 	bool saveDepth = false;
 };

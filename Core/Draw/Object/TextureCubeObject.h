@@ -4,10 +4,12 @@
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/Pipeline/IA/IndexBuffer.h"
 
-class ColorCube : public Drawable
+#include <string>
+
+class TextureCubeObject : public Drawable
 {
 public:
-	ColorCube(float size);
+	TextureCubeObject(float size, std::string path);
 
 	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
 	void SetRotation(float roll, float pitch, float yaw) noexcept;

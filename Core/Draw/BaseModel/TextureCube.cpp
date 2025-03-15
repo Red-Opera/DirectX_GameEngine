@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "TextureCube.h"
 
-#include "Base/Image/Image.h"
+#include "../Base/Image/Image.h"
+
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "Core/RenderingPipeline/RenderTarget.h"

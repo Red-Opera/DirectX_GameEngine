@@ -87,7 +87,7 @@
     <ClInclude Include="Core\Draw\Base\TriangleIndexList.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\BaseModel\Sphere.h">
+    <ClInclude Include="Core\Draw\BaseModel\SphereFrame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h">
@@ -114,9 +114,6 @@
     <ClInclude Include="Core\Draw\BaseModel\ColorSphere.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\TestObject.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\Vertex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -141,7 +138,7 @@
     <ClInclude Include="Core\Draw\BaseModel\Plane.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\BaseModel\Cube.h">
+    <ClInclude Include="Core\Draw\BaseModel\CubeFrame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h">
@@ -198,7 +195,7 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\Stencil.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\BaseModel\ColorCube.h">
+    <ClInclude Include="Core\Draw\Object\TextureCubeObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStep.h">
@@ -336,7 +333,7 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\Rasterizer\ShadowRasterizer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\TextureCube.h">
+    <ClInclude Include="Core\Draw\BaseModel\TextureCube.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.h">
@@ -642,6 +639,12 @@
     <ClInclude Include="Core\Component\TransformComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Draw\Object\ColorCubeObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Object\ColorSphereObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -827,9 +830,6 @@
     <ClCompile Include="Core\Draw\BaseModel\ColorSphere.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\TestObject.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -869,7 +869,7 @@
     <ClCompile Include="Core\RenderingPipeline\Test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\BaseModel\ColorCube.cpp">
+    <ClCompile Include="Core\Draw\Object\TextureCubeObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\RenderingPipeline\RenderingManager\Technique\RenderStep.cpp">
@@ -974,7 +974,7 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\Rasterizer\ShadowRasterizer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\TextureCube.cpp">
+    <ClCompile Include="Core\Draw\BaseModel\TextureCube.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\SkyboxTransformConstantBuffer.cpp">
@@ -1028,12 +1028,21 @@
     <ClCompile Include="Core\Component\TransformComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Draw\BaseModel\CubeFrame.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Object\ColorCubeObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Object\ColorSphereObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\_Sample_Shader.fx" />
     <FxCompile Include="Shader\_Sample_ColorShader.hlsl" />
     <FxCompile Include="Shader\_Sample_Texture.hlsl" />
-    <FxCompile Include="Shader\LitTexture.hlsl">
+    <FxCompile Include="Shader\LitColor.hlsl">
       <Filter>소스 파일</Filter>
     </FxCompile>
     <FxCompile Include="Shader\ColorShader.hlsl" />

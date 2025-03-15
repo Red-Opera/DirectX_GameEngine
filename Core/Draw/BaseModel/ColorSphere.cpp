@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ColorSphere.h"
-#include "Sphere.h"
+#include "SphereFrame.h"
 
 #include "Core/RenderingPipeline/RenderingPipeline.h"
 #include "Core/RenderingPipeline/Vertex.h"
@@ -13,7 +13,7 @@ ColorSphere::ColorSphere(float radius)
 {
 	using namespace Graphic;
 
-	auto model = Sphere::Make();
+	auto model = SphereFrame::CreateFrame();
 	model.Transform(DirectX::XMMatrixScaling(radius, radius, radius));
 
 	const auto objectTag = "$sphere." + std::to_string(radius);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
-#include "ColorCube.h"
-#include "Cube.h"
+#include "TextureCubeObject.h"
+
+#include "../BaseModel/CubeFrame.h"
 
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
@@ -12,12 +13,12 @@
 
 #include "External/Imgui/imgui.h"
 
-ColorCube::ColorCube(float size)
+TextureCubeObject::TextureCubeObject(float size, std::string path)
 {
 	using VertexCore::VertexLayout;
 	using namespace Graphic;
 
-	auto model = Cube::CreateTextureCube();
+	auto model = CubeFrame::CreateTextureFrame();
 	model.Transform(DirectX::XMMatrixScaling(size, size, size));
 	model.SetNormalVector();
 
@@ -33,7 +34,7 @@ ColorCube::ColorCube(float size)
 		{
 			RenderStep cubeRender("lambertian");
 
-			cubeRender.AddRender(Texture::GetRender("Images/brickwall.jpg"));
+			cubeRender.AddRender(Texture::GetRender(path));
 			cubeRender.AddRender(SamplerState::GetRender());
 
 			auto vertexShader = VertexShader::GetRender("Shader/ShadowTest.hlsl");
@@ -56,7 +57,6 @@ ColorCube::ColorCube(float size)
 			cubeRender.AddRender(Rasterizer::GetRender(false));
 
 			cubeRender.AddRender(transformConstantBuffer);
-
 
 			tech.push_back(std::move(cubeRender));
 		}
@@ -121,25 +121,25 @@ ColorCube::ColorCube(float size)
 	}
 }
 
-void ColorCube::SetPosition(DirectX::XMFLOAT3 position) noexcept
+void TextureCubeObject::SetPosition(DirectX::XMFLOAT3 position) noexcept
 {
 	this->position = position;
 }
 
-void ColorCube::SetRotation(float roll, float pitch, float yaw) noexcept
+void TextureCubeObject::SetRotation(float roll, float pitch, float yaw) noexcept
 {
 	this->roll = roll;
 	this->pitch = pitch;
 	this->yaw = yaw;
 }
 
-DirectX::XMMATRIX ColorCube::GetTransformMatrix() const noexcept
+DirectX::XMMATRIX TextureCubeObject::GetTransformMatrix() const noexcept
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(roll, pitch, yaw) *
 		DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 }
 
-void ColorCube::SpawnControlWindow(const char* name) noexcept
+void TextureCubeObject::SpawnControlWindow(const char* name) noexcept
 {
 	if (ImGui::Begin(name))
 	{

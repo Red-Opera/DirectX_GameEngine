@@ -107,6 +107,10 @@ Material::Material(const aiMaterial& material, const std::filesystem::path& path
 		}
 
 		{
+			// Shader 코드 이름이 LitTexture인 경우 LitColor로 변경
+			if (shaderCodeName == "Shader/LitTexture")
+				shaderCodeName = "Shader/LitColor";
+
 			renderStep.AddRender(std::make_shared<TransformConstantBuffer>(0u));
 
 			auto vertexShader = VertexShader::GetRender(shaderCodeName + ".hlsl");

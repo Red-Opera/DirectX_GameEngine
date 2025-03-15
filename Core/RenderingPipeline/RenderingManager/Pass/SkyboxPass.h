@@ -4,9 +4,9 @@
 #include "Base/RenderJob.h"
 
 #include "Core/Camera/Camera.h"
-#include "Core/Draw/BaseModel/Cube.h"
-#include "Core/Draw/BaseModel/Sphere.h"
-#include "Core/Draw/TextureCube.h"
+#include "Core/Draw/BaseModel/CubeFrame.h"
+#include "Core/Draw/BaseModel/SphereFrame.h"
+#include "Core/Draw/BaseModel/TextureCube.h"
 #include "Core/RenderingPipeline/Pipeline/IA/PrimitiveTopology.h"
 #include "Core/RenderingPipeline/Pipeline/IA/IndexBuffer.h"
 #include "Core/RenderingPipeline/Pipeline/IA/InputLayout.h"
@@ -47,7 +47,7 @@ namespace RenderGraphNameSpace
 				auto vertexShaderCode = VertexShader::GetRender("Shader/Skybox.hlsl");
 
 				{
-					auto cube = Cube::Create();
+					auto cube = CubeFrame::CreateFrame();
 
 					const auto geometryTag = "$Skybox";
 					cubeVertexBuffer = VertexBuffer::GetRender(geometryTag, std::move(cube.vertices));
@@ -58,7 +58,7 @@ namespace RenderGraphNameSpace
 				}
 
 				{
-					auto sphere = Sphere::Make();
+					auto sphere = SphereFrame::CreateFrame();
 
 					const auto geometryTag = "$SkySphere";
 					sphereVertexBuffer = VertexBuffer::GetRender(geometryTag, std::move(sphere.vertices));

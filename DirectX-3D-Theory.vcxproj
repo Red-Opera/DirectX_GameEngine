@@ -155,15 +155,17 @@
     <ClInclude Include="Core\Camera\CameraProjection.h" />
     <ClInclude Include="Core\Component\Component.h" />
     <ClInclude Include="Core\Component\TransformComponent.h" />
+    <ClInclude Include="Core\Draw\Object\ColorCubeObject.h" />
+    <ClInclude Include="Core\Draw\Object\ColorSphereObject.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
-    <ClInclude Include="Core\Draw\BaseModel\ColorCube.h" />
+    <ClInclude Include="Core\Draw\Object\TextureCubeObject.h" />
     <ClInclude Include="Core\Draw\BaseModel\Plane.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
     <ClInclude Include="Core\Draw\Base\Material.h" />
     <ClInclude Include="Core\Draw\Model.h" />
     <ClInclude Include="Core\Draw\ModelBase.h" />
     <ClInclude Include="Core\Draw\SceneGraphNode.h" />
-    <ClInclude Include="Core\Draw\TextureCube.h" />
+    <ClInclude Include="Core\Draw\BaseModel\TextureCube.h" />
     <ClInclude Include="Core\DxGraphicResource.h" />
     <ClInclude Include="Core\EngineUI\FolderViewInspector.h" />
     <ClInclude Include="Core\EngineUI\MenuBar.h" />
@@ -211,7 +213,7 @@
     <ClInclude Include="Core\Draw\BaseModel\ColorSphere.h" />
     <ClInclude Include="Core\Camera\Camera.h" />
     <ClInclude Include="Core\Draw\BaseModel\Cone.h" />
-    <ClInclude Include="Core\Draw\BaseModel\Sphere.h" />
+    <ClInclude Include="Core\Draw\BaseModel\SphereFrame.h" />
     <ClInclude Include="Core\Draw\Base\ColorInfo.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderTarget.h" />
@@ -237,10 +239,9 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\PixelShader.h" />
     <ClInclude Include="Core\Draw\Base\Image\Image.h" />
     <ClInclude Include="Core\Draw\Light\PointLight.h" />
-    <ClInclude Include="Core\Draw\TestObject.h" />
     <ClInclude Include="Core\Draw\Mesh.h" />
     <ClInclude Include="Core\Draw\TestPlane.h" />
-    <ClInclude Include="Core\Draw\BaseModel\Cube.h" />
+    <ClInclude Include="Core\Draw\BaseModel\CubeFrame.h" />
     <None Include="Reference.txt" />
     <None Include="External\Assimp\color4.inl" />
     <None Include="External\Assimp\config.h.in" />
@@ -380,14 +381,17 @@
     <ClCompile Include="Core\Camera\CameraProjection.cpp" />
     <ClCompile Include="Core\Component\Component.cpp" />
     <ClCompile Include="Core\Component\TransformComponent.cpp" />
-    <ClCompile Include="Core\Draw\BaseModel\ColorCube.cpp" />
+    <ClCompile Include="Core\Draw\Object\ColorCubeObject.cpp" />
+    <ClCompile Include="Core\Draw\Object\ColorSphereObject.cpp" />
+    <ClCompile Include="Core\Draw\Object\TextureCubeObject.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorSphere.cpp" />
     <ClCompile Include="Core\Camera\Camera.cpp" />
+    <ClCompile Include="Core\Draw\BaseModel\CubeFrame.cpp" />
     <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp" />
     <ClCompile Include="Core\Draw\Base\Material.cpp" />
     <ClCompile Include="Core\Draw\Model.cpp" />
     <ClCompile Include="Core\Draw\SceneGraphNode.cpp" />
-    <ClCompile Include="Core\Draw\TextureCube.cpp" />
+    <ClCompile Include="Core\Draw\BaseModel\TextureCube.cpp" />
     <ClCompile Include="Core\DxGraphicResource.cpp" />
     <ClCompile Include="Core\EngineUI\FolderViewInspector.cpp" />
     <ClCompile Include="Core\EngineUI\MenuBar.cpp" />
@@ -512,14 +516,13 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shader\LitTexture.hlsl">
+    <FxCompile Include="Shader\LitColor.hlsl">
       <FileType>Document</FileType>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <ClCompile Include="Core\Draw\Light\PointLight.cpp" />
-    <ClCompile Include="Core\Draw\TestObject.cpp" />
     <ClCompile Include="Core\Draw\Mesh.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
