@@ -13,15 +13,15 @@
 
 #include "External/Imgui/imgui.h"
 
-ColorPlaneObject::ColorPlaneObject(float size, GraphicResource::Image::Color color, bool isLit) : size(size)
+ColorPlaneObject::ColorPlaneObject(Vector2 scale, GraphicResource::Image::Color color, bool isLit)
 {
 	using VertexCore::VertexLayout;
 	using namespace Graphic;
 
 	auto model = ColorPlaneFrame::CreateTextureFrame();
-	model.Transform(DirectX::XMMatrixScaling(size, size, size));
+	model.Transform(DirectX::XMMatrixScaling(scale.x, scale.y, 1));
 
-	const auto geometryTag = "$ColorPlane." + std::to_string(size);
+	const auto geometryTag = "$ColorPlane.X" + std::to_string(scale.x) + "Y" + std::to_string(scale.y);
 	vertexBuffer = VertexBuffer::GetRender(geometryTag, model.vertices);
 	indexBuffer = IndexBuffer::GetRender(geometryTag, model.indices);
 	primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -154,9 +154,15 @@ void ColorPlaneObject::SetRotation(Rotation rotation) noexcept
 	this->rotation = rotation;
 }
 
+void ColorPlaneObject::SetScale(Vector2 scale) noexcept
+{
+	this->scale = scale;
+}
+
 DirectX::XMMATRIX ColorPlaneObject::GetTransformMatrix() const noexcept
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) *
+	return DirectX::XMMatrixScaling(scale.x, scale.y, 1.0f) *
+		DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) *
 		DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 }
 
@@ -165,14 +171,18 @@ void ColorPlaneObject::CreateControlWindow(const char* name) noexcept
 	if (ImGui::Begin(name))
 	{
 		ImGui::Text("Position");
-		ImGui::SliderFloat("X", &position.x, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("Y", &position.y, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("Z", &position.z, -80.0f, 80.0f, "%.1f");
+		ImGui::SliderFloat("PositionX", &position.x, -80.0f, 80.0f, "%.1f");
+		ImGui::SliderFloat("PositionY", &position.y, -80.0f, 80.0f, "%.1f");
+		ImGui::SliderFloat("PositionZ", &position.z, -80.0f, 80.0f, "%.1f");
 
 		ImGui::Text("Orientation");
 		ImGui::SliderAngle("Roll", &rotation.x, -180.0f, 180.0f);
 		ImGui::SliderAngle("Pitch", &rotation.y, -180.0f, 180.0f);
 		ImGui::SliderAngle("Yaw", &rotation.z, -180.0f, 180.0f);
+
+		ImGui::Text("Scale");
+		ImGui::SliderFloat("ScaleX", &scale.x, 0.1f, 10.0f, "%.1f");
+		ImGui::SliderFloat("ScaleY", &scale.y, 0.1f, 10.0f, "%.1f");
 
 		class Probe : public TechniqueBase
 		{

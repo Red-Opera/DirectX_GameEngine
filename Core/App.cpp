@@ -35,14 +35,14 @@ App::App(const std::string& commandLine)
 	cube2.SetPosition({ 10.0f, 4.0f, 0.0f });
 	//colorCube.SetPosition({ 4.0f, 2.0f, 0.0f });
 	//colorCube2.SetPosition({ 0.0f, 6.0f, 0.0f });
-	//colorSphere.SetPosition({ -4.0f, 10.0f, 0.0f });
-	//colorSphere.SetRotation({ 0.0f, 0.0f, 0.0f });
+	colorSphere.SetPosition({ -4.0f, 10.0f, 0.0f });
+	colorSphere.SetRotation({ 0.0f, 0.0f, 0.0f });
 	//colorCone.SetRotation({ 0.0f, 0.0f, 0.0f });
 	//colorCone2.SetPosition({ -8.0f, 14.0f, 0.0f });
 	//colorCylinder.SetPosition({ 0.0f, 4.0f, 0.0f });
 	//colorCylinder2.SetPosition({ 0.0f, 6.0f, 0.0f });
-	colorPlane.SetPosition({ 0.0f, 0.0f, 0.0f });
-	colorPlane2.SetPosition({ 0.0f, 5.0f, 0.0f });
+	//colorPlane.SetPosition({ 0.0f, 0.0f, 0.0f });
+	//colorPlane2.SetPosition({ 0.0f, 5.0f, 0.0f });
 
 	nano.SetRootTransform(
 		DirectX::XMMatrixRotationY(Math::PI / 2.f) *
@@ -57,14 +57,14 @@ App::App(const std::string& commandLine)
 	cube2.LinkTechniques(renderGraph);
 	//colorCube.LinkTechniques(renderGraph);
 	//colorCube2.LinkTechniques(renderGraph);
-	//colorSphere.LinkTechniques(renderGraph);
-	//colorSphere2.LinkTechniques(renderGraph);
+	colorSphere.LinkTechniques(renderGraph);
+	colorSphere2.LinkTechniques(renderGraph);
 	//colorCone.LinkTechniques(renderGraph);
 	//colorCone2.LinkTechniques(renderGraph);
 	//colorCylinder.LinkTechniques(renderGraph);
 	//colorCylinder2.LinkTechniques(renderGraph);
-	colorPlane.LinkTechniques(renderGraph);
-	colorPlane2.LinkTechniques(renderGraph);
+	//colorPlane.LinkTechniques(renderGraph);
+	//colorPlane2.LinkTechniques(renderGraph);
 	light.LinkTechniques(renderGraph);
 	sponza.LinkTechniques(renderGraph);
 	gobber.LinkTechniques(renderGraph);
@@ -112,14 +112,14 @@ void App::DoFrame(float deltaTime)
 	cube2.Submit(RenderingChannel::main);
 	//colorCube.Submit(RenderingChannel::main);
 	//colorCube2.Submit(RenderingChannel::main);
-	//colorSphere.Submit(RenderingChannel::main);
-	//colorSphere2.Submit(RenderingChannel::main);
+	colorSphere.Submit(RenderingChannel::main);
+	colorSphere2.Submit(RenderingChannel::main);
 	//colorCone.Submit(RenderingChannel::main);
 	//colorCone2.Submit(RenderingChannel::main);
 	//colorCylinder.Submit(RenderingChannel::main);
 	//colorCylinder2.Submit(RenderingChannel::main);
-	colorPlane.Submit(RenderingChannel::main);
-	colorPlane2.Submit(RenderingChannel::main);
+	//colorPlane.Submit(RenderingChannel::main);
+	//colorPlane2.Submit(RenderingChannel::main);
 	sponza.Submit(RenderingChannel::main);
 	nano.Submit(RenderingChannel::main);
 	gobber.Submit(RenderingChannel::main);
@@ -130,14 +130,14 @@ void App::DoFrame(float deltaTime)
 	cube2.Submit(RenderingChannel::shadow);
 	//colorCube.Submit(RenderingChannel::shadow);
 	//colorCube2.Submit(RenderingChannel::shadow);
-	//colorSphere.Submit(RenderingChannel::shadow);
-	//colorSphere2.Submit(RenderingChannel::shadow);
+	colorSphere.Submit(RenderingChannel::shadow);
+	colorSphere2.Submit(RenderingChannel::shadow);
 	//colorCone.Submit(RenderingChannel::shadow);
 	//colorCone2.Submit(RenderingChannel::shadow);
 	//colorCylinder.Submit(RenderingChannel::shadow);
 	//colorCylinder2.Submit(RenderingChannel::shadow);
-	colorPlane.Submit(RenderingChannel::shadow);
-	colorPlane2.Submit(RenderingChannel::shadow);
+	//colorPlane.Submit(RenderingChannel::shadow);
+	//colorPlane2.Submit(RenderingChannel::shadow);
 	gobber.Submit(RenderingChannel::shadow);
 	nano.Submit(RenderingChannel::shadow);
 
@@ -175,14 +175,14 @@ void App::DoFrame(float deltaTime)
 	cube2.SpawnControlWindow("Cube 2");
 	//colorCube.CreateControlWindow("Color Cube");
 	//colorCube2.CreateControlWindow("Color Cube 2");
-	//colorSphere.CreateControlWindow("Color Sphere");
-	//colorSphere2.CreateControlWindow("Color Sphere 2");
+	colorSphere.CreateControlWindow("Color Sphere");
+	colorSphere2.CreateControlWindow("Color Sphere 2");
 	//colorCone.CreateControlWindow("Color Cone");
 	//colorCone2.CreateControlWindow("Color Cone 2");
 	//colorCylinder.CreateControlWindow("Color Cylinder");
 	//colorCylinder2.CreateControlWindow("Color Cylinder 2");
-	colorPlane.CreateControlWindow("Color Plane");
-	colorPlane2.CreateControlWindow("Color Plane 2");
+	//colorPlane.CreateControlWindow("Color Plane");
+	//colorPlane2.CreateControlWindow("Color Plane 2");
 	renderGraph.RenderWindows();
 
 	Engine::FolderViewInspector::instance->RenderFolderView();

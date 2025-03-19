@@ -10,10 +10,11 @@
 class ColorPlaneObject : public Drawable
 {
 public:
-	ColorPlaneObject(float size, GraphicResource::Image::Color color, bool isLit = true);
+	ColorPlaneObject(Vector2 scale, GraphicResource::Image::Color color, bool isLit = true);
 
 	void SetPosition(Vector3 position) noexcept;
 	void SetRotation(Rotation rotation) noexcept;
+	void SetScale(Vector2 scale) noexcept;
 
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
 
@@ -22,6 +23,5 @@ public:
 private:
 	Vector3 position = { 1.0f, 1.0f, 1.0f };
 	Rotation rotation = { 0.0f, 0.0f, 0.0f };
-
-	int size;
+	Vector2 scale = { 1.0f, 1.0f };
 };
