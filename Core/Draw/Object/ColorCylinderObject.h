@@ -7,10 +7,10 @@
 
 #include "Utility/Vector.h"
 
-class ColorSphereObject : public Drawable
+class ColorCylinderObject : public Drawable
 {
 public:
-	ColorSphereObject(float size, GraphicResource::Image::Color color, bool isLit = true);
+	ColorCylinderObject(float size, GraphicResource::Image::Color color, bool isLit = true);
 
 	void SetPosition(Vector3 position) noexcept;
 	void SetRotation(Rotation rotation) noexcept;

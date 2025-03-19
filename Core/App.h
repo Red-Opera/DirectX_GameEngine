@@ -7,6 +7,9 @@
 #include "Draw/Object/TextureCubeObject.h"
 #include "Draw/Object/ColorCubeObject.h"
 #include "Draw/Object/ColorSphereObject.h"
+#include "Draw/Object/ColorConeObject.h"
+#include "Draw/Object/ColorCylinderObject.h"
+#include "Draw/Object/ColorPlaneObject.h"
 
 #include "RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
 #include "EngineUI/FolderViewInspector.h"
@@ -60,11 +63,21 @@ private:
 	TextureCubeObject cube{ 4.0f, "Images/brickwall.jpg" };
 	TextureCubeObject cube2{ 4.0f, "Images/brickwall.jpg" };
 
-	ColorCubeObject colorCube{ 4.0f, { 255, 0, 0 } };
-	ColorCubeObject colorCube2{ 4.0f, { 255, 0, 0 }, false };
+	//ColorCubeObject colorCube{ 4.0f, { 255, 0, 0 } };
+	//ColorCubeObject colorCube2{ 4.0f, { 255, 0, 0 }, false };
+	//
+	//ColorSphereObject colorSphere{ 1.0f, { 0, 255, 0 } };
+	//ColorSphereObject colorSphere2{ 1.0f, { 0, 255, 0 }, false };
 
-	ColorSphereObject colorSphere{ 1.0f, { 0, 255, 0 } };
-	ColorSphereObject colorSphere2{ 1.0f, { 0, 255, 0 }, false };
+	//ColorConeObject colorCone{ 1.0f, { 0, 255, 0 } };
+	//ColorConeObject colorCone2{ 1.0f, { 0, 255, 0 }, false };
+	//
+	//ColorCylinderObject colorCylinder{ 1.0f, { 0, 255, 255 } };
+	//ColorCylinderObject colorCylinder2{ 1.0f, { 0, 255, 255 }, false };
+	//
+	ColorPlaneObject colorPlane{ 1.0f, { 255, 255, 255 } };
+	ColorPlaneObject colorPlane2{ 1.0f, { 255, 255, 255 }, false };
+
 
 	bool saveDepth = false;
 };

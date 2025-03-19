@@ -155,11 +155,14 @@
     <ClInclude Include="Core\Camera\CameraProjection.h" />
     <ClInclude Include="Core\Component\Component.h" />
     <ClInclude Include="Core\Component\TransformComponent.h" />
+    <ClInclude Include="Core\Draw\BaseModel\CylinderFrame.h" />
+    <ClInclude Include="Core\Draw\Object\ColorConeObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorCubeObject.h" />
+    <ClInclude Include="Core\Draw\Object\ColorCylinderObject.h" />
+    <ClInclude Include="Core\Draw\Object\ColorPlaneObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorSphereObject.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
     <ClInclude Include="Core\Draw\Object\TextureCubeObject.h" />
-    <ClInclude Include="Core\Draw\BaseModel\Plane.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
     <ClInclude Include="Core\Draw\Base\Material.h" />
     <ClInclude Include="Core\Draw\Model.h" />
@@ -212,7 +215,7 @@
     <ClInclude Include="Core\RenderingPipeline\RenderManager.h" />
     <ClInclude Include="Core\Draw\BaseModel\ColorSphere.h" />
     <ClInclude Include="Core\Camera\Camera.h" />
-    <ClInclude Include="Core\Draw\BaseModel\Cone.h" />
+    <ClInclude Include="Core\Draw\BaseModel\ConeFrame.h" />
     <ClInclude Include="Core\Draw\BaseModel\SphereFrame.h" />
     <ClInclude Include="Core\Draw\Base\ColorInfo.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h" />
@@ -240,7 +243,7 @@
     <ClInclude Include="Core\Draw\Base\Image\Image.h" />
     <ClInclude Include="Core\Draw\Light\PointLight.h" />
     <ClInclude Include="Core\Draw\Mesh.h" />
-    <ClInclude Include="Core\Draw\TestPlane.h" />
+    <ClInclude Include="Core\Draw\BaseModel\ColorPlaneFrame.h" />
     <ClInclude Include="Core\Draw\BaseModel\CubeFrame.h" />
     <None Include="Reference.txt" />
     <None Include="External\Assimp\color4.inl" />
@@ -381,7 +384,13 @@
     <ClCompile Include="Core\Camera\CameraProjection.cpp" />
     <ClCompile Include="Core\Component\Component.cpp" />
     <ClCompile Include="Core\Component\TransformComponent.cpp" />
+    <ClCompile Include="Core\Draw\BaseModel\ConeFrame.cpp" />
+    <ClCompile Include="Core\Draw\BaseModel\CylinderFrame.cpp" />
+    <ClCompile Include="Core\Draw\BaseModel\SphereFrame.cpp" />
+    <ClCompile Include="Core\Draw\Object\ColorConeObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorCubeObject.cpp" />
+    <ClCompile Include="Core\Draw\Object\ColorCylinderObject.cpp" />
+    <ClCompile Include="Core\Draw\Object\ColorPlaneObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorSphereObject.cpp" />
     <ClCompile Include="Core\Draw\Object\TextureCubeObject.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorSphere.cpp" />
@@ -434,7 +443,7 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\VertexShader.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\VertexBuffer.cpp" />
-    <ClCompile Include="Core\Draw\TestPlane.cpp" />
+    <ClCompile Include="Core\Draw\BaseModel\ColorPlaneFrame.cpp" />
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.cpp" />
     <ClCompile Include="External\Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

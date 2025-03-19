@@ -93,7 +93,7 @@
     <ClInclude Include="Core\RenderingPipeline\RenderingPipeline.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\BaseModel\Cone.h">
+    <ClInclude Include="Core\Draw\BaseModel\ConeFrame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Base\Image\Image.h">
@@ -132,10 +132,7 @@
     <ClInclude Include="Core\RenderingPipeline\RenderManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Draw\TestPlane.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\BaseModel\Plane.h">
+    <ClInclude Include="Core\Draw\BaseModel\ColorPlaneFrame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\BaseModel\CubeFrame.h">
@@ -645,6 +642,18 @@
     <ClInclude Include="Core\Draw\Object\ColorSphereObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Draw\Object\ColorConeObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\BaseModel\CylinderFrame.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Object\ColorCylinderObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\Object\ColorPlaneObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -842,7 +851,7 @@
     <ClCompile Include="Utility\Vector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\TestPlane.cpp">
+    <ClCompile Include="Core\Draw\BaseModel\ColorPlaneFrame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp">
@@ -1035,6 +1044,24 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Object\ColorSphereObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\BaseModel\SphereFrame.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Object\ColorConeObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\BaseModel\ConeFrame.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\BaseModel\CylinderFrame.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Object\ColorCylinderObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Object\ColorPlaneObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

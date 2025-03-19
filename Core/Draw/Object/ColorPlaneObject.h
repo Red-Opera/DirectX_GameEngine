@@ -7,10 +7,10 @@
 
 #include "Utility/Vector.h"
 
-class ColorSphereObject : public Drawable
+class ColorPlaneObject : public Drawable
 {
 public:
-	ColorSphereObject(float size, GraphicResource::Image::Color color, bool isLit = true);
+	ColorPlaneObject(float size, GraphicResource::Image::Color color, bool isLit = true);
 
 	void SetPosition(Vector3 position) noexcept;
 	void SetRotation(Rotation rotation) noexcept;
@@ -23,5 +23,5 @@ private:
 	Vector3 position = { 1.0f, 1.0f, 1.0f };
 	Rotation rotation = { 0.0f, 0.0f, 0.0f };
 
-	float size;
+	int size;
 };
