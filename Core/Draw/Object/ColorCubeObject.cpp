@@ -13,6 +13,12 @@
 
 #include "External/Imgui/imgui.h"
 
+ColorCubeObject::ColorCubeObject(float scale, GraphicResource::Image::Color color, bool isLit)
+	: ColorCubeObject(Scale{ scale, scale, scale }, color, isLit)
+{
+
+}
+
 ColorCubeObject::ColorCubeObject(Scale scale, GraphicResource::Image::Color color, bool isLit)
 {
 	using VertexCore::VertexLayout;

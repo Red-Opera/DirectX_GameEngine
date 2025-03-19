@@ -13,6 +13,12 @@
 
 #include "External/Imgui/imgui.h"
 
+ColorSphereObject::ColorSphereObject(float scale, GraphicResource::Image::Color color, bool isLit)
+	: ColorSphereObject(Scale{ scale, scale, scale }, color, isLit)
+{
+
+}
+
 ColorSphereObject::ColorSphereObject(Scale scale, GraphicResource::Image::Color color, bool isLit)
 {
 	using VertexCore::VertexLayout;

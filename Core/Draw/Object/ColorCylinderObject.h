@@ -10,7 +10,8 @@
 class ColorCylinderObject : public Drawable
 {
 public:
-	ColorCylinderObject(Scale scale, GraphicResource::Image::Color color, bool isLit = true);
+	ColorCylinderObject(float scale = 1.0f, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
+	ColorCylinderObject(Scale scale, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
 
 	void SetPosition(Vector3 position) noexcept;
 	void SetRotation(Rotation rotation) noexcept;

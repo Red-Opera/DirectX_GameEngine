@@ -13,6 +13,12 @@
 
 #include "External/Imgui/imgui.h"
 
+ColorConeObject::ColorConeObject(float scale, GraphicResource::Image::Color color, bool isLit)
+	: ColorConeObject(Scale{ scale, scale, scale }, color, isLit)
+{
+
+}
+
 ColorConeObject::ColorConeObject(Scale scale, GraphicResource::Image::Color color, bool isLit) : scale(scale)
 {
 	using VertexCore::VertexLayout;

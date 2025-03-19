@@ -13,6 +13,12 @@
 
 #include "External/Imgui/imgui.h"
 
+ColorPlaneObject::ColorPlaneObject(float scale, GraphicResource::Image::Color color, bool isLit)
+	: ColorPlaneObject(Vector2{ scale, scale }, color, isLit)
+{
+
+}
+
 ColorPlaneObject::ColorPlaneObject(Vector2 scale, GraphicResource::Image::Color color, bool isLit)
 {
 	using VertexCore::VertexLayout;

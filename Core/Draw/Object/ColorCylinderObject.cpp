@@ -13,7 +13,13 @@
 
 #include "External/Imgui/imgui.h"
 
-ColorCylinderObject::ColorCylinderObject(Scale scale, GraphicResource::Image::Color color, bool isLit)
+ColorCylinderObject::ColorCylinderObject(float scale, GraphicResource::Image::Color color, bool isLit)
+	: ColorCylinderObject(Scale{ scale, scale, scale }, color, isLit)
+{
+
+}
+
+ColorCylinderObject::ColorCylinderObject(Scale scale, GraphicResource::Image::Color color,bool isLit)
 {
 	using VertexCore::VertexLayout;
 	using namespace Graphic;
