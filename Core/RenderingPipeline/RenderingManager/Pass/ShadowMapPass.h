@@ -40,7 +40,7 @@ namespace RenderGraphNameSpace
 			AddRender(Stencil::GetRender(Stencil::DrawMode::Off));
 			AddRender(ColorBlend::GetRender(false));
 			AddRender(std::make_shared<Viewport>((float)size, (float)size));
-			AddRender(std::make_shared<Graphic::ShadowRasterizer>(50, 2.0f, 0.1f));
+			AddRender(std::make_shared<Graphic::ShadowRasterizer>(50, 8.0f, 0.1f));
 
 			AddDataProvider(DirectRenderPipelineDataProvider<Graphic::DepthTextureCube>::Create("Map", depthTextureCube));
 
@@ -117,6 +117,6 @@ namespace RenderGraphNameSpace
 
 		std::shared_ptr<Graphic::DepthTextureCube> depthTextureCube;
 
-		static constexpr UINT size = 1000;
+		static constexpr UINT size = 2048;
 	};
 }

@@ -75,9 +75,8 @@ private:
 	//ColorCylinderObject colorCylinder{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 255 },  };
 	//ColorCylinderObject colorCylinder2{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 255 }, false };
 	//
-	ColorPlaneObject colorPlane{ { 1.0f, 1.0f }, { 255, 255, 255 },  };
-	ColorPlaneObject colorPlane2{ { 1.0f, 1.0f }, { 255, 255, 255 }, false };
-
+	//ColorPlaneObject colorPlane{ { 1.0f, 1.0f }, { 255, 255, 255 },  };
+	//ColorPlaneObject colorPlane2{ { 1.0f, 1.0f }, { 255, 255, 255 }, false };
 
 	bool saveDepth = false;
 };
