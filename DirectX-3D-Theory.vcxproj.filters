@@ -654,6 +654,9 @@
     <ClInclude Include="Core\Draw\Object\ColorPlaneObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Draw\Object\ColorObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -1062,6 +1065,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Object\ColorPlaneObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Object\ColorObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

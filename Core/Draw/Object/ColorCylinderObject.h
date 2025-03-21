@@ -1,28 +1,10 @@
 #pragma once
 
-#include "Core/Draw/Base/Drawable.h"
-#include "Core/RenderingPipeline/Render.h"
-#include "Core/RenderingPipeline/Pipeline/IA/IndexBuffer.h"
-#include "Core/Draw/Base/Image/Image.h"
+#include "Core/Draw/Object/ColorObject.h"
 
-#include "Utility/Vector.h"
-
-class ColorCylinderObject : public Drawable
+class ColorCylinderObject : public ColorObject
 {
 public:
 	ColorCylinderObject(float scale = 1.0f, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
 	ColorCylinderObject(Scale scale, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
-
-	void SetPosition(Vector3 position) noexcept;
-	void SetRotation(Rotation rotation) noexcept;
-	void SetScale(Scale scale) noexcept;
-
-	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
-
-	void CreateControlWindow(const char* name) noexcept;
-
-private:
-	Vector3 position = { 1.0f, 1.0f, 1.0f };
-	Rotation rotation = { 0.0f, 0.0f, 0.0f };
-	Scale scale = { 1.0f, 1.0f, 1.0f };
 };

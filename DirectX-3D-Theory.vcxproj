@@ -159,6 +159,7 @@
     <ClInclude Include="Core\Draw\Object\ColorConeObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorCubeObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorCylinderObject.h" />
+    <ClInclude Include="Core\Draw\Object\ColorObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorPlaneObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorSphereObject.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
@@ -390,6 +391,7 @@
     <ClCompile Include="Core\Draw\Object\ColorConeObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorCubeObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorCylinderObject.cpp" />
+    <ClCompile Include="Core\Draw\Object\ColorObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorPlaneObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorSphereObject.cpp" />
     <ClCompile Include="Core\Draw\Object\TextureCubeObject.cpp" />

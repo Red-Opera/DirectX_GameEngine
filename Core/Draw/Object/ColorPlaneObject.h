@@ -1,28 +1,12 @@
 #pragma once
 
-#include "Core/Draw/Base/Drawable.h"
-#include "Core/RenderingPipeline/Render.h"
-#include "Core/RenderingPipeline/Pipeline/IA/IndexBuffer.h"
-#include "Core/Draw/Base/Image/Image.h"
+#include "Core/Draw/Object/ColorObject.h"
 
-#include "Utility/Vector.h"
-
-class ColorPlaneObject : public Drawable
+class ColorPlaneObject : public ColorObject
 {
 public:
 	ColorPlaneObject(float scale = 1.0f, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
 	ColorPlaneObject(Vector2 scale, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
 
-	void SetPosition(Vector3 position) noexcept;
-	void SetRotation(Rotation rotation) noexcept;
-	void SetScale(Vector2 scale) noexcept;
-
-	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
-
-	void CreateControlWindow(const char* name) noexcept;
-
-private:
-	Vector3 position = { 1.0f, 1.0f, 1.0f };
-	Rotation rotation = { 0.0f, 0.0f, 0.0f };
-	Vector2 scale = { 1.0f, 1.0f };
+	void CreateControlWindow(const char* name) noexcept override;
 };
