@@ -11,7 +11,7 @@ ColorSphereObject::ColorSphereObject(float scale, GraphicResource::Image::Color 
 
 ColorSphereObject::ColorSphereObject(Scale scale, GraphicResource::Image::Color color, bool isLit)
 {
-	auto model = SphereFrame::CreateTextureFrame();
+	auto model = isLit ? SphereFrame::CreateTextureFrame() : SphereFrame::CreateFrame();
 
 	SetRenderingPipeline(scale, color, isLit, model);
 }

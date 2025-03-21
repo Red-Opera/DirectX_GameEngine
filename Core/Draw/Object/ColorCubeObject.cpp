@@ -13,7 +13,7 @@ ColorCubeObject::ColorCubeObject(float scale, GraphicResource::Image::Color colo
 
 ColorCubeObject::ColorCubeObject(Scale scale, GraphicResource::Image::Color color, bool isLit)
 {
-	auto model = CubeFrame::CreateTextureFrame();
+	auto model = isLit ? CubeFrame::CreateTextureFrame() : CubeFrame::CreateFrame();
 
 	if (isLit)
 		model.SetNormalVector();

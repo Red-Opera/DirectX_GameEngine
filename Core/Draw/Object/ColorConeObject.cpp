@@ -11,7 +11,7 @@ ColorConeObject::ColorConeObject(float scale, GraphicResource::Image::Color colo
 
 ColorConeObject::ColorConeObject(Scale scale, GraphicResource::Image::Color color, bool isLit)
 {
-	auto model = ConeFrame::CreateTextureFrameSeparateBottom();
+	auto model = isLit ? ConeFrame::CreateTextureFrameSeparateBottom() : ConeFrame::CreateFrame();
 
 	SetRenderingPipeline(scale, color, isLit, model);
 }

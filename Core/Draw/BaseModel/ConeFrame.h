@@ -16,6 +16,6 @@ public:
 	static TriangleIndexList MakeTesselatedSeparateBottom(VertexCore::VertexLayout vertexLayout, int longDiv);
 	static TriangleIndexList MakeTesselatedIndependentFaces(int longDiv);
 
-	static TriangleIndexList CreateFrame(std::optional<VertexCore::VertexLayout> vertexLayout);
+	static TriangleIndexList CreateFrame(std::optional<VertexCore::VertexLayout> vertexLayout = { });
 	static TriangleIndexList CreateTextureFrameSeparateBottom();
 };

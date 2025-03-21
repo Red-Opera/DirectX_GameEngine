@@ -14,6 +14,6 @@ class CylinderFrame
 public:
 	static TriangleIndexList MakeTesselated(VertexCore::VertexLayout vertexLayout, int divisionCount);
 
-	static TriangleIndexList CreateFrame(std::optional<VertexCore::VertexLayout> vertexLayout);
+	static TriangleIndexList CreateFrame(std::optional<VertexCore::VertexLayout> vertexLayout = { });
 	static TriangleIndexList CreateTextureFrame();
 };

@@ -14,7 +14,7 @@ ColorPlaneObject::ColorPlaneObject(float scale, GraphicResource::Image::Color co
 
 ColorPlaneObject::ColorPlaneObject(Vector2 scale, GraphicResource::Image::Color color, bool isLit)
 {
-	auto model = ColorPlaneFrame::CreateTextureFrame();
+	TriangleIndexList model = isLit ? ColorPlaneFrame::CreateTextureFrame() : ColorPlaneFrame::CreateFrame();
 
 	SetRenderingPipeline({ scale.x, scale.y, 1.0f }, color, isLit, model);
 }

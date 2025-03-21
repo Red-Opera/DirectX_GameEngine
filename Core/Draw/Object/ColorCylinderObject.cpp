@@ -11,7 +11,7 @@ ColorCylinderObject::ColorCylinderObject(float scale, GraphicResource::Image::Co
 
 ColorCylinderObject::ColorCylinderObject(Scale scale, GraphicResource::Image::Color color,bool isLit)
 {
-	auto model = CylinderFrame::CreateTextureFrame();
+	auto model = isLit ? CylinderFrame::CreateTextureFrame() : CylinderFrame::CreateFrame();
 
 	SetRenderingPipeline(scale, color, isLit, model);
 }

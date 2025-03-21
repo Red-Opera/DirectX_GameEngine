@@ -14,6 +14,6 @@ class ColorPlaneFrame
 public:
 	static TriangleIndexList MakeTesselated(VertexCore::VertexLayout vertexLayout);
 
-	static TriangleIndexList CreateFrame(std::optional<VertexCore::VertexLayout> vertexLayout);
+	static TriangleIndexList CreateFrame(std::optional<VertexCore::VertexLayout> vertexLayout = { });
 	static TriangleIndexList CreateTextureFrame();
 };
