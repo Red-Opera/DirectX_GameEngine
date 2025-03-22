@@ -141,8 +141,8 @@ TriangleIndexList SphereFrame::CreateTextureFrame()
         12, 24);
 
     // 텍스처 및 노멀 좌표 계산 (구의 극이 Z축에 맞춰져 있음, Sphere는 SetNormalVector()를 사용하지 않음)
-    int vertexCount = textureVertices.vertices.count();
-    for (int i = 0; i < vertexCount; i++)
+    size_t vertexCount = textureVertices.vertices.count();
+    for (size_t i = 0; i < vertexCount; i++)
     {
         auto& pos = textureVertices.vertices[i].GetValue<VertexType::Position3D>();
         auto& tex = textureVertices.vertices[i].GetValue<VertexType::Texture2D>();

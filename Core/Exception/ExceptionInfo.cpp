@@ -46,10 +46,8 @@ void ExceptionInfo::Set() noexcept
 	next = infoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 }
 
-vector<string> ExceptionInfo::GetMessages() const
+const char* ExceptionInfo::GetMessages()
 {
-	vector<string> messages;
-
 	const auto end = infoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 
 	for (auto i = next; i < end; i++)
@@ -65,9 +63,11 @@ vector<string> ExceptionInfo::GetMessages() const
 
 		// i번쨰에 해당하는 디버그 메세지를 가져옴
 		INFOEXCEPTION(infoQueue->GetMessage(DXGI_DEBUG_ALL, i, message, &messageLength));
-		messages.emplace_back(message->pDescription);
+
+		// 메세지를 저장
+		strncpy_s(this->message[messageCount], message->pDescription, sizeof(this->message[0]) - 1);
+		messageCount++;
 	}
 
-	// 디버그 메세지를 반환함
-	return messages;
+	return reinterpret_cast<const char*>(this->message);
 }

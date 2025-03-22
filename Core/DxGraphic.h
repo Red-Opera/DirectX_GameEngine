@@ -42,6 +42,7 @@ public:
 	{
 	public:
 		HRException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMessage = {}) noexcept;
+		HRException(int line, const char* file, HRESULT hr, const char* infoMessage) noexcept;
 		HRException(int line, std::string file, HRESULT hr, std::vector<std::string> infoMessage = {}) noexcept;
 
 		const char* what() const noexcept override;
@@ -62,6 +63,7 @@ public:
 	{
 		using HRException::HRException;
 
+
 	public:
 		const char* GetType() const noexcept override;
 
@@ -73,6 +75,7 @@ public:
 	{
 	public:
 		InfoException(int line, const char* file, std::vector<std::string> infoMessage = {});
+		InfoException(int line, const char* file, const char* infoMessage = { });
 		InfoException(int line, std::string file, std::vector<std::string> infoMessage = {});
 
 		const char* what() const noexcept override;

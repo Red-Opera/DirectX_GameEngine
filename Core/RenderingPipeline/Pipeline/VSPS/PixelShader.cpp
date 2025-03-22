@@ -107,7 +107,7 @@ namespace Graphic
             hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
 
             if (FAILED(hr))
-                DXTrace(__FILE__, (DWORD)__LINE__, hr, "D3DX11CompileFromFile", true);
+                DXTraceW(__FILE__, (DWORD)__LINE__, hr, L"Graphic HLSL 파일 컴파일 에러", true);
 
             if (errorMessage != 0)
             {
@@ -131,7 +131,7 @@ namespace Graphic
         namespace fileSystem = std::filesystem;
 
         if (!fileSystem::exists(shaderPath) || !fileSystem::exists(cachePath))
-            DXTrace(__FILE__, (DWORD)__LINE__, S_FALSE, "Shader 파일과 캐시 경로가 존재하지 않음", true);
+            DXTraceW(__FILE__, (DWORD)__LINE__, S_FALSE, L"Shader 파일과 캐시 경로가 존재하지 않음", true);
 
         auto shaderCompileTime = fileSystem::last_write_time(shaderPath);
         auto chcheCompileTime = fileSystem::last_write_time(cachePath);

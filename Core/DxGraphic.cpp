@@ -27,6 +27,13 @@ DxGraphic::HRException::HRException(int line, const char* file, HRESULT hr, vect
         info.pop_back();
 }
 
+DxGraphic::HRException::HRException(int line, const char* file, HRESULT hr, const char* infoMessage) noexcept
+    : Exception(line, file), hr(hr)
+{
+    if (infoMessage)
+        info = infoMessage;
+}
+
 DxGraphic::HRException::HRException(int line, string file, HRESULT hr, vector<string> infoMessage) noexcept :
     Exception(line, file), hr(hr)
 {
@@ -132,7 +139,7 @@ void DxGraphic::EndFrame()
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
 
-    HRESULT hr = swapChain->Present(1, 0);
+    HRESULT hr = swapChain->Present(0, 0);
 
 #ifndef NDEBUG
     infoManager.Set();
@@ -237,7 +244,7 @@ void DxGraphic::SwapChainSettings(HWND hWnd)
     backBufferDesc.Height = 0;                                                  // 후면 버퍼 높이
 
     backBufferDesc.RefreshRate.Denominator = 1;                                 // 창 주사율 분모
-    backBufferDesc.RefreshRate.Numerator = 60;                                  // 창 주사율 분자
+    backBufferDesc.RefreshRate.Numerator = 0;                                  // 창 주사율 분자
 
     backBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                         // 후면 버퍼 픽셀 형식 (보통 8비트씩 하는게 적당하고 더 높여도 의미가 없음)
     backBufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;     // 화면 출력 순서
@@ -561,6 +568,13 @@ DxGraphic::InfoException::InfoException(int line, const char* file, vector<strin
 
     if (!info.empty())
         info.pop_back();
+}
+
+DxGraphic::InfoException::InfoException(int line, const char* file, const char* infoMessage)
+    : Exception(line, file)
+{
+    if (infoMessage)
+        info = infoMessage;
 }
 
 DxGraphic::InfoException::InfoException(int line, string file, vector<string> infoMessage)
