@@ -18,6 +18,6 @@ namespace RenderGraphNameSpace
 		PostProcessFullScreenRenderPass(const std::string name) NOEXCEPTRELEASE;
 
 		// RenderingPass을(를) 통해 상속됨
-		void Execute() const NOEXCEPTRELEASE override;
+		void Execute() NOEXCEPTRELEASE override;
 	};
 }

@@ -133,6 +133,16 @@ void TextureCubeObject::SetRotation(float roll, float pitch, float yaw) noexcept
 	this->yaw = yaw;
 }
 
+DirectX::XMFLOAT3 TextureCubeObject::GetPosition() const noexcept
+{
+	return position;
+}
+
+DirectX::XMFLOAT3 TextureCubeObject::GetRotation() const noexcept
+{
+	return { roll, pitch, yaw };
+}
+
 DirectX::XMMATRIX TextureCubeObject::GetTransformMatrix() const noexcept
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(roll, pitch, yaw) *

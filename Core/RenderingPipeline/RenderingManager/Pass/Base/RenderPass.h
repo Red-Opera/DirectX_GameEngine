@@ -25,7 +25,7 @@ namespace RenderGraphNameSpace
 	public:
 		RenderPass(std::string name) noexcept;
 
-		virtual void Execute() const NOEXCEPTRELEASE = 0;
+		virtual void Execute() NOEXCEPTRELEASE = 0;
 		virtual void Reset() NOEXCEPTRELEASE;
 
 		const std::vector<std::unique_ptr<PipelineDataConsumer>>& GetSinks() const;

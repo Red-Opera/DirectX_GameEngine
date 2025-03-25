@@ -198,6 +198,8 @@ namespace RenderGraphNameSpace
 
 	void BlurOutlineRenderGraph::RenderMainCamera(Camera& camera)
 	{
+		UpdateViewFrustum(camera);
+
 		dynamic_cast<LambertianRenderPass&>(FindRenderPass("lambertian")).RenderMainCamera(camera);
 		dynamic_cast<SkyboxPass&>(FindRenderPass("Skybox")).RenderMainCamera(camera);
 	}

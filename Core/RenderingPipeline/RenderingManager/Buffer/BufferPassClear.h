@@ -11,7 +11,7 @@ namespace RenderGraphNameSpace
 	public:
 		BufferPassClear(std::string name);
 
-		void Execute() const NOEXCEPTRELEASE override;
+		void Execute() NOEXCEPTRELEASE override;
 
 	private:
 		std::shared_ptr<Graphic::BufferResource> buffer;

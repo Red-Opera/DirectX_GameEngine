@@ -10,6 +10,8 @@
 #include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Core/RenderingPipeline/Test.h"
 
+#include "Core/RenderingPipeline/RenderingManager/Pass/Base/RenderJob.h"
+
 #include <iomanip>
 
 using namespace std;
@@ -31,8 +33,8 @@ App::App(const std::string& commandLine)
 	//gobber.SetRootTransform(DirectX::XMMatrixTranslation(9.2f, 7.0f, 0.0f));
 	//bluePlane.SetPosition(camera.GetPosition());
 	//redPlane.SetPosition(camera.GetPosition());
-	//cube.SetPosition({ 14.0f, 0.0f, 0.0f });
-	//cube2.SetPosition({ 10.0f, 4.0f, 0.0f });
+	cube.SetPosition({ 14.0f, 0.0f, 0.0f });
+	cube2.SetPosition({ 10.0f, 4.0f, 0.0f });
 	//colorCube.SetPosition({ 4.0f, 2.0f, 0.0f });
 	//colorCube2.SetPosition({ 0.0f, 6.0f, 0.0f });
 	//colorSphere.SetPosition({ -4.0f, 10.0f, 0.0f });
@@ -103,6 +105,13 @@ void App::DoFrame(float deltaTime)
 	Window::ShowGameFrame(wnd.GetHWnd());
 
 	wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
+
+    Camera& activeCamera = cameras.GetActiveCamera();
+
+	// 활성 카메라의 뷰 행렬과 투영 행렬 구하기
+	DirectX::XMMATRIX viewMatrix = activeCamera.GetMatrix();
+	DirectX::XMMATRIX projMatrix = activeCamera.GetProjection();
+	RenderGraphNameSpace::RenderJob::GetViewFrustum().UpdateFromMatrices(viewMatrix, projMatrix);
 
 	light.Update(cameras->GetMatrix());
 	renderGraph.RenderMainCamera(cameras.GetActiveCamera());
@@ -188,6 +197,29 @@ void App::DoFrame(float deltaTime)
 	Engine::FolderViewInspector::instance->RenderFolderView();
 	Engine::FolderViewInspector::instance->RenderInspector();
 	Engine::MenuBar::menuBar->RenderMenuBar();
+
+	//if (ImGui::Begin("Occlusion Debug"))
+	//{
+	//	ImGui::Text("Cube 1 Visible: %s", cube.IsVisibleAfterOcclusionTest() ? "Yes" : "No");
+	//	ImGui::Text("Cube 2 Visible: %s", cube2.IsVisibleAfterOcclusionTest() ? "Yes" : "No");
+	//
+	//	// 카메라 정보
+	//	auto& camera = cameras.GetActiveCamera();
+	//	DirectX::XMFLOAT3 cameraPos = camera.GetPosition();
+	//	ImGui::Text("Camera Pos: %.2f, %.2f, %.2f", cameraPos.x, cameraPos.y, cameraPos.z);
+	//
+	//	DirectX::XMFLOAT3 cubePosition = cube.GetPosition();
+	//
+	//	ImGui::Text("Cube 1 Pos: %.2f, %.2f, %.2f", cubePosition.x, cubePosition.y, cubePosition.z);
+	//	ImGui::Text("Cube 2 Pos: %.2f, %.2f, %.2f", cube2.GetPosition().x, cube2.GetPosition().y, cube2.GetPosition().z);
+	//
+	//	// 디버그 정보 추가
+	//	static bool useDoNotFlush = false;
+	//	ImGui::Checkbox("Use DO_NOT_FLUSH", &useDoNotFlush);
+	//	// 이 값을 OcclusionCulling 클래스로 전달하는 메서드 추가 필요
+	//}
+	//ImGui::End();
+
 
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 

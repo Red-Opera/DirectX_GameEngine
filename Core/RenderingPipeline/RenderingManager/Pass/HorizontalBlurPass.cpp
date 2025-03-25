@@ -28,7 +28,7 @@ namespace RenderGraphNameSpace
 		AddDataProvider(DirectRenderPipelineDataProvider<RenderTarget>::Create("scratchOut", renderTarget));
 	}
 
-	void HorizontalBlurPass::Execute() const NOEXCEPTRELEASE
+	void HorizontalBlurPass::Execute() NOEXCEPTRELEASE
 	{
 		auto buffer = direction->GetBuffer();
 		buffer["isHorizontal"] = true;

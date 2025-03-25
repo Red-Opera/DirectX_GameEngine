@@ -16,7 +16,7 @@ namespace RenderGraphNameSpace
 		AddDataProvider(DirectBufferPipelineDataProvider<Graphic::BufferResource>::Create("buffer", buffer));
 	}
 
-	void BufferPassClear::Execute() const NOEXCEPTRELEASE
+	void BufferPassClear::Execute() NOEXCEPTRELEASE
 	{
 		buffer->Clear();
 	}

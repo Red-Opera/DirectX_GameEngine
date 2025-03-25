@@ -275,7 +275,9 @@ namespace Graphic
 
         GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
 
-        cnpy::npy_save(path, arr.data(), { height, width });
+        std::vector<size_t> shape = { static_cast<size_t>(height), static_cast<size_t>(width) };
+
+        cnpy::npy_save(path, arr.data(), shape);
     }
 
     UINT DepthStencil::GetWidth() const

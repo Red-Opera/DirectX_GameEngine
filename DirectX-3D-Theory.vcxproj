@@ -154,6 +154,7 @@
     <ClInclude Include="Core\Camera\CameraFrustum.h" />
     <ClInclude Include="Core\Camera\CameraIndicator.h" />
     <ClInclude Include="Core\Camera\CameraProjection.h" />
+    <ClInclude Include="Core\Camera\CameraViewFrustumCulling.h" />
     <ClInclude Include="Core\Component\Component.h" />
     <ClInclude Include="Core\Component\TransformComponent.h" />
     <ClInclude Include="Core\Draw\BaseModel\CylinderFrame.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Core\Draw\Object\ColorObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorPlaneObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorSphereObject.h" />
+    <ClInclude Include="Core\Draw\OcclusionCulling.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
     <ClInclude Include="Core\Draw\Object\TextureCubeObject.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
@@ -384,6 +386,7 @@
     <ClCompile Include="Core\Camera\CameraFrustum.cpp" />
     <ClCompile Include="Core\Camera\CameraIndicator.cpp" />
     <ClCompile Include="Core\Camera\CameraProjection.cpp" />
+    <ClCompile Include="Core\Camera\CameraViewFrustumCulling.cpp" />
     <ClCompile Include="Core\Component\Component.cpp" />
     <ClCompile Include="Core\Component\TransformComponent.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ConeFrame.cpp" />
@@ -402,6 +405,7 @@
     <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp" />
     <ClCompile Include="Core\Draw\Base\Material.cpp" />
     <ClCompile Include="Core\Draw\Model.cpp" />
+    <ClCompile Include="Core\Draw\OcclusionCulling.cpp" />
     <ClCompile Include="Core\Draw\SceneGraphNode.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\TextureCube.cpp" />
     <ClCompile Include="Core\DxGraphicResource.cpp" />

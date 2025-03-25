@@ -1,6 +1,7 @@
-#define USE_VERTEX_CODE
+#pragma warning(disable: 4603)
 
 #include "stdafx.h"
+#define USE_VERTEX_CODE
 #include "Vertex.h"
 
 namespace VertexCore

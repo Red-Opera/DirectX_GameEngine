@@ -73,7 +73,7 @@ namespace RenderGraphNameSpace
 			AddDataProvider(DirectBufferPipelineDataProvider<DepthStencil>::Create("depthStencil", depthStencil));
 		}
 
-		void Execute() const NOEXCEPTRELEASE override
+		void Execute() NOEXCEPTRELEASE override
 		{
 			assert(mainCamera != nullptr);
 			mainCamera->RenderToGraphic();

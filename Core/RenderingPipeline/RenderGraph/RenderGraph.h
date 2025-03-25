@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Camera/CameraFrustum.h"
 #include "Core/Exception/WindowException.h"
 
 #include <string>
@@ -7,6 +8,7 @@
 #include <memory>
 
 class DxGraphic;
+class Camera;
 
 namespace Graphic
 {
@@ -32,6 +34,9 @@ namespace RenderGraphNameSpace
 
 		RenderQueuePass& GetRenderQueue(const std::string& passName);
 
+		// 모든 RenderJob들에게 View Frustum 설정
+		void UpdateViewFrustum(const Camera& camera);
+
 	protected:
 		void SetSinkTarget(const std::string& sinkName, const std::string& target);
 		void AddRenderPass(std::unique_ptr<RenderPass> renderPass);
@@ -52,6 +57,8 @@ namespace RenderGraphNameSpace
 		std::vector<std::unique_ptr<RenderPass>> renderPasses;
 		std::vector<std::unique_ptr<PipelineDataProvider>> globalDataProviders;
 		std::vector<std::unique_ptr<PipelineDataConsumer>> globalDataConsumers;
+
+		CameraViewFrustumCulling m_viewFrustum;
 
 		bool isFinalized = false;
 	};

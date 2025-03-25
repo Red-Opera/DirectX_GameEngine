@@ -14,6 +14,9 @@ public:
 	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
 	void SetRotation(float roll, float pitch, float yaw) noexcept;
 
+	DirectX::XMFLOAT3 GetPosition() const noexcept;
+	DirectX::XMFLOAT3 GetRotation() const noexcept;
+
 	// Drawable을(를) 통해 상속됨
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;
 

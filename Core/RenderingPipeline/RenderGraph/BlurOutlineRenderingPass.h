@@ -34,7 +34,7 @@ namespace RenderGraphNameSpace
 			AddDataProvider(DirectRenderPipelineDataProvider<Graphic::RenderTarget>::Create("scratchOut", renderTarget));
 		}
 
-		void Execute() const NOEXCEPTRELEASE override
+		void Execute() NOEXCEPTRELEASE override
 		{
 			renderTarget->Clear();
 

@@ -19,7 +19,7 @@ namespace RenderGraphNameSpace
 	public:
 		HorizontalBlurPass(std::string name, unsigned int width, unsigned int height);
 
-		void Execute() const NOEXCEPTRELEASE override;
+		void Execute() NOEXCEPTRELEASE override;
 
 	private:
 		std::shared_ptr<Graphic::CachingPixelConstantBufferEx> direction;

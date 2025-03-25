@@ -29,7 +29,7 @@ namespace RenderGraphNameSpace
 		AddRender(Graphic::Rasterizer::GetRender(false));
 	}
 
-	void PostProcessFullScreenRenderPass::Execute() const NOEXCEPTRELEASE
+	void PostProcessFullScreenRenderPass::Execute() NOEXCEPTRELEASE
 	{
 		RenderAll();
 

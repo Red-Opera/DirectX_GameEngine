@@ -67,7 +67,7 @@ namespace RenderGraphNameSpace
 			SetDepthStencil(depthTextureCube->GetDepthStencil(0));
 		}
 
-		void Execute() const NOEXCEPTRELEASE override
+		void Execute() NOEXCEPTRELEASE override
 		{
 			XMFLOAT3 cameraPosition = shadowCamera->GetPosition();
 			const auto position = XMLoadFloat3(&cameraPosition);

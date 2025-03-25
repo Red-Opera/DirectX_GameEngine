@@ -43,7 +43,7 @@ namespace RenderGraphNameSpace
 			AddRender(Stencil::GetRender(Stencil::DrawMode::Off));
 		}
 
-		void Execute() const NOEXCEPTRELEASE override
+		void Execute() NOEXCEPTRELEASE override
 		{
 			assert(mainCamera != nullptr);
 

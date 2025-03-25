@@ -33,7 +33,7 @@ namespace RenderGraphNameSpace
 		AddDataProvider(DirectBufferPipelineDataProvider<DepthStencil>::Create("depthStencil", depthStencil));
 	}
 
-	void VerticalBlurPass::Execute() const NOEXCEPTRELEASE
+	void VerticalBlurPass::Execute() NOEXCEPTRELEASE
 	{
 		auto buffer = direction->GetBuffer();
 		buffer["isHorizontal"] = false;
