@@ -65,6 +65,11 @@ namespace RenderGraphNameSpace
 			DirectX::XMStoreFloat3(&cameraUp[5], DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 
 			SetDepthStencil(depthTextureCube->GetDepthStencil(0));
+
+			isFrustumCulling = true;
+
+			// 각 방향별 Frustum Culling을 위한 CameraViewFrustumCulling 배열 초기화
+			shadowFrustums.resize(6);
 		}
 
 		void Execute() NOEXCEPTRELEASE override
@@ -74,6 +79,11 @@ namespace RenderGraphNameSpace
 
 			Window::GetDxGraphic().SetProjection(XMLoadFloat4x4(&projection));
 
+			// 현재 설정된 카메라 및 Frustum 저장
+			XMMATRIX activateCamera = Window::GetDxGraphic().GetCamera();
+			CameraViewFrustumCulling activateFrustum = RenderJob::GetViewFrustum();
+			XMMATRIX cameraViewProjection = RenderJob::GetViewFrustum().GetViewProjection();
+
 			for (size_t i = 0; i < 6; i++)
 			{
 				auto depth = depthTextureCube->GetDepthStencil(i);
@@ -82,10 +92,23 @@ namespace RenderGraphNameSpace
 				SetDepthStencil(std::move(depth));
 				
 				const auto lookAt = position + XMLoadFloat3(&cameraDirections[i]);
-				Window::GetDxGraphic().SetCamera(XMMatrixLookAtLH(position, lookAt, XMLoadFloat3(&cameraUp[i])));
+				const auto viewMatrix = XMMatrixLookAtLH(position, lookAt, XMLoadFloat3(&cameraUp[i]));
+				const auto projMatrix = XMLoadFloat4x4(&projection);
+
+				// 현재 방향의 그림자 카메라 View Frustum 업데이트
+				shadowFrustums[i].UpdateFromMatrices(viewMatrix, projMatrix);
+
+				// 모든 RenderJob에 현재 방향의 그림자 카메라 View Frustum 설정
+				RenderJob::SetViewFrustum(shadowFrustums[i]);
+
+				Window::GetDxGraphic().SetCamera(viewMatrix);
 
 				RenderQueuePass::Execute();
 			}
+
+			// 다시 설정한 카메라 및 Frustum으로 복원
+			Window::GetDxGraphic().SetCamera(activateCamera);
+			RenderJob::SetViewFrustum(activateFrustum);
 		}
 
 		void DumpShadowMap(const std::string& path) const
@@ -112,6 +135,7 @@ namespace RenderGraphNameSpace
 
 		std::vector<DirectX::XMFLOAT3> cameraUp{ 6 };
 		std::vector<DirectX::XMFLOAT3> cameraDirections{ 6 };
+		std::vector<CameraViewFrustumCulling> shadowFrustums; // 6방향의 그림자 카메라 View Frustum
 
 		DirectX::XMFLOAT4X4 projection;
 

@@ -25,6 +25,6 @@ namespace RenderGraphNameSpace
 
 		// 렌더링 작업 수행 (쿼리 결과를 기다리지 않고 비동기적으로 처리)
 		for (RenderJob& job : renderJobs)
-			job.Excute();
+			job.Excute(isFrustumCulling);
 	}
 }

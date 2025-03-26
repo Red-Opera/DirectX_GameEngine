@@ -145,6 +145,5 @@ private:
 	std::vector<BYTE> rawBuffer;
 	std::string commandLine;
 
-
 	static std::string currentSceneName;
 };

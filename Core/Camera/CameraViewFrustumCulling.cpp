@@ -5,7 +5,7 @@
 
 using namespace DirectX;
 
-CameraViewFrustumCulling::CameraViewFrustumCulling()
+CameraViewFrustumCulling::CameraViewFrustumCulling() : viewProjection()
 {
     // 초기화
     for (int i = 0; i < Plane::Count; i++)
@@ -17,8 +17,13 @@ void CameraViewFrustumCulling::UpdateFromMatrices(const XMMATRIX& view, const XM
     // view-projection 행렬 계산
     XMMATRIX viewProj = XMMatrixMultiply(view, projection);
 
+    UpdateFromViewProjection(viewProj);
+}
+
+void CameraViewFrustumCulling::UpdateFromViewProjection(const DirectX::XMMATRIX& viewProjection)
+{
     // 행렬을 전치하여 계산을 쉽게 만듦
-    XMMATRIX viewProjT = XMMatrixTranspose(viewProj);
+    XMMATRIX viewProjT = XMMatrixTranspose(viewProjection);
 
     // 각 절두체 평면 계산
     XMVECTOR rowX, rowY, rowZ, rowW;

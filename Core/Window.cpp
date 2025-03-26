@@ -287,7 +287,7 @@ void Window::ShowGameFrame(HWND hWnd) noexcept
 
    title.insert(0, std::string(WindowClass::GetName()) + " (Scene Name : " + currentSceneName + ")");
 
-   SetTitle(hWnd, title);  
+   SetTitle(hWnd, title);
 }
 
 LRESULT Window::WndMessageSetting(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept

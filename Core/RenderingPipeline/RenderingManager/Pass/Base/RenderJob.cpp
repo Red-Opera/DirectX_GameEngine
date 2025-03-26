@@ -8,8 +8,8 @@
 
 namespace RenderGraphNameSpace
 {
-	CameraViewFrustumCulling RenderJob::m_viewFrustum;
-	bool RenderJob::m_useFrustumCulling;
+	CameraViewFrustumCulling RenderJob::viewFrustumCulling;
+	bool RenderJob::useViewFrustum = true;
 
 	std::unique_ptr<OcclusionCulling> RenderJob::m_occlusionCulling;
     
@@ -17,13 +17,12 @@ namespace RenderGraphNameSpace
         : drawable{ drawable }, renderStep{ renderStep }
     {
         EnableOcclusionCulling(true);
-        EnableFrustumCulling(true);
     }
 
-    void RenderJob::Excute() NOEXCEPTRELEASE
+    void RenderJob::Excute(bool isPassFrustumCulling) NOEXCEPTRELEASE
     {
-        // Frustum Culling 체크 추가
-        if (!IsInViewFrustum())
+		// Frustum Culling 체크 (해당 Pass가 Frustum Culling을 사용하는지 여부, Frustum Culling이 활성화되어 있는지 여부, Frustum 안에 들어온지 여부)
+        if (isPassFrustumCulling && useViewFrustum && !IsInViewFrustum())
             return;
 
         drawable->SetRenderPipeline();
@@ -86,29 +85,29 @@ namespace RenderGraphNameSpace
 
     void RenderJob::EnableFrustumCulling(bool enable)
     {
-        m_useFrustumCulling = enable;
+        useViewFrustum = enable;
     }
 
     bool RenderJob::IsFrustumCullingEnabled() const
     {
-        return m_useFrustumCulling;
+        return useViewFrustum;
     }
 
     void RenderJob::SetViewFrustum(const CameraViewFrustumCulling& frustum)
     {
-        m_viewFrustum = frustum;
+        viewFrustumCulling = frustum;
     }
 
     CameraViewFrustumCulling& RenderGraphNameSpace::RenderJob::GetViewFrustum()
     {
-		return m_viewFrustum;
+		return viewFrustumCulling;
     }
 
     bool RenderJob::IsInViewFrustum() const
     {
-        if (!m_useFrustumCulling)
+        if (!useViewFrustum)
             return true;
 
-        return drawable->IsInViewFrustum(m_viewFrustum);
+        return drawable->IsInViewFrustum(viewFrustumCulling);
     }
 }

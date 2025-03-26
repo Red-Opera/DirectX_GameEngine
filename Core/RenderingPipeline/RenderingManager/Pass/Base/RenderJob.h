@@ -17,7 +17,7 @@ namespace RenderGraphNameSpace
 	public:
 		RenderJob(const RenderStep* renderStep, const Drawable* drawable);
 
-		void Excute() NOEXCEPTRELEASE;
+		void Excute(bool isPassFrustumCulling = true) NOEXCEPTRELEASE;
 
 		// Occlusion Culling 활성화/비활성화
 		void EnableOcclusionCulling(bool enable);
@@ -52,7 +52,7 @@ namespace RenderGraphNameSpace
 		bool m_useOcclusionCulling = false;
 
 		// Frustum Culling 관련 추가
-		static CameraViewFrustumCulling m_viewFrustum;
-		static bool m_useFrustumCulling;
+		static CameraViewFrustumCulling viewFrustumCulling;
+		static bool useViewFrustum;
 	};
 }

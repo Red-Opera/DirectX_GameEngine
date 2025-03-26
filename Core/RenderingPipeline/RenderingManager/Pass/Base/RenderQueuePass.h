@@ -22,6 +22,9 @@ namespace RenderGraphNameSpace
 		// 모든 RenderJob에 View Frustum 설정
 		void SetViewFrustum(const CameraViewFrustumCulling& viewFrustum);
 
+	protected:
+		bool isFrustumCulling = true;
+
 	private:
 		std::vector<RenderJob> renderJobs;
 	};

@@ -128,22 +128,6 @@ namespace RenderGraphNameSpace
 		throw RENDER_GRAPHIC_EXCEPTION(passName + "라는 이름의 RenderQueue에 패스가 존재하지 않음");
 	}
 
-	void RenderGraph::UpdateViewFrustum(const Camera& camera)
-	{
-		// 카메라의 View와 Projection 행렬로 View Frustum 업데이트
-		m_viewFrustum.UpdateFromMatrices(camera.GetMatrix(), camera.GetProjection());
-
-		// 모든 RenderPass의 모든 RenderJob에 View Frustum 설정
-		for (auto& pass : renderPasses)
-		{
-			// RenderQueuePass만 RenderJob을 가짐
-			if (auto* renderQueuePass = dynamic_cast<RenderQueuePass*>(pass.get()))
-			{
-				renderQueuePass->SetViewFrustum(m_viewFrustum);
-			}
-		}
-	}
-
 	void RenderGraph::LinkSinks(RenderPass& pass)
 	{
 		for (auto& passInput : pass.GetSinks())
