@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Vector.h"
 
+#include <xmmintrin.h>
+
 const XMVECTOR Vector::forwardV = XMLoadFloat3(&Vector::forward);
 const XMVECTOR Vector::backV = XMLoadFloat3(&Vector::back);
 const XMVECTOR Vector::leftV = XMLoadFloat3(&Vector::left);
@@ -87,6 +89,26 @@ Vector4 operator/(const Vector4& lhs, float value)
 Vector4 operator/(const Vector4& lhs, const Vector4 rhs)
 {
 	return Vector4{ lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w };
+}
+
+float Vector::GetLength(const XMVECTOR& vec)
+{
+	// 벡터의 각 성분을 제곱
+	XMVECTOR vSquared = XMVectorMultiply(vec, vec);
+
+	// 첫 세 성분의 합으로 제곱 길이 계산
+	float lenSq = _mm_cvtss_f32(_mm_dp_ps(vSquared, _mm_setr_ps(1.f, 1.f, 1.f, 0.f), 0x71));
+
+	// 제곱 길이의 근사 역제곱근 계산 (_mm_rsqrt_ss 사용)
+	__m128 lenSqVec = _mm_set_ss(lenSq);
+	__m128 approxInvSqrt = _mm_rsqrt_ss(lenSqVec);
+	float invSqrt = _mm_cvtss_f32(approxInvSqrt);
+
+	// 뉴턴-랩슨 보정: 정확도를 높이기 위한 1회 반복
+	invSqrt = invSqrt * (1.5f - 0.5f * lenSq * invSqrt * invSqrt);
+
+	// 최종 벡터 길이 계산: length = lenSq * (1/√lenSq)
+	return lenSq * invSqrt;
 }
 
 GraphicResource::Image::Color Vector::ConvertColor(DirectX::XMVECTOR vector)

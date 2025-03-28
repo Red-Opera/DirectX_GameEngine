@@ -59,11 +59,11 @@ bool CameraViewFrustumCulling::CheckSphere(const XMFLOAT3& center, float radius)
     for (int i = 0; i < Plane::Count; i++)
     {
         // 평면 방정식의 점 대입: Ax + By + Cz + D = 거리
-        XMVECTOR plane = XMLoadFloat4(&frustumPlanes[i]);
-        XMVECTOR centerVec = XMLoadFloat3(&center);
-
-        // 평면과 중심 사이의 거리 계산
-        float distance = XMVectorGetX(XMPlaneDotCoord(plane, centerVec));
+        // SIMD 연산 대신 직접 스칼라 계산으로 최적화
+        float distance = frustumPlanes[i].x * center.x +
+            frustumPlanes[i].y * center.y +
+            frustumPlanes[i].z * center.z +
+            frustumPlanes[i].w;
 
         // 모든 평면에 대한 거리 출력
         //OutputDebugStringA(std::format("Center: ({:.3f}, {:.3f}, {:.3f}), Radius: {:.3f}, Distance to plane {}: {:.3f}\n",

@@ -37,6 +37,8 @@ public:
 	static const XMVECTOR downV;
 	static const XMVECTOR allDirV;
 
+	static float GetLength(const XMVECTOR& vec);
+
 	// ==============================================
 	//			XMFLOAT3, XMVECTOR to Convert
 	// ==============================================

@@ -106,7 +106,7 @@ void Drawable::CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept
     XMVECTOR diagonal = XMVectorSubtract(maxVec, minVec);
 
     // 반지름 = 대각선 길이의 절반
-    m_boundingSphereRadius = XMVectorGetX(XMVector3Length(diagonal)) * 0.5f;
+    m_boundingSphereRadius = Vector::GetLength(diagonal) * 0.5f;
 }
 
 DirectX::XMFLOAT3 Drawable::GetBoundingSphereCenter() const noexcept
@@ -126,16 +126,11 @@ float Drawable::GetBoundingSphereRadius() const noexcept
     // 변환 행렬에서 최대 스케일 요소 추출
     XMMATRIX transformMatrix = GetTransformMatrix();
 
-    // 각 축에 대한 스케일 계산
-    XMVECTOR scaleX = XMVector3Length(transformMatrix.r[0]);
-    XMVECTOR scaleY = XMVector3Length(transformMatrix.r[1]);
-    XMVECTOR scaleZ = XMVector3Length(transformMatrix.r[2]);
-
     // 가장 큰 스케일 찾기
-    float sx = XMVectorGetX(scaleX);
-    float sy = XMVectorGetX(scaleY);
-    float sz = XMVectorGetX(scaleZ);
-    float maxScale = std::max(sx, std::max(sy, sz));
+    float scaleX = Vector::GetLength(transformMatrix.r[0]);
+    float scaleY = Vector::GetLength(transformMatrix.r[1]);
+    float scaleZ = Vector::GetLength(transformMatrix.r[2]);
+    float maxScale = std::max(scaleX, std::max(scaleY, scaleZ));
 
     // 원래 반지름에 최대 스케일 적용
     return m_boundingSphereRadius * maxScale;
