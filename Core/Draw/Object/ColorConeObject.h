@@ -2,9 +2,15 @@
 
 #include "Core/Draw/Object/ColorObject.h"
 
+#include <memory>
+
 class ColorConeObject : public ColorObject
 {
 public:
-	ColorConeObject(float scale = 1.0f, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
-	ColorConeObject(Scale scale, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
+	ColorConeObject(std::shared_ptr<class Object> object);
+
+	virtual std::string GetClassName() const { return "ColorConeObject"; }
+	static std::string GetStaticClassName() { return "ColorConeObject"; }
+
+	void Initialize() override;
 };

@@ -27,6 +27,22 @@ App::App(const std::string& commandLine)
 	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.GetLightViewCamera());
 
+	objects.push_back(Object::Create("Color Cube 1"));
+	objects[0]->AddComponent<ColorCubeObject>();
+
+	for (auto& object : objects)
+		object->Initialize();
+
+	for (auto& object : objects)
+		object->BeforeFrame();
+
+	for (auto& object : objects)
+		object->Start();
+
+	for (auto& object : objects)
+		object->LateStart();
+
+
 	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
 	//texturePlane.SetPosition({ -2.0f, 13.0f, -10.0f });
 	//texturePlane.SetRotation(0.0f, 3.14f, 0.0f);
@@ -55,8 +71,8 @@ App::App(const std::string& commandLine)
 		DirectX::XMMatrixTranslation(-30.f, 10.f, 0.f)
 	);
 
-	cube.LinkTechniques(renderGraph);
-	cube2.LinkTechniques(renderGraph);
+	cube.LinkTechniques(App::GetRenderGraph());
+	cube2.LinkTechniques(App::GetRenderGraph());
 	//colorCube.LinkTechniques(renderGraph);
 	//colorCube2.LinkTechniques(renderGraph);
 	//colorSphere.LinkTechniques(renderGraph);
@@ -67,13 +83,13 @@ App::App(const std::string& commandLine)
 	//colorCylinder2.LinkTechniques(renderGraph);
 	//colorPlane.LinkTechniques(renderGraph);
 	//colorPlane2.LinkTechniques(renderGraph);
-	light.LinkTechniques(renderGraph);
-	sponza.LinkTechniques(renderGraph);
-	gobber.LinkTechniques(renderGraph);
-	nano.LinkTechniques(renderGraph);
-	cameras.LinkTechniques(renderGraph);
+	light.LinkTechniques(App::GetRenderGraph());
+	sponza.LinkTechniques(App::GetRenderGraph());
+	gobber.LinkTechniques(App::GetRenderGraph());
+	nano.LinkTechniques(App::GetRenderGraph());
+	cameras.LinkTechniques(App::GetRenderGraph());
 
-	renderGraph.RenderShadowCamera(*light.GetLightViewCamera());
+	App::GetRenderGraph().RenderShadowCamera(*light.GetLightViewCamera());
 }
 
 App::~App()
@@ -114,7 +130,10 @@ void App::DoFrame(float deltaTime)
 	RenderGraphNameSpace::RenderJob::GetViewFrustum().UpdateFromMatrices(viewMatrix, projMatrix);
 
 	light.Update(cameras->GetMatrix());
-	renderGraph.RenderMainCamera(cameras.GetActiveCamera());
+	App::GetRenderGraph().RenderMainCamera(cameras.GetActiveCamera());
+
+	for (auto& object : objects)
+		object->Update();
 
 	light.Submit(RenderingChannel::main);
 	cube.Submit(RenderingChannel::main);
@@ -152,11 +171,11 @@ void App::DoFrame(float deltaTime)
 
 	if (saveDepth)
 	{
-		renderGraph.DumpShadowMap("depth.png");
+		App::GetRenderGraph().DumpShadowMap("depth.png");
 		saveDepth = false;
 	}
 
-	renderGraph.Execute();
+	App::GetRenderGraph().Execute();
 
 	// auto deviceContext = wnd.GetDxGraphic().GetDeviceContext();
 	// 
@@ -182,6 +201,12 @@ void App::DoFrame(float deltaTime)
 	//nano.ShowWindow(wnd.GetDxGraphic(), "Nano");
 	cube.SpawnControlWindow("Cube 1");
 	cube2.SpawnControlWindow("Cube 2");
+
+
+
+	for (auto& object : objects)
+		object->LateUpdate();
+
 	//colorCube.CreateControlWindow("Color Cube");
 	//colorCube2.CreateControlWindow("Color Cube 2");
 	//colorSphere.CreateControlWindow("Color Sphere");
@@ -192,7 +217,7 @@ void App::DoFrame(float deltaTime)
 	//colorCylinder2.CreateControlWindow("Color Cylinder 2");
 	//colorPlane.CreateControlWindow("Color Plane");
 	//colorPlane2.CreateControlWindow("Color Plane 2");
-	renderGraph.RenderWindows();
+	App::GetRenderGraph().RenderWindows();
 
 	Engine::FolderViewInspector::instance->RenderFolderView();
 	Engine::FolderViewInspector::instance->RenderInspector();
@@ -223,7 +248,7 @@ void App::DoFrame(float deltaTime)
 
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 
-	renderGraph.Reset();
+	App::GetRenderGraph().Reset();
 }
 
 void App::KeyBoardInput(float deltaTime)
@@ -284,6 +309,24 @@ void App::KeyBoardInput(float deltaTime)
 
 		if (wnd.keyBoard.IsPressed('E'))
 			cameras->Translate(Vector::down * cameraDelta);
+
+		if (wnd.keyBoard.IsPressed('P'))
+			objects[0]->transform->SetPosition(objects[0]->transform->GetRight() * cameraDelta + objects[0]->transform->GetPosition());
+
+		if (wnd.keyBoard.IsPressed('L'))
+			objects[0]->transform->SetPosition(objects[0]->transform->GetRight() * -cameraDelta + objects[0]->transform->GetPosition());
+
+		if (wnd.keyBoard.IsPressed('O'))
+			objects[0]->transform->SetPosition(objects[0]->transform->GetForward() * cameraDelta + objects[0]->transform->GetPosition());
+
+		if (wnd.keyBoard.IsPressed('K'))
+			objects[0]->transform->SetPosition(objects[0]->transform->GetForward() * -cameraDelta + objects[0]->transform->GetPosition());
+
+		if (wnd.keyBoard.IsPressed('I'))
+			objects[0]->transform->SetPosition(objects[0]->transform->GetUp() * cameraDelta + objects[0]->transform->GetPosition());
+
+		if (wnd.keyBoard.IsPressed('J'))
+			objects[0]->transform->SetPosition(objects[0]->transform->GetUp() * -cameraDelta + objects[0]->transform->GetPosition());
 	}
 
 	while (const auto mouseDelta = wnd.mouse.ReadRawDelta())

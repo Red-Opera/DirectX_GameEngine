@@ -5,6 +5,10 @@
 class ColorSphereObject : public ColorObject
 {
 public:
-	ColorSphereObject(float scale = 1.0f, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
-	ColorSphereObject(Scale scale, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
+	ColorSphereObject(std::shared_ptr<class Object> object);
+
+	virtual std::string GetClassName() const { return "ColorSphereObject"; }
+	static std::string GetStaticClassName() { return "ColorSphereObject"; }
+
+	void Initialize() override;
 };

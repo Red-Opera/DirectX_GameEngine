@@ -10,6 +10,7 @@
 #include "Draw/Object/ColorConeObject.h"
 #include "Draw/Object/ColorCylinderObject.h"
 #include "Draw/Object/ColorPlaneObject.h"
+#include "Object/Object.h"
 
 #include "RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
 #include "EngineUI/FolderViewInspector.h"
@@ -18,6 +19,9 @@
 #include "Utility/Imgui/ImguiManager.h"
 #include "Utility/Json/ScriptCommander.h"
 #include "Utility/MathInfo.h"
+
+#include <vector>
+#include <memory>
 
 class App
 {
@@ -50,7 +54,6 @@ private:
 
 	std::string commandLine;
 	ScriptCommander scriptCommander;
-	RenderGraphNameSpace::BlurOutlineRenderGraph renderGraph{ };
 
 	//Model wall { wnd.GetDxGraphic(), "Model/Sample/brick_wall/brick_wall.obj", 6.0f };
 	Model gobber{ "Model/Sample/gobber/GoblinX.obj", 4.0f };
@@ -62,9 +65,6 @@ private:
 
 	TextureCubeObject cube{ 4.0f, "Images/brickwall.jpg" };
 	TextureCubeObject cube2{ 4.0f, "Images/brickwall.jpg" };
-
-	//ColorCubeObject colorCube{ { 1.0f, 1.0f, 1.0f }, { 255, 0, 0 } };
-	//ColorCubeObject colorCube2{ { 1.0f, 1.0f, 1.0f }, { 255, 0, 0 }, false };
 	//
 	//ColorSphereObject colorSphere { };
 	//ColorSphereObject colorSphere2{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 0 }, false };
@@ -78,6 +78,16 @@ private:
 	//ColorPlaneObject colorPlane{ { 1.0f, 1.0f }, { 255, 255, 255 },  };
 	//ColorPlaneObject colorPlane2{ { 1.0f, 1.0f }, { 255, 255, 255 }, false };
 
+	std::vector<std::shared_ptr<Object>> objects;
+
 	bool saveDepth = false;
+
+public:
+	static RenderGraphNameSpace::BlurOutlineRenderGraph& GetRenderGraph()
+	{
+		static RenderGraphNameSpace::BlurOutlineRenderGraph renderGraph;
+
+		return renderGraph;
+	}
 };
 

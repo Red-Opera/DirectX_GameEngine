@@ -3,24 +3,32 @@
 
 #include "../BaseModel/ColorPlaneFrame.h"
 
+#include "Core/Object/Object.h"
+#include "Core/Component/TransformComponent.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
 
-ColorPlaneObject::ColorPlaneObject(float scale, GraphicResource::Image::Color color, bool isLit)
-	: ColorPlaneObject(Vector2{ scale, scale }, color, isLit)
+ColorPlaneObject::ColorPlaneObject(std::shared_ptr<Object> object)
+	: ColorObject(object)
 {
 
 }
 
-ColorPlaneObject::ColorPlaneObject(Vector2 scale, GraphicResource::Image::Color color, bool isLit)
+void ColorPlaneObject::Initialize()
 {
 	TriangleIndexList model = isLit ? ColorPlaneFrame::CreateTextureFrame() : ColorPlaneFrame::CreateFrame();
 
-	SetRenderingPipeline({ scale.x, scale.y, 1.0f }, color, isLit, model);
+	SetRenderingPipeline(color, isLit, model);
+
+	ColorObject::Initialize();
 }
 
 void ColorPlaneObject::CreateControlWindow(const char* name) noexcept
 {
+	Position& position = GetObject()->transform->GetLocalPosition();
+	Rotation& rotation = GetObject()->transform->GetLocalRotation();
+	Scale& scale = GetObject()->transform->GetLocalScale();
+
 	if (ImGui::Begin(name))
 	{
 		ImGui::Text("Position");

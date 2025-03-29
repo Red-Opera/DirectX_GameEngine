@@ -5,8 +5,11 @@
 class ColorPlaneObject : public ColorObject
 {
 public:
-	ColorPlaneObject(float scale = 1.0f, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
-	ColorPlaneObject(Vector2 scale, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
+	ColorPlaneObject(std::shared_ptr<class Object> object);
 
+	virtual std::string GetClassName() const { return "ColorPlaneObject"; }
+	static std::string GetStaticClassName() { return "ColorPlaneObject"; }
+
+	void Initialize() override;
 	void CreateControlWindow(const char* name) noexcept override;
 };

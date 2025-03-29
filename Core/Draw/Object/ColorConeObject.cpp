@@ -3,15 +3,17 @@
 
 #include "../BaseModel/ConeFrame.h"
 
-ColorConeObject::ColorConeObject(float scale, GraphicResource::Image::Color color, bool isLit)
-	: ColorConeObject(Scale{ scale, scale, scale }, color, isLit)
+ColorConeObject::ColorConeObject(std::shared_ptr<class Object> object)
+	: ColorObject(object)
 {
 
 }
 
-ColorConeObject::ColorConeObject(Scale scale, GraphicResource::Image::Color color, bool isLit)
+void ColorConeObject::Initialize()
 {
 	auto model = isLit ? ConeFrame::CreateTextureFrameSeparateBottom() : ConeFrame::CreateFrame();
 
-	SetRenderingPipeline(scale, color, isLit, model);
+	SetRenderingPipeline(color, isLit, model);
+
+	ColorObject::Initialize();
 }

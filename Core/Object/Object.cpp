@@ -121,11 +121,6 @@ void Object::Reset()
 	}
 }
 
-Object::Object()
-{
-	components.clear();
-}
-
 const std::vector<std::shared_ptr<Component>> Object::GetAllComponents()
 {
 	std::vector<std::shared_ptr<Component>> result;

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ColorObject.h"
 
+#include "Core/App.h"
+#include "Core/Component/TransformComponent.h"
 #include "Core/Draw/Base/TriangleIndexList.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
@@ -12,12 +14,18 @@
 
 #include "External/Imgui/imgui.h"
 
-void ColorObject::SetRenderingPipeline(Scale scale, GraphicResource::Image::Color color, bool isLit, class TriangleIndexList model)
+ColorObject::ColorObject(std::shared_ptr<class Object> object)
+	: Component(object)
 {
-	this->scale = scale;
 
+}
+
+void ColorObject::SetRenderingPipeline(GraphicResource::Image::Color color, bool isLit, class TriangleIndexList model)
+{
 	using VertexCore::VertexLayout;
 	using namespace Graphic;
+
+	Scale scale = transform->GetLocalScale();
 
 	model.Transform(DirectX::XMMatrixScaling(scale.x, scale.y, scale.z));
 
@@ -144,23 +152,12 @@ void ColorObject::SetRenderingPipeline(Scale scale, GraphicResource::Image::Colo
 	}
 }
 
-void ColorObject::SetPosition(Vector3 position) noexcept
-{
-	this->position = position;
-}
-
-void ColorObject::SetRotation(Rotation rotation) noexcept
-{
-	this->rotation = rotation;
-}
-
-void ColorObject::SetScale(Scale scale) noexcept
-{
-	this->scale = scale;
-}
-
 DirectX::XMMATRIX ColorObject::GetTransformMatrix() const noexcept
 {
+	const Position position = transform->GetPosition();
+	const Rotation rotation = transform->GetLocalRotation();
+	const Scale scale = transform->GetLocalScale();
+
 	return DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) *
 		DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) *
 		DirectX::XMMatrixTranslation(position.x, position.y, position.z);
@@ -168,22 +165,39 @@ DirectX::XMMATRIX ColorObject::GetTransformMatrix() const noexcept
 
 void ColorObject::CreateControlWindow(const char* name) noexcept
 {
+	Position& position = transform->GetPosition();
+	Rotation& rotation = transform->GetLocalRotation();
+	Scale& scale = transform->GetLocalScale();
+
 	if (ImGui::Begin(name))
 	{
+		bool positionChanged = false;
+		bool rotationChanged = false;
+		bool scaleChanged = false;
+
 		ImGui::Text("Position");
-		ImGui::SliderFloat("PositionX", &position.x, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("PositionY", &position.y, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("PositionZ", &position.z, -80.0f, 80.0f, "%.1f");
+		positionChanged |= ImGui::SliderFloat("PositionX", &position.x, -80.0f, 80.0f, "%.1f");
+		positionChanged |= ImGui::SliderFloat("PositionY", &position.y, -80.0f, 80.0f, "%.1f");
+		positionChanged |= ImGui::SliderFloat("PositionZ", &position.z, -80.0f, 80.0f, "%.1f");
+
+		if (positionChanged)
+			transform->SetPosition(position);
 
 		ImGui::Text("Orientation");
-		ImGui::SliderAngle("Roll", &rotation.x, -180.0f, 180.0f);
-		ImGui::SliderAngle("Pitch", &rotation.y, -180.0f, 180.0f);
-		ImGui::SliderAngle("Yaw", &rotation.z, -180.0f, 180.0f);
+		rotationChanged |= ImGui::SliderAngle("Roll", &rotation.x, -180.0f, 180.0f);
+		rotationChanged |= ImGui::SliderAngle("Pitch", &rotation.y, -180.0f, 180.0f);
+		rotationChanged |= ImGui::SliderAngle("Yaw", &rotation.z, -180.0f, 180.0f);
+
+		if (rotationChanged)
+			transform->SetLocalRotation(rotation);
 
 		ImGui::Text("Scale");
-		ImGui::SliderFloat("ScaleX", &scale.x, 0.0f, 2.0f, "%.1f");
-		ImGui::SliderFloat("ScaleY", &scale.y, 0.0f, 2.0f, "%.1f");
-		ImGui::SliderFloat("ScaleZ", &scale.z, 0.0f, 2.0f, "%.1f");
+		scaleChanged |= ImGui::SliderFloat("ScaleX", &scale.x, 0.0f, 2.0f, "%.1f");
+		scaleChanged |= ImGui::SliderFloat("ScaleY", &scale.y, 0.0f, 2.0f, "%.1f");
+		scaleChanged |= ImGui::SliderFloat("ScaleZ", &scale.z, 0.0f, 2.0f, "%.1f");
+
+		if (scaleChanged)
+			transform->SetLocalScale(scale);
 
 		class Probe : public TechniqueBase
 		{
@@ -233,4 +247,45 @@ void ColorObject::CreateControlWindow(const char* name) noexcept
 	}
 
 	ImGui::End();
+}
+
+void ColorObject::SetColor(GraphicResource::Image::Color color)
+{
+	this->color = color;
+}
+
+GraphicResource::Image::Color ColorObject::GetColor() const
+{
+	return color;
+}
+
+void ColorObject::SetLit(bool isLit)
+{
+	this->isLit = isLit;
+}
+
+bool ColorObject::GetLit() const
+{
+	return isLit;
+}
+
+void ColorObject::Initialize()
+{
+	LinkTechniques(App::GetRenderGraph());
+}
+
+void ColorObject::Update()
+{
+	Component::Update();
+
+	Submit(RenderingChannel::main);
+
+	Submit(RenderingChannel::shadow);
+}
+
+void ColorObject::LateUpdate()
+{
+	Component::LateUpdate();
+
+	CreateControlWindow(GetObject()->GetName().c_str());
 }

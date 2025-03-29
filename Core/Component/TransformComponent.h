@@ -14,7 +14,7 @@
 class TransformComponent : public Component, public std::enable_shared_from_this<TransformComponent>
 {
 public:
-	TransformComponent() = default;
+	TransformComponent(std::shared_ptr<class Object> object);
 	virtual ~TransformComponent() = default;
 
 	// =============================================
@@ -25,17 +25,23 @@ public:
 	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
 	void SetPosition(float x, float y, float z) noexcept;
 
+	Position& GetPosition() noexcept;
+
 	void SetRotation(Rotation rotation) noexcept;
 	void SetRotation(DirectX::XMFLOAT3 rotation) noexcept;
 	void SetRotation(float roll, float pitch, float yaw) noexcept;
+
+	Rotation& GetRotation() noexcept;
 
 	void SetScale(Scale scale) noexcept;
 	void SetScale(DirectX::XMFLOAT3 scale) noexcept;
 	void SetScale(float x, float y, float z) noexcept;
 
+	Scale& GetScale() noexcept;
+
 	const Vector3 GetRight() const noexcept;
-	//const Vector3 GetUp() const noexcept;
-	//const Vector3 GetForward() const noexcept;
+	const Vector3 GetUp() const noexcept;
+	const Vector3 GetForward() const noexcept;
 
 	// =============================================
 	// [Local]
@@ -45,10 +51,16 @@ public:
 	void SetLocalPosition(float x, float y, float z) noexcept;
 
 	void SetLocalRotation(Rotation rotation) noexcept;
+	void SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept;
 	void SetLocalRotation(float roll, float pitch, float yaw) noexcept;
 
 	void SetLocalScale(Scale scale) noexcept;
+	void SetLocalScale(DirectX::XMFLOAT3 scale) noexcept;
 	void SetLocalScale(float x, float y, float z) noexcept;
+
+	Position& GetLocalPosition() noexcept;
+	Rotation& GetLocalRotation() noexcept;
+	Scale& GetLocalScale() noexcept;
 
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
 	DirectX::XMMATRIX GetLocalTransformMatrix() const noexcept;
@@ -94,11 +106,11 @@ private:
 	std::vector<std::shared_ptr<TransformComponent>> children;	// 자식 오브젝트를 저장하는 벡터
 	std::shared_ptr<TransformComponent> parent;					// 부모 오브젝트를 저장하는 변수
 
-	Position position	= { 0.0f, 0.0f, 0.0f };
-	Rotation rotation	= { 0.0f, 0.0f, 0.0f };
+	Position position	= Position();
+	Rotation rotation	= Rotation();
 	Scale scale			= { 1.0f, 1.0f, 1.0f };
 
-	Position localPosition	= { 0.0f, 0.0f, 0.0f };
-	Rotation localRotation	= { 0.0f, 0.0f, 0.0f };
+	Position localPosition	= Position();
+	Rotation localRotation	= Rotation();
 	Scale localScale		= { 1.0f, 1.0f, 1.0f };
 };

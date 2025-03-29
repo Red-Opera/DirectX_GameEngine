@@ -3,6 +3,7 @@
 #include "EngineLoop.h"
 
 #include "Core/Component/Component.h"
+#include "Core/Component/TransformComponent.h"
 
 #include <unordered_map>
 #include <memory>
@@ -14,8 +15,27 @@ concept ComponentChild = std::is_base_of_v<Component, T>;
 class Object : public EngineLoop, public std::enable_shared_from_this<Object>
 {
 public:
-	Object();
+    Object(std::string name) : name(name)  
+    {  
 
+    }
+
+	static std::shared_ptr<Object> Create(std::string name)
+	{
+		std::shared_ptr<Object> newObject = std::make_shared<Object>(name);
+		
+		auto transformComponent = std::make_shared<TransformComponent>(newObject);
+		newObject->components[transformComponent->GetClassName()] = transformComponent;
+		transformComponent->SetObject(newObject);
+
+		newObject->transform = transformComponent;
+		transformComponent->transform = transformComponent;
+
+
+		return newObject;
+	}
+
+	void SetName(std::string name) { this->name = name; }
 	std::string GetName() const { return name; }
 
 	// 해당 컴포넌트를 추가하는 함수
@@ -28,7 +48,20 @@ public:
 		// Component에 Object를 설정함
 		component->SetObject(shared_from_this());
 
-		components[component->GetClassName()] = *component;
+		components[component->GetClassName()] = component;
+	}
+
+	template <ComponentChild ComponentClass>
+	void AddComponent()
+	{
+		auto component = std::make_shared<ComponentClass>(shared_from_this());
+
+		if (components.find(component->GetClassName()) != components.end())
+			return;
+
+		// Component에 Object를 설정함
+		component->SetObject(shared_from_this());
+		components[component->GetClassName()] = component;
 	}
 
 	// 템플릿을 사용하여 해당 컴포넌트를 반환하는 함수
@@ -94,6 +127,8 @@ public:
 	void Reset() override;
 
 	~Object() = default;
+
+	std::shared_ptr<class TransformComponent> transform;
 
 private:
 	std::unordered_map<std::string, std::shared_ptr<Component>> components;

@@ -3,85 +3,577 @@
 
 #include "Core/Object/Object.h"
 
+TransformComponent::TransformComponent(std::shared_ptr<Object> object)
+	: Component(object)
+{
+
+}
+
 void TransformComponent::SetPosition(Position position) noexcept
 {
 	this->position = position;
+
+	// 부모가 있는 경우 로컬 위치 계산
+	if (HasParent())
+	{
+		XMFLOAT3 worldPostiion = { position.x, position.y, position.z };
+
+		// 부모의 역변환을 적용하여 로컬 위치 계산
+		DirectX::XMVECTOR worldPos = DirectX::XMLoadFloat3(&worldPostiion);
+		DirectX::XMMATRIX parentWorldToLocalMatrix = DirectX::XMMatrixInverse(nullptr, parent->GetTransformMatrix());
+		DirectX::XMVECTOR localPos = DirectX::XMVector3TransformCoord(worldPos, parentWorldToLocalMatrix);
+
+		DirectX::XMFLOAT3 localPosFloat3;
+		DirectX::XMStoreFloat3(&localPosFloat3, localPos);
+
+		this->localPosition = { localPosFloat3.x, localPosFloat3.y, localPosFloat3.z };
+	}
+
+	// 부모가 없는 경우 월드 위치와 로컬 위치는 같음
+	else
+		this->localPosition = position;
 }
 
 void TransformComponent::SetPosition(DirectX::XMFLOAT3 position) noexcept
 {
 	this->position = { position.x, position.y, position.z };
+
+	// 부모가 있는 경우 로컬 위치 계산
+	if (HasParent())
+	{
+		// 부모의 역변환을 적용하여 로컬 위치 계산
+		DirectX::XMVECTOR worldPos = DirectX::XMLoadFloat3(&position);
+		DirectX::XMMATRIX parentWorldToLocalMatrix = DirectX::XMMatrixInverse(nullptr, parent->GetTransformMatrix());
+		DirectX::XMVECTOR localPos = DirectX::XMVector3TransformCoord(worldPos, parentWorldToLocalMatrix);
+
+		DirectX::XMFLOAT3 localPosFloat3;
+		DirectX::XMStoreFloat3(&localPosFloat3, localPos);
+
+		this->localPosition = { localPosFloat3.x, localPosFloat3.y, localPosFloat3.z };
+	}
+
+	// 부모가 없는 경우 월드 위치와 로컬 위치는 같음
+	else
+		this->localPosition = { position.x, position.y, position.z };
 }
 
 void TransformComponent::SetPosition(float x, float y, float z) noexcept
 {
 	this->position = { x, y, z };
+
+	// 부모가 있는 경우 로컬 위치 계산
+	if (HasParent())
+	{
+		// 부모의 역변환을 적용하여 로컬 위치 계산
+		DirectX::XMFLOAT3 worldPos = { x, y, z };
+		DirectX::XMVECTOR worldPosVector = DirectX::XMLoadFloat3(&worldPos);
+		DirectX::XMMATRIX parentWorldToLocalMatrix = DirectX::XMMatrixInverse(nullptr, parent->GetTransformMatrix());
+		DirectX::XMVECTOR localPos = DirectX::XMVector3TransformCoord(worldPosVector, parentWorldToLocalMatrix);
+
+		DirectX::XMFLOAT3 localPosFloat3;
+		DirectX::XMStoreFloat3(&localPosFloat3, localPos);
+
+		this->localPosition = { localPosFloat3.x, localPosFloat3.y, localPosFloat3.z };
+	}
+
+	// 부모가 없는 경우 월드 위치와 로컬 위치는 같음
+	else
+		this->localPosition = { x, y, z };
+}
+
+Position& TransformComponent::GetPosition() noexcept
+{
+	return position;
 }
 
 void TransformComponent::SetRotation(float roll, float pitch, float yaw) noexcept
 {
 	this->rotation = { roll, pitch, yaw };
+
+	// 부모가 있는 경우 로컬 회전 계산
+	if (HasParent())
+	{
+		// 월드 회전에서 부모의 회전을 빼서 로컬 회전 계산
+		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(roll, pitch, yaw);
+		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
+		DirectX::XMVECTOR parentRotQuatInv = DirectX::XMQuaternionInverse(parentRotQuat);
+		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionMultiply(parentRotQuatInv, worldRotQuat);
+
+		// 쿼터니언을 오일러 각으로 변환
+		DirectX::XMFLOAT4 localRotFloat4;
+		DirectX::XMStoreFloat4(&localRotFloat4, localRotQuat);
+
+		// 쿼터니언에서 오일러 각 추출
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(localRotQuat);
+		float localPitch = asinf(-rotMatrix.r[2].m128_f32[1]);
+		float localRoll, localYaw;
+
+		if (cosf(localPitch) > 0.0001f)
+		{
+			localRoll = atan2f(rotMatrix.r[2].m128_f32[0], rotMatrix.r[2].m128_f32[2]);
+			localYaw = atan2f(rotMatrix.r[0].m128_f32[1], rotMatrix.r[1].m128_f32[1]);
+		}
+		else
+		{
+			localRoll = atan2f(-rotMatrix.r[0].m128_f32[2], rotMatrix.r[0].m128_f32[0]);
+			localYaw = 0.0f;
+		}
+
+		this->localRotation = { localRoll, localPitch, localYaw };
+	}
+
+	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
+	else
+		this->localRotation = { roll, pitch, yaw };
+}
+
+Rotation& TransformComponent::GetRotation() noexcept
+{
+	return rotation;
 }
 
 void TransformComponent::SetScale(Scale scale) noexcept
 {
 	this->scale = scale;
+
+	// 부모가 있는 경우 로컬 스케일 계산
+	if (HasParent())
+	{
+		// 월드 스케일을 부모의 스케일로 나누어 로컬 스케일 계산
+		this->localScale = {
+			scale.x / parent->GetScale().x,
+			scale.y / parent->GetScale().y,
+			scale.z / parent->GetScale().z
+		};
+	}
+
+	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
+	else
+		this->localScale = scale;
 }
 
 void TransformComponent::SetScale(DirectX::XMFLOAT3 scale) noexcept
 {
 	this->scale = { scale.x, scale.y, scale.z };
+
+	// 부모가 있는 경우 로컬 스케일 계산
+	if (HasParent())
+	{
+		// 월드 스케일을 부모의 스케일로 나누어 로컬 스케일 계산
+		this->localScale = {
+			scale.x / parent->GetScale().x,
+			scale.y / parent->GetScale().y,
+			scale.z / parent->GetScale().z
+		};
+	}
+
+	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
+	else
+		this->localScale = { scale.x, scale.y, scale.z };
 }
 
 void TransformComponent::SetScale(float x, float y, float z) noexcept
 {
 	this->scale = { x, y, z };
+
+	// 부모가 있는 경우 로컬 스케일 계산
+	if (HasParent())
+	{
+		// 월드 스케일을 부모의 스케일로 나누어 로컬 스케일 계산
+		this->localScale = {
+			x / parent->GetScale().x,
+			y / parent->GetScale().y,
+			z / parent->GetScale().z
+		};
+	}
+	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
+	else
+		this->localScale = { x, y, z };
+}
+
+Scale& TransformComponent::GetScale() noexcept
+{
+	return scale;
 }
 
 const Vector3 TransformComponent::GetRight() const noexcept
 {
-	// TODO
-	return Vector3();
+	// 회전 행렬을 생성
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+
+	// 월드 좌표계의 기본 오른쪽 벡터 (1, 0, 0)를 로드
+	DirectX::XMVECTOR rightVector = DirectX::XMLoadFloat3(&Vector::right);
+
+	// 회전 행렬을 사용하여 기본 오른쪽 벡터를 변환
+	rightVector = DirectX::XMVector3TransformNormal(rightVector, rotationMatrix);
+
+	// 변환된 벡터를 정규화
+	rightVector = DirectX::XMVector3Normalize(rightVector);
+
+	// XMVECTOR를 Vector3로 변환
+	DirectX::XMFLOAT3 right;
+	DirectX::XMStoreFloat3(&right, rightVector);
+
+	return Vector3(right.x, right.y, right.z);
+}
+
+const Vector3 TransformComponent::GetUp() const noexcept
+{
+	// 회전 행렬을 생성
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+
+	// 월드 좌표계의 기본 오른쪽 벡터 (1, 0, 0)를 로드
+	DirectX::XMVECTOR upVector = DirectX::XMLoadFloat3(&Vector::up);
+
+	// 회전 행렬을 사용하여 기본 오른쪽 벡터를 변환
+	upVector = DirectX::XMVector3TransformNormal(upVector, rotationMatrix);
+
+	// 변환된 벡터를 정규화
+	upVector = DirectX::XMVector3Normalize(upVector);
+
+	// XMVECTOR를 Vector3로 변환
+	DirectX::XMFLOAT3 up;
+	DirectX::XMStoreFloat3(&up, upVector);
+
+	return Vector3(up.x, up.y, up.z);
+}
+
+const Vector3 TransformComponent::GetForward() const noexcept
+{
+	// 회전 행렬을 생성
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+
+	// 월드 좌표계의 기본 오른쪽 벡터 (1, 0, 0)를 로드
+	DirectX::XMVECTOR forwardVector = DirectX::XMLoadFloat3(&Vector::forward);
+
+	// 회전 행렬을 사용하여 기본 오른쪽 벡터를 변환
+	forwardVector = DirectX::XMVector3TransformNormal(forwardVector, rotationMatrix);
+
+	// 변환된 벡터를 정규화
+	forwardVector = DirectX::XMVector3Normalize(forwardVector);
+
+	// XMVECTOR를 Vector3로 변환
+	DirectX::XMFLOAT3 forward;
+	DirectX::XMStoreFloat3(&forward, forwardVector);
+
+	return Vector3(forward.x, forward.y, forward.z);
 }
 
 void TransformComponent::SetRotation(Rotation rotation) noexcept
 {
 	this->rotation = rotation;
+
+	// 부모가 있는 경우 로컬 회전 계산
+	if (HasParent())
+	{
+		// 월드 회전에서 부모의 회전을 빼서 로컬 회전 계산
+		// 이때 쿼터니언 방식으로 변환하여 계산
+		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
+		DirectX::XMVECTOR parentRotQuatInv = DirectX::XMQuaternionInverse(parentRotQuat);
+		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionMultiply(parentRotQuatInv, worldRotQuat);
+
+		// 쿼터니언을 오일러 각으로 변환
+		DirectX::XMFLOAT4 localRotFloat4;
+		DirectX::XMStoreFloat4(&localRotFloat4, localRotQuat);
+
+		// 쿼터니언에서 오일러 각 추출
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(localRotQuat);
+		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
+		float roll, yaw;
+
+		if (cosf(pitch) > 0.0001f)
+		{
+			roll = atan2f(rotMatrix.r[2].m128_f32[0], rotMatrix.r[2].m128_f32[2]);
+			yaw = atan2f(rotMatrix.r[0].m128_f32[1], rotMatrix.r[1].m128_f32[1]);
+		}
+
+		else
+		{
+			roll = atan2f(-rotMatrix.r[0].m128_f32[2], rotMatrix.r[0].m128_f32[0]);
+			yaw = 0.0f;
+		}
+
+		this->localRotation = { roll, pitch, yaw };
+	}
+
+	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
+	else
+		this->localRotation = rotation;
 }
 
 void TransformComponent::SetRotation(DirectX::XMFLOAT3 rotation) noexcept
 {
 	this->rotation = { rotation.x, rotation.y, rotation.z };
+
+	// 부모가 있는 경우 로컬 회전 계산
+	if (HasParent())
+	{
+		// 월드 회전에서 부모의 회전을 빼서 로컬 회전 계산
+		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
+		DirectX::XMVECTOR parentRotQuatInv = DirectX::XMQuaternionInverse(parentRotQuat);
+		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionMultiply(parentRotQuatInv, worldRotQuat);
+
+		// 쿼터니언을 오일러 각으로 변환
+		DirectX::XMFLOAT4 localRotFloat4;
+		DirectX::XMStoreFloat4(&localRotFloat4, localRotQuat);
+
+		// 쿼터니언에서 오일러 각 추출
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(localRotQuat);
+		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
+		float roll, yaw;
+
+		if (cosf(pitch) > 0.0001f)
+		{
+			roll = atan2f(rotMatrix.r[2].m128_f32[0], rotMatrix.r[2].m128_f32[2]);
+			yaw = atan2f(rotMatrix.r[0].m128_f32[1], rotMatrix.r[1].m128_f32[1]);
+		}
+
+		else
+		{
+			roll = atan2f(-rotMatrix.r[0].m128_f32[2], rotMatrix.r[0].m128_f32[0]);
+			yaw = 0.0f;
+		}
+
+		this->localRotation = { roll, pitch, yaw };
+	}
+
+	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
+	else
+		this->localRotation = { rotation.x, rotation.y, rotation.z };
 }
 
 void TransformComponent::SetLocalPosition(Position position) noexcept
 {
 	this->localPosition = position;
+
+	// 부모가 있는 경우 월드 위치 계산
+	if (HasParent())
+	{
+		// 부모의 변환 행렬을 사용하여 월드 위치 계산
+		DirectX::XMFLOAT3 localPos = { position.x, position.y, position.z };
+		DirectX::XMVECTOR localPosVector = DirectX::XMLoadFloat3(&localPos);
+		DirectX::XMMATRIX parentWorldMatrix = parent->GetTransformMatrix();
+		DirectX::XMVECTOR worldPos = DirectX::XMVector3TransformCoord(localPosVector, parentWorldMatrix);
+
+		DirectX::XMFLOAT3 worldPosFloat3;
+		DirectX::XMStoreFloat3(&worldPosFloat3, worldPos);
+
+		this->position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
+	}
+
+	// 부모가 없는 경우 월드 위치와 로컬 위치는 같음
+	else
+		this->position = position;
 }
 
 void TransformComponent::SetLocalPosition(float x, float y, float z) noexcept
 {
 	this->localPosition = { x, y, z };
+
+	// 부모가 있는 경우 월드 위치 계산
+	if (HasParent())
+	{
+		// 부모의 변환 행렬을 사용하여 월드 위치 계산
+		DirectX::XMFLOAT3 localPos = { x, y, z };
+		DirectX::XMVECTOR localPosVector = DirectX::XMLoadFloat3(&localPos);
+		DirectX::XMMATRIX parentWorldMatrix = parent->GetTransformMatrix();
+		DirectX::XMVECTOR worldPos = DirectX::XMVector3TransformCoord(localPosVector, parentWorldMatrix);
+
+		DirectX::XMFLOAT3 worldPosFloat3;
+		DirectX::XMStoreFloat3(&worldPosFloat3, worldPos);
+
+		this->position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
+	}
+
+	// 부모가 없는 경우 월드 위치와 로컬 위치는 같음
+	else
+		this->position = { x, y, z };
 }
 
 void TransformComponent::SetLocalRotation(float roll, float pitch, float yaw) noexcept
 {
 	this->localRotation = { roll, pitch, yaw };
+
+	// 부모가 있는 경우 월드 회전 계산
+	if (HasParent())
+	{
+		// 로컬 회전을 월드 회전으로 변환
+		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(roll, pitch, yaw);
+		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
+		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionMultiply(localRotQuat, parentRotQuat);
+
+		// 쿼터니언에서 오일러 각 계산
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(worldRotQuat);
+		float worldPitch = asinf(-rotMatrix.r[2].m128_f32[1]);
+		float worldRoll, worldYaw;
+
+		if (cosf(worldPitch) > 0.0001f)
+		{
+			worldRoll = atan2f(rotMatrix.r[2].m128_f32[0], rotMatrix.r[2].m128_f32[2]);
+			worldYaw = atan2f(rotMatrix.r[0].m128_f32[1], rotMatrix.r[1].m128_f32[1]);
+		}
+		else
+		{
+			worldRoll = atan2f(-rotMatrix.r[0].m128_f32[2], rotMatrix.r[0].m128_f32[0]);
+			worldYaw = 0.0f;
+		}
+
+		this->rotation = { worldRoll, worldPitch, worldYaw };
+	}
+
+	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
+	else
+		this->rotation = { roll, pitch, yaw };
 }
 
 void TransformComponent::SetLocalScale(Scale scale) noexcept
 {
 	this->localScale = scale;
+
+	// 부모가 있는 경우 월드 스케일 계산
+	if (HasParent())
+	{
+		// 로컬 스케일에 부모의 스케일을 곱하여 월드 스케일 계산
+		this->scale = {
+			scale.x * parent->GetScale().x,
+			scale.y * parent->GetScale().y,
+			scale.z * parent->GetScale().z
+		};
+	}
+
+	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
+	else
+		this->scale = scale;
+}
+
+void TransformComponent::SetLocalScale(DirectX::XMFLOAT3 scale) noexcept
+{
+	this->localScale = { scale.x, scale.y, scale.z };
+
+	// 부모가 있는 경우 월드 스케일 계산
+	if (HasParent())
+	{
+		// 로컬 스케일에 부모의 스케일을 곱하여 월드 스케일 계산
+		this->scale = {
+			scale.x * parent->GetScale().x,
+			scale.y * parent->GetScale().y,
+			scale.z * parent->GetScale().z
+		};
+	}
+
+	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
+	else
+		this->scale = { scale.x, scale.y, scale.z };
 }
 
 void TransformComponent::SetLocalScale(float x, float y, float z) noexcept
 {
 	this->localScale = { x, y, z };
+
+	// 부모가 있는 경우 월드 스케일 계산
+	if (HasParent())
+	{
+		// 로컬 스케일에 부모의 스케일을 곱하여 월드 스케일 계산
+		this->scale = {
+			x * parent->GetScale().x,
+			y * parent->GetScale().y,
+			z * parent->GetScale().z
+		};
+	}
+
+	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
+	else
+		this->scale = { x, y, z };
+}
+
+Position& TransformComponent::GetLocalPosition() noexcept
+{
+	return localPosition;
+}
+
+Rotation& TransformComponent::GetLocalRotation() noexcept
+{
+	return localRotation;
+}
+
+Scale& TransformComponent::GetLocalScale() noexcept
+{
+	return localScale;
 }
 
 void TransformComponent::SetLocalRotation(Rotation rotation) noexcept
 {
 	this->localRotation = rotation;
+
+	// 부모가 있는 경우 월드 회전 계산
+	if (HasParent())
+	{
+		// 로컬 회전을 월드 회전으로 변환
+		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
+		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionMultiply(localRotQuat, parentRotQuat);
+
+		// 쿼터니언에서 오일러 각 계산
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(worldRotQuat);
+		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
+		float roll, yaw;
+
+		if (cosf(pitch) > 0.0001f)
+		{
+			roll = atan2f(rotMatrix.r[2].m128_f32[0], rotMatrix.r[2].m128_f32[2]);
+			yaw = atan2f(rotMatrix.r[0].m128_f32[1], rotMatrix.r[1].m128_f32[1]);
+		}
+		else
+		{
+			roll = atan2f(-rotMatrix.r[0].m128_f32[2], rotMatrix.r[0].m128_f32[0]);
+			yaw = 0.0f;
+		}
+
+		this->rotation = { roll, pitch, yaw };
+	}
+
+	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
+	else
+		this->rotation = rotation;
+}
+
+void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
+{
+	this->localRotation = { rotation.x, rotation.y, rotation.z };
+
+	// 부모가 있는 경우 월드 회전 계산
+	if (HasParent())
+	{
+		// 로컬 회전을 월드 회전으로 변환
+		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
+		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionMultiply(localRotQuat, parentRotQuat);
+
+		// 쿼터니언에서 오일러 각 계산
+		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(worldRotQuat);
+		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
+		float roll, yaw;
+
+		if (cosf(pitch) > 0.0001f)
+		{
+			roll = atan2f(rotMatrix.r[2].m128_f32[0], rotMatrix.r[2].m128_f32[2]);
+			yaw = atan2f(rotMatrix.r[0].m128_f32[1], rotMatrix.r[1].m128_f32[1]);
+		}
+
+		else
+		{
+			roll = atan2f(-rotMatrix.r[0].m128_f32[2], rotMatrix.r[0].m128_f32[0]);
+			yaw = 0.0f;
+		}
+
+		this->rotation = { roll, pitch, yaw };
+	}
+
+	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
+	else
+		this->rotation = { rotation.x, rotation.y, rotation.z };
 }
 
 DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const noexcept

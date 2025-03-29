@@ -3,15 +3,17 @@
 
 #include "../BaseModel/CylinderFrame.h"
 
-ColorCylinderObject::ColorCylinderObject(float scale, GraphicResource::Image::Color color, bool isLit)
-	: ColorCylinderObject(Scale{ scale, scale, scale }, color, isLit)
+ColorCylinderObject::ColorCylinderObject(std::shared_ptr<class Object> object)
+	: ColorObject(object)
 {
 
 }
 
-ColorCylinderObject::ColorCylinderObject(Scale scale, GraphicResource::Image::Color color,bool isLit)
+void ColorCylinderObject::Initialize()
 {
 	auto model = isLit ? CylinderFrame::CreateTextureFrame() : CylinderFrame::CreateFrame();
 
-	SetRenderingPipeline(scale, color, isLit, model);
+	SetRenderingPipeline(color, isLit, model);
+
+	ColorObject::Initialize();
 }

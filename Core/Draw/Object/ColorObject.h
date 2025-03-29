@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Component/Component.h"
 #include "Core/Draw/Base/Drawable.h"
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/Pipeline/IA/IndexBuffer.h"
@@ -7,23 +8,29 @@
 
 #include "Utility/Vector.h"
 
-class ColorObject : public Drawable
+class ColorObject : public Drawable, public Component
 {
 public:
-	ColorObject() = default;
+	ColorObject(std::shared_ptr<class Object> object);
 
-	void SetRenderingPipeline(Scale scale, GraphicResource::Image::Color color, bool isLit, class TriangleIndexList model);
-
-	void SetPosition(Vector3 position) noexcept;
-	void SetRotation(Rotation rotation) noexcept;
-	void SetScale(Scale scale) noexcept;
+	void SetRenderingPipeline(GraphicResource::Image::Color color, bool isLit, class TriangleIndexList model);
 
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
 
 	virtual void CreateControlWindow(const char* name) noexcept;
 
+	void SetColor(GraphicResource::Image::Color color);
+	GraphicResource::Image::Color GetColor() const;
+
+	void SetLit(bool isLit);
+	bool GetLit() const;
+
+	void Initialize() override;
+	void Update() override;
+	void LateUpdate() override;
+
 protected:
-	Vector3 position = { 1.0f, 1.0f, 1.0f };
-	Rotation rotation = { 0.0f, 0.0f, 0.0f };
-	Scale scale = { 1.0f, 1.0f, 1.0f };
+	GraphicResource::Image::Color color = { 255, 255, 255 };
+
+	bool isLit = true;
 };

@@ -5,6 +5,10 @@
 class ColorCubeObject : public ColorObject
 {
 public:
-	ColorCubeObject(float scale = 1.0f, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
-	ColorCubeObject(Scale scale, GraphicResource::Image::Color color = { 255, 255, 255 }, bool isLit = true);
+	ColorCubeObject(std::shared_ptr<class Object> object);
+
+	virtual std::string GetClassName() const { return "ColorCubeObject"; }
+	static std::string GetStaticClassName() { return "ColorCubeObject"; }
+
+	void Initialize() override;
 };
