@@ -51,17 +51,24 @@ public:
 		components[component->GetClassName()] = component;
 	}
 
-	template <ComponentChild ComponentClass>
-	void AddComponent()
+	template <ComponentChild ComponentClass, typename... Args>
+	std::shared_ptr<ComponentClass> AddComponent(Args&&... args)
 	{
-		auto component = std::make_shared<ComponentClass>(shared_from_this());
+		// 먼저 이미 해당 컴포넌트가 있는지 확인
+		std::string componentName = ComponentClass::GetStaticClassName();
 
-		if (components.find(component->GetClassName()) != components.end())
-			return;
+		if (components.find(componentName) != components.end())
+			return std::dynamic_pointer_cast<ComponentClass>(components[componentName]);
+
+		// shared_from_this() + 추가 매개변수들을 사용하여 컴포넌트 생성
+		auto component = std::make_shared<ComponentClass>(shared_from_this(), std::forward<Args>(args)...);
 
 		// Component에 Object를 설정함
 		component->SetObject(shared_from_this());
+
 		components[component->GetClassName()] = component;
+
+		return component;
 	}
 
 	// 템플릿을 사용하여 해당 컴포넌트를 반환하는 함수

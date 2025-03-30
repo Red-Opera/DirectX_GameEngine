@@ -22,6 +22,8 @@ namespace Graphic
 		HRESULT SaveCacheShader(const std::wstring& tempShaderPath);
 		void GetCompileShader(const std::string& path);
 
+		std::wstring GetCacheFilePathWithTimestamp(const std::wstring& shaderPath, const std::wstring& basePath);
+		void CleanupOldShaderCaches(const std::wstring& tempPath, const std::wstring& shaderFileName);
 		bool IsShaderCacheVaild(const std::wstring& shaderPath, const std::wstring& cachePath);
 
 		std::string path;

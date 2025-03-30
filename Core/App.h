@@ -1,24 +1,17 @@
 #pragma once
 
 #include "Window.h"
+
 #include "Camera/CameraContainer.h"
 #include "Draw/Light/PointLight.h"
 #include "Draw/Model.h"
-#include "Draw/Object/TextureCubeObject.h"
-#include "Draw/Object/ColorCubeObject.h"
-#include "Draw/Object/ColorSphereObject.h"
-#include "Draw/Object/ColorConeObject.h"
-#include "Draw/Object/ColorCylinderObject.h"
-#include "Draw/Object/ColorPlaneObject.h"
 #include "Object/Object.h"
 
 #include "RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
-#include "EngineUI/FolderViewInspector.h"
 
 #include "Utility/GameTimer.h"
 #include "Utility/Imgui/ImguiManager.h"
 #include "Utility/Json/ScriptCommander.h"
-#include "Utility/MathInfo.h"
 
 #include <vector>
 #include <memory>
@@ -55,28 +48,12 @@ private:
 	std::string commandLine;
 	ScriptCommander scriptCommander;
 
-	//Model wall { wnd.GetDxGraphic(), "Model/Sample/brick_wall/brick_wall.obj", 6.0f };
 	Model gobber{ "Model/Sample/gobber/GoblinX.obj", 4.0f };
 	Model nano { "Model/Sample/nano_textured/nanosuit.obj", 1.0f };
 	Model sponza { "Model/Sample/sponza/sponza.obj", 1.0f / 20.0f };
 	//TestPlane texturePlane{ wnd.GetDxGraphic(), 6.0f };
 	//TestPlane bluePlane{ wnd.GetDxGraphic(), 6.0f, {0.3f, 0.3f, 1.0f, 0.0f} };
 	//TestPlane redPlane{ wnd.GetDxGraphic(), 6.0f, {1.0f, 0.3f, 0.3f, 0.0f} };
-
-	TextureCubeObject cube{ 4.0f, "Images/brickwall.jpg" };
-	TextureCubeObject cube2{ 4.0f, "Images/brickwall.jpg" };
-	//
-	//ColorSphereObject colorSphere { };
-	//ColorSphereObject colorSphere2{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 0 }, false };
-
-	//ColorConeObject colorCone{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 0 } };
-	//ColorConeObject colorCone2{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 0 }, false };
-	//
-	//ColorCylinderObject colorCylinder{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 255 },  };
-	//ColorCylinderObject colorCylinder2{ { 1.0f, 1.0f, 1.0f }, { 0, 255, 255 }, false };
-	//
-	//ColorPlaneObject colorPlane{ { 1.0f, 1.0f }, { 255, 255, 255 },  };
-	//ColorPlaneObject colorPlane2{ { 1.0f, 1.0f }, { 255, 255, 255 }, false };
 
 	std::vector<std::shared_ptr<Object>> objects;
 
@@ -90,4 +67,3 @@ public:
 		return renderGraph;
 	}
 };
-

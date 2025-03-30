@@ -31,7 +31,6 @@ public:
 	~Model() noexcept;
 
 private:
-	static std::unique_ptr<Mesh> ConvertMesh(const aiMesh& mesh, const aiMaterial* const* materials, const std::filesystem::path& path, float scale);	// 모델에서 가져온 aiMesh를 Mesh 클래스로 변환
 	std::unique_ptr<SceneGraphNode> ConvertSceneGraphNode(int& nextID, const aiNode& modelNode, float scale) noexcept;			// 모델에서 가져온 aiNode를 SceneGraphNode로 변환하는 메소드
 
 	std::unique_ptr<SceneGraphNode> root;

@@ -6,10 +6,10 @@
 #include "Utility/Vector.h"
 
 #include <DirectXMath.h>
-#include <string>
 #include <memory>
-#include <vector>
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 class TransformComponent : public Component, public std::enable_shared_from_this<TransformComponent>
 {

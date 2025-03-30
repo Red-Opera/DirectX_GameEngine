@@ -1,31 +1,22 @@
 #pragma once
 
-#include "Core/Draw/Base/Drawable.h"
-#include "Core/RenderingPipeline/Render.h"
-#include "Core/RenderingPipeline/Pipeline/IA/IndexBuffer.h"
+#include "Core/Draw/Object/ColorObject.h"
 
 #include <string>
 
-class TextureCubeObject : public Drawable
+class TextureCubeObject : public ColorObject
 {
 public:
-	TextureCubeObject(float size, std::string path);
+	TextureCubeObject(std::shared_ptr<class Object> object, std::string path);
 
-	void SetPosition(DirectX::XMFLOAT3 position) noexcept;
-	void SetRotation(float roll, float pitch, float yaw) noexcept;
+	void SetTexturePath(std::string path) { this->path = path; }
+	std::string GetTexturePath() const { return path; }
 
-	DirectX::XMFLOAT3 GetPosition() const noexcept;
-	DirectX::XMFLOAT3 GetRotation() const noexcept;
+	virtual std::string GetClassName() const { return "TextureCubeObject"; }
+	static std::string GetStaticClassName() { return "TextureCubeObject"; }
 
-	// Drawable을(를) 통해 상속됨
-	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;
-
-	void SpawnControlWindow(const char* name) noexcept;
-
+	void Initialize() override;
+	
 private:
-	DirectX::XMFLOAT3 position = { 1.0f, 1.0f, 1.0f };
-
-	float roll = 0.0f;
-	float pitch = 0.0f;
-	float yaw = 0.0f;
+	std::string path;
 };

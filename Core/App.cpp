@@ -1,14 +1,18 @@
-#pragma comment(lib, "Utility\\assimp\\assimp-vc143-mt.lib")
-
 #include "stdafx.h"
 #include "App.h"
+#include "TestModelBase.h"
 
-#include "Core/TestModelBase.h"
-#include "Core/Camera/Camera.h"
-#include "Core/EngineUI/FolderViewInspector.h"
-#include "Core/EngineUI/MenuBar.h"
-#include "Core/RenderingPipeline/RenderingChannel.h"
-#include "Core/RenderingPipeline/Test.h"
+#include "Camera/Camera.h"
+#include "Draw/Object/ColorConeObject.h"
+#include "Draw/Object/ColorCubeObject.h"
+#include "Draw/Object/ColorCylinderObject.h"
+#include "Draw/Object/ColorPlaneObject.h"
+#include "Draw/Object/ColorSphereObject.h"
+#include "Draw/Object/TextureCubeObject.h"
+#include "EngineUI/FolderViewInspector.h"
+#include "EngineUI/MenuBar.h"
+#include "RenderingPipeline/RenderingChannel.h"
+#include "RenderingPipeline/Test.h"
 
 #include "Core/RenderingPipeline/RenderingManager/Pass/Base/RenderJob.h"
 
@@ -27,8 +31,8 @@ App::App(const std::string& commandLine)
 	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.GetLightViewCamera());
 
-	objects.push_back(Object::Create("Color Cube 1"));
-	objects[0]->AddComponent<ColorCubeObject>();
+	objects.push_back(Object::Create("Texture Cube 1"));
+	objects[0]->AddComponent<TextureCubeObject>("Images/brickwall.jpg");
 
 	for (auto& object : objects)
 		object->Initialize();
@@ -42,25 +46,12 @@ App::App(const std::string& commandLine)
 	for (auto& object : objects)
 		object->LateStart();
 
-
 	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
 	//texturePlane.SetPosition({ -2.0f, 13.0f, -10.0f });
 	//texturePlane.SetRotation(0.0f, 3.14f, 0.0f);
 	//gobber.SetRootTransform(DirectX::XMMatrixTranslation(9.2f, 7.0f, 0.0f));
 	//bluePlane.SetPosition(camera.GetPosition());
 	//redPlane.SetPosition(camera.GetPosition());
-	cube.SetPosition({ 14.0f, 0.0f, 0.0f });
-	cube2.SetPosition({ 10.0f, 4.0f, 0.0f });
-	//colorCube.SetPosition({ 4.0f, 2.0f, 0.0f });
-	//colorCube2.SetPosition({ 0.0f, 6.0f, 0.0f });
-	//colorSphere.SetPosition({ -4.0f, 10.0f, 0.0f });
-	//colorSphere.SetRotation({ 0.0f, 0.0f, 0.0f });
-	//colorCone.SetRotation({ 0.0f, 0.0f, 0.0f });
-	//colorCone2.SetPosition({ -8.0f, 14.0f, 0.0f });
-	//colorCylinder.SetPosition({ 0.0f, 4.0f, 0.0f });
-	//colorCylinder2.SetPosition({ 0.0f, 6.0f, 0.0f });
-	//colorPlane.SetPosition({ 0.0f, 0.0f, 0.0f });
-	//colorPlane2.SetPosition({ 0.0f, 5.0f, 0.0f });
 
 	nano.SetRootTransform(
 		DirectX::XMMatrixRotationY(Math::PI / 2.f) *
@@ -71,18 +62,6 @@ App::App(const std::string& commandLine)
 		DirectX::XMMatrixTranslation(-30.f, 10.f, 0.f)
 	);
 
-	cube.LinkTechniques(App::GetRenderGraph());
-	cube2.LinkTechniques(App::GetRenderGraph());
-	//colorCube.LinkTechniques(renderGraph);
-	//colorCube2.LinkTechniques(renderGraph);
-	//colorSphere.LinkTechniques(renderGraph);
-	//colorSphere2.LinkTechniques(renderGraph);
-	//colorCone.LinkTechniques(renderGraph);
-	//colorCone2.LinkTechniques(renderGraph);
-	//colorCylinder.LinkTechniques(renderGraph);
-	//colorCylinder2.LinkTechniques(renderGraph);
-	//colorPlane.LinkTechniques(renderGraph);
-	//colorPlane2.LinkTechniques(renderGraph);
 	light.LinkTechniques(App::GetRenderGraph());
 	sponza.LinkTechniques(App::GetRenderGraph());
 	gobber.LinkTechniques(App::GetRenderGraph());
@@ -136,36 +115,12 @@ void App::DoFrame(float deltaTime)
 		object->Update();
 
 	light.Submit(RenderingChannel::main);
-	cube.Submit(RenderingChannel::main);
-	cube2.Submit(RenderingChannel::main);
-	//colorCube.Submit(RenderingChannel::main);
-	//colorCube2.Submit(RenderingChannel::main);
-	//colorSphere.Submit(RenderingChannel::main);
-	//colorSphere2.Submit(RenderingChannel::main);
-	//colorCone.Submit(RenderingChannel::main);
-	//colorCone2.Submit(RenderingChannel::main);
-	//colorCylinder.Submit(RenderingChannel::main);
-	//colorCylinder2.Submit(RenderingChannel::main);
-	//colorPlane.Submit(RenderingChannel::main);
-	//colorPlane2.Submit(RenderingChannel::main);
 	sponza.Submit(RenderingChannel::main);
 	nano.Submit(RenderingChannel::main);
 	gobber.Submit(RenderingChannel::main);
 	cameras.Submit(RenderingChannel::main);
 
 	sponza.Submit(RenderingChannel::shadow);
-	cube.Submit(RenderingChannel::shadow);
-	cube2.Submit(RenderingChannel::shadow);
-	//colorCube.Submit(RenderingChannel::shadow);
-	//colorCube2.Submit(RenderingChannel::shadow);
-	//colorSphere.Submit(RenderingChannel::shadow);
-	//colorSphere2.Submit(RenderingChannel::shadow);
-	//colorCone.Submit(RenderingChannel::shadow);
-	//colorCone2.Submit(RenderingChannel::shadow);
-	//colorCylinder.Submit(RenderingChannel::shadow);
-	//colorCylinder2.Submit(RenderingChannel::shadow);
-	//colorPlane.Submit(RenderingChannel::shadow);
-	//colorPlane2.Submit(RenderingChannel::shadow);
 	gobber.Submit(RenderingChannel::shadow);
 	nano.Submit(RenderingChannel::shadow);
 
@@ -199,52 +154,15 @@ void App::DoFrame(float deltaTime)
 	//texturePlane.SpawnControlWindow(wnd.GetDxGraphic());
 	//gobber.ShowWindow(wnd.GetDxGraphic(), "Gobber");
 	//nano.ShowWindow(wnd.GetDxGraphic(), "Nano");
-	cube.SpawnControlWindow("Cube 1");
-	cube2.SpawnControlWindow("Cube 2");
-
-
 
 	for (auto& object : objects)
 		object->LateUpdate();
 
-	//colorCube.CreateControlWindow("Color Cube");
-	//colorCube2.CreateControlWindow("Color Cube 2");
-	//colorSphere.CreateControlWindow("Color Sphere");
-	//colorSphere2.CreateControlWindow("Color Sphere 2");
-	//colorCone.CreateControlWindow("Color Cone");
-	//colorCone2.CreateControlWindow("Color Cone 2");
-	//colorCylinder.CreateControlWindow("Color Cylinder");
-	//colorCylinder2.CreateControlWindow("Color Cylinder 2");
-	//colorPlane.CreateControlWindow("Color Plane");
-	//colorPlane2.CreateControlWindow("Color Plane 2");
 	App::GetRenderGraph().RenderWindows();
 
 	Engine::FolderViewInspector::instance->RenderFolderView();
 	Engine::FolderViewInspector::instance->RenderInspector();
 	Engine::MenuBar::menuBar->RenderMenuBar();
-
-	//if (ImGui::Begin("Occlusion Debug"))
-	//{
-	//	ImGui::Text("Cube 1 Visible: %s", cube.IsVisibleAfterOcclusionTest() ? "Yes" : "No");
-	//	ImGui::Text("Cube 2 Visible: %s", cube2.IsVisibleAfterOcclusionTest() ? "Yes" : "No");
-	//
-	//	// 카메라 정보
-	//	auto& camera = cameras.GetActiveCamera();
-	//	DirectX::XMFLOAT3 cameraPos = camera.GetPosition();
-	//	ImGui::Text("Camera Pos: %.2f, %.2f, %.2f", cameraPos.x, cameraPos.y, cameraPos.z);
-	//
-	//	DirectX::XMFLOAT3 cubePosition = cube.GetPosition();
-	//
-	//	ImGui::Text("Cube 1 Pos: %.2f, %.2f, %.2f", cubePosition.x, cubePosition.y, cubePosition.z);
-	//	ImGui::Text("Cube 2 Pos: %.2f, %.2f, %.2f", cube2.GetPosition().x, cube2.GetPosition().y, cube2.GetPosition().z);
-	//
-	//	// 디버그 정보 추가
-	//	static bool useDoNotFlush = false;
-	//	ImGui::Checkbox("Use DO_NOT_FLUSH", &useDoNotFlush);
-	//	// 이 값을 OcclusionCulling 클래스로 전달하는 메서드 추가 필요
-	//}
-	//ImGui::End();
-
 
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 
