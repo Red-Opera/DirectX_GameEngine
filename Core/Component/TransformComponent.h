@@ -11,6 +11,13 @@
 #include <unordered_map>
 #include <vector>
 
+struct Transform final
+{
+	Position position;
+	Rotation rotation;
+	Scale scale;
+};
+
 class TransformComponent : public Component, public std::enable_shared_from_this<TransformComponent>
 {
 public:
@@ -43,6 +50,11 @@ public:
 	const Vector3 GetUp() const noexcept;
 	const Vector3 GetForward() const noexcept;
 
+	Transform& GetTransform() noexcept;
+
+	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
+	DirectX::XMFLOAT4X4 &GetTransformMatrix4x4() noexcept;
+
 	// =============================================
 	// [Local]
 	// =============================================
@@ -58,12 +70,14 @@ public:
 	void SetLocalScale(DirectX::XMFLOAT3 scale) noexcept;
 	void SetLocalScale(float x, float y, float z) noexcept;
 
+	Transform& GetLocalTransform() noexcept;
+
 	Position& GetLocalPosition() noexcept;
 	Rotation& GetLocalRotation() noexcept;
 	Scale& GetLocalScale() noexcept;
 
-	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
 	DirectX::XMMATRIX GetLocalTransformMatrix() const noexcept;
+	DirectX::XMFLOAT4X4& GetLocalTransformMatrix4x4() noexcept;
 
 	virtual std::string GetClassName() const { return "TransformComponent"; }	// 객체의 컴포넌트 이름을 반환하는 함수
 	static std::string GetStaticClassName() { return "TransformComponent"; }	// 해당 클래스의 이름을 반환하는 함수
@@ -106,11 +120,8 @@ private:
 	std::vector<std::shared_ptr<TransformComponent>> children;	// 자식 오브젝트를 저장하는 벡터
 	std::shared_ptr<TransformComponent> parent;					// 부모 오브젝트를 저장하는 변수
 
-	Position position	= Position();
-	Rotation rotation	= Rotation();
-	Scale scale			= { 1.0f, 1.0f, 1.0f };
+	DirectX::XMFLOAT4X4 transformMatrix;						// 오브젝트의 변환 행렬
 
-	Position localPosition	= Position();
-	Rotation localRotation	= Rotation();
-	Scale localScale		= { 1.0f, 1.0f, 1.0f };
+	Transform transform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
+	Transform localTransform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
 };

@@ -4,14 +4,18 @@
 #include "SceneGraphNode.h"
 
 #include "Base/Material.h"
+#include "Core/App.h"
 #include "Core/Exception/ModelException.h"
+#include "Core/Object/Object.h"
+#include "Core/RenderingPipeline/RenderingChannel.h"
 #include "Utility/MathInfo.h"
 
 #include <External/Assimp/Importer.hpp>
 #include <External/Assimp/scene.h>
 #include <External/Assimp/postprocess.h>
 
-Model::Model(const std::string& pathString, const float scale)
+Model::Model(std::shared_ptr<class Object> object, const std::string& pathString, const float scale)
+	: Component(object)
 {
 	Assimp::Importer importer;
 
@@ -39,7 +43,6 @@ Model::Model(const std::string& pathString, const float scale)
 
 void Model::Submit(size_t channel) const NOEXCEPTRELEASE
 {
-	//modelHierarchy->ApplyParameter();
 	root->Submit(channel, DirectX::XMMatrixIdentity());
 }
 
@@ -57,6 +60,32 @@ void Model::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
 {
 	for (auto& mesh : meshPtrs)
 		mesh->LinkTechniques(renderGraph);
+}
+
+void Model::Initialize()
+{
+	Component::Initialize();
+
+	modelEditor = std::make_unique<ModelEditor>(ModelEditor(GetObject()->GetName()));
+
+	if (transform && root)
+		root->transformComponent = transform;
+
+	LinkTechniques(App::GetRenderGraph());
+}
+
+void Model::Update()
+{
+	Component::Update();
+
+	Submit(RenderingChannel::main);
+	Submit(RenderingChannel::shadow);
+}
+
+void Model::LateUpdate()
+{
+	Component::LateUpdate();
+	modelEditor->CreateWindow(*this);
 }
 
 Model::~Model() noexcept

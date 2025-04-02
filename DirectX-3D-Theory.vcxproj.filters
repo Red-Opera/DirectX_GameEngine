@@ -276,7 +276,7 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBufferScaling.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\TestModelBase.h">
+    <ClInclude Include="Core\Draw\ModelEditor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.h">
@@ -1080,6 +1080,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\OcclusionCulling.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\ModelEditor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

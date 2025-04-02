@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Component/TransformComponent.h"
 #include "Core/Draw/Mesh.h"
 #include "Core/Draw/ModelBase.h"
 #include "Core/Draw/SceneGraphNode.h"
@@ -13,7 +14,9 @@
 #include <External/Assimp/scene.h>
 #include <External/Assimp/postprocess.h>
 
-class TB : public TechniqueBase
+#include <memory>
+
+class TechniqueEditor : public TechniqueBase
 {
 public:
 	void OnSetTechnique() override
@@ -70,49 +73,12 @@ public:
 };
 
 #undef CreateWindow
-class MB : ModelBase
+class ModelEditor : ModelBase
 {
 public:
-	MB(std::string name) : name(std::move(name)) { }
+	ModelEditor(std::string name) : name(std::move(name)) { }
 
-	void CreateWindow(Model& model)
-	{
-		ImGui::Begin(name.c_str());
-		ImGui::Columns(2, nullptr, true);
-		model.Accept(*this);
-		ImGui::NextColumn();
-
-		if (selectNode != nullptr)
-		{
-			bool isNotMath = false;
-			const auto dcheck = [&isNotMath](bool changed) {isNotMath = isNotMath || changed; };
-			auto& tf = GetTransform();
-
-			ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, "Translation");
-			dcheck(ImGui::SliderFloat("X", &tf.x, -60.f, 60.f));
-			dcheck(ImGui::SliderFloat("Y", &tf.y, -60.f, 60.f));
-			dcheck(ImGui::SliderFloat("Z", &tf.z, -60.f, 60.f));
-			ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, "Orientation");
-			dcheck(ImGui::SliderAngle("X-rotation", &tf.roll, -180.0f, 180.0f));
-			dcheck(ImGui::SliderAngle("Y-rotation", &tf.pitch, -180.0f, 180.0f));
-			dcheck(ImGui::SliderAngle("Z-rotation", &tf.yaw, -180.0f, 180.0f));
-
-			if (isNotMath)
-			{
-				selectNode->ApplyWorldTranfsorm(
-					DirectX::XMMatrixRotationX(tf.roll) *
-					DirectX::XMMatrixRotationY(tf.pitch) *
-					DirectX::XMMatrixRotationZ(tf.yaw) *
-					DirectX::XMMatrixTranslation(tf.x, tf.y, tf.z)
-				);
-			}
-
-			TB probe;
-			selectNode->Accept(probe);
-		}
-
-		ImGui::End();
-	}
+	void CreateWindow(class Model& model);
 
 protected:
 	bool push(SceneGraphNode& node) override
@@ -131,42 +97,27 @@ protected:
 	}
 
 	void pop(SceneGraphNode& node) override { ImGui::TreePop(); }
-private:
-	struct TransformType
-	{
-		float roll = 0.0f, pitch = 0.0f, yaw = 0.0f;
-		float x = 0.0f, y = 0.0f, z = 0.0f;
-	};
 
-	TransformType& GetTransform() noexcept
+private:
+	std::shared_ptr<TransformComponent> GetTransformComponent() noexcept
 	{
 		const auto id = selectNode->GetID();
 		auto i = transform.find(id);
 
 		if (i == transform.end())
-			return GetTranform(id);
+			return SetTranformComponent(id);
 
 		return i->second;
 	}
 
-	TransformType& GetTranform(int id) noexcept
+	std::shared_ptr<TransformComponent> SetTranformComponent(int id) noexcept
 	{
-		const auto transform = selectNode->GetTranform();
-		const auto angle = Vector::GetEulerAngle(transform);
-		const auto position = Vector::GetPosition(transform);
+		auto transformComponent = selectNode->GetTransformComponent();
 
-		TransformType newTransform;
-		newTransform.yaw = angle.z;
-		newTransform.roll = angle.x;
-		newTransform.pitch = angle.y;
-		newTransform.x = position.x;
-		newTransform.y = position.y;
-		newTransform.z = position.z;
-
-		return this->transform.insert({ id, {newTransform} }).first->second;
+		return transform.insert({ id, {transformComponent} }).first->second;
 	}
 
-	std::unordered_map<int, TransformType> transform;
+	std::unordered_map<int, std::shared_ptr<TransformComponent>> transform;
 	SceneGraphNode* selectNode = nullptr;
 
 	std::string name;

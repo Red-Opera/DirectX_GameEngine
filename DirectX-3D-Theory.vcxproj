@@ -233,7 +233,7 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\DynamicConstantBuffer.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.h" />
     <ClInclude Include="Core\RenderingPipeline\Viewport.h" />
-    <ClInclude Include="Core\TestModelBase.h" />
+    <ClInclude Include="Core\Draw\ModelEditor.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.h" />
     <ClInclude Include="Core\InputSystem\KeyBoard.h" />
     <ClInclude Include="Core\InputSystem\Mouse.h" />
@@ -392,6 +392,7 @@
     <ClCompile Include="Core\Draw\BaseModel\ConeFrame.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\CylinderFrame.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\SphereFrame.cpp" />
+    <ClCompile Include="Core\Draw\ModelEditor.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorConeObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorCubeObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorCylinderObject.cpp" />

@@ -2,9 +2,11 @@
 
 #include "Core/DxGraphic.h"
 
+#include "Core/Object/Object.h"
+#include "Core/Component/TransformComponent.h"
+
 #include <memory>
 
-class Model;
 class Mesh;
 class TechniqueBase;
 class ModelBase;
@@ -21,8 +23,10 @@ public:
 	void Accept(ModelBase& modelBase);
 	void Accept(TechniqueBase& techniqueBase);
 
+	const Transform& GetTranform() const noexcept;
+	const std::shared_ptr<TransformComponent>& GetTransformComponent() const noexcept;
+
 	void ApplyWorldTranfsorm(DirectX::FXMMATRIX transform) noexcept;
-	const DirectX::XMFLOAT4X4& GetTranform() const noexcept;
 	bool hasChildren() const noexcept { return childPtrs.size() > 0; }
 
 	int GetID() const noexcept;
@@ -34,8 +38,9 @@ private:
 
 	std::vector<std::unique_ptr<SceneGraphNode>> childPtrs;		// 자식 객체의 노드의 주소를 저장하는 배열
 	std::vector<Mesh*> meshPtrs;								// 이 일부 오브젝트에 사용되는 Mesh를 저장하는 배열
-	DirectX::XMFLOAT4X4 transform;								// 오브젝트의 Local Transform
-	DirectX::XMFLOAT4X4 worldTransform;							// 오브젝트의 World Transform
+
+	std::shared_ptr<Object> object;								// 이 노드가 속한 오브젝트
+	std::shared_ptr<TransformComponent> transformComponent;		// 이 노드의 TransformComponent
 
 	std::string name;	// 노드 이름
 	int id;				// 노드 ID

@@ -3,22 +3,22 @@
 #include "Mesh.h"
 #include "ModelBase.h"
 
+#include "Core/Component/TransformComponent.h"
+#include "Core/Object/Object.h"
 #include "External/Imgui/imgui.h"
 
 SceneGraphNode::SceneGraphNode(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) NOEXCEPTRELEASE
 	: id(id), meshPtrs(std::move(meshPtrs)), name(name)
 {
-	DirectX::XMStoreFloat4x4(&this->transform, transform);
-	DirectX::XMStoreFloat4x4(&this->worldTransform, DirectX::XMMatrixIdentity());
+	object = Object::Create(name);
+	transformComponent = std::make_shared<TransformComponent>(object);
 }
 
 void SceneGraphNode::Submit(size_t channel, DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
 {
 	// 부모를 걸쳐 변한 transform 값을 이 오브젝트를 곱하여 이 오브젝트의 World Transform 값을 구함
-	const auto thisWorldTransform =
-		DirectX::XMLoadFloat4x4(&worldTransform) *
-		DirectX::XMLoadFloat4x4(&transform) *
-		parentWorldTransform;
+	const auto thisLocalTransform = transformComponent->GetLocalTransformMatrix();
+	const auto thisWorldTransform = thisLocalTransform * parentWorldTransform;
 
 	// Mesh를 그림
 	for (const auto meshPtr : meshPtrs)
@@ -48,12 +48,17 @@ void SceneGraphNode::Accept(TechniqueBase& techniqueBase)
 
 void SceneGraphNode::ApplyWorldTranfsorm(DirectX::FXMMATRIX transform) noexcept
 {
-	DirectX::XMStoreFloat4x4(&worldTransform, transform);
+	DirectX::XMStoreFloat4x4(&transformComponent->GetTransformMatrix4x4(), transform);
 }
 
-const DirectX::XMFLOAT4X4& SceneGraphNode::GetTranform() const noexcept
+const Transform& SceneGraphNode::GetTranform() const noexcept
 {
-	return worldTransform;
+	return transformComponent->GetTransform();
+}
+
+const std::shared_ptr<TransformComponent>& SceneGraphNode::GetTransformComponent() const noexcept
+{
+	return transformComponent;
 }
 
 int SceneGraphNode::GetID() const noexcept

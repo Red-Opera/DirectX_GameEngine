@@ -1,6 +1,9 @@
 #pragma once
 
+#include "Core/Component/Component.h"
 #include "Core/DxGraphic.h"
+#include "Core/Draw/ModelBase.h"
+#include "Core/Draw/ModelEditor.h"
 
 #include <string>
 #include <memory>
@@ -17,12 +20,12 @@ struct aiMaterial;
 struct aiNode;
 
 // 전체적인 오브젝트를 나타내는 클래스
-class Model
+class Model : public Component
 {
 public:
-	Model(const std::string& pathString, float scale = 1.0f);
+	Model(std::shared_ptr<class Object> object, const std::string& pathString, float scale = 1.0f);
 
-	void Submit(size_t size) const NOEXCEPTRELEASE;
+	void Submit(size_t channel) const NOEXCEPTRELEASE;
 	void Accept(class ModelBase& modelBase);
 
 	void SetRootTransform(DirectX::FXMMATRIX transform) noexcept;
@@ -30,9 +33,15 @@ public:
 
 	~Model() noexcept;
 
+	void Initialize() override;
+	void Update() override;
+	void LateUpdate() override;
+
 private:
 	std::unique_ptr<SceneGraphNode> ConvertSceneGraphNode(int& nextID, const aiNode& modelNode, float scale) noexcept;			// 모델에서 가져온 aiNode를 SceneGraphNode로 변환하는 메소드
 
 	std::unique_ptr<SceneGraphNode> root;
 	std::vector<std::unique_ptr<Mesh>> meshPtrs;
+
+	std::unique_ptr<ModelEditor> modelEditor;
 };

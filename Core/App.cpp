@@ -1,14 +1,8 @@
 #include "stdafx.h"
 #include "App.h"
-#include "TestModelBase.h"
 
 #include "Camera/Camera.h"
-#include "Draw/Object/ColorConeObject.h"
-#include "Draw/Object/ColorCubeObject.h"
-#include "Draw/Object/ColorCylinderObject.h"
-#include "Draw/Object/ColorPlaneObject.h"
-#include "Draw/Object/ColorSphereObject.h"
-#include "Draw/Object/TextureCubeObject.h"
+#include "Draw/Model.h"
 #include "EngineUI/FolderViewInspector.h"
 #include "EngineUI/MenuBar.h"
 #include "RenderingPipeline/RenderingChannel.h"
@@ -31,8 +25,18 @@ App::App(const std::string& commandLine)
 	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.GetLightViewCamera());
 
-	objects.push_back(Object::Create("Texture Cube 1"));
-	objects[0]->AddComponent<TextureCubeObject>("Images/brickwall.jpg");
+	objects.push_back(Object::Create("Gobber"));
+	objects[0]->AddComponent<Model>("Model/Sample/gobber/GoblinX.obj", 4.0f);
+	objects[0]->GetComponent<TransformComponent>()->SetPosition(-30.0f, 10.0f, 0.0f);
+	objects[0]->GetComponent<TransformComponent>()->SetRotation(0.0f, -Math::PI / 2.0f, 0.0f);
+
+	objects.push_back(Object::Create("Nano"));
+	objects[1]->AddComponent<Model>("Model/Sample/nano_textured/nanosuit.obj", 1.0f);
+	objects[1]->AddComponent<TransformComponent>()->SetPosition(27.0f, -0.56f, 1.7f);
+	objects[1]->AddComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
+
+	objects.push_back(Object::Create("Sponza"));
+	objects[2]->AddComponent<Model>("Model/Sample/sponza/sponza.obj", 1.0f / 20.0f);
 
 	for (auto& object : objects)
 		object->Initialize();
@@ -49,23 +53,10 @@ App::App(const std::string& commandLine)
 	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
 	//texturePlane.SetPosition({ -2.0f, 13.0f, -10.0f });
 	//texturePlane.SetRotation(0.0f, 3.14f, 0.0f);
-	//gobber.SetRootTransform(DirectX::XMMatrixTranslation(9.2f, 7.0f, 0.0f));
 	//bluePlane.SetPosition(camera.GetPosition());
 	//redPlane.SetPosition(camera.GetPosition());
 
-	nano.SetRootTransform(
-		DirectX::XMMatrixRotationY(Math::PI / 2.f) *
-		DirectX::XMMatrixTranslation(27.f, -0.56f, 1.7f)
-	);
-	gobber.SetRootTransform(
-		DirectX::XMMatrixRotationY(-Math::PI / 2.f) *
-		DirectX::XMMatrixTranslation(-30.f, 10.f, 0.f)
-	);
-
 	light.LinkTechniques(App::GetRenderGraph());
-	sponza.LinkTechniques(App::GetRenderGraph());
-	gobber.LinkTechniques(App::GetRenderGraph());
-	nano.LinkTechniques(App::GetRenderGraph());
 	cameras.LinkTechniques(App::GetRenderGraph());
 
 	App::GetRenderGraph().RenderShadowCamera(*light.GetLightViewCamera());
@@ -94,6 +85,13 @@ int App::Run()
 	}
 }
 
+RenderGraphNameSpace::BlurOutlineRenderGraph& App::GetRenderGraph()
+{
+	static RenderGraphNameSpace::BlurOutlineRenderGraph renderGraph;
+
+	return renderGraph;
+}
+
 void App::DoFrame(float deltaTime)
 {
 	const float t = timer.TotalTime();
@@ -115,14 +113,7 @@ void App::DoFrame(float deltaTime)
 		object->Update();
 
 	light.Submit(RenderingChannel::main);
-	sponza.Submit(RenderingChannel::main);
-	nano.Submit(RenderingChannel::main);
-	gobber.Submit(RenderingChannel::main);
 	cameras.Submit(RenderingChannel::main);
-
-	sponza.Submit(RenderingChannel::shadow);
-	gobber.Submit(RenderingChannel::shadow);
-	nano.Submit(RenderingChannel::shadow);
 
 	if (saveDepth)
 	{
@@ -139,21 +130,10 @@ void App::DoFrame(float deltaTime)
 	// 
 	// Graphic::SceneView::Render();
 
-	static MB sponzaBase{ "Sponza" };
-	static MB gobbarBase{ "Gobbar" };
-	static MB nanoBase{ "Nano" };
-	sponzaBase.CreateWindow(sponza);
-	gobbarBase.CreateWindow(gobber);
-	nanoBase.CreateWindow(nano);
-
 	CreateSimulationWindow();
 	cameras.CreateWindow();
 	light.CreatePositionChangeWindow();
 	CreateDemoWindows();
-	//wall.ShowWindow(wnd.GetDxGraphic(), "Wall");
-	//texturePlane.SpawnControlWindow(wnd.GetDxGraphic());
-	//gobber.ShowWindow(wnd.GetDxGraphic(), "Gobber");
-	//nano.ShowWindow(wnd.GetDxGraphic(), "Nano");
 
 	for (auto& object : objects)
 		object->LateUpdate();
@@ -227,24 +207,6 @@ void App::KeyBoardInput(float deltaTime)
 
 		if (wnd.keyBoard.IsPressed('E'))
 			cameras->Translate(Vector::down * cameraDelta);
-
-		if (wnd.keyBoard.IsPressed('P'))
-			objects[0]->transform->SetPosition(objects[0]->transform->GetRight() * cameraDelta + objects[0]->transform->GetPosition());
-
-		if (wnd.keyBoard.IsPressed('L'))
-			objects[0]->transform->SetPosition(objects[0]->transform->GetRight() * -cameraDelta + objects[0]->transform->GetPosition());
-
-		if (wnd.keyBoard.IsPressed('O'))
-			objects[0]->transform->SetPosition(objects[0]->transform->GetForward() * cameraDelta + objects[0]->transform->GetPosition());
-
-		if (wnd.keyBoard.IsPressed('K'))
-			objects[0]->transform->SetPosition(objects[0]->transform->GetForward() * -cameraDelta + objects[0]->transform->GetPosition());
-
-		if (wnd.keyBoard.IsPressed('I'))
-			objects[0]->transform->SetPosition(objects[0]->transform->GetUp() * cameraDelta + objects[0]->transform->GetPosition());
-
-		if (wnd.keyBoard.IsPressed('J'))
-			objects[0]->transform->SetPosition(objects[0]->transform->GetUp() * -cameraDelta + objects[0]->transform->GetPosition());
 	}
 
 	while (const auto mouseDelta = wnd.mouse.ReadRawDelta())
@@ -258,7 +220,7 @@ void App::CreateSimulationWindow() noexcept
 {
 	if (ImGui::Begin("Simulation Speed"))
 	{
-		ImGui::SliderFloat("Speed", &objectSpeed, 0.0f, 6.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
+		ImGui::SliderFloat("Speed", &playSpeed, 0.0f, 6.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
 		ImGui::Text("Status: %s", wnd.keyBoard.IsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");
 	}
 	ImGui::End();

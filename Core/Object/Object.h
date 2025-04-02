@@ -29,8 +29,6 @@ public:
 		transformComponent->SetObject(newObject);
 
 		newObject->transform = transformComponent;
-		transformComponent->transform = transformComponent;
-
 
 		return newObject;
 	}
@@ -137,7 +135,7 @@ public:
 
 	std::shared_ptr<class TransformComponent> transform;
 
-private:
+protected:
 	std::unordered_map<std::string, std::shared_ptr<Component>> components;
 
 	std::string name;

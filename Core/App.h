@@ -4,7 +4,6 @@
 
 #include "Camera/CameraContainer.h"
 #include "Draw/Light/PointLight.h"
-#include "Draw/Model.h"
 #include "Object/Object.h"
 
 #include "RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
@@ -24,6 +23,8 @@ public:
 
 	int Run();
 
+	static RenderGraphNameSpace::BlurOutlineRenderGraph& GetRenderGraph();
+
 private:
 	void DoFrame(float deltaTime);
 	void KeyBoardInput(float deltaTime);
@@ -42,15 +43,11 @@ private:
 	PointLight light;
 	float cameraSpeed = 1.0f;
 
-	std::vector<std::unique_ptr<class Drawable>> drawables;
-	float objectSpeed = 1.0f;
+	float playSpeed = 1.0f;
 
 	std::string commandLine;
 	ScriptCommander scriptCommander;
 
-	Model gobber{ "Model/Sample/gobber/GoblinX.obj", 4.0f };
-	Model nano { "Model/Sample/nano_textured/nanosuit.obj", 1.0f };
-	Model sponza { "Model/Sample/sponza/sponza.obj", 1.0f / 20.0f };
 	//TestPlane texturePlane{ wnd.GetDxGraphic(), 6.0f };
 	//TestPlane bluePlane{ wnd.GetDxGraphic(), 6.0f, {0.3f, 0.3f, 1.0f, 0.0f} };
 	//TestPlane redPlane{ wnd.GetDxGraphic(), 6.0f, {1.0f, 0.3f, 0.3f, 0.0f} };
@@ -58,12 +55,4 @@ private:
 	std::vector<std::shared_ptr<Object>> objects;
 
 	bool saveDepth = false;
-
-public:
-	static RenderGraphNameSpace::BlurOutlineRenderGraph& GetRenderGraph()
-	{
-		static RenderGraphNameSpace::BlurOutlineRenderGraph renderGraph;
-
-		return renderGraph;
-	}
 };
