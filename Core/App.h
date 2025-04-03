@@ -3,7 +3,7 @@
 #include "Window.h"
 
 #include "Camera/CameraContainer.h"
-#include "Core/Scene/Scene.h"
+#include "Core/Scene/Base/Scene.h"
 #include "Draw/Light/PointLight.h"
 #include "Object/Object.h"
 
@@ -30,6 +30,8 @@ private:
 	void DoFrame(float deltaTime);
 	void KeyBoardInput(float deltaTime);
 
+	void LoadScene(std::shared_ptr<Scene> scene);
+
 	// ImGui
 	void CreateSimulationWindow() noexcept;
 	void CreateDemoWindows() noexcept;
@@ -51,7 +53,7 @@ private:
 
 	//TestPlane texturePlane{ wnd.GetDxGraphic(), 6.0f };
 
-	std::shared_ptr<Scene> sponzaScene;
+	std::shared_ptr<Scene> currentScene;
 
 	bool saveDepth = false;
 };

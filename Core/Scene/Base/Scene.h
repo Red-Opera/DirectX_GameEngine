@@ -20,6 +20,9 @@ public:
 
 	std::shared_ptr<Object> GetObject(const std::string& name);			// 해당 이름을 가진 오브젝트를 반환하는 메소드
 	std::shared_ptr<Object> GetObject(size_t index);					// 해당 인덱스에 있는 오브젝트를 반환하는 메소드
+	std::vector<std::shared_ptr<Object>> GetObjects();					// 씬에 포함된 모든 오브젝트를 반환하는 메소드
+
+	std::string GetName() const;										// 씬의 이름을 반환하는 메소드
 
 	// 해당 이름을 가진 오브젝트가 존재하는지 확인하는 메소드
 	bool HasObject(const std::string& name);
@@ -39,7 +42,7 @@ public:
 	void OnDisable() override;
 	void Reset() override;
 
-private:
+protected:
 	// 현재 활성화된 씬을 저장하는 정적 변수
 	static std::shared_ptr<Scene> activeScene;
 

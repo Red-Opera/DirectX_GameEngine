@@ -264,7 +264,9 @@
     <None Include="Shader\ShaderHeader\ShadowDynamicPS.hlsli">
       <FileType>Document</FileType>
     </None>
-    <ClInclude Include="Core\Scene\Scene.h" />
+    <ClInclude Include="Core\Scene\Base\Scene.h" />
+    <ClInclude Include="Core\Scene\EmptyScene.h" />
+    <ClInclude Include="Core\Scene\SponzaScene.h" />
     <ClInclude Include="External\Assimp\aabb.h" />
     <ClInclude Include="External\Assimp\ai_assert.h" />
     <ClInclude Include="External\Assimp\anim.h" />
@@ -454,7 +456,9 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\IA\VertexBuffer.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ColorPlaneFrame.cpp" />
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.cpp" />
-    <ClCompile Include="Core\Scene\Scene.cpp" />
+    <ClCompile Include="Core\Scene\Base\Scene.cpp" />
+    <ClCompile Include="Core\Scene\EmptyScene.cpp" />
+    <ClCompile Include="Core\Scene\SponzaScene.cpp" />
     <ClCompile Include="External\Imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>

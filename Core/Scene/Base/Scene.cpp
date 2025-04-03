@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Scene.h"
 
-#include "Core/Draw/Model.h"
-
 std::shared_ptr<Scene> Scene::activeScene = nullptr;
 
 Scene::Scene(std::string sceneName)
@@ -75,6 +73,16 @@ std::shared_ptr<Object> Scene::GetObject(size_t index)
 	return objects[index];
 }
 
+std::vector<std::shared_ptr<Object>> Scene::GetObjects()
+{
+	return objects;
+}
+
+std::string Scene::GetName() const
+{
+	return sceneName;
+}
+
 bool Scene::HasObject(const std::string& name)
 {
 	return GetObject(name) == nullptr;
@@ -90,19 +98,6 @@ std::shared_ptr<Scene> Scene::GetActiveScene()
 
 void Scene::Initialize()
 {
-	objects.push_back(Object::Create("Gobber"));
-	objects[0]->AddComponent<Model>("Model/Sample/gobber/GoblinX.obj", 4.0f);
-	objects[0]->GetComponent<TransformComponent>()->SetPosition(-30.0f, 10.0f, 0.0f);
-	objects[0]->GetComponent<TransformComponent>()->SetRotation(0.0f, -Math::PI / 2.0f, 0.0f);
-
-	objects.push_back(Object::Create("Nano"));
-	objects[1]->AddComponent<Model>("Model/Sample/nano_textured/nanosuit.obj", 1.0f);
-	objects[1]->AddComponent<TransformComponent>()->SetPosition(27.0f, -0.56f, 1.7f);
-	objects[1]->AddComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
-
-	objects.push_back(Object::Create("Sponza"));
-	objects[2]->AddComponent<Model>("Model/Sample/sponza/sponza.obj", 1.0f / 20.0f);
-
 	for (auto& object : objects)
 		object->Initialize();
 }

@@ -663,7 +663,13 @@
     <ClInclude Include="Core\Draw\OcclusionCulling.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Scene\Scene.h">
+    <ClInclude Include="Core\Scene\Base\Scene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Scene\SponzaScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Scene\EmptyScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1088,7 +1094,13 @@
     <ClCompile Include="Core\Draw\ModelEditor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Scene\Scene.cpp">
+    <ClCompile Include="Core\Scene\Base\Scene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scene\SponzaScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scene\EmptyScene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

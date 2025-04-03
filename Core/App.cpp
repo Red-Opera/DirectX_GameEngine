@@ -2,6 +2,8 @@
 #include "App.h"
 
 #include "Camera/Camera.h"
+#include "Core/Scene/EmptyScene.h"
+#include "Core/Scene/SponzaScene.h"
 #include "EngineUI/FolderViewInspector.h"
 #include "EngineUI/MenuBar.h"
 #include "RenderingPipeline/RenderingChannel.h"
@@ -25,12 +27,12 @@ App::App(const std::string& commandLine)
 	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.GetLightViewCamera());
 
-	sponzaScene = Scene::Create("Sponza");
+	currentScene = SponzaScene::Create("Sponza");
 
-	sponzaScene->Initialize();
-	sponzaScene->BeforeFrame();
-	sponzaScene->Start();
-	sponzaScene->LateStart();
+	currentScene->Initialize();
+	currentScene->BeforeFrame();
+	currentScene->Start();
+	currentScene->LateStart();
 
 	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
 	//texturePlane.SetPosition({ -2.0f, 13.0f, -10.0f });
@@ -89,7 +91,7 @@ void App::DoFrame(float deltaTime)
 	light.Update(cameras->GetMatrix());
 	App::GetRenderGraph().RenderMainCamera(cameras.GetActiveCamera());
 
-	sponzaScene->Update();
+	currentScene->Update();
 
 	light.Submit(RenderingChannel::main);
 	cameras.Submit(RenderingChannel::main);
@@ -114,7 +116,7 @@ void App::DoFrame(float deltaTime)
 	light.CreatePositionChangeWindow();
 	CreateDemoWindows();
 
-	sponzaScene->LateUpdate();
+	currentScene->LateUpdate();
 
 	App::GetRenderGraph().RenderWindows();
 
@@ -185,6 +187,12 @@ void App::KeyBoardInput(float deltaTime)
 
 		if (wnd.keyBoard.IsPressed('E'))
 			cameras->Translate(Vector::down * cameraDelta);
+
+		if (wnd.keyBoard.IsPressed('R'))
+			LoadScene(SponzaScene::Create("Sponza"));
+
+		if (wnd.keyBoard.IsPressed('T'))
+			LoadScene(EmptyScene::Create("EmptyScene"));
 	}
 
 	while (const auto mouseDelta = wnd.mouse.ReadRawDelta())
@@ -192,6 +200,18 @@ void App::KeyBoardInput(float deltaTime)
 		if (!wnd.GetCursorEnabled())
 			cameras->Rotate((float)mouseDelta->x, (float)mouseDelta->y);
 	}
+}
+
+void App::LoadScene(std::shared_ptr<Scene> scene)
+{
+	if (currentScene->GetName() == scene->GetName())
+		return;
+
+	currentScene = scene;
+	currentScene->Initialize();
+	currentScene->BeforeFrame();
+	currentScene->Start();
+	currentScene->LateStart();
 }
 
 void App::CreateSimulationWindow() noexcept
