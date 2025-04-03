@@ -3,6 +3,7 @@
 #include "Window.h"
 
 #include "Camera/CameraContainer.h"
+#include "Core/Scene/Scene.h"
 #include "Draw/Light/PointLight.h"
 #include "Object/Object.h"
 
@@ -49,10 +50,8 @@ private:
 	ScriptCommander scriptCommander;
 
 	//TestPlane texturePlane{ wnd.GetDxGraphic(), 6.0f };
-	//TestPlane bluePlane{ wnd.GetDxGraphic(), 6.0f, {0.3f, 0.3f, 1.0f, 0.0f} };
-	//TestPlane redPlane{ wnd.GetDxGraphic(), 6.0f, {1.0f, 0.3f, 0.3f, 0.0f} };
 
-	std::vector<std::shared_ptr<Object>> objects;
+	std::shared_ptr<Scene> sponzaScene;
 
 	bool saveDepth = false;
 };

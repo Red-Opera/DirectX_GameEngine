@@ -2,13 +2,13 @@
 #include "App.h"
 
 #include "Camera/Camera.h"
-#include "Draw/Model.h"
 #include "EngineUI/FolderViewInspector.h"
 #include "EngineUI/MenuBar.h"
 #include "RenderingPipeline/RenderingChannel.h"
-#include "RenderingPipeline/Test.h"
 
 #include "Core/RenderingPipeline/RenderingManager/Pass/Base/RenderJob.h"
+
+#include "Utility/StringConverter.h"
 
 #include <iomanip>
 
@@ -25,36 +25,16 @@ App::App(const std::string& commandLine)
 	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
 	cameras.AddCamera(light.GetLightViewCamera());
 
-	objects.push_back(Object::Create("Gobber"));
-	objects[0]->AddComponent<Model>("Model/Sample/gobber/GoblinX.obj", 4.0f);
-	objects[0]->GetComponent<TransformComponent>()->SetPosition(-30.0f, 10.0f, 0.0f);
-	objects[0]->GetComponent<TransformComponent>()->SetRotation(0.0f, -Math::PI / 2.0f, 0.0f);
+	sponzaScene = Scene::Create("Sponza");
 
-	objects.push_back(Object::Create("Nano"));
-	objects[1]->AddComponent<Model>("Model/Sample/nano_textured/nanosuit.obj", 1.0f);
-	objects[1]->AddComponent<TransformComponent>()->SetPosition(27.0f, -0.56f, 1.7f);
-	objects[1]->AddComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
-
-	objects.push_back(Object::Create("Sponza"));
-	objects[2]->AddComponent<Model>("Model/Sample/sponza/sponza.obj", 1.0f / 20.0f);
-
-	for (auto& object : objects)
-		object->Initialize();
-
-	for (auto& object : objects)
-		object->BeforeFrame();
-
-	for (auto& object : objects)
-		object->Start();
-
-	for (auto& object : objects)
-		object->LateStart();
+	sponzaScene->Initialize();
+	sponzaScene->BeforeFrame();
+	sponzaScene->Start();
+	sponzaScene->LateStart();
 
 	//wall.SetRootTransform(DirectX::XMMatrixTranslation(-2.0f, 13.0f, -10.0f));
 	//texturePlane.SetPosition({ -2.0f, 13.0f, -10.0f });
 	//texturePlane.SetRotation(0.0f, 3.14f, 0.0f);
-	//bluePlane.SetPosition(camera.GetPosition());
-	//redPlane.SetPosition(camera.GetPosition());
 
 	light.LinkTechniques(App::GetRenderGraph());
 	cameras.LinkTechniques(App::GetRenderGraph());
@@ -109,8 +89,7 @@ void App::DoFrame(float deltaTime)
 	light.Update(cameras->GetMatrix());
 	App::GetRenderGraph().RenderMainCamera(cameras.GetActiveCamera());
 
-	for (auto& object : objects)
-		object->Update();
+	sponzaScene->Update();
 
 	light.Submit(RenderingChannel::main);
 	cameras.Submit(RenderingChannel::main);
@@ -135,8 +114,7 @@ void App::DoFrame(float deltaTime)
 	light.CreatePositionChangeWindow();
 	CreateDemoWindows();
 
-	for (auto& object : objects)
-		object->LateUpdate();
+	sponzaScene->LateUpdate();
 
 	App::GetRenderGraph().RenderWindows();
 
