@@ -42,10 +42,10 @@ public:
 			};
 
 		if (auto data = buffer["scale"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Scale"), &data, 1.0f, 2.0f, "%.3f"));
+			IsNotMatch(ImGui::DragFloat(Tag("Scale"), &data, 0.1f, 1.0f, 2.0f, "%.3f"));
 
 		if (auto data = buffer["offset"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Offset"), &data, 0.0f, 1.0f, "%.3f"));
+			IsNotMatch(ImGui::DragFloat(Tag("Offset"), &data, 0.1f, 0.0f, 1.0f, "%.3f"));
 
 		if (auto data = buffer["materialColor"]; data.IsExist())
 			IsNotMatch(ImGui::ColorPicker3(Tag("Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(data))));
@@ -54,10 +54,10 @@ public:
 			IsNotMatch(ImGui::ColorPicker3(Tag("Specular Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(data))));
 
 		if (auto data = buffer["specularGlass"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Specular Glass"), &data, 1.0f, 100.0f, "%.1f"));
+			IsNotMatch(ImGui::DragFloat(Tag("Specular Glass"), &data, 0.1f, 1.0f, 100.0f, "%.1f"));
 
 		if (auto data = buffer["specularIntensity"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Specular Intensity"), &data, 0.0f, 2.0f));
+			IsNotMatch(ImGui::DragFloat(Tag("Specular Intensity"), &data, 0.1f, 0.0f, 2.0f, "%.1f"));
 
 		if (auto data = buffer["useSpecularMap"]; data.IsExist())
 			IsNotMatch(ImGui::Checkbox(Tag("Specular Map Enable"), &data));
@@ -66,7 +66,7 @@ public:
 			IsNotMatch(ImGui::Checkbox(Tag("Normal Map Enable"), &data));
 
 		if (auto data = buffer["normalMapPower"]; data.IsExist())
-			IsNotMatch(ImGui::SliderFloat(Tag("Normal Map Intensity"), &data, 0.0f, 2.0f));
+			IsNotMatch(ImGui::DragFloat(Tag("Normal Map Intensity"), &data, 0.1f , 0.0f, 2.0f, "%.1f"));
 
 		return isNotMatch;
 	}

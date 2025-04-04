@@ -31,19 +31,44 @@ void ColorPlaneObject::CreateControlWindow(const char* name) noexcept
 
 	if (ImGui::Begin(name))
 	{
+		bool positionChanged = false;
+		bool rotationChanged = false;
+		bool scaleChanged = false;
+
 		ImGui::Text("Position");
-		ImGui::SliderFloat("PositionX", &position.x, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("PositionY", &position.y, -80.0f, 80.0f, "%.1f");
-		ImGui::SliderFloat("PositionZ", &position.z, -80.0f, 80.0f, "%.1f");
+		positionChanged |= ImGui::DragFloat("PositionX", &position.x, 0.1f, 0.0f, 0.0f, "%.1f");
+		positionChanged |= ImGui::DragFloat("PositionY", &position.y, 0.1f, 0.0f, 0.0f, "%.1f");
+		positionChanged |= ImGui::DragFloat("PositionZ", &position.z, 0.1f, 0.0f, 0.0f, "%.1f");
+
+		if (positionChanged)
+			transform->SetPosition(position);
+
+		Rotation toRotation;
+		toRotation.x = rotation.x * 180.0f / Math::PI;
+		toRotation.y = rotation.y * 180.0f / Math::PI;
+		toRotation.z = rotation.z * 180.0f / Math::PI;
 
 		ImGui::Text("Orientation");
-		ImGui::SliderAngle("Roll", &rotation.x, -180.0f, 180.0f);
-		ImGui::SliderAngle("Pitch", &rotation.y, -180.0f, 180.0f);
-		ImGui::SliderAngle("Yaw", &rotation.z, -180.0f, 180.0f);
+		rotationChanged |= ImGui::DragFloat("Roll", &toRotation.x, 0.1f, 0.0f, 0.0f, "%.1f");
+		rotationChanged |= ImGui::DragFloat("Pitch", &toRotation.y, 0.1f, 0.0f, 0.0f, "%.1f");
+		rotationChanged |= ImGui::DragFloat("Yaw", &toRotation.z, 0.1f, 0.0f, 0.0f, "%.1f");
+
+		if (rotationChanged)
+		{
+			toRotation.x = Math::NormalizeAngle(toRotation.x);
+			toRotation.y = Math::NormalizeAngle(toRotation.y);
+			toRotation.z = Math::NormalizeAngle(toRotation.z);
+
+			toRotation.x = Math::ConvertAngleToRadian(toRotation.x);
+			toRotation.y = Math::ConvertAngleToRadian(toRotation.y);
+			toRotation.z = Math::ConvertAngleToRadian(toRotation.z);
+
+			transform->SetLocalRotation(toRotation);
+		}
 
 		ImGui::Text("Scale");
-		ImGui::SliderFloat("ScaleX", &scale.x, 0.1f, 10.0f, "%.1f");
-		ImGui::SliderFloat("ScaleY", &scale.y, 0.1f, 10.0f, "%.1f");
+		ImGui::DragFloat("ScaleX", &scale.x, 0.1f, 0.0f, 0.0f, "%.1f");
+		ImGui::DragFloat("ScaleY", &scale.y, 0.1f, 0.0f, 0.0f, "%.1f");
 
 		class Probe : public TechniqueBase
 		{

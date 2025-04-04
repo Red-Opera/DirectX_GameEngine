@@ -17,26 +17,40 @@ void ModelEditor::CreateWindow(Model& model)
 		auto transformComponent = GetTransformComponent();
 		auto tf = transformComponent->GetLocalTransform();
 
+		Rotation toRotaion;
+		toRotaion.x = tf.rotation.x * 180.0f / Math::PI;
+		toRotaion.y = tf.rotation.y * 180.0f / Math::PI;
+		toRotaion.z = tf.rotation.z * 180.0f / Math::PI;
+
 		ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, "Translation");
-		dcheck(ImGui::SliderFloat("X", &(tf.position.x), -60.f, 60.f));
-		dcheck(ImGui::SliderFloat("Y", &(tf.position.y), -60.f, 60.f));
-		dcheck(ImGui::SliderFloat("Z", &(tf.position.z), -60.f, 60.f));
+		dcheck(ImGui::DragFloat("X", &(tf.position.x), 0.1f, 0.0f, 0.0f, "%.1f"));
+		dcheck(ImGui::DragFloat("Y", &(tf.position.y), 0.1f, 0.0f, 0.0f, "%.1f"));
+		dcheck(ImGui::DragFloat("Z", &(tf.position.z), 0.1f, 0.0f, 0.0f, "%.1f"));
+
 		ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, "Orientation");
-		dcheck(ImGui::SliderAngle("X Rotation", &(tf.rotation.x), -180.0f, 180.0f));
-		dcheck(ImGui::SliderAngle("Y Rotation", &(tf.rotation.y), -180.0f, 180.0f));
-		dcheck(ImGui::SliderAngle("Z Rotation", &(tf.rotation.z), -180.0f, 180.0f));
+		dcheck(ImGui::DragFloat("X Rotation", &(toRotaion.x), 0.1f, 0.0f, 0.0f, "%.1f"));
+		dcheck(ImGui::DragFloat("Y Rotation", &(toRotaion.y), 0.1f, 0.0f, 0.0f, "%.1f"));
+		dcheck(ImGui::DragFloat("Z Rotation", &(toRotaion.z), 0.1f, 0.0f, 0.0f, "%.1f"));
 
 		if (isNotMath)
 		{
+			toRotaion.x = Math::NormalizeAngle(toRotaion.x);
+			toRotaion.y = Math::NormalizeAngle(toRotaion.y);
+			toRotaion.z = Math::NormalizeAngle(toRotaion.z);
+
+			toRotaion.x = Math::ConvertAngleToRadian(toRotaion.x);
+			toRotaion.y = Math::ConvertAngleToRadian(toRotaion.y);
+			toRotaion.z = Math::ConvertAngleToRadian(toRotaion.z);
+
 			selectNode->ApplyWorldTranfsorm(
-				DirectX::XMMatrixRotationX(tf.rotation.x) *
-				DirectX::XMMatrixRotationY(tf.rotation.y) *
-				DirectX::XMMatrixRotationZ(tf.rotation.z) *
+				DirectX::XMMatrixRotationX(toRotaion.x) *
+				DirectX::XMMatrixRotationY(toRotaion.y) *
+				DirectX::XMMatrixRotationZ(toRotaion.z) *
 				DirectX::XMMatrixTranslation(tf.position.x, tf.position.y, tf.position.z)
 			);
 
 			transformComponent->SetPosition(tf.position);
-			transformComponent->SetRotation(tf.rotation);
+			transformComponent->SetRotation(toRotaion);
 		}
 
 		TechniqueEditor probe;

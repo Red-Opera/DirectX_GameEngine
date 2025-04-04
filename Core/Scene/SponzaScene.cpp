@@ -2,6 +2,7 @@
 #include "SponzaScene.h"
 
 #include "Core/Draw/Model.h"
+#include "Core/Draw/Object/ColorCubeObject.h"
 
 SponzaScene::SponzaScene(std::string sceneName) : Scene(sceneName)
 {
@@ -27,6 +28,9 @@ void SponzaScene::Initialize()
 	chair->AddComponent<Model>("Model/Sample/Chair/Chair.gltf", 7.0f);
 	chair->GetComponent<TransformComponent>()->SetRotation(Math::PI / 2.0f, -Math::PI / 2.0f, 0.0f);
 	chair->GetComponent<TransformComponent>()->SetPosition(-60.0f, 6.5f, 1.5f);
+
+	std::shared_ptr<Object> table = AddObject(Object::Create("Plane"));
+	table->AddComponent<ColorCubeObject>();
 
 	Scene::Initialize();
 }
