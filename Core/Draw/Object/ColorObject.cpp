@@ -208,9 +208,9 @@ void ColorObject::CreateControlWindow(const char* name) noexcept
 		}
 
 		ImGui::Text("Scale");
-		scaleChanged |= ImGui::SliderFloat("ScaleX", &scale.x, 0.0f, 2.0f, "%.1f");
-		scaleChanged |= ImGui::SliderFloat("ScaleY", &scale.y, 0.0f, 2.0f, "%.1f");
-		scaleChanged |= ImGui::SliderFloat("ScaleZ", &scale.z, 0.0f, 2.0f, "%.1f");
+		scaleChanged |= ImGui::DragFloat("ScaleX", &scale.x, 0.1f, 0.0f, 0.0f, "%.1f");
+		scaleChanged |= ImGui::DragFloat("ScaleY", &scale.y, 0.1f, 0.0f, 0.0f, "%.1f");
+		scaleChanged |= ImGui::DragFloat("ScaleZ", &scale.z, 0.1f, 0.0f, 0.0f, "%.1f");
 
 		if (scaleChanged)
 			transform->SetLocalScale(scale);

@@ -53,7 +53,7 @@ void Model::Accept(ModelBase& modelBase)
 
 void Model::SetRootTransform(DirectX::FXMMATRIX transform) noexcept
 {
-	root->ApplyWorldTranfsorm(transform);
+	root->ApplyWorldTransform(transform);
 }
 
 void Model::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)

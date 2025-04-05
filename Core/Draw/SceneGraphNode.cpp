@@ -46,7 +46,7 @@ void SceneGraphNode::Accept(TechniqueBase& techniqueBase)
 		mashPtr->Accept(techniqueBase);
 }
 
-void SceneGraphNode::ApplyWorldTranfsorm(DirectX::FXMMATRIX transform) noexcept
+void SceneGraphNode::ApplyWorldTransform(DirectX::FXMMATRIX transform) noexcept
 {
 	DirectX::XMStoreFloat4x4(&transformComponent->GetTransformMatrix4x4(), transform);
 }

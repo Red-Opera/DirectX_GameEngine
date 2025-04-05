@@ -26,7 +26,7 @@ public:
 	const Transform& GetTranform() const noexcept;
 	const std::shared_ptr<TransformComponent>& GetTransformComponent() const noexcept;
 
-	void ApplyWorldTranfsorm(DirectX::FXMMATRIX transform) noexcept;
+	void ApplyWorldTransform(DirectX::FXMMATRIX transform) noexcept;
 	bool hasChildren() const noexcept { return childPtrs.size() > 0; }
 
 	int GetID() const noexcept;

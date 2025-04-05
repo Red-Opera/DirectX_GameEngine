@@ -32,6 +32,11 @@ void ModelEditor::CreateWindow(Model& model)
 		dcheck(ImGui::DragFloat("Y Rotation", &(toRotaion.y), 0.1f, 0.0f, 0.0f, "%.1f"));
 		dcheck(ImGui::DragFloat("Z Rotation", &(toRotaion.z), 0.1f, 0.0f, 0.0f, "%.1f"));
 
+		ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, "Scale");
+		dcheck(ImGui::DragFloat("X Scale", &(tf.scale.x), 0.1f, 0.0f, 0.0f, "%.1f"));
+		dcheck(ImGui::DragFloat("Y Scale", &(tf.scale.y), 0.1f, 0.0f, 0.0f, "%.1f"));
+		dcheck(ImGui::DragFloat("Z Scale", &(tf.scale.z), 0.1f, 0.0f, 0.0f, "%.1f"));
+
 		if (isNotMath)
 		{
 			toRotaion.x = Math::NormalizeAngle(toRotaion.x);
@@ -42,15 +47,15 @@ void ModelEditor::CreateWindow(Model& model)
 			toRotaion.y = Math::ConvertAngleToRadian(toRotaion.y);
 			toRotaion.z = Math::ConvertAngleToRadian(toRotaion.z);
 
-			selectNode->ApplyWorldTranfsorm(
-				DirectX::XMMatrixRotationX(toRotaion.x) *
-				DirectX::XMMatrixRotationY(toRotaion.y) *
-				DirectX::XMMatrixRotationZ(toRotaion.z) *
+			selectNode->ApplyWorldTransform(
+				DirectX::XMMatrixScaling(tf.scale.x, tf.scale.y, tf.scale.z) *
+				DirectX::XMMatrixRotationRollPitchYaw(toRotaion.x, toRotaion.y, toRotaion.z) *
 				DirectX::XMMatrixTranslation(tf.position.x, tf.position.y, tf.position.z)
 			);
 
 			transformComponent->SetPosition(tf.position);
 			transformComponent->SetRotation(toRotaion);
+			transformComponent->SetScale(tf.scale);
 		}
 
 		TechniqueEditor probe;

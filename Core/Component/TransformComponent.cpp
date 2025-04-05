@@ -589,12 +589,15 @@ void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
 DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const noexcept
 {
 	return DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z) *
-		DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
+		DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z) *
+		DirectX::XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z);
 }
 
 DirectX::XMFLOAT4X4& TransformComponent::GetTransformMatrix4x4() noexcept
 {
-	DirectX::XMMATRIX newTransformMatrix = DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z) *
+	DirectX::XMMATRIX newTransformMatrix = 
+		DirectX::XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z) *
+		DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z) *
 		DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
 
 	DirectX::XMStoreFloat4x4(&transformMatrix, newTransformMatrix);
@@ -604,13 +607,17 @@ DirectX::XMFLOAT4X4& TransformComponent::GetTransformMatrix4x4() noexcept
 
 DirectX::XMMATRIX TransformComponent::GetLocalTransformMatrix() const noexcept
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
+	return
+		DirectX::XMMatrixScaling(localTransform.scale.x, localTransform.scale.y, localTransform.scale.z) *
+		DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
 		DirectX::XMMatrixTranslation(localTransform.position.x, localTransform.position.y, localTransform.position.z);
 }
 
 DirectX::XMFLOAT4X4& TransformComponent::GetLocalTransformMatrix4x4() noexcept
 {
-	DirectX::XMMATRIX newTransformMatrix = DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
+	DirectX::XMMATRIX newTransformMatrix = 
+		DirectX::XMMatrixScaling(localTransform.scale.x, localTransform.scale.y, localTransform.scale.z) *
+		DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
 		DirectX::XMMatrixTranslation(localTransform.position.x, localTransform.position.y, localTransform.position.z);
 
 	DirectX::XMStoreFloat4x4(&transformMatrix, newTransformMatrix);
