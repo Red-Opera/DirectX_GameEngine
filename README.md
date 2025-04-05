@@ -1,6 +1,10 @@
 # DirectX Game Engine
 
 <h2 id="Play">실행 이미지</h2>
+2025.04.06
+<img src="https://github.com/user-attachments/assets/994328ba-8e9e-4ca2-ba8b-2c8769615352" width="100%" height="100%"/>
+
+2025.03.10
 <img src="https://github.com/user-attachments/assets/0f5f713a-4c01-4237-bd8f-869fcb69c85b" width="100%" height="100%"/>
 
 <h2 id="Play">Graphic 참고 레포지토리</h2>
@@ -33,6 +37,6 @@
     </li>
     <li>
         <h3>Target Platform</h3>
-        <img src="https://img.shields.io/badge/Windows-0078D4?style=flat&logo=windows&logoColor=white"/>
+        <img src="https://custom-icon-badges.demolab.com/badge/Windows-0078D6?logo=windows11&logoColor=white"/>
     </li>
 </ul>
