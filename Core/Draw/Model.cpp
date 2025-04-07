@@ -38,9 +38,7 @@ Model::Model(std::shared_ptr<class Object> object, const std::string& pathString
 	}
 
 	int nextID = 0;
-	root = ConvertSceneGraphNode(nextID, *model->mRootNode, scale);
-
-	object->SetTransform(root->GetTransformComponent());
+	root = ConvertSceneGraphNode(nextID, *model->mRootNode, scale, object);
 }
 
 void Model::Submit(size_t channel) const NOEXCEPTRELEASE
@@ -95,7 +93,7 @@ Model::~Model() noexcept
 
 }
 
-std::unique_ptr<SceneGraphNode> Model::ConvertSceneGraphNode(int& nextID, const aiNode& modelNode, float scale) noexcept
+std::unique_ptr<SceneGraphNode> Model::ConvertSceneGraphNode(int& nextID, const aiNode& modelNode, float scale, std::shared_ptr<class Object> root) noexcept
 {
 	const auto transform = 
 		Math::MultipleMatrixScale
@@ -119,7 +117,13 @@ std::unique_ptr<SceneGraphNode> Model::ConvertSceneGraphNode(int& nextID, const 
 		currentMeshPtrs.push_back(meshPtrs.at(meshIndex).get());
 	}
 
-	auto node = std::make_unique<SceneGraphNode>(nextID++, modelNode.mName.C_Str(), std::move(currentMeshPtrs), transform);
+	std::unique_ptr<SceneGraphNode> node;
+	
+	if (nextID == 0)
+		node = std::make_unique<SceneGraphNode>(nextID++, modelNode.mName.C_Str(), std::move(currentMeshPtrs), transform, root);
+
+	else
+		node = std::make_unique<SceneGraphNode>(nextID++, modelNode.mName.C_Str(), std::move(currentMeshPtrs), transform);
 
 	for (size_t i = 0; i < modelNode.mNumChildren; i++)
 		node->AddChild(ConvertSceneGraphNode(nextID, *modelNode.mChildren[i], scale));

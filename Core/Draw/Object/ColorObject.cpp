@@ -234,11 +234,11 @@ void ColorObject::CreateControlWindow(const char* name) noexcept
 				float isNotMatch = false;
 				const auto IsNotMatch = [&isNotMatch](bool changed) { isNotMatch = isNotMatch || changed; };
 				auto Tag = [tagScratch = std::string{}, tagString = "##" + std::to_string(bufferIndex)](const char* label) mutable
-					{
-						tagScratch = label + tagString;
+				{
+					tagScratch = label + tagString;
 
-						return tagScratch.c_str();
-					};
+					return tagScratch.c_str();
+				};
 
 				if (auto data = buffer["materialColor"]; data.IsExist())
 					IsNotMatch(ImGui::ColorEdit3(Tag("Material Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(data))));

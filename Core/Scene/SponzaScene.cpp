@@ -18,8 +18,8 @@ void SponzaScene::Initialize()
 
 	std::shared_ptr<Object> nano = AddObject(Object::Create("Nano"));
 	nano->AddComponent<Model>("Model/Sample/nano_textured/nanosuit.obj", 1.0f);
-	nano->AddComponent<TransformComponent>()->SetPosition(27.0f, -0.56f, 1.7f);
-	nano->AddComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
+	nano->GetComponent<TransformComponent>()->SetPosition(27.0f, -0.56f, 1.7f);
+	nano->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
 
 	std::shared_ptr<Object> sponza = AddObject(Object::Create("Sponza"));
 	sponza->AddComponent<Model>("Model/Sample/sponza/sponza.obj", 1.0f / 20.0f);
@@ -29,7 +29,7 @@ void SponzaScene::Initialize()
 	chair->GetComponent<TransformComponent>()->SetRotation(Math::PI / 2.0f, -Math::PI / 2.0f, 0.0f);
 	chair->GetComponent<TransformComponent>()->SetPosition(-60.0f, 6.5f, 1.5f);
 
-	std::shared_ptr<Object> table = AddObject(Object::Create("Plane"));
+	std::shared_ptr<Object> table = AddObject(Object::Create("White Cube"));
 	table->AddComponent<ColorCubeObject>();
 
 	Scene::Initialize();

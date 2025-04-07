@@ -669,7 +669,7 @@ void TransformComponent::RemoveChild(std::shared_ptr<TransformComponent> child) 
 {
 	auto iter = childIndex.find(child->GetObject()->GetName());
 
-	if (iter != childIndex.end())
+	if (iter == childIndex.end())
 		return;
 
 	UINT indexToRemove = iter->second;
@@ -693,7 +693,7 @@ void TransformComponent::RemoveChild(std::shared_ptr<Object> child) noexcept
 {
 	auto iter = childIndex.find(child->GetName());
 
-	if (iter != childIndex.end())
+	if (iter == childIndex.end())
 		return;
 
 	UINT indexToRemove = iter->second;
@@ -710,7 +710,7 @@ void TransformComponent::RemoveChild(std::string childObjectName) noexcept
 {
 	auto iter = childIndex.find(childObjectName);
 
-	if (iter != childIndex.end())
+	if (iter == childIndex.end())
 		return;
 
 	UINT indexToRemove = iter->second;

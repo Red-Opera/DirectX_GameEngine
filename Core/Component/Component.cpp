@@ -8,7 +8,7 @@ Component::Component(std::shared_ptr<Object> object)
 {
 	SetObject(object);
 
-	if (object->transform != nullptr)
+	if (object && object->transform != nullptr)
 		transform = object->transform;
 }
 

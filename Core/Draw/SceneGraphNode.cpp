@@ -7,11 +7,20 @@
 #include "Core/Object/Object.h"
 #include "External/Imgui/imgui.h"
 
-SceneGraphNode::SceneGraphNode(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) NOEXCEPTRELEASE
+SceneGraphNode::SceneGraphNode(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform, std::shared_ptr<Object> root) NOEXCEPTRELEASE
 	: id(id), meshPtrs(std::move(meshPtrs)), name(name)
 {
-	object = Object::Create(name);
-	transformComponent = std::make_shared<TransformComponent>(object);
+	if (root != nullptr)
+	{
+		object = root;
+		transformComponent = root->transform;
+	}
+
+	else
+	{
+		object = Object::Create(name);
+		transformComponent = std::make_shared<TransformComponent>(object);
+	}
 }
 
 void SceneGraphNode::Submit(size_t channel, DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
@@ -73,7 +82,7 @@ void SceneGraphNode::AddChild(std::unique_ptr<SceneGraphNode> child) NOEXCEPTREL
 	child->transformComponent->SetParent(transformComponent);
 	transformComponent->AddChild(child->transformComponent);
 
-	child->object->SetTransform(child->transformComponent);
+	child->object->SetTransformComponent(child->transformComponent);
 
 	childPtrs.push_back(std::move(child));
 }

@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Core/Component/Component.h"
 #include "Core/Object/EngineLoop.h"
+#include "Core/Object/Object.h"
 
 #include <memory>
 
@@ -43,6 +45,7 @@ namespace Engine
 		void Reset() override;
 
 	private:
-		static std::shared_ptr<Object> currentSelectObject;	// 현재 선택된 오브젝트
+		static std::shared_ptr<Object> selectObject;		// 현재 선택된 오브젝트
+		static std::shared_ptr<Component> selectComponent;	// 현재 선택된 컴포넌트
 	};
 }

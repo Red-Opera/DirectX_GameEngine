@@ -218,7 +218,7 @@ void App::LoadScene(std::shared_ptr<Scene> scene)
 
 void App::CreateSimulationWindow() noexcept
 {
-	if (ImGui::Begin("Simulation Speed"))
+	if (ImGui::Begin("Simulation Speed", NULL, ImGuiWindowFlags_NoMove))
 	{
 		ImGui::SliderFloat("Speed", &playSpeed, 0.0f, 6.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
 		ImGui::Text("Status: %s", wnd.keyBoard.IsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");

@@ -47,7 +47,7 @@ void SceneGraph::ShowNodeChildren(std::shared_ptr<Object> object) noexcept
 
 void SceneGraph::UpdateSceneGraph() noexcept
 {
-    if (ImGui::Begin(sceneName.c_str()))
+    if (ImGui::Begin(sceneName.c_str(), NULL, ImGuiWindowFlags_NoMove))
     {
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Scene Graph");
 

@@ -121,6 +121,14 @@ void Object::Reset()
 	}
 }
 
+void Object::SetTransformComponent(std::shared_ptr<TransformComponent> transform)
+{
+	this->transform = transform;
+	this->transform->transform = transform;
+
+	this->transform->SetObject(shared_from_this());
+}
+
 const std::vector<std::shared_ptr<Component>> Object::GetAllComponents()
 {
 	std::vector<std::shared_ptr<Component>> result;

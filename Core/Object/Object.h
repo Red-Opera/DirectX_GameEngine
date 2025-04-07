@@ -30,6 +30,9 @@ public:
 
 		newObject->transform = transformComponent;
 
+		// TransformComponent 자체의 transform 포인터도 업데이트
+		transformComponent->transform = transformComponent;
+
 		return newObject;
 	}
 
@@ -46,12 +49,19 @@ public:
 		// Component에 Object를 설정함
 		component->SetObject(shared_from_this());
 
+		// transform 포인터 동기화 추가
+		component->transform = this->transform;
+
 		components[component->GetClassName()] = component;
 	}
 
 	template <ComponentChild ComponentClass, typename... Args>
 	std::shared_ptr<ComponentClass> AddComponent(Args&&... args)
 	{
+		// TransformComponent를 추가하려는 경우 기존 transform 반환
+		if constexpr (std::is_same_v<ComponentClass, TransformComponent>)
+			return std::dynamic_pointer_cast<ComponentClass>(transform);
+
 		// 먼저 이미 해당 컴포넌트가 있는지 확인
 		std::string componentName = ComponentClass::GetStaticClassName();
 
@@ -63,6 +73,9 @@ public:
 
 		// Component에 Object를 설정함
 		component->SetObject(shared_from_this());
+
+		// transform 포인터 동기화 추가
+		component->transform = this->transform;
 
 		components[component->GetClassName()] = component;
 
@@ -105,13 +118,7 @@ public:
 		return components[componentName];
 	}
 
-	void SetTransform(std::shared_ptr<TransformComponent> transform)
-	{
-		this->transform = transform;
-		this->transform->transform = transform;
-
-		this->transform->SetObject(shared_from_this());
-	}
+	void SetTransformComponent(std::shared_ptr<TransformComponent> transform);
 
 	// 모든 컴포넌트를 반환하는 함수
 	const std::vector<std::shared_ptr<Component>> GetAllComponents();
