@@ -4,7 +4,7 @@
 std::shared_ptr<Scene> Scene::activeScene = nullptr;
 
 Scene::Scene(std::string sceneName)
-	: sceneName(sceneName)
+	: sceneName(sceneName), sceneGraph(std::make_shared<SceneGraph>(sceneName, objects))
 {
 
 }
@@ -124,6 +124,8 @@ void Scene::Update()
 {
 	for (auto& object : objects)
 		object->Update();
+
+	sceneGraph->Update();
 }
 
 void Scene::LateUpdate()

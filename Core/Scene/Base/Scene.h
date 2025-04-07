@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Object/Object.h"
+#include "Core/Scene/Base/SceneGraph.h"
 
 #include <memory>
 #include <vector>
@@ -50,4 +51,6 @@ protected:
 	std::vector<std::shared_ptr<Object>> objects;			// 씬에 포함된 오브젝트를 저장하는 배열
 
 	std::string sceneName;									// 씬 이름
+
+	std::shared_ptr<SceneGraph> sceneGraph;					// 씬 그래프
 };

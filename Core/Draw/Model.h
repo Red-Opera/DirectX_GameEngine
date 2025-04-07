@@ -37,6 +37,9 @@ public:
 	void Update() override;
 	void LateUpdate() override;
 
+	virtual std::string GetClassName() const override { return "Model"; }
+	static std::string GetStaticClassName() { return "Model"; }
+
 private:
 	std::unique_ptr<SceneGraphNode> ConvertSceneGraphNode(int& nextID, const aiNode& modelNode, float scale) noexcept;			// 모델에서 가져온 aiNode를 SceneGraphNode로 변환하는 메소드
 

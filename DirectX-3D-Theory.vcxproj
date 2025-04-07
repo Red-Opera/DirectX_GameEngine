@@ -165,6 +165,7 @@
     <ClInclude Include="Core\Draw\Object\ColorPlaneObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorSphereObject.h" />
     <ClInclude Include="Core\Draw\OcclusionCulling.h" />
+    <ClInclude Include="Core\EngineUI\Inspector.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
     <ClInclude Include="Core\Draw\Object\TextureCubeObject.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
@@ -174,7 +175,7 @@
     <ClInclude Include="Core\Draw\SceneGraphNode.h" />
     <ClInclude Include="Core\Draw\BaseModel\TextureCube.h" />
     <ClInclude Include="Core\DxGraphicResource.h" />
-    <ClInclude Include="Core\EngineUI\FolderViewInspector.h" />
+    <ClInclude Include="Core\EngineUI\FolderView.h" />
     <ClInclude Include="Core\EngineUI\MenuBar.h" />
     <ClInclude Include="Core\EngineUI\SceneView.h" />
     <ClInclude Include="Core\Exception\EngineUIException.h" />
@@ -265,6 +266,7 @@
       <FileType>Document</FileType>
     </None>
     <ClInclude Include="Core\Scene\Base\Scene.h" />
+    <ClInclude Include="Core\Scene\Base\SceneGraph.h" />
     <ClInclude Include="Core\Scene\EmptyScene.h" />
     <ClInclude Include="Core\Scene\SponzaScene.h" />
     <ClInclude Include="External\Assimp\aabb.h" />
@@ -413,7 +415,8 @@
     <ClCompile Include="Core\Draw\SceneGraphNode.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\TextureCube.cpp" />
     <ClCompile Include="Core\DxGraphicResource.cpp" />
-    <ClCompile Include="Core\EngineUI\FolderViewInspector.cpp" />
+    <ClCompile Include="Core\EngineUI\FolderView.cpp" />
+    <ClCompile Include="Core\EngineUI\Inspector.cpp" />
     <ClCompile Include="Core\EngineUI\MenuBar.cpp" />
     <ClCompile Include="Core\EngineUI\SceneView.cpp" />
     <ClCompile Include="Core\Exception\EngineUIException.cpp" />
@@ -457,6 +460,7 @@
     <ClCompile Include="Core\Draw\BaseModel\ColorPlaneFrame.cpp" />
     <ClCompile Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.cpp" />
     <ClCompile Include="Core\Scene\Base\Scene.cpp" />
+    <ClCompile Include="Core\Scene\Base\SceneGraph.cpp" />
     <ClCompile Include="Core\Scene\EmptyScene.cpp" />
     <ClCompile Include="Core\Scene\SponzaScene.cpp" />
     <ClCompile Include="External\Imgui\imgui.cpp">

@@ -15,7 +15,7 @@ concept ComponentChild = std::is_base_of_v<Component, T>;
 class Object : public EngineLoop, public std::enable_shared_from_this<Object>
 {
 public:
-    Object(std::string name) : name(name)  
+	Object(std::string name) : name(name)
     {  
 
     }
@@ -103,6 +103,14 @@ public:
 			return nullptr;
 
 		return components[componentName];
+	}
+
+	void SetTransform(std::shared_ptr<TransformComponent> transform)
+	{
+		this->transform = transform;
+		this->transform->transform = transform;
+
+		this->transform->SetObject(shared_from_this());
 	}
 
 	// 모든 컴포넌트를 반환하는 함수

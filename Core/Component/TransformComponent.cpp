@@ -11,7 +11,7 @@ TransformComponent::TransformComponent(std::shared_ptr<Object> object)
 
 void TransformComponent::SetPosition(Position position) noexcept
 {
-	transform.position = position;
+	worldTransform.position = position;
 
 	// 부모가 있는 경우 로컬 위치 계산
 	if (HasParent())
@@ -36,7 +36,7 @@ void TransformComponent::SetPosition(Position position) noexcept
 
 void TransformComponent::SetPosition(DirectX::XMFLOAT3 position) noexcept
 {
-	transform.position = { position.x, position.y, position.z };
+	worldTransform.position = { position.x, position.y, position.z };
 
 	// 부모가 있는 경우 로컬 위치 계산
 	if (HasParent())
@@ -59,7 +59,7 @@ void TransformComponent::SetPosition(DirectX::XMFLOAT3 position) noexcept
 
 void TransformComponent::SetPosition(float x, float y, float z) noexcept
 {
-	transform.position = { x, y, z };
+	worldTransform.position = { x, y, z };
 
 	// 부모가 있는 경우 로컬 위치 계산
 	if (HasParent())
@@ -83,12 +83,12 @@ void TransformComponent::SetPosition(float x, float y, float z) noexcept
 
 Position& TransformComponent::GetPosition() noexcept
 {
-	return transform.position;
+	return worldTransform.position;
 }
 
 void TransformComponent::SetRotation(float roll, float pitch, float yaw) noexcept
 {
-	transform.rotation = { roll, pitch, yaw };
+	worldTransform.rotation = { roll, pitch, yaw };
 
 	// 부모가 있는 경우 로컬 회전 계산
 	if (HasParent())
@@ -129,12 +129,12 @@ void TransformComponent::SetRotation(float roll, float pitch, float yaw) noexcep
 
 Rotation& TransformComponent::GetRotation() noexcept
 {
-	return transform.rotation;
+	return worldTransform.rotation;
 }
 
 void TransformComponent::SetScale(Scale scale) noexcept
 {
-	transform.scale = scale;
+	worldTransform.scale = scale;
 
 	// 부모가 있는 경우 로컬 스케일 계산
 	if (HasParent())
@@ -154,7 +154,7 @@ void TransformComponent::SetScale(Scale scale) noexcept
 
 void TransformComponent::SetScale(DirectX::XMFLOAT3 scale) noexcept
 {
-	transform.scale = { scale.x, scale.y, scale.z };
+	worldTransform.scale = { scale.x, scale.y, scale.z };
 
 	// 부모가 있는 경우 로컬 스케일 계산
 	if (HasParent())
@@ -174,7 +174,7 @@ void TransformComponent::SetScale(DirectX::XMFLOAT3 scale) noexcept
 
 void TransformComponent::SetScale(float x, float y, float z) noexcept
 {
-	transform.scale = { x, y, z };
+	worldTransform.scale = { x, y, z };
 
 	// 부모가 있는 경우 로컬 스케일 계산
 	if (HasParent())
@@ -193,13 +193,13 @@ void TransformComponent::SetScale(float x, float y, float z) noexcept
 
 Scale& TransformComponent::GetScale() noexcept
 {
-	return transform.scale;
+	return worldTransform.scale;
 }
 
 const Vector3 TransformComponent::GetRight() const noexcept
 {
 	// 회전 행렬을 생성
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z);
 
 	// 월드 좌표계의 기본 오른쪽 벡터 (1, 0, 0)를 로드
 	DirectX::XMVECTOR rightVector = DirectX::XMLoadFloat3(&Vector::right);
@@ -220,7 +220,7 @@ const Vector3 TransformComponent::GetRight() const noexcept
 const Vector3 TransformComponent::GetUp() const noexcept
 {
 	// 회전 행렬을 생성
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z);
 
 	// 월드 좌표계의 기본 오른쪽 벡터 (1, 0, 0)를 로드
 	DirectX::XMVECTOR upVector = DirectX::XMLoadFloat3(&Vector::up);
@@ -241,7 +241,7 @@ const Vector3 TransformComponent::GetUp() const noexcept
 const Vector3 TransformComponent::GetForward() const noexcept
 {
 	// 회전 행렬을 생성
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z);
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z);
 
 	// 월드 좌표계의 기본 오른쪽 벡터 (1, 0, 0)를 로드
 	DirectX::XMVECTOR forwardVector = DirectX::XMLoadFloat3(&Vector::forward);
@@ -261,12 +261,12 @@ const Vector3 TransformComponent::GetForward() const noexcept
 
 Transform& TransformComponent::GetTransform() noexcept
 {
-	return transform;
+	return worldTransform;
 }
 
 void TransformComponent::SetRotation(Rotation rotation) noexcept
 {
-	transform.rotation = rotation;
+	worldTransform.rotation = rotation;
 
 	// 부모가 있는 경우 로컬 회전 계산
 	if (HasParent())
@@ -309,7 +309,7 @@ void TransformComponent::SetRotation(Rotation rotation) noexcept
 
 void TransformComponent::SetRotation(DirectX::XMFLOAT3 rotation) noexcept
 {
-	transform.rotation = { rotation.x, rotation.y, rotation.z };
+	worldTransform.rotation = { rotation.x, rotation.y, rotation.z };
 
 	// 부모가 있는 경우 로컬 회전 계산
 	if (HasParent())
@@ -365,12 +365,12 @@ void TransformComponent::SetLocalPosition(Position position) noexcept
 		DirectX::XMFLOAT3 worldPosFloat3;
 		DirectX::XMStoreFloat3(&worldPosFloat3, worldPos);
 
-		transform.position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
+		worldTransform.position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
 	}
 
 	// 부모가 없는 경우 월드 위치와 로컬 위치는 같음
 	else
-		transform.position = position;
+		worldTransform.position = position;
 }
 
 void TransformComponent::SetLocalPosition(float x, float y, float z) noexcept
@@ -389,12 +389,12 @@ void TransformComponent::SetLocalPosition(float x, float y, float z) noexcept
 		DirectX::XMFLOAT3 worldPosFloat3;
 		DirectX::XMStoreFloat3(&worldPosFloat3, worldPos);
 
-		transform.position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
+		worldTransform.position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
 	}
 
 	// 부모가 없는 경우 월드 위치와 로컬 위치는 같음
 	else
-		transform.position = { x, y, z };
+		worldTransform.position = { x, y, z };
 }
 
 void TransformComponent::SetLocalRotation(float roll, float pitch, float yaw) noexcept
@@ -425,12 +425,12 @@ void TransformComponent::SetLocalRotation(float roll, float pitch, float yaw) no
 			worldYaw = 0.0f;
 		}
 
-		transform.rotation = { worldRoll, worldPitch, worldYaw };
+		worldTransform.rotation = { worldRoll, worldPitch, worldYaw };
 	}
 
 	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
 	else
-		transform.rotation = { roll, pitch, yaw };
+		worldTransform.rotation = { roll, pitch, yaw };
 }
 
 void TransformComponent::SetLocalScale(Scale scale) noexcept
@@ -441,7 +441,7 @@ void TransformComponent::SetLocalScale(Scale scale) noexcept
 	if (HasParent())
 	{
 		// 로컬 스케일에 부모의 스케일을 곱하여 월드 스케일 계산
-		transform.scale = {
+		worldTransform.scale = {
 			scale.x * parent->GetScale().x,
 			scale.y * parent->GetScale().y,
 			scale.z * parent->GetScale().z
@@ -450,7 +450,7 @@ void TransformComponent::SetLocalScale(Scale scale) noexcept
 
 	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
 	else
-		transform.scale = scale;
+		worldTransform.scale = scale;
 }
 
 void TransformComponent::SetLocalScale(DirectX::XMFLOAT3 scale) noexcept
@@ -461,7 +461,7 @@ void TransformComponent::SetLocalScale(DirectX::XMFLOAT3 scale) noexcept
 	if (HasParent())
 	{
 		// 로컬 스케일에 부모의 스케일을 곱하여 월드 스케일 계산
-		transform.scale = {
+		worldTransform.scale = {
 			scale.x * parent->GetScale().x,
 			scale.y * parent->GetScale().y,
 			scale.z * parent->GetScale().z
@@ -470,7 +470,7 @@ void TransformComponent::SetLocalScale(DirectX::XMFLOAT3 scale) noexcept
 
 	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
 	else
-		transform.scale = { scale.x, scale.y, scale.z };
+		worldTransform.scale = { scale.x, scale.y, scale.z };
 }
 
 void TransformComponent::SetLocalScale(float x, float y, float z) noexcept
@@ -481,7 +481,7 @@ void TransformComponent::SetLocalScale(float x, float y, float z) noexcept
 	if (HasParent())
 	{
 		// 로컬 스케일에 부모의 스케일을 곱하여 월드 스케일 계산
-		transform.scale = {
+		worldTransform.scale = {
 			x * parent->GetScale().x,
 			y * parent->GetScale().y,
 			z * parent->GetScale().z
@@ -490,7 +490,7 @@ void TransformComponent::SetLocalScale(float x, float y, float z) noexcept
 
 	// 부모가 없는 경우 월드 스케일과 로컬 스케일은 같음
 	else
-		transform.scale = { x, y, z };
+		worldTransform.scale = { x, y, z };
 }
 
 Transform& TransformComponent::GetLocalTransform() noexcept
@@ -541,12 +541,12 @@ void TransformComponent::SetLocalRotation(Rotation rotation) noexcept
 			yaw = 0.0f;
 		}
 
-		transform.rotation = { roll, pitch, yaw };
+		worldTransform.rotation = { roll, pitch, yaw };
 	}
 
 	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
 	else
-		transform.rotation = rotation;
+		worldTransform.rotation = rotation;
 }
 
 void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
@@ -578,27 +578,27 @@ void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
 			yaw = 0.0f;
 		}
 
-		transform.rotation = { roll, pitch, yaw };
+		worldTransform.rotation = { roll, pitch, yaw };
 	}
 
 	// 부모가 없는 경우 월드 회전과 로컬 회전은 같음
 	else
-		transform.rotation = { rotation.x, rotation.y, rotation.z };
+		worldTransform.rotation = { rotation.x, rotation.y, rotation.z };
 }
 
 DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const noexcept
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z) *
-		DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z) *
-		DirectX::XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z);
+	return DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
+		DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z) *
+		DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
 }
 
 DirectX::XMFLOAT4X4& TransformComponent::GetTransformMatrix4x4() noexcept
 {
 	DirectX::XMMATRIX newTransformMatrix = 
-		DirectX::XMMatrixScaling(transform.scale.x, transform.scale.y, transform.scale.z) *
-		DirectX::XMMatrixRotationRollPitchYaw(transform.rotation.x, transform.rotation.y, transform.rotation.z) *
-		DirectX::XMMatrixTranslation(transform.position.x, transform.position.y, transform.position.z);
+		DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z) *
+		DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
+		DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
 
 	DirectX::XMStoreFloat4x4(&transformMatrix, newTransformMatrix);
 
@@ -628,8 +628,6 @@ DirectX::XMFLOAT4X4& TransformComponent::GetLocalTransformMatrix4x4() noexcept
 void TransformComponent::SetParent(std::shared_ptr<TransformComponent> parent) noexcept
 {
 	this->parent = parent;
-
-	parent->children.push_back(this->shared_from_this());
 }
 
 void TransformComponent::SetParent(std::shared_ptr<Object> parent) noexcept
@@ -637,8 +635,6 @@ void TransformComponent::SetParent(std::shared_ptr<Object> parent) noexcept
 	std::shared_ptr<TransformComponent> parentComponent = parent->GetComponent<TransformComponent>();
 
 	this->parent = parentComponent;
-
-	parentComponent->children.push_back(this->shared_from_this());
 }
 
 bool TransformComponent::HasParent() const noexcept
@@ -659,8 +655,6 @@ void TransformComponent::AddChild(std::shared_ptr<TransformComponent> child) noe
 {
 	children.push_back(child);
 	childIndex[child->GetObject()->GetName()] = ((UINT)children.size() - (UINT)1);
-
-	child->parent = this->shared_from_this();
 }
 
 void TransformComponent::AddChild(std::shared_ptr<Object> child) noexcept
@@ -669,8 +663,6 @@ void TransformComponent::AddChild(std::shared_ptr<Object> child) noexcept
 
 	children.push_back(childComponent);
 	childIndex[child->GetName()] = ((UINT)children.size() - (UINT)1);
-
-	childComponent->parent = this->shared_from_this();
 }
 
 void TransformComponent::RemoveChild(std::shared_ptr<TransformComponent> child) noexcept

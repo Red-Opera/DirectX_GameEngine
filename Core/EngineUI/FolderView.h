@@ -14,37 +14,36 @@ namespace Graphic { class Render; }
 
 namespace Engine
 {
-	class FolderViewInspector : public Graphic::Render
+	class FolderView : public Graphic::Render
 	{
 		struct FileItemTree;
 
 	public:
 		enum class IconType { folder, file, ParentFolder, };
 
-		static std::unique_ptr<FolderViewInspector> instance;
+		static std::unique_ptr<FolderView> instance;
 
 		static void GetInstance()
 		{
 			if (!instance)
-				instance = std::make_unique<FolderViewInspector>();
+				instance = std::make_unique<FolderView>();
 		}
 
-		FolderViewInspector();
-		FolderViewInspector(const FolderViewInspector&) = delete;
-		FolderViewInspector(FolderViewInspector&&) = delete;
-		FolderViewInspector& operator=(const FolderViewInspector&) = delete;
-		FolderViewInspector& operator=(FolderViewInspector&&) = delete;
+		FolderView();
+		FolderView(const FolderView&) = delete;
+		FolderView(FolderView&&) = delete;
+		FolderView& operator=(const FolderView&) = delete;
+		FolderView& operator=(FolderView&&) = delete;
 
 		std::shared_ptr<FileItemTree> CreateFileSystem();													// 프로젝트 구조 반영한 파일 시스템 생성 시작 메소드
 		std::shared_ptr<FileItemTree> BuildFileItemTree(const std::filesystem::directory_entry& rootPath);	// 프로젝트 구조 반영하여 파일 트리를 만드는 메소드
 
 		void RenderFolderView(std::shared_ptr<FileItemTree> itemTree = { });
-		void RenderInspector();
 
 		// Render을(를) 통해 상속됨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
-		~FolderViewInspector() = default;
+		~FolderView() = default;
 
 	private:
 		struct FileItemTree

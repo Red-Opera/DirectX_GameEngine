@@ -39,6 +39,8 @@ Model::Model(std::shared_ptr<class Object> object, const std::string& pathString
 
 	int nextID = 0;
 	root = ConvertSceneGraphNode(nextID, *model->mRootNode, scale);
+
+	object->SetTransform(root->GetTransformComponent());
 }
 
 void Model::Submit(size_t channel) const NOEXCEPTRELEASE

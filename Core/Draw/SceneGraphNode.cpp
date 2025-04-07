@@ -70,5 +70,10 @@ void SceneGraphNode::AddChild(std::unique_ptr<SceneGraphNode> child) NOEXCEPTREL
 {
 	assert(child && "추가할 자식 노드가 유효하지 않습니다.");
 
+	child->transformComponent->SetParent(transformComponent);
+	transformComponent->AddChild(child->transformComponent);
+
+	child->object->SetTransform(child->transformComponent);
+
 	childPtrs.push_back(std::move(child));
 }

@@ -79,8 +79,8 @@ public:
 	DirectX::XMMATRIX GetLocalTransformMatrix() const noexcept;
 	DirectX::XMFLOAT4X4& GetLocalTransformMatrix4x4() noexcept;
 
-	virtual std::string GetClassName() const { return "TransformComponent"; }	// 객체의 컴포넌트 이름을 반환하는 함수
-	static std::string GetStaticClassName() { return "TransformComponent"; }	// 해당 클래스의 이름을 반환하는 함수
+	virtual std::string GetClassName() const override { return "TransformComponent"; };	// 객체의 컴포넌트 이름을 반환하는 함수
+	static std::string GetStaticClassName() { return "TransformComponent"; }			// 해당 클래스의 이름을 반환하는 함수
 
 	// =============================================
 	// [Parent, Child]
@@ -122,6 +122,6 @@ private:
 
 	DirectX::XMFLOAT4X4 transformMatrix;						// 오브젝트의 변환 행렬
 
-	Transform transform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
+	Transform worldTransform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
 	Transform localTransform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
 };

@@ -612,7 +612,7 @@
     <ClInclude Include="External\Imgui\imstb_truetype.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\EngineUI\FolderViewInspector.h">
+    <ClInclude Include="Core\EngineUI\FolderView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Exception\EngineUIException.h">
@@ -670,6 +670,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Scene\EmptyScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Scene\Base\SceneGraph.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\EngineUI\Inspector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1031,7 +1037,7 @@
     <ClCompile Include="External\Imgui\imgui_widgets.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\EngineUI\FolderViewInspector.cpp">
+    <ClCompile Include="Core\EngineUI\FolderView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Exception\EngineUIException.cpp">
@@ -1101,6 +1107,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Scene\EmptyScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scene\Base\SceneGraph.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\EngineUI\Inspector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

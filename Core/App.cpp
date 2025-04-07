@@ -4,7 +4,8 @@
 #include "Camera/Camera.h"
 #include "Core/Scene/EmptyScene.h"
 #include "Core/Scene/SponzaScene.h"
-#include "EngineUI/FolderViewInspector.h"
+#include "EngineUI/FolderView.h"
+#include "EngineUI/Inspector.h"
 #include "EngineUI/MenuBar.h"
 #include "RenderingPipeline/RenderingChannel.h"
 
@@ -20,8 +21,9 @@ App::App(const std::string& commandLine)
 	: wnd(WINWIDTH, WINHEIGHT, "Sponza"), commandLine(commandLine), scriptCommander(StringConverter::TokenizeQuoted(commandLine)), 
 	  light({ 0.0f, 10.0f, 0.0f })
 {
-	Engine::FolderViewInspector::GetInstance();
+	Engine::FolderView::GetInstance();
 	Engine::MenuBar::GetInstance();
+	Engine::Inspector::GetInstance();
 
 	cameras.AddCamera(std::make_unique<Camera>("A", DirectX::XMFLOAT3{ -22.0f, 4.0f, 0.0f }, 0.0f, Math::PI / 2.0f));
 	cameras.AddCamera(std::make_unique<Camera>("B", DirectX::XMFLOAT3{ -13.5f,28.8f,-6.4f }, Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f));
@@ -120,9 +122,9 @@ void App::DoFrame(float deltaTime)
 
 	App::GetRenderGraph().RenderWindows();
 
-	Engine::FolderViewInspector::instance->RenderFolderView();
-	Engine::FolderViewInspector::instance->RenderInspector();
+	Engine::FolderView::instance->RenderFolderView();
 	Engine::MenuBar::menuBar->RenderMenuBar();
+	Engine::Inspector::instance->Update();
 
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 

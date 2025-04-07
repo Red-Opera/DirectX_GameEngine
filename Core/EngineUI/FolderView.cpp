@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "FolderViewInspector.h"
+#include "FolderView.h"
 
 #include "Core/Exception/GraphicsException.h"
 #include "Core/Exception/ExceptionInfo.h"
@@ -24,9 +24,9 @@ namespace Engine
 {
     namespace fileSystem = std::filesystem;
 
-    std::unique_ptr<FolderViewInspector> FolderViewInspector::instance = nullptr;
+    std::unique_ptr<FolderView> FolderView::instance = nullptr;
 
-    FolderViewInspector::FolderViewInspector() : selectedName("")
+    FolderView::FolderView()
     {
         if (!folderTree)
         {
@@ -66,7 +66,7 @@ namespace Engine
         }
     }
 
-    std::shared_ptr<FolderViewInspector::FileItemTree> FolderViewInspector::CreateFileSystem()
+    std::shared_ptr<FolderView::FileItemTree> FolderView::CreateFileSystem()
     {
         // 프로젝트 폴더(최상위 폴더)를 가져옴
         fileSystem::path rootPath = fileSystem::current_path();
@@ -83,7 +83,7 @@ namespace Engine
         return BuildFileItemTree(entry);
     }
 
-    std::shared_ptr<FolderViewInspector::FileItemTree> FolderViewInspector::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
+    std::shared_ptr<FolderView::FileItemTree> FolderView::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
     {
         // 해당 위치에서 현재 파일 정보를 가져옴
         auto itemTree = std::make_shared<FileItemTree>();
@@ -106,7 +106,7 @@ namespace Engine
         return itemTree;
     }
 
-    void FolderViewInspector::RenderFolderView(std::shared_ptr<FileItemTree> itemTree)
+    void FolderView::RenderFolderView(std::shared_ptr<FileItemTree> itemTree)
     {
         if (!ImGui::Begin("Folder View"))
         {
@@ -130,21 +130,7 @@ namespace Engine
         ImGui::End();
     }
 
-    void FolderViewInspector::RenderInspector()
-    {
-        if (ImGui::Begin("Inspector"))
-        {
-            if (!selectedName.empty())
-                ImGui::Text("Selected Item : %s", selectedName.c_str());
-
-            else
-                ImGui::Text("No items selected.");
-
-            ImGui::End();
-        }
-    }
-
-    ID3D11ShaderResourceView* FolderViewInspector::GetFileTextureResourceView(std::string fileName)
+    ID3D11ShaderResourceView* FolderView::GetFileTextureResourceView(std::string fileName)
     {
         // 대문자를 모두 소문자로
         std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
@@ -165,7 +151,7 @@ namespace Engine
         return fileIconTextures[fileName].Get();
     }
 
-    void FolderViewInspector::LoadIconTexture(std::string fileName, IconType iconType)
+    void FolderView::LoadIconTexture(std::string fileName, IconType iconType)
     {
         using namespace Graphic;
         using namespace DirectX;
@@ -186,11 +172,11 @@ namespace Engine
 
         switch (iconType)
         {
-        case Engine::FolderViewInspector::IconType::folder:
+        case Engine::FolderView::IconType::folder:
             hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
             break;
 
-        case Engine::FolderViewInspector::IconType::file:
+        case Engine::FolderView::IconType::file:
         {
             Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> newIconTexture;
 
@@ -209,7 +195,7 @@ namespace Engine
             break;
         }
 
-        case Engine::FolderViewInspector::IconType::ParentFolder:
+        case Engine::FolderView::IconType::ParentFolder:
             hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());
             break;
 
@@ -222,7 +208,7 @@ namespace Engine
         GRAPHIC_THROW_INFO(hr);
     }
 
-    std::string FolderViewInspector::GetRelativePath(const std::shared_ptr<FileItemTree>& tree)
+    std::string FolderView::GetRelativePath(const std::shared_ptr<FileItemTree>& tree)
     {
         if (!tree)
             return "";
@@ -239,7 +225,7 @@ namespace Engine
         return path;
     }
 
-    std::string FolderViewInspector::GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree)
+    std::string FolderView::GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree)
     {
         if (!tree)
             return "";
@@ -251,7 +237,7 @@ namespace Engine
         return absolutePath;
     }
 
-    void FolderViewInspector::RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree)
+    void FolderView::RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree)
     {
         // itemTree가 nullptr이면 기본 folderTree 사용
         std::shared_ptr<FileItemTree> currentFolder = itemTree ? itemTree : folderTree;
@@ -260,7 +246,7 @@ namespace Engine
         ImGui::Text("Current Path : %s", currentPath.c_str());
     }
 
-    void FolderViewInspector::RenderParentFolderButton()
+    void FolderView::RenderParentFolderButton()
     {
         ImVec2 iconSize(32.0f, 32.0f);
 
@@ -290,7 +276,7 @@ namespace Engine
             ImGui::EndDisabled();
     }
 
-    void FolderViewInspector::RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree)
+    void FolderView::RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree)
     {
         ImGui::BeginChild("View", ImVec2(0, 0), true);  // if문 제거
         {
@@ -323,7 +309,7 @@ namespace Engine
         ImGui::EndChild();
     }
 
-    void FolderViewInspector::RenderFolderItem(const std::shared_ptr<FileItemTree>& child)
+    void FolderView::RenderFolderItem(const std::shared_ptr<FileItemTree>& child)
     {
         ImGui::PushID(child->name.c_str());
 
@@ -345,7 +331,7 @@ namespace Engine
         ImGui::PopID();
     }
 
-    void FolderViewInspector::RenderFileItem(const std::shared_ptr<FileItemTree>& child)
+    void FolderView::RenderFileItem(const std::shared_ptr<FileItemTree>& child)
     {
         // 파일 확장자 추출
         std::string fileName = child->name;
@@ -365,7 +351,7 @@ namespace Engine
             OpenFile(child);
     }
 
-    void FolderViewInspector::OpenFile(const std::shared_ptr<FileItemTree>& child)
+    void FolderView::OpenFile(const std::shared_ptr<FileItemTree>& child)
     {
 #ifdef _WIN32
         std::filesystem::path relativePath = GetRelativePath(child);
@@ -381,7 +367,7 @@ namespace Engine
 #endif
     }
 
-    void FolderViewInspector::SetRenderPipeline() NOEXCEPTRELEASE
+    void FolderView::SetRenderPipeline() NOEXCEPTRELEASE
     {
 
     }
