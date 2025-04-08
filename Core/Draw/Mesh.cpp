@@ -21,8 +21,21 @@ Mesh::Mesh(const Material& material, const aiMesh& mesh, float scale) NOEXCEPTRE
 
 void Mesh::Submit(size_t channel, DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
 {
+	if (!isVisible)
+		return;
+
 	DirectX::XMStoreFloat4x4(&transform, parentWorldTransform);
 	Drawable::Submit(channel);
+}
+
+void Mesh::SetVisible(bool visible) noexcept
+{
+	isVisible = visible;
+}
+
+bool Mesh::GetVisible() const noexcept
+{
+	return isVisible;
 }
 
 DirectX::XMMATRIX Mesh::GetTransformMatrix() const noexcept

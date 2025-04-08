@@ -32,7 +32,7 @@ void SceneGraph::ShowNodeChildren(std::shared_ptr<Object> object) noexcept
         if (ImGui::IsItemClicked())
         {
             selectedObject = child->GetObject();
-			Engine::Inspector::GetInstance()->SetSelectObject(selectedObject);
+            Engine::Inspector::GetInstance()->SetSelectObject(selectedObject);
         }
 
         if (nodeOpen)
@@ -47,7 +47,7 @@ void SceneGraph::ShowNodeChildren(std::shared_ptr<Object> object) noexcept
 
 void SceneGraph::UpdateSceneGraph() noexcept
 {
-    if (ImGui::Begin(sceneName.c_str(), NULL, ImGuiWindowFlags_NoMove))
+    if (ImGui::Begin(sceneName.c_str(), NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
     {
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Scene Graph");
 
@@ -69,7 +69,7 @@ void SceneGraph::UpdateSceneGraph() noexcept
                 if (ImGui::IsItemClicked())
                 {
                     selectedObject = object;
-					Engine::Inspector::GetInstance()->SetSelectObject(object);
+                    Engine::Inspector::GetInstance()->SetSelectObject(object);
                 }
 
                 ShowNodeChildren(object);
@@ -79,7 +79,7 @@ void SceneGraph::UpdateSceneGraph() noexcept
             else if (ImGui::IsItemClicked())
             {
                 selectedObject = object;
-				Engine::Inspector::GetInstance()->SetSelectObject(object);
+                Engine::Inspector::GetInstance()->SetSelectObject(object);
             }
         }
     }

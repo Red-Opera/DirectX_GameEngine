@@ -31,6 +31,7 @@ public:
 
 	int GetID() const noexcept;
 	const std::string& GetName() const { return name; }
+	const std::vector<Mesh*>& GetMeshPtrs() const noexcept;	// 이 노드에 속한 Mesh의 주소를 반환함
 
 private:
 	// 해당 오브젝트에 자식을 추가하는 메소드

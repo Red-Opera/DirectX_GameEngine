@@ -11,5 +11,4 @@ public:
 	static std::string GetStaticClassName() { return "ColorPlaneObject"; }
 
 	void Initialize() override;
-	void CreateControlWindow(const char* name) noexcept override;
 };

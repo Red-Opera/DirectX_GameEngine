@@ -29,6 +29,9 @@ namespace Engine
 
 		void ShowNodeInfomation() noexcept;
 
+		void ColorObjectEditor() noexcept;
+		void ModelEditor() noexcept;
+
 		~Inspector() = default;
 
 		// EngineLoop을(를) 통해 상속됨

@@ -17,8 +17,13 @@ public:
 
 	void Submit(size_t channel, DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE;
 
+	void SetVisible(bool visible) noexcept;	// Mesh의 가시성 여부를 설정함
+	bool GetVisible() const noexcept;		// Mesh의 가시성 여부를 반환함
+
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;	// Mesh의 World 행렬을 반환함
 
 private:
 	mutable DirectX::XMFLOAT4X4 transform;	// Mesh의 World 행렬을 저장하는 행렬
+
+	bool isVisible = true;					// Mesh의 가시성 여부
 };

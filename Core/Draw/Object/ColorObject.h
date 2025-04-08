@@ -17,8 +17,6 @@ public:
 
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept;
 
-	virtual void CreateControlWindow(const char* name) noexcept;
-
 	void SetColor(GraphicResource::Image::Color color);
 	GraphicResource::Image::Color GetColor() const;
 

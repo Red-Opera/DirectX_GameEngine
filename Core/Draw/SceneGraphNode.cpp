@@ -75,6 +75,11 @@ int SceneGraphNode::GetID() const noexcept
 	return id;
 }
 
+const std::vector<Mesh*>& SceneGraphNode::GetMeshPtrs() const noexcept
+{
+	return meshPtrs;
+}
+
 void SceneGraphNode::AddChild(std::unique_ptr<SceneGraphNode> child) NOEXCEPTRELEASE
 {
 	assert(child && "추가할 자식 노드가 유효하지 않습니다.");
