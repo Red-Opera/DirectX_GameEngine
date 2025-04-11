@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "Inspector.h"
 
+#include "Core/Component/MeshComponent.h"
 #include "Core/Component/TransformComponent.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/ModelEditor.h"
 #include "Core/Draw/Object/ColorObject.h"
+#include "Core/Draw/SceneGraphNode.h"
 #include "Core/Object/Object.h"
-#include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
 #include "Core/RenderingPipeline/RenderingManager/Technique/Technique.h"
+#include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
 
 #include "External/Imgui/imgui.h"
@@ -130,9 +132,6 @@ namespace Engine
                     // Model 컴포넌트가 선택되어 있지 않더라도 Mesh 정보를 표시
                     if (selectComponent != modelComponent) // Model 컴포넌트가 이미 선택되어 있으면 중복 표시 방지
                     {
-                        ImGui::Separator();
-                        ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Mesh Components");
-
                         // 모델 계층 구조를 표시하고 메시를 컴포넌트처럼 보여주는 컨트롤러 클래스
                         class MeshComponentsController : public ModelBase
                         {
@@ -229,6 +228,119 @@ namespace Engine
                     }
                 }
 
+                else if (auto meshComponent = selectObject->GetComponent("MeshComponent"))
+                {
+                    // MeshComponent가 선택되어 있지 않더라도 Mesh 정보를 표시
+                    if (selectComponent != meshComponent) // 이미 선택되어 있으면 중복 표시 방지
+                    {
+                        // MeshComponent에서 메시들을 표시하는 클래스
+                        class MeshInfoController
+                        {
+                        public:
+                            void UpdateMeshComponents(std::vector<Mesh*>& meshes)
+                            {
+                                meshComponents.clear();
+                                selectedMeshIndex = -1;
+
+                                for (size_t i = 0; i < meshes.size(); i++)
+                                {
+                                    MeshInfo comp;
+                                    comp.mesh = meshes[i];
+                                    comp.name = "Mesh " + std::to_string(i);
+                                    meshComponents.push_back(comp);
+                                }
+                            }
+
+                            void ShowMeshComponents()
+                            {
+                                if (meshComponents.empty())
+                                    return;
+
+                                for (size_t i = 0; i < meshComponents.size(); i++)
+                                {
+                                    auto& comp = meshComponents[i];
+
+                                    ImGui::PushID(static_cast<int>(i));
+
+                                    // 메시 가시성 토글을 위한 체크박스
+                                    bool isVisible = comp.mesh->GetVisible();
+                                    if (ImGui::Checkbox("##MeshVisible", &isVisible))
+                                        comp.mesh->SetVisible(isVisible);
+
+                                    ImGui::SameLine();
+
+                                    // 메시 선택 버튼
+                                    bool isSelected = (selectedMeshIndex == static_cast<int>(i));
+
+                                    if (isSelected)
+                                        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.6f, 0.8f, 1.0f));
+
+                                    if (ImGui::Button(comp.name.c_str(), ImVec2(-1, 0)))
+                                    {
+                                        selectedMeshIndex = static_cast<int>(i);
+                                        comp.isSelected = true;
+
+                                        // 다른 메시는 선택 해제
+                                        for (size_t j = 0; j < meshComponents.size(); j++)
+                                        {
+                                            if (j != i)
+                                                meshComponents[j].isSelected = false;
+                                        }
+                                    }
+
+                                    if (isSelected)
+                                        ImGui::PopStyleColor();
+
+                                    ImGui::PopID();
+                                }
+
+                                // 선택된 메시의 속성 표시
+                                if (selectedMeshIndex >= 0 && selectedMeshIndex < meshComponents.size())
+                                {
+                                    ShowSelectedMeshProperties(meshComponents[selectedMeshIndex].mesh);
+                                }
+                            }
+
+                            // 선택된 메시에 대한 속성 편집기 표시
+                            void ShowSelectedMeshProperties(Mesh* mesh)
+                            {
+                                if (!mesh)
+                                    return;
+
+                                ImGui::Separator();
+                                ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Mesh Properties");
+
+                                // 메시 가시성 설정
+                                bool isVisible = mesh->GetVisible();
+                                if (ImGui::Checkbox("Visible", &isVisible))
+                                    mesh->SetVisible(isVisible);
+
+                                // TechniqueEditor를 사용하여 메시의 재질 속성 표시
+                                TechniqueEditor editor;
+                                mesh->Accept(editor);
+                            }
+
+                        private:
+                            struct MeshInfo
+                            {
+                                Mesh* mesh = nullptr;
+                                std::string name;
+                                bool isSelected = false;
+                            };
+
+                            std::vector<MeshInfo> meshComponents;   // 메시 컴포넌트 목록
+                            int selectedMeshIndex = -1;             // 선택된 메시 컴포넌트 인덱스
+                        };
+
+                        static MeshInfoController meshInfoController;
+
+                        auto meshComp = std::static_pointer_cast<MeshComponent>(meshComponent);
+                        auto& meshes = meshComp->GetMeshes();
+
+                        meshInfoController.UpdateMeshComponents(meshes);
+                    }
+                }
+
                 // 선택된 컴포넌트의 상세 정보 표시
                 if (selectComponent)
                 {
@@ -255,6 +367,9 @@ namespace Engine
 
                     else if (selectComponent->GetClassName() == "Model")
                         ModelEditor();
+
+                    else if (selectComponent->GetClassName() == "MeshComponent")
+                        MeshComponentEditor();
 
                     // 다른 컴포넌트 타입에 따른 특수 UI는 여기에 추가
                     else
@@ -486,6 +601,50 @@ namespace Engine
 
         // 메시 컴포넌트 목록 표시
         controller.ShowMeshComponents();
+    }
+
+    void Inspector::MeshComponentEditor() noexcept
+    {
+        auto meshComponent = std::static_pointer_cast<MeshComponent>(selectComponent);
+
+        // 메시 목록 표시
+        ImGui::Separator();
+        ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Meshes");
+
+        auto& meshes = meshComponent->GetMeshes();
+
+        // 메시 목록이 없으면 메시지 표시
+        if (meshes.empty())
+        {
+            ImGui::TextDisabled("No meshes available");
+            return;
+        }
+
+        // 각 메시 표시
+        for (size_t i = 0; i < meshes.size(); i++)
+        {
+            auto mesh = meshes[i];
+
+            ImGui::PushID(static_cast<int>(i));
+
+            // 메시 속성 펼쳐서 보기
+            if (ImGui::TreeNode(("Properties##" + std::to_string(i)).c_str()))
+            {
+                // 메시 가시성
+                bool isVisible = mesh->GetVisible();
+
+                if (ImGui::Checkbox("Visible##Detail", &isVisible))
+                    mesh->SetVisible(isVisible);
+
+                // 재질 속성 표시
+                TechniqueEditor editor;
+                mesh->Accept(editor);
+
+                ImGui::TreePop();
+            }
+
+            ImGui::PopID();
+        }
     }
 
 	void Inspector::Initialize()

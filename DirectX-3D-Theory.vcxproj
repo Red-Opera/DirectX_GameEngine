@@ -156,8 +156,10 @@
     <ClInclude Include="Core\Camera\CameraProjection.h" />
     <ClInclude Include="Core\Camera\CameraViewFrustumCulling.h" />
     <ClInclude Include="Core\Component\Component.h" />
+    <ClInclude Include="Core\Component\MeshComponent.h" />
     <ClInclude Include="Core\Component\TransformComponent.h" />
     <ClInclude Include="Core\Draw\BaseModel\CylinderFrame.h" />
+    <ClInclude Include="Core\Draw\ModelEditor.h" />
     <ClInclude Include="Core\Draw\Object\ColorConeObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorCubeObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorCylinderObject.h" />
@@ -234,7 +236,6 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\DynamicConstantBuffer.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.h" />
     <ClInclude Include="Core\RenderingPipeline\Viewport.h" />
-    <ClInclude Include="Core\Draw\ModelEditor.h" />
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.h" />
     <ClInclude Include="Core\InputSystem\KeyBoard.h" />
     <ClInclude Include="Core\InputSystem\Mouse.h" />
@@ -357,7 +358,6 @@
     <ClInclude Include="External\Imgui\imstb_rectpack.h" />
     <ClInclude Include="External\Imgui\imstb_textedit.h" />
     <ClInclude Include="External\Imgui\imstb_truetype.h" />
-    <ClInclude Include="Core\RenderingPipeline\Test.h" />
     <ClInclude Include="External\Cnpy\cnpy.h" />
     <ClInclude Include="External\DirectXTex\include\BC.h" />
     <ClInclude Include="External\DirectXTex\include\BCDirectCompute.h" />
@@ -393,10 +393,12 @@
     <ClCompile Include="Core\Camera\CameraProjection.cpp" />
     <ClCompile Include="Core\Camera\CameraViewFrustumCulling.cpp" />
     <ClCompile Include="Core\Component\Component.cpp" />
+    <ClCompile Include="Core\Component\MeshComponent.cpp" />
     <ClCompile Include="Core\Component\TransformComponent.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ConeFrame.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\CylinderFrame.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\SphereFrame.cpp" />
+    <ClCompile Include="Core\Draw\Model.cpp" />
     <ClCompile Include="Core\Draw\ModelEditor.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorConeObject.cpp" />
     <ClCompile Include="Core\Draw\Object\ColorCubeObject.cpp" />
@@ -410,7 +412,6 @@
     <ClCompile Include="Core\Draw\BaseModel\CubeFrame.cpp" />
     <ClCompile Include="Core\Draw\Base\Image\TexturePreprocessor.cpp" />
     <ClCompile Include="Core\Draw\Base\Material.cpp" />
-    <ClCompile Include="Core\Draw\Model.cpp" />
     <ClCompile Include="Core\Draw\OcclusionCulling.cpp" />
     <ClCompile Include="Core\Draw\SceneGraphNode.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\TextureCube.cpp" />
@@ -484,7 +485,6 @@
     <ClCompile Include="External\Imgui\imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\Test.cpp" />
     <ClCompile Include="External\Cnpy\cnpy.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>

@@ -186,9 +186,6 @@
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\RenderingPipeline\Test.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\Stencil.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -274,9 +271,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBufferScaling.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Draw\ModelEditor.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\RenderingPipeline\RenderGraph\OutlineScaleRenderGraph.h">
@@ -678,6 +672,12 @@
     <ClInclude Include="Core\EngineUI\Inspector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Component\MeshComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Draw\ModelEditor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -899,9 +899,6 @@
     <ClCompile Include="Core\RenderingPipeline\Pipeline\VSPS\TypeCache.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\RenderingPipeline\Test.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Draw\Object\TextureCubeObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -918,9 +915,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\Base\Material.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Draw\Model.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Exception\ModelException.cpp">
@@ -1097,9 +1091,6 @@
     <ClCompile Include="Core\Draw\OcclusionCulling.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Draw\ModelEditor.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Scene\Base\Scene.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -1113,6 +1104,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\EngineUI\Inspector.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Component\MeshComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\Model.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Draw\ModelEditor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

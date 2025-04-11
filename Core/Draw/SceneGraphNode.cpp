@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "ModelBase.h"
 
+#include "Core/Component/MeshComponent.h"
 #include "Core/Component/TransformComponent.h"
 #include "Core/Object/Object.h"
 #include "External/Imgui/imgui.h"
@@ -21,6 +22,9 @@ SceneGraphNode::SceneGraphNode(int id, const std::string& name, std::vector<Mesh
 		object = Object::Create(name);
 		transformComponent = std::make_shared<TransformComponent>(object);
 	}
+
+	if (!this->meshPtrs.empty())
+		object->AddComponent<MeshComponent>(this->meshPtrs);
 }
 
 void SceneGraphNode::Submit(size_t channel, DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE

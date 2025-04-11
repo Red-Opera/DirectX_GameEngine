@@ -3,7 +3,6 @@
 #include "Core/Component/Component.h"
 #include "Core/DxGraphic.h"
 #include "Core/Draw/ModelBase.h"
-#include "Core/Draw/ModelEditor.h"
 
 #include <string>
 #include <memory>
@@ -51,6 +50,4 @@ private:
 
 	std::unique_ptr<SceneGraphNode> root;
 	std::vector<std::unique_ptr<Mesh>> meshPtrs;
-
-	std::unique_ptr<ModelEditor> modelEditor;
 };

@@ -5,6 +5,7 @@
 
 #include "Base/Material.h"
 #include "Core/App.h"
+#include "Core/Component/MeshComponent.h"
 #include "Core/Exception/ModelException.h"
 #include "Core/Object/Object.h"
 #include "Core/RenderingPipeline/RenderingChannel.h"
@@ -66,8 +67,6 @@ void Model::Initialize()
 {
 	Component::Initialize();
 
-	modelEditor = std::make_unique<ModelEditor>(ModelEditor(GetObject()->GetName()));
-
 	if (transform && root)
 		root->transformComponent = transform;
 
@@ -85,7 +84,6 @@ void Model::Update()
 void Model::LateUpdate()
 {
 	Component::LateUpdate();
-	modelEditor->CreateWindow(*this);
 }
 
 Model::~Model() noexcept
