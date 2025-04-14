@@ -91,18 +91,21 @@ CameraIndicator::CameraIndicator()
 	}
 }
 
-void CameraIndicator::SetPosition(DirectX::XMFLOAT3 position) noexcept
+void CameraIndicator::SetPosition(Position position) noexcept
 {
 	this->position = position;
 }
 
-void CameraIndicator::SetRotation(DirectX::XMFLOAT3 rotation) noexcept
+void CameraIndicator::SetRotation(Rotation rotation) noexcept
 {
 	this->rotation = rotation;
 }
 
-DirectX::XMMATRIX CameraIndicator::GetTransformMatrix() const noexcept
-{
-	return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&rotation)) *
-		   DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&position));
+DirectX::XMMATRIX CameraIndicator::GetTransformMatrix() const noexcept  
+{  
+   DirectX::XMFLOAT3 rotationFloat3 = { rotation.x, rotation.y, rotation.z };  
+   DirectX::XMFLOAT3 positionFloat3 = { position.x, position.y, position.z };
+
+   return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&rotationFloat3)) *  
+          DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&positionFloat3));
 }

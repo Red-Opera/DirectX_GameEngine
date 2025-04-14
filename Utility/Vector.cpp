@@ -11,6 +11,33 @@ const XMVECTOR Vector::upV = XMLoadFloat3(&Vector::up);
 const XMVECTOR Vector::downV = XMLoadFloat3(&Vector::down);
 const XMVECTOR Vector::allDirV = XMVectorReplicate(1.0f);
 
+const Vector2 Vector2::zero		= Vector2( 0.0f,  0.0f);
+const Vector2 Vector2::up		= Vector2( 0.0f,  1.0f);
+const Vector2 Vector2::down		= Vector2( 0.0f, -1.0f);
+const Vector2 Vector2::left		= Vector2(-1.0f,  0.0f);
+const Vector2 Vector2::right	= Vector2( 1.0f,  0.0f);
+const Vector2 Vector2::one		= Vector2( 1.0f,  1.0f);
+
+const Vector3 Vector3::zero		= Vector3( 0.0f,  0.0f,  0.0f);
+const Vector3 Vector3::forward	= Vector3( 0.0f,  0.0f,  1.0f);
+const Vector3 Vector3::back		= Vector3( 0.0f,  0.0f, -1.0f);
+const Vector3 Vector3::left		= Vector3(-1.0f,  0.0f,  0.0f);
+const Vector3 Vector3::right	= Vector3( 1.0f,  0.0f,  0.0f);
+const Vector3 Vector3::up		= Vector3( 0.0f,  1.0f,  0.0f);
+const Vector3 Vector3::down		= Vector3( 0.0f, -1.0f,  0.0f);
+const Vector3 Vector3::one		= Vector3( 1.0f,  1.0f,  1.0f);
+
+const Vector4 Vector4::zero				= Vector4( 0.0f,  0.0f,  0.0f,  0.0f);
+const Vector4 Vector4::forward			= Vector4( 0.0f,  0.0f,  1.0f,  0.0f);
+const Vector4 Vector4::back				= Vector4( 0.0f,  0.0f, -1.0f,  0.0f);
+const Vector4 Vector4::left				= Vector4(-1.0f,  0.0f,  0.0f,  0.0f);
+const Vector4 Vector4::right			= Vector4( 1.0f,  0.0f,  0.0f,  0.0f);
+const Vector4 Vector4::up				= Vector4( 0.0f,  1.0f,  0.0f,  0.0f);
+const Vector4 Vector4::down				= Vector4( 0.0f, -1.0f,  0.0f,  0.0f);
+const Vector4 Vector4::reverseOpaque	= Vector4( 0.0f,  0.0f,  0.0f, -1.0f);
+const Vector4 Vector4::opaque			= Vector4( 0.0f,  0.0f,  0.0f,  1.0f);
+const Vector4 Vector4::one				= Vector4( 1.0f,  1.0f,  1.0f,  1.0f);
+
 XMFLOAT3 operator+(const XMFLOAT3& lhs, float value)
 {
 	return XMFLOAT3{ lhs.x + value, lhs.y + value, lhs.z + value };
@@ -122,6 +149,16 @@ GraphicResource::Image::Color Vector::ConvertColor(DirectX::XMVECTOR vector)
 	XMStoreFloat3(&toFloat, color);
 
 	return { (UCHAR)round(toFloat.x), (UCHAR)round(toFloat.y), (UCHAR)round(toFloat.z) };
+}
+
+XMVECTOR Vector::ConvertXMVECTOR(const Vector3& vector3)
+{
+	return XMVectorSet(vector3.x, vector3.y, vector3.z, 0.0f);
+}
+
+XMVECTOR Vector::ConvertXMVECTOR(const Vector4& vector4)
+{
+	return XMVectorSet(vector4.x, vector4.y, vector4.z, vector4.w);
 }
 
 DirectX::XMFLOAT3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)

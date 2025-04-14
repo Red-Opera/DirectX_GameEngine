@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "SponzaScene.h"
 
+#include "Core/Camera/Camera.h"
+#include "Core/Draw/Light/PointLight.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/Object/ColorCubeObject.h"
+#include "Core/App.h"
 
 SponzaScene::SponzaScene(std::string sceneName) : Scene(sceneName)
 {
@@ -11,6 +14,16 @@ SponzaScene::SponzaScene(std::string sceneName) : Scene(sceneName)
 
 void SponzaScene::Initialize()
 {
+	std::shared_ptr<Object> camera = AddObject(Object::Create("Camera"));
+	cameras.AddCamera(camera->AddComponent<Camera>("A"));
+	camera->GetComponent<TransformComponent>()->SetPosition(-22.0f, 4.0f, 0.0f);
+	camera->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
+
+	std::shared_ptr<Object> camera2 = AddObject(Object::Create("Camera2"));
+	cameras.AddCamera(camera2->AddComponent<Camera>("B"));
+	camera2->GetComponent<TransformComponent>()->SetPosition(-13.5f, 28.8f, -6.4f);
+	camera2->GetComponent<TransformComponent>()->SetRotation(Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f, 0.0f);
+
 	std::shared_ptr<Object> gobber = AddObject(Object::Create("Gobber"));
 	gobber->AddComponent<Model>("Model/Sample/gobber/GoblinX.obj", 4.0f);
 	gobber->GetComponent<TransformComponent>()->SetPosition(-30.0f, 10.0f, 0.0f);
@@ -31,6 +44,12 @@ void SponzaScene::Initialize()
 
 	std::shared_ptr<Object> table = AddObject(Object::Create("White Cube"));
 	table->AddComponent<ColorCubeObject>();
+
+	std::shared_ptr<Object> pointLight = AddObject(Object::Create("PointLight"));
+	std::shared_ptr<PointLight> pointComponent = pointLight->AddComponent<PointLight>();
+	pointLight->GetComponent<TransformComponent>()->SetPosition(0.0f, 10.0f, 0.0f);
+
+	App::GetRenderGraph().RenderShadowCamera(*pointComponent->GetLightViewCamera()->GetComponent<Camera>());
 
 	Scene::Initialize();
 }

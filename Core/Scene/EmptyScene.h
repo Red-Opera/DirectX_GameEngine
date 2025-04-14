@@ -8,4 +8,6 @@ public:
 	EmptyScene(std::string sceneName);
 
 	static std::shared_ptr<Scene> Create(std::string sceneName);
+
+	void Initialize() override;
 };

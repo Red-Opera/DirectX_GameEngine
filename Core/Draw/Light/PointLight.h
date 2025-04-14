@@ -1,33 +1,43 @@
 #pragma once
 
+#include "Core/Component/Component.h"
 #include "Core/Exception/WindowException.h"
 #include "Core/DxGraphic.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBuffer.h"
-
-#include "../BaseModel/ColorSphere.h"
 
 namespace RenderGraphNameSpace { class RenderGraph; }
 
 class Camera;
 
-class PointLight
+class PointLight : public Component
 {
 public:
-	PointLight(DirectX::XMFLOAT3 position = { 0.0f, 10.0f, 0.0f }, float radius = 0.5f);
+	PointLight
+	(
+		std::shared_ptr<class Object> object, 
+		Position position = { 0.0f, 10.0f, 0.0f },
+		float radius = 0.5f
+	);
 
 	void CreatePositionChangeWindow() noexcept;
 	void Reset() noexcept;
 	void Submit(size_t channel) const NOEXCEPTRELEASE;
-	void Update(DirectX::FXMMATRIX view) const noexcept;
 
-	void LinkTechniques(RenderGraphNameSpace::RenderGraph&);
+	std::shared_ptr<Object> GetLightViewCamera() const noexcept;
 
-	std::shared_ptr<Camera> GetLightViewCamera() const noexcept;
+	~PointLight() override = default;
+
+	void Initialize() override;
+	void Update() override;
+	void LateUpdate() override;
+
+	virtual std::string GetClassName() const override { return "PointLightComponent"; }
+	static std::string GetStaticClassName() { return "PointLightComponent"; }
 
 private:
 	struct PointLightConstantBuffer
 	{
-		alignas(16) DirectX::XMFLOAT3 position;
+		alignas(16) Position position;
 		alignas(16) DirectX::XMFLOAT3 ambient;
 		alignas(16) DirectX::XMFLOAT3 diffuseColor;
 		float diffuseIntensity;
@@ -36,11 +46,11 @@ private:
 		float attQuad;
 	};
 
-	std::shared_ptr<Camera> viewCamera;
+	std::shared_ptr<Object> viewCamera;
 
 	PointLightConstantBuffer lightInfo;
 	PointLightConstantBuffer initLightInfo;
 
-	mutable ColorSphere mesh;
+	mutable std::shared_ptr<class ColorSphereObject> mesh;
 	mutable Graphic::PixelConstantBuffer<PointLightConstantBuffer> cBuffer;
 };

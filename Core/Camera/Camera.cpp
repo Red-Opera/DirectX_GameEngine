@@ -3,14 +3,15 @@
 
 #include "Core/Window.h"
 #include "Core/DxGraphic.h"
+#include "Core/Object/Object.h"
 
-Camera::Camera(std::string name, DirectX::XMFLOAT3 initPosition, float initPitch, float initYaw, bool isTethered) noexcept
-	: name(std::move(name)), initPosition(initPosition), initPitch(initPitch), initYaw(initYaw), projection(1.0f, 9.0f / 16.0f, 0.5f, 400.0f), 
+Camera::Camera(std::shared_ptr<class Object> object, std::string name, bool isTethered) noexcept
+	: Component(object), name(std::move(name)), projection(1.0f, 9.0f / 16.0f, 0.5f, 400.0f), 
 	  indicator(), isTethered(isTethered)
 {
 	if (isTethered)
 	{
-		position = initPosition;
+		auto position = object->transform->GetPosition();
 
 		indicator.SetPosition(position);
 		projection.SetPosition(position);
@@ -21,8 +22,12 @@ Camera::Camera(std::string name, DirectX::XMFLOAT3 initPosition, float initPitch
 
 DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 {
+	auto pos = this->object->transform->GetPosition();
+    DirectX::XMFLOAT3 position = { pos.x, pos.y, pos.z };
+	auto rotation = this->object->transform->GetRotation();
+
 	// 카메라의 앞 방향 Vector와 위치 Vector를 구함
-	const DirectX::XMVECTOR lookVector = DirectX::XMVector3Transform(Vector::forwardV, DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f));
+	const DirectX::XMVECTOR lookVector = DirectX::XMVector3Transform(Vector::forwardV, DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, 0.0f));
 	const DirectX::XMVECTOR positionVector = DirectX::XMLoadFloat3(&position);
 
 	// 카메라가 바라보는 목표 위치
@@ -43,6 +48,9 @@ void Camera::SpawnControlWidgets() noexcept
 	bool isPositionIsNotMatch = false;
 	const auto IsNotMatch = [](bool notMatch, bool& carry) { carry = carry || notMatch; };
 
+	auto& position = this->object->transform->GetPosition();
+	auto& rotation = this->object->transform->GetRotation();
+
 	if (!isTethered)
 	{
 		ImGui::Text("Position");
@@ -52,8 +60,8 @@ void Camera::SpawnControlWidgets() noexcept
 	}
 
 	ImGui::Text("Rotation");
-	IsNotMatch(ImGui::SliderAngle("Pitch", &pitch, 0.995f * -90.0f, 0.995f * 90.0f), isRotationIsNotMatch);
-	IsNotMatch(ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f), isRotationIsNotMatch);
+	IsNotMatch(ImGui::SliderAngle("Pitch", &rotation.x, 0.995f * -90.0f, 0.995f * 90.0f), isRotationIsNotMatch);
+	IsNotMatch(ImGui::SliderAngle("Yaw", &rotation.y, -180.0f, 180.0f), isRotationIsNotMatch);
 
 	projection.RenderWidgets();
 
@@ -65,7 +73,7 @@ void Camera::SpawnControlWidgets() noexcept
 
 	if (isRotationIsNotMatch)
 	{
-		const DirectX::XMFLOAT3 angle = { pitch, yaw, 0.0f };
+		const Rotation angle = { rotation.x, rotation.y, 0.0f };
 		indicator.SetRotation(angle);
 		projection.SetRotation(angle);
 	}
@@ -81,60 +89,68 @@ void Camera::Reset() noexcept
 {
 	if (!isTethered)
 	{
-		position = initPosition;
+		auto& position = this->object->transform->GetPosition();
+		position = { 0.0f, 0.0f, 0.0f };
 
 		indicator.SetPosition(position);
 		projection.SetPosition(position);
 	}
 
-	pitch = initPitch;
-	yaw = initYaw;
+	auto& rotation = this->object->transform->GetRotation();
+	rotation = { 0.0f, 0.0f, 0.0f };
 
-	const DirectX::XMFLOAT3 angle = { pitch, yaw, 0.0f };
-	indicator.SetRotation(angle);
-	projection.SetRotation(angle);
+	indicator.SetRotation(rotation);
+	projection.SetRotation(rotation);
 
 	projection.Reset();
 }
 
 void Camera::Rotate(float dx, float dy) noexcept
 {
-	yaw = Math::NormalizeRadian(yaw + dx * rotationSpeed);
-	pitch = std::clamp(pitch + dy * rotationSpeed, 0.995f * -Math::PI / 2.0f, 0.995f * Math::PI / 2.0f);
+	auto& rotation = this->object->transform->GetRotation();
 
-	const DirectX::XMFLOAT3 angle = { pitch, yaw, 0.0f };
-	indicator.SetRotation(angle);
-	projection.SetRotation(angle);
+	rotation.x = std::clamp(rotation.x + dy * rotationSpeed, 0.995f * -Math::PI / 2.0f, 0.995f * Math::PI / 2.0f);
+	rotation.y = Math::NormalizeRadian(rotation.y + dx * rotationSpeed);
+
+	indicator.SetRotation(rotation);
+	projection.SetRotation(rotation);
 }
 
-void Camera::Translate(DirectX::XMFLOAT3 translation) noexcept
+void Camera::Translate(Position translation) noexcept
 {
+	auto& position = this->object->transform->GetPosition();
+	auto& rotation = this->object->transform->GetRotation();
+
 	if (!isTethered)
 	{
-		DirectX::XMStoreFloat3(&translation, DirectX::XMVector3Transform(
-			DirectX::XMLoadFloat3(&translation),
-			DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f) *
+		DirectX::XMFLOAT3 translationFloat3 = { translation.x, translation.y, translation.z };
+
+		DirectX::XMStoreFloat3(&translationFloat3, DirectX::XMVector3Transform(
+			DirectX::XMLoadFloat3(&translationFloat3),
+			DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, 0.0f) *
 			DirectX::XMMatrixScaling(moveSpeed, moveSpeed, moveSpeed)
 		));
 
-		position = { position.x + translation.x, position.y + translation.y, position.z + translation.z };
+		position = { position.x + translationFloat3.x, position.y + translationFloat3.y, position.z + translationFloat3.z };
 
 		indicator.SetPosition(position);
 		projection.SetPosition(position);
 	}
 }
 
-void Camera::SetPosition(const DirectX::XMFLOAT3& position) noexcept
+void Camera::SetPosition(const Position& targetPosition) noexcept
 {
-	this->position = position;
+	auto& position = this->object->transform->GetPosition();
 
-	indicator.SetPosition(position);
-	projection.SetPosition(position);
+	position = targetPosition;
+
+	indicator.SetPosition(targetPosition);
+	projection.SetPosition(targetPosition);
 }
 
-DirectX::XMFLOAT3 Camera::GetPosition() const noexcept
+Position& Camera::GetPosition() const noexcept
 {
-	return position;
+	return this->object->transform->GetPosition();
 }
 
 const std::string& Camera::GetName() const noexcept
@@ -161,4 +177,19 @@ void Camera::RenderToGraphic() const
 {
 	Window::GetDxGraphic().SetCamera(GetMatrix());
 	Window::GetDxGraphic().SetProjection(projection.GetMatrix());
+}
+
+void Camera::Initialize()
+{
+
+}
+
+void Camera::Update()
+{
+	Component::Update();
+}
+
+void Camera::LateUpdate()
+{
+	Component::LateUpdate();
 }

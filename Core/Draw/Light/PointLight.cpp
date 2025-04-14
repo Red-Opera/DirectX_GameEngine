@@ -1,12 +1,22 @@
 #include "stdafx.h"
 #include "PointLight.h"
 
+#include "Core/App.h"
 #include "Core/Camera/Camera.h"
+#include "Core/Object/Object.h"
+#include "Core/Component/Component.h"
+#include "Core/Draw/Object/ColorSphereObject.h"
+#include "Core/Component/TransformComponent.h"
+#include "Core/RenderingPipeline/RenderingChannel.h"
 
 #include "Utility/MathInfo.h"
 
-PointLight::PointLight(DirectX::XMFLOAT3 position, float radius) : mesh(radius), cBuffer()
+PointLight::PointLight(std::shared_ptr<Object> object, Position position, float radius)
+	: Component(object), mesh(this->object->AddComponent<ColorSphereObject>()), cBuffer()
 {
+	this->object->transform->SetScale(radius, radius, radius);
+	this->object->GetComponent<ColorSphereObject>()->SetLit(false);
+
 	initLightInfo =
 	{
 		position,
@@ -17,7 +27,10 @@ PointLight::PointLight(DirectX::XMFLOAT3 position, float radius) : mesh(radius),
 
 	Reset();
 
-	viewCamera = std::make_shared<Camera>("Light", lightInfo.position, 0.0f, Math::PI / 2.0f, true);
+	viewCamera = Object::Create("LightCamera");
+	viewCamera->AddComponent<Camera>("LightCamera", true);
+	viewCamera->GetComponent<TransformComponent>()->SetPosition(lightInfo.position);
+	viewCamera->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
 }
 
 void PointLight::CreatePositionChangeWindow() noexcept
@@ -33,7 +46,7 @@ void PointLight::CreatePositionChangeWindow() noexcept
 		IsNotMatch(ImGui::SliderFloat("Z", &lightInfo.position.z, -60.0f, 60.0f, "%.1f"));
 
 		if (isNotMatch)
-			viewCamera->SetPosition(lightInfo.position);
+			viewCamera->GetComponent<Camera>()->SetPosition(lightInfo.position);
 
 		ImGui::Text("Intensity/Color");
 		ImGui::SliderFloat("Intensity", &lightInfo.diffuseIntensity, 0.01f, 200.0f, "%.2f");
@@ -55,30 +68,46 @@ void PointLight::CreatePositionChangeWindow() noexcept
 void PointLight::Reset() noexcept
 {
 	lightInfo = initLightInfo;
+
+	// Update transform if available
+	if (transform)
+		transform->SetPosition(lightInfo.position);
 }
 
 void PointLight::Submit(size_t channel) const NOEXCEPTRELEASE
 {
-	mesh.SetPos(lightInfo.position);
-	mesh.Submit(channel);
+	transform->SetPosition(lightInfo.position);
 }
 
-void PointLight::Update(DirectX::FXMMATRIX view) const noexcept
+std::shared_ptr<Object> PointLight::GetLightViewCamera() const noexcept
 {
+	return viewCamera;
+}
+
+void PointLight::Initialize()
+{
+	mesh->LinkTechniques(App::GetRenderGraph());
+}
+
+void PointLight::Update()
+{
+	Component::Update();
+
+	auto& activeCamera = CameraContainer::GetActiveCamera();
+	const DirectX::FXMMATRIX view = activeCamera.GetMatrix();
+
 	auto dataCopy = lightInfo;
-	const auto position = DirectX::XMLoadFloat3(&lightInfo.position);
-	DirectX::XMStoreFloat3(&dataCopy.position, DirectX::XMVector3Transform(position, view));
+    const auto position = DirectX::XMLoadFloat3(reinterpret_cast<const DirectX::XMFLOAT3*>(&lightInfo.position));
+
+	dataCopy.position = DirectX::XMVector3Transform(position, view);
 
 	cBuffer.Update(dataCopy);
 	cBuffer.SetRenderPipeline();
+
+	Submit(RenderingChannel::main);
 }
 
-void PointLight::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
+void PointLight::LateUpdate()
 {
-	mesh.LinkTechniques(renderGraph);
-}
-
-std::shared_ptr<Camera> PointLight::GetLightViewCamera() const noexcept
-{
-	return viewCamera;
+	Component::LateUpdate();
 }

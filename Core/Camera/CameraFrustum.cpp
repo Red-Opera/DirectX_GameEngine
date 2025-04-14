@@ -122,18 +122,21 @@ void CameraFrustum::SetVertices(float width, float height, float nearZ, float fa
 	vertexBuffer = std::make_shared<Graphic::VertexBuffer>(vertices);
 }
 
-void CameraFrustum::SetPosition(DirectX::XMFLOAT3 position) noexcept
+void CameraFrustum::SetPosition(Position position) noexcept
 {
 	this->position = position;
 }
 
-void CameraFrustum::SetRotation(DirectX::XMFLOAT3 rotation) noexcept
+void CameraFrustum::SetRotation(Rotation rotation) noexcept
 {
 	this->rotation = rotation;
 }
 
 DirectX::XMMATRIX CameraFrustum::GetTransformMatrix() const noexcept
 {
-	return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&rotation)) *
-		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&position));
+	DirectX::XMFLOAT3 rotationFloat3 = { rotation.x, rotation.y, rotation.z };
+	DirectX::XMFLOAT3 positionFloat3 = { position.x, position.y, position.z };
+
+	return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&rotationFloat3)) *
+		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&positionFloat3));
 }

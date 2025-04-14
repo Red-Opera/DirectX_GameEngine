@@ -44,6 +44,8 @@ public:
 	// ==============================================
 
 	static GraphicResource::Image::Color ConvertColor(DirectX::XMVECTOR vector);
+	static XMVECTOR ConvertXMVECTOR(const class Vector3& vector3);
+	static XMVECTOR ConvertXMVECTOR(const class Vector4& vector4);
 
 	// ==============================================
 	//			XMFLOAT4X4 to Position, Rotate
@@ -84,13 +86,6 @@ public:
 };
 using Position2D = Vector2;
 
-const Vector2 Vector2::zero		= Vector2( 0.0f,  0.0f);
-const Vector2 Vector2::up		= Vector2( 0.0f,  1.0f);
-const Vector2 Vector2::down		= Vector2( 0.0f, -1.0f);
-const Vector2 Vector2::left		= Vector2(-1.0f,  0.0f);
-const Vector2 Vector2::right	= Vector2( 1.0f,  0.0f);
-const Vector2 Vector2::one		= Vector2( 1.0f,  1.0f);
-
 class Vector3
 {
 public:
@@ -123,16 +118,6 @@ using Position = Vector3;
 using Rotation = Vector3;
 using Scale = Vector3;
 
-const Vector3 Vector3::zero		= Vector3( 0.0f,  0.0f,  0.0f);
-const Vector3 Vector3::forward	= Vector3( 0.0f,  0.0f,  1.0f);
-const Vector3 Vector3::back		= Vector3( 0.0f,  0.0f, -1.0f);
-const Vector3 Vector3::left		= Vector3(-1.0f,  0.0f,  0.0f);
-const Vector3 Vector3::right	= Vector3( 1.0f,  0.0f,  0.0f);
-const Vector3 Vector3::up		= Vector3( 0.0f,  1.0f,  0.0f);
-const Vector3 Vector3::down		= Vector3( 0.0f, -1.0f,  0.0f);
-const Vector3 Vector3::one		= Vector3( 1.0f,  1.0f,  1.0f);
-
-
 class Vector4
 {
 public:
@@ -164,17 +149,6 @@ public:
 
 	float x, y, z, w;
 };
-
-const Vector4 Vector4::zero				= Vector4( 0.0f,  0.0f,  0.0f,  0.0f);
-const Vector4 Vector4::forward			= Vector4( 0.0f,  0.0f,  1.0f,  0.0f);
-const Vector4 Vector4::back				= Vector4( 0.0f,  0.0f, -1.0f,  0.0f);
-const Vector4 Vector4::left				= Vector4(-1.0f,  0.0f,  0.0f,  0.0f);
-const Vector4 Vector4::right			= Vector4( 1.0f,  0.0f,  0.0f,  0.0f);
-const Vector4 Vector4::up				= Vector4( 0.0f,  1.0f,  0.0f,  0.0f);
-const Vector4 Vector4::down				= Vector4( 0.0f, -1.0f,  0.0f,  0.0f);
-const Vector4 Vector4::reverseOpaque	= Vector4( 0.0f,  0.0f,  0.0f, -1.0f);
-const Vector4 Vector4::opaque			= Vector4( 0.0f,  0.0f,  0.0f,  1.0f);
-const Vector4 Vector4::one				= Vector4( 1.0f,  1.0f,  1.0f,  1.0f);
 
 // ==============================================
 //		Vector2, Vectro3, Vector4 Operator

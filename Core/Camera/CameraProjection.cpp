@@ -10,12 +10,12 @@ CameraProjection::CameraProjection(float width, float height, float nearZ, float
 
 }
 
-void CameraProjection::SetPosition(DirectX::XMFLOAT3 position) noexcept
+void CameraProjection::SetPosition(Position position) noexcept
 {
 	frust.SetPosition(position);
 }
 
-void CameraProjection::SetRotation(DirectX::XMFLOAT3 rotation) noexcept
+void CameraProjection::SetRotation(Rotation rotation) noexcept
 {
 	frust.SetRotation(rotation);
 }

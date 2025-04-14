@@ -74,8 +74,8 @@ namespace RenderGraphNameSpace
 
 		void Execute() NOEXCEPTRELEASE override
 		{
-			XMFLOAT3 cameraPosition = shadowCamera->GetPosition();
-			const auto position = XMLoadFloat3(&cameraPosition);
+			Position cameraPosition = shadowCamera->GetPosition();
+			const auto position = cameraPosition;
 
 			Window::GetDxGraphic().SetProjection(XMLoadFloat4x4(&projection));
 
@@ -92,7 +92,7 @@ namespace RenderGraphNameSpace
 				SetDepthStencil(std::move(depth));
 				
 				const auto lookAt = position + XMLoadFloat3(&cameraDirections[i]);
-				const auto viewMatrix = XMMatrixLookAtLH(position, lookAt, XMLoadFloat3(&cameraUp[i]));
+				const auto viewMatrix = XMMatrixLookAtLH(Vector::ConvertXMVECTOR(position), Vector::ConvertXMVECTOR(lookAt), XMLoadFloat3(&cameraUp[i]));
 				const auto projMatrix = XMLoadFloat4x4(&projection);
 
 				// 현재 방향의 그림자 카메라 View Frustum 업데이트

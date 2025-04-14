@@ -2,9 +2,7 @@
 
 #include "Window.h"
 
-#include "Camera/CameraContainer.h"
 #include "Core/Scene/Base/Scene.h"
-#include "Draw/Light/PointLight.h"
 #include "Object/Object.h"
 
 #include "RenderingPipeline/RenderGraph/BlurOutlineRenderGraph.h"
@@ -42,9 +40,6 @@ private:
 	
 	Window wnd;
 	GameTimer timer;
-	CameraContainer cameras;
-	PointLight light;
-	float cameraSpeed = 1.0f;
 
 	float playSpeed = 1.0f;
 
