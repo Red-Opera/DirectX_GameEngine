@@ -24,6 +24,7 @@ namespace Engine
 		}
 
 		static void SetSelectObject(std::shared_ptr<Object> object) noexcept;
+		static std::shared_ptr<Object> GetSelectObject() noexcept;
 
 		Inspector() = default;
 

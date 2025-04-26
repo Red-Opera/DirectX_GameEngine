@@ -24,10 +24,14 @@ public:
 		using namespace std::string_literals;
 		ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, technique->GetName().c_str());
 
-		bool isActive = technique->GetAcive();
-		ImGui::Checkbox(("Tech Active##"s + std::to_string(techIndex)).c_str(), &isActive);
+		// Outline 테크닉은 체크박스를 표시하지 않음
+		if (technique->GetName() != "Outline")
+		{
+			bool isActive = technique->GetAcive();
+			ImGui::Checkbox(("Tech Active##"s + std::to_string(techIndex)).c_str(), &isActive);
 
-		technique->SetActive(isActive);
+			technique->SetActive(isActive);
+		}
 	}
 
 	bool OnVisitBuffer(DynamicConstantBuffer::Buffer& buffer) override

@@ -41,6 +41,9 @@ public:
 	void AddTechnique(Technique technique) noexcept;
 	void LinkTechniques(RenderGraphNameSpace::RenderGraph&);
 
+	void SetTechniqueActive(const std::string& name, bool active) noexcept;
+	bool GetTechniqueActive(const std::string& name) const noexcept;
+
 	void CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept;
 	DirectX::XMFLOAT3 GetBoundingSphereCenter() const noexcept;
 	float GetBoundingSphereRadius() const noexcept;

@@ -96,7 +96,7 @@ void ColorObject::SetRenderingPipeline(GraphicResource::Image::Color color, bool
 	}
 
 	{
-		Technique tech("Outline", RenderingChannel::main);
+		Technique tech("Outline", RenderingChannel::main, false);
 		{
 			RenderStep outlineMask("outlineMask");
 

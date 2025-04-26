@@ -60,6 +60,29 @@ void Drawable::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
 		tech.Link(renderGraph);
 }
 
+void Drawable::SetTechniqueActive(const std::string& name, bool active) noexcept
+{
+    for (auto& technique : techniques) 
+    {
+        if (technique.GetName() == name) 
+        {
+            technique.SetActive(active);
+            break;
+        }
+    }
+}
+
+bool Drawable::GetTechniqueActive(const std::string& name) const noexcept
+{
+    for (const auto& technique : techniques) 
+    {
+        if (technique.GetName() == name)
+            return technique.GetAcive();
+    }
+
+    return false;
+}
+
 void Drawable::CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept
 {
 #undef max
