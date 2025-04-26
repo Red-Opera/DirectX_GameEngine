@@ -47,10 +47,8 @@ void SceneGraph::ShowNodeChildren(std::shared_ptr<Object> object) noexcept
 
 void SceneGraph::UpdateSceneGraph() noexcept
 {
-    if (ImGui::Begin(sceneName.c_str(), NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+    if (ImGui::Begin("Scene Graph", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
     {
-        ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Scene Graph");
-
         for (auto& object : sceneObjects)
         {
             // 루트 오브젝트도 자식이 없으면 ImGuiTreeNodeFlags_Leaf 플래그 사용

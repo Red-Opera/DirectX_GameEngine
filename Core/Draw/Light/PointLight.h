@@ -19,7 +19,7 @@ public:
 		float radius = 0.5f
 	);
 
-	void CreatePositionChangeWindow() noexcept;
+	void SpawnControlWidgets() noexcept;
 	void Reset() noexcept;
 	void Submit(size_t channel) const NOEXCEPTRELEASE;
 

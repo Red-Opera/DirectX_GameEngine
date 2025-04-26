@@ -18,7 +18,6 @@ public:
 	Camera
 	(
 		std::shared_ptr<class Object> object,
-		std::string name,
 		bool isTethered = false
 	) noexcept;
 
@@ -33,7 +32,7 @@ public:
 
 	void SetPosition(const Position& position) noexcept;
 	Position& GetPosition() const noexcept;					// 카메라 위치를 반환함
-	const std::string& GetName() const noexcept;
+	const std::string GetName() const noexcept;
 
 	void LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph);
 	void Submit(size_t channel) const;
@@ -50,8 +49,6 @@ public:
 	static std::string GetStaticClassName() { return "CameraComponent"; }
 
 private:
-	std::string name;
-
 	CameraIndicator indicator;
 	CameraProjection projection;
 

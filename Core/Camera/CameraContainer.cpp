@@ -10,7 +10,6 @@
 #include "External/Imgui/imgui.h"
 
 std::shared_ptr<Camera> CameraContainer::activeCamera;
-std::shared_ptr<Camera> CameraContainer::controlCamera;
 
 Camera& CameraContainer::GetActiveCamera()
 {
@@ -20,28 +19,9 @@ Camera& CameraContainer::GetActiveCamera()
 	return *activeCamera;
 }
 
-Camera& CameraContainer::GetControlCamera()
-{
-	if (controlCamera == nullptr)
-		controlCamera = Scene::GetActiveScene()->GetCameraContainer().GetCameras()[0];
-
-	return *controlCamera;
-}
-
 void CameraContainer::SetActiveCamera(std::shared_ptr<Camera> camera)
 {
 	activeCamera = camera;
-
-	if (controlCamera == nullptr)
-		controlCamera = activeCamera;
-}
-
-void CameraContainer::SetControlCamera(std::shared_ptr<Camera> camera)
-{
-	controlCamera = camera;
-
-	if (activeCamera == nullptr)
-		activeCamera = controlCamera;
 }
 
 bool CameraContainer::IsActiveCameraVaild()
@@ -61,71 +41,28 @@ bool CameraContainer::IsActiveCameraVaild()
 	return activeCamera != nullptr;
 }
 
-bool CameraContainer::IsControlCameraVaild()
-{
-	if (controlCamera == nullptr)
-	{
-		auto scene = Scene::GetActiveScene();
-		auto& cameraContainer = scene->GetCameraContainer();
-		auto& cameras = cameraContainer.GetCameras();
-
-		if (cameras.size() == 0)
-			return false;
-
-		SetControlCamera(cameras[0]);
-	}
-
-	return controlCamera != nullptr;
-}
-
 void CameraContainer::ResetCamera()
 {
 	activeCamera = nullptr;
-	controlCamera = nullptr;
 }
 
-void CameraContainer::CreateWindow()
+void CameraContainer::SpawnInspectorWidgets()
 {
-	if (ImGui::Begin("Cameras"))
+	if (ImGui::BeginCombo("Active Camera", (*this)->GetName().c_str()))
 	{
-		if (ImGui::BeginCombo("Active Camera", (*this)->GetName().c_str()))
+		for (int i = 0; i < std::size(cameras); i++)
 		{
-			for (int i = 0; i < std::size(cameras); i++)
+			const bool isSelected = i == active;
+
+			if (ImGui::Selectable(cameras[i]->GetName().c_str(), isSelected))
 			{
-				const bool isSelected = i == active;
-
-				if (ImGui::Selectable(cameras[i]->GetName().c_str(), isSelected))
-				{
-					active = i;
-
-					activeCamera = cameras[i];
-				}
+				active = i;
+				activeCamera = cameras[i];
 			}
-
-			ImGui::EndCombo();
 		}
 
-		if (ImGui::BeginCombo("Control Camera", GetControlTargetCamera().GetName().c_str()))
-		{
-			for (int i = 0; i < std::size(cameras); i++)
-			{
-				const bool isSelected = i == controlTarget;
-
-				if (ImGui::Selectable(cameras[i]->GetName().c_str(), isSelected))
-				{
-					controlTarget = i;
-
-					controlCamera = cameras[i];
-				}
-			}
-
-			ImGui::EndCombo();
-		}
-
-		GetControlTargetCamera().SpawnControlWidgets();
+		ImGui::EndCombo();
 	}
-
-	ImGui::End();
 }
 
 void CameraContainer::SetRenderPipeline()
@@ -142,9 +79,6 @@ void CameraContainer::AddCamera(std::shared_ptr<Camera> camera)
 
 	if (activeCamera == nullptr)
 		activeCamera = cameras[cameras.size() - 1];
-
-	if (controlCamera == nullptr)
-		controlCamera = cameras[cameras.size() - 1];
 }
 
 std::vector<std::shared_ptr<Camera>>& CameraContainer::GetCameras()
@@ -175,9 +109,4 @@ void CameraContainer::Submit(size_t channel) const
 CameraContainer::~CameraContainer()
 {
 
-}
-
-Camera& CameraContainer::GetControlTargetCamera()
-{
-	return *cameras[controlTarget];
 }

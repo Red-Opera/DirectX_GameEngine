@@ -75,6 +75,10 @@ public:
 	Vector2& operator=(const Vector3& vector) noexcept;
 	Vector2& operator=(const Vector4& vector) noexcept;
 
+	bool operator==(const Vector2& vector) const;
+	bool operator==(const Vector3& vector) const;
+	bool operator==(const Vector4& vector) const;
+
 	static const Vector2 zero;
 	static const Vector2 up;
 	static const Vector2 down;
@@ -102,6 +106,10 @@ public:
 	Vector3& operator=(const Vector2& vector) noexcept;
 	Vector3& operator=(const Vector3& vector) noexcept;
 	Vector3& operator=(const Vector4& vector) noexcept;
+
+	bool operator==(const Vector2& vector) const;
+	bool operator==(const Vector3& vector) const;
+	bool operator==(const Vector4& vector) const;
 
 	static const Vector3 zero;
 	static const Vector3 forward;
@@ -135,6 +143,10 @@ public:
 	Vector4& operator=(const Vector2& vector) noexcept;
 	Vector4& operator=(const Vector3& vector) noexcept;
 	Vector4& operator=(const Vector4& vector) noexcept;
+
+	bool operator==(const Vector2& vector) const;
+	bool operator==(const Vector3& vector) const;
+	bool operator==(const Vector4& vector) const;
 
 	static const Vector4 zero;
 	static const Vector4 forward;

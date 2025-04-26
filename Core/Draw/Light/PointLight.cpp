@@ -28,41 +28,25 @@ PointLight::PointLight(std::shared_ptr<Object> object, Position position, float 
 	Reset();
 
 	viewCamera = Object::Create("LightCamera");
-	viewCamera->AddComponent<Camera>("LightCamera", true);
+	viewCamera->AddComponent<Camera>(true);
 	viewCamera->GetComponent<TransformComponent>()->SetPosition(lightInfo.position);
 	viewCamera->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
 }
 
-void PointLight::CreatePositionChangeWindow() noexcept
+void PointLight::SpawnControlWidgets() noexcept
 {
-	if (ImGui::Begin("Light"))
-	{
-		bool isNotMatch = false;
-		const auto IsNotMatch = [&isNotMatch](bool notMatch) { isNotMatch = isNotMatch || notMatch; };
+	ImGui::Text("Intensity/Color");
+	ImGui::SliderFloat("Intensity", &lightInfo.diffuseIntensity, 0.01f, 200.0f, "%.2f");
+	ImGui::ColorEdit3("Diffuse Color", &lightInfo.diffuseColor.x);
+	ImGui::ColorEdit3("Ambient", &lightInfo.ambient.x);
 
-		ImGui::Text("Position");
-		IsNotMatch(ImGui::SliderFloat("X", &lightInfo.position.x, -60.0f, 60.0f, "%.1f"));
-		IsNotMatch(ImGui::SliderFloat("Y", &lightInfo.position.y, -60.0f, 60.0f, "%.1f"));
-		IsNotMatch(ImGui::SliderFloat("Z", &lightInfo.position.z, -60.0f, 60.0f, "%.1f"));
+	ImGui::Text("Falloff");
+	ImGui::SliderFloat("Constant", &lightInfo.attConst, 0.05f, 10.0f, "%.2f");
+	ImGui::SliderFloat("Linear", &lightInfo.attLin, 0.0001f, 4.0f, "%.4f");
+	ImGui::SliderFloat("Quadratic", &lightInfo.attQuad, 0.0000001f, 10.0f, "%.7f");
 
-		if (isNotMatch)
-			viewCamera->GetComponent<Camera>()->SetPosition(lightInfo.position);
-
-		ImGui::Text("Intensity/Color");
-		ImGui::SliderFloat("Intensity", &lightInfo.diffuseIntensity, 0.01f, 200.0f, "%.2f");
-		ImGui::ColorEdit3("Diffuse Color", &lightInfo.diffuseColor.x);
-		ImGui::ColorEdit3("Ambient", &lightInfo.ambient.x);
-
-		ImGui::Text("Falloff");
-		ImGui::SliderFloat("Constant", &lightInfo.attConst, 0.05f, 10.0f, "%.2f");
-		ImGui::SliderFloat("Linear", &lightInfo.attLin, 0.0001f, 4.0f, "%.4f");
-		ImGui::SliderFloat("Quadratic", &lightInfo.attQuad, 0.0000001f, 10.0f, "%.7f");
-
-		if (ImGui::Button("Reset"))
-			Reset();
-	}
-
-	ImGui::End();
+	if (ImGui::Button("Reset"))
+		Reset();
 }
 
 void PointLight::Reset() noexcept
@@ -76,7 +60,7 @@ void PointLight::Reset() noexcept
 
 void PointLight::Submit(size_t channel) const NOEXCEPTRELEASE
 {
-	transform->SetPosition(lightInfo.position);
+
 }
 
 std::shared_ptr<Object> PointLight::GetLightViewCamera() const noexcept
@@ -93,11 +77,18 @@ void PointLight::Update()
 {
 	Component::Update();
 
+	const auto& transformPosition = transform->GetPosition();
+
+	// transform의 위치를 lightInfo와 동기화 (인스펙터 변경 반영)
+	if (transformPosition != lightInfo.position)
+		lightInfo.position = transformPosition;
+
+	// 기존 코드
 	auto& activeCamera = CameraContainer::GetActiveCamera();
 	const DirectX::FXMMATRIX view = activeCamera.GetMatrix();
 
 	auto dataCopy = lightInfo;
-    const auto position = DirectX::XMLoadFloat3(reinterpret_cast<const DirectX::XMFLOAT3*>(&lightInfo.position));
+	const auto position = DirectX::XMLoadFloat3(reinterpret_cast<const DirectX::XMFLOAT3*>(&lightInfo.position));
 
 	dataCopy.position = DirectX::XMVector3Transform(position, view);
 
@@ -106,6 +97,7 @@ void PointLight::Update()
 
 	Submit(RenderingChannel::main);
 }
+
 
 void PointLight::LateUpdate()
 {

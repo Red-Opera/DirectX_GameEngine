@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #include "Inspector.h"
 
+#include "Core/Camera/Camera.h"
+#include "Core/Camera/CameraContainer.h"
 #include "Core/Component/MeshComponent.h"
 #include "Core/Component/TransformComponent.h"
+#include "Core/Draw/Light/PointLight.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/ModelEditor.h"
 #include "Core/Draw/Object/ColorObject.h"
@@ -11,6 +14,7 @@
 #include "Core/RenderingPipeline/RenderingManager/Technique/Technique.h"
 #include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
+#include "Core/Scene/Base/Scene.h"
 
 #include "External/Imgui/imgui.h"
 
@@ -371,6 +375,15 @@ namespace Engine
                     else if (selectComponent->GetClassName() == "MeshComponent")
                         MeshComponentEditor();
 
+                    else if (selectComponent->GetClassName() == "PointLightComponent")
+                    {
+                        auto pointLightComponent = std::static_pointer_cast<PointLight>(selectComponent);
+                        pointLightComponent->SpawnControlWidgets();
+                    }
+
+                    else if (selectComponent->GetClassName() == "CameraComponent")
+                        CameraEditor();
+
                     // 다른 컴포넌트 타입에 따른 특수 UI는 여기에 추가
                     else
                     {
@@ -645,6 +658,26 @@ namespace Engine
 
             ImGui::PopID();
         }
+    }
+
+    void Inspector::CameraEditor() noexcept
+    {
+        // CameraContainer의 선택 UI를 먼저 표시
+        ImGui::TextColored({ 0.4f, 0.8f, 1.0f, 1.0f }, "Camera Selection");
+
+        // CameraContainer 인스턴스 가져오기
+        auto scene = Scene::GetActiveScene();
+        auto& cameraContainer = scene->GetCameraContainer();
+
+        // CameraContainer의 Inspector용 UI 요소 표시
+        cameraContainer.SpawnInspectorWidgets();
+
+        ImGui::Separator();
+        ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Camera Properties");
+
+        // 카메라 컴포넌트의 고유 속성 표시
+        auto cameraComponent = std::static_pointer_cast<Camera>(selectComponent);
+        cameraComponent->SpawnControlWidgets();
     }
 
 	void Inspector::Initialize()

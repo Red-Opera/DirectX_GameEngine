@@ -15,12 +15,12 @@ SponzaScene::SponzaScene(std::string sceneName) : Scene(sceneName)
 void SponzaScene::Initialize()
 {
 	std::shared_ptr<Object> camera = AddObject(Object::Create("Camera"));
-	cameras.AddCamera(camera->AddComponent<Camera>("A"));
+	cameras.AddCamera(camera->AddComponent<Camera>());
 	camera->GetComponent<TransformComponent>()->SetPosition(-22.0f, 4.0f, 0.0f);
 	camera->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
 
 	std::shared_ptr<Object> camera2 = AddObject(Object::Create("Camera2"));
-	cameras.AddCamera(camera2->AddComponent<Camera>("B"));
+	cameras.AddCamera(camera2->AddComponent<Camera>());
 	camera2->GetComponent<TransformComponent>()->SetPosition(-13.5f, 28.8f, -6.4f);
 	camera2->GetComponent<TransformComponent>()->SetRotation(Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f, 0.0f);
 

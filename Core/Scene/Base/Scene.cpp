@@ -168,7 +168,7 @@ void Scene::LateStart()
 
 void Scene::Update()
 {
-	if (!CameraContainer::IsActiveCameraVaild() || !CameraContainer::IsControlCameraVaild())
+	if (!CameraContainer::IsActiveCameraVaild())
 		return;
 
 	const Camera& activeCamera = CameraContainer::GetActiveCamera();
@@ -192,8 +192,6 @@ void Scene::LateUpdate()
 {
 	for (auto& object : objects)
 		object->LateUpdate();
-
-	cameras.CreateWindow();
 }
 
 void Scene::Finalize()

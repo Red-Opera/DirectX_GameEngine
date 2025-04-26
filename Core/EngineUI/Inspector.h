@@ -32,6 +32,7 @@ namespace Engine
 		void ColorObjectEditor() noexcept;
 		void ModelEditor() noexcept;
 		void MeshComponentEditor() noexcept;
+		void CameraEditor() noexcept;
 
 		~Inspector() = default;
 

@@ -237,6 +237,21 @@ Vector3& Vector3::operator=(const Vector4& vector) noexcept
 	return *this;
 }
 
+bool Vector3::operator==(const Vector2& vector) const
+{
+	return (x == vector.x && y == vector.y);
+}
+
+bool Vector3::operator==(const Vector3& vector) const
+{
+	return (x == vector.x && y == vector.y && z == vector.z);
+}
+
+bool Vector3::operator==(const Vector4& vector) const
+{
+	return (x == vector.x && y == vector.y && z == vector.z);
+}
+
 Vector2::Vector2(const Vector3& vector) noexcept : x(vector.x), y(vector.y)
 {
 
@@ -283,6 +298,21 @@ Vector2& Vector2::operator=(const Vector4& vector) noexcept
 	this->y = vector.y;
 
 	return *this;
+}
+
+bool Vector2::operator==(const Vector2& vector) const
+{
+	return (x == vector.x && y == vector.y);
+}
+
+bool Vector2::operator==(const Vector3& vector) const
+{
+	return (x == vector.x && y == vector.y);
+}
+
+bool Vector2::operator==(const Vector4& vector) const
+{
+	return (x == vector.x && y == vector.y);
 }
 
 Vector4::Vector4(const Vector3& vector) noexcept : x(vector.x), y(vector.y), z(vector.z), w(0.0f) 
@@ -336,6 +366,21 @@ Vector4& Vector4::operator=(const Vector4& vector) noexcept
 	this->w = vector.w;
 
 	return *this;
+}
+
+bool Vector4::operator==(const Vector2& vector) const
+{
+	return (x == vector.x && y == vector.y);
+}
+
+bool Vector4::operator==(const Vector3& vector) const
+{
+	return (x == vector.x && y == vector.y && z == vector.z);
+}
+
+bool Vector4::operator==(const Vector4& vector) const
+{
+	return (x == vector.x && y == vector.y && z == vector.z && w == vector.w);
 }
 
 Vector2 operator+(const Vector2& lhs, float value)

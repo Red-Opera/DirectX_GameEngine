@@ -5,8 +5,8 @@
 #include "Core/DxGraphic.h"
 #include "Core/Object/Object.h"
 
-Camera::Camera(std::shared_ptr<class Object> object, std::string name, bool isTethered) noexcept
-	: Component(object), name(std::move(name)), projection(1.0f, 9.0f / 16.0f, 0.5f, 400.0f), 
+Camera::Camera(std::shared_ptr<class Object> object, bool isTethered) noexcept
+	: Component(object), projection(1.0f, 9.0f / 16.0f, 0.5f, 400.0f), 
 	  indicator(), isTethered(isTethered)
 {
 	if (isTethered)
@@ -44,45 +44,26 @@ DirectX::XMMATRIX Camera::GetProjection() const noexcept
 
 void Camera::SpawnControlWidgets() noexcept
 {
-	bool isRotationIsNotMatch = false;
-	bool isPositionIsNotMatch = false;
-	const auto IsNotMatch = [](bool notMatch, bool& carry) { carry = carry || notMatch; };
-
 	auto& position = this->object->transform->GetPosition();
 	auto& rotation = this->object->transform->GetRotation();
 
-	if (!isTethered)
-	{
-		ImGui::Text("Position");
-		IsNotMatch(ImGui::SliderFloat("X", &position.x, -80.0f, 80.0f, "%.1f"), isPositionIsNotMatch);
-		IsNotMatch(ImGui::SliderFloat("Y", &position.y, -80.0f, 80.0f, "%.1f"), isPositionIsNotMatch);
-		IsNotMatch(ImGui::SliderFloat("Z", &position.z, -80.0f, 80.0f, "%.1f"), isPositionIsNotMatch);
-	}
-
-	ImGui::Text("Rotation");
-	IsNotMatch(ImGui::SliderAngle("Pitch", &rotation.x, 0.995f * -90.0f, 0.995f * 90.0f), isRotationIsNotMatch);
-	IsNotMatch(ImGui::SliderAngle("Yaw", &rotation.y, -180.0f, 180.0f), isRotationIsNotMatch);
-
+	// 프로젝션 설정은 유지
 	projection.RenderWidgets();
 
+	// 카메라 시각화 옵션도 유지
 	ImGui::Checkbox("Enable Camera Indicator", &isEnableIndicator);
 	ImGui::Checkbox("Enable Frustum Indicator", &isEnableFrustumIndicator);
 
 	if (ImGui::Button("Reset"))
 		Reset();
 
-	if (isRotationIsNotMatch)
-	{
-		const Rotation angle = { rotation.x, rotation.y, 0.0f };
-		indicator.SetRotation(angle);
-		projection.SetRotation(angle);
-	}
+	// Transform이 외부(Inspector)에서 변경되었을 때 indicator와 projection 업데이트
+	indicator.SetPosition(position);
+	projection.SetPosition(position);
 
-	if (isPositionIsNotMatch)
-	{
-		indicator.SetPosition(position);
-		projection.SetPosition(position);
-	}
+	const Rotation angle = { rotation.x, rotation.y, 0.0f };
+	indicator.SetRotation(angle);
+	projection.SetRotation(angle);
 }
 
 void Camera::Reset() noexcept
@@ -153,9 +134,9 @@ Position& Camera::GetPosition() const noexcept
 	return this->object->transform->GetPosition();
 }
 
-const std::string& Camera::GetName() const noexcept
+const std::string Camera::GetName() const noexcept
 {
-	return name;
+	return object->GetName();
 }
 
 void Camera::LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph)
