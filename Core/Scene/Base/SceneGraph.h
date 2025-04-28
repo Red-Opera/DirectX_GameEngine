@@ -6,16 +6,20 @@
 #include <unordered_map>
 #include <functional>
 
+class Object;
+
 class SceneGraph : public EngineLoop
 {
 public:
-    SceneGraph(std::string sceneName, std::vector<std::shared_ptr<class Object>>& sceneObjects);
+    SceneGraph(std::string sceneName, std::vector<std::shared_ptr<Object>>& sceneObjects);
 
     void ShowNodeChildren(std::shared_ptr<Object> object) noexcept;
     void UpdateSceneGraph() noexcept;
 
     void EnableOutlineForObject(std::shared_ptr<Object> object) noexcept;
     void DisableOutlineForObject(std::shared_ptr<Object> object) noexcept;
+
+    void OnMouseClick(int x, int y, bool cursorEnabled);
 
     ~SceneGraph() = default;
 

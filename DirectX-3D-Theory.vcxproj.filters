@@ -606,16 +606,16 @@
     <ClInclude Include="External\Imgui\imstb_truetype.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\EngineUI\FolderView.h">
+    <ClInclude Include="Core\Engine\UI\FolderView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Exception\EngineUIException.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\EngineUI\SceneView.h">
+    <ClInclude Include="Core\Engine\UI\SceneView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\EngineUI\MenuBar.h">
+    <ClInclude Include="Core\Engine\UI\MenuBar.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Object\Object.h">
@@ -669,13 +669,16 @@
     <ClInclude Include="Core\Scene\Base\SceneGraph.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\EngineUI\Inspector.h">
+    <ClInclude Include="Core\Engine\UI\Inspector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Component\MeshComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\ModelEditor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Engine\ObjectPicker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1031,7 +1034,7 @@
     <ClCompile Include="External\Imgui\imgui_widgets.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\EngineUI\FolderView.cpp">
+    <ClCompile Include="Core\Engine\UI\FolderView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Exception\EngineUIException.cpp">
@@ -1040,10 +1043,10 @@
     <ClCompile Include="External\Imgui\imgui_tables.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\EngineUI\SceneView.cpp">
+    <ClCompile Include="Core\Engine\UI\SceneView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\EngineUI\MenuBar.cpp">
+    <ClCompile Include="Core\Engine\UI\MenuBar.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Object\Object.cpp">
@@ -1103,7 +1106,7 @@
     <ClCompile Include="Core\Scene\Base\SceneGraph.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\EngineUI\Inspector.cpp">
+    <ClCompile Include="Core\Engine\UI\Inspector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Component\MeshComponent.cpp">
@@ -1113,6 +1116,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\ModelEditor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Engine\ObjectPicker.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

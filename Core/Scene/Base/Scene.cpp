@@ -87,6 +87,11 @@ std::vector<std::shared_ptr<Object>> Scene::GetObjects()
 	return objects;
 }
 
+std::shared_ptr<SceneGraph> Scene::GetSceneGraph()
+{
+	return sceneGraph;
+}
+
 std::string Scene::GetName() const
 {
 	return sceneName;
@@ -142,6 +147,8 @@ std::shared_ptr<Scene> Scene::GetActiveScene()
 
 void Scene::Initialize()
 {
+	Window::SetActiveSceneGraph(sceneGraph);
+
 	for (auto& object : objects)
 		object->Initialize();
 

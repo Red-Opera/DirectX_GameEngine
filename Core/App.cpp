@@ -4,9 +4,9 @@
 #include "Camera/Camera.h"
 #include "Core/Scene/EmptyScene.h"
 #include "Core/Scene/SponzaScene.h"
-#include "EngineUI/FolderView.h"
-#include "EngineUI/Inspector.h"
-#include "EngineUI/MenuBar.h"
+#include "Engine/UI/FolderView.h"
+#include "Engine/UI/Inspector.h"
+#include "Engine/UI/MenuBar.h"
 #include "RenderingPipeline/RenderingChannel.h"
 
 #include "Core/RenderingPipeline/RenderingManager/Pass/Base/RenderJob.h"

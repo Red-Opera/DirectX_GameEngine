@@ -3,9 +3,9 @@
 #include "stdafx.h"
 #include "DxGraphic.h"
 
+#include "Core/Scene/Base/SceneGraph.h"
 #include "Exception/BaseException.h"
 #include "Exception/WindowException.h"
-
 #include "InputSystem/KeyBoard.h"
 #include "InputSystem/Mouse.h"
 
@@ -68,6 +68,10 @@ public:
 	void EnableCursor() noexcept;				// 커서를 사용할 수 있도록 설정하는 메소드
 	void DisableCursor() noexcept;				// 커서를 사용할 수 없도록 설정하는 메소드
 	bool GetCursorEnabled() const noexcept;		// 커서 사용할 수 있는 여부를 반환하는 메소드
+
+	// 활성 SceneGraph 설정/가져오기
+	static void SetActiveSceneGraph(std::shared_ptr<SceneGraph> sceneGraph) { activeSceneGraph = sceneGraph; }
+	static std::shared_ptr<SceneGraph> GetActiveSceneGraph() { return activeSceneGraph; }
 
 	static std::optional<int> ProcessMessages() noexcept;
 	static void ShowGameFrame(HWND hWnd) noexcept;
@@ -141,6 +145,7 @@ private:
 	HWND hWnd;
 
 	static std::unique_ptr<DxGraphic> graphic; // DierctX 3D 그래픽 클래스
+	static std::shared_ptr<SceneGraph> activeSceneGraph;
 
 	std::vector<BYTE> rawBuffer;
 	std::string commandLine;

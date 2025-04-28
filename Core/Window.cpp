@@ -12,6 +12,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 string Window::currentSceneName = "";
 std::unique_ptr<DxGraphic> Window::graphic;
+std::shared_ptr<SceneGraph> Window::activeSceneGraph = nullptr;
 
 string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
@@ -318,6 +319,7 @@ LRESULT Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 }
 
+#include "Scene/Base/Scene.h"
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
@@ -452,6 +454,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnLeftPressed(point.x, point.y);
+
+		// 현재 활성화된 SceneGraph에 마우스 클릭 전달
+		if (auto sceneGraph = Scene::GetActiveScene()->GetSceneGraph())
+			sceneGraph->OnMouseClick(point.x, point.y, cursorEnabled);
 
 		break;
 	}

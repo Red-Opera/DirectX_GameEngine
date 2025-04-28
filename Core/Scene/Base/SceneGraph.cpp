@@ -6,9 +6,11 @@
 #include "Core/Draw/Base/Drawable.h"
 #include "Core/Draw/Mesh.h"
 #include "Core/Draw/SceneGraphNode.h"
-#include "Core/EngineUI/Inspector.h"
+#include "Core/Engine/ObjectPicker.h"
+#include "Core/Engine/UI/Inspector.h"
 #include "Core/Object/Object.h"
 #include "Core/RenderingPipeline/RenderingManager/Technique/Technique.h"
+#include "Core/Window.h"
 
 SceneGraph::SceneGraph(std::string sceneName, std::vector<std::shared_ptr<Object>>& sceneObjects)
     : EngineLoop(), sceneName(sceneName), sceneObjects(sceneObjects)
@@ -166,6 +168,37 @@ void SceneGraph::EnableOutlineForObject(std::shared_ptr<Object> object) noexcept
 void SceneGraph::DisableOutlineForObject(std::shared_ptr<Object> object) noexcept
 {
     SetOutlineForObject(object, false);
+}
+
+void SceneGraph::OnMouseClick(int x, int y, bool cursorEnabled)
+{
+    // 커서가 활성화되었을 때만 처리
+    if (!cursorEnabled)
+        return;
+
+    // 현재 카메라 및 프로젝션 행렬 가져오기
+    auto& graphic = Window::GetDxGraphic();
+    DirectX::XMMATRIX viewMatrix = graphic.GetCamera();
+    DirectX::XMMATRIX projMatrix = graphic.GetProjection();
+
+    // 화면 크기 가져오기
+    int screenWidth = graphic.GetWidth();
+    int screenHeight = graphic.GetHeight();
+
+    // 오브젝트 피커를 사용하여 클릭한 위치의 오브젝트 찾기
+    auto pickedObject = Engine::ObjectPicker::Get().PickObjectAtScreenPoint(
+        x, y, sceneObjects, viewMatrix, projMatrix, screenWidth, screenHeight);
+
+    // 오브젝트가 선택되었으면 선택 처리
+    if (pickedObject)
+    {
+        // 기존 선택된 오브젝트의 아웃라인 비활성화
+        if (selectedObject)
+            DisableOutlineForObject(selectedObject);
+
+        // 새 오브젝트 선택 처리
+        SelectObject(pickedObject);
+    }
 }
 
 void SceneGraph::SelectNextObjectInTree()
