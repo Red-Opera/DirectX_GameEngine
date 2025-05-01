@@ -10,8 +10,6 @@ void Engine::ObjectGizmo::SetSelectedObject(std::shared_ptr<Object> object)
     {
         currentGizmoOperation = ImGuizmo::TRANSLATE;
         currentGizmoMode = ImGuizmo::LOCAL;
-
-        return;
     }
 }
 
@@ -127,9 +125,15 @@ void Engine::ObjectGizmo::RenderGizmoUI()
         currentGizmoMode = ImGuizmo::LOCAL;
 }
 
-bool Engine::ObjectGizmo::ApplyImGuizmoToObjectOnMain(std::shared_ptr<Object> object, const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projectionMatrix, float screenWidth, float screenHeight)
+bool Engine::ObjectGizmo::ApplyImGuizmoToObjectOnMain
+(
+    std::shared_ptr<Object> object, 
+    const DirectX::XMMATRIX& viewMatrix, 
+    const DirectX::XMMATRIX& projectionMatrix, 
+    float screenWidth, float screenHeight
+)
 {
-    if (!object)
+    if (object == nullptr)
         return false;
 
     // ImGuizmo를 전체 화면에 설정
@@ -149,6 +153,7 @@ bool Engine::ObjectGizmo::ApplyImGuizmoToObjectOnMain(std::shared_ptr<Object> ob
 
     if (currentGizmoOperation == ImGuizmo::ROTATE)
         snapValues[0] = 15.0f;
+
     else if (currentGizmoOperation == ImGuizmo::SCALE)
         snapValues[0] = 0.1f;
 
@@ -160,7 +165,8 @@ bool Engine::ObjectGizmo::ApplyImGuizmoToObjectOnMain(std::shared_ptr<Object> ob
     DirectX::XMStoreFloat4x4(&viewMatrixFloat, viewMatrix);
     DirectX::XMStoreFloat4x4(&projectionMatrixFloat, projectionMatrix);
 
-    bool manipulated = ImGuizmo::Manipulate(
+    bool manipulated = ImGuizmo::Manipulate
+    (
         &viewMatrixFloat._11,
         &projectionMatrixFloat._11,
         currentGizmoOperation,
@@ -181,6 +187,7 @@ bool Engine::ObjectGizmo::ApplyImGuizmoToObjectOnMain(std::shared_ptr<Object> ob
             transform->SetRotation(Rotation(rotation.m128_f32[0], rotation.m128_f32[1], rotation.m128_f32[2]));
             transform->SetScale(Scale(scale.m128_f32[0], scale.m128_f32[1], scale.m128_f32[2]));
         }
+
         else
         {
             transform->SetLocalPosition(Position(translation.m128_f32[0], translation.m128_f32[1], translation.m128_f32[2]));

@@ -588,10 +588,11 @@ void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
 
 DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const noexcept
 {
-	return DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
-		DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z) *
-		DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z);
+	return DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z) *
+		DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
+		DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
 }
+
 
 DirectX::XMFLOAT4X4& TransformComponent::GetTransformMatrix4x4() noexcept
 {
