@@ -681,6 +681,27 @@
     <ClInclude Include="Core\Engine\ObjectPicker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="External\Imgui\GraphEditor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\ImCurveEdit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\ImGradient.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\ImGuizmo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\ImSequencer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\Imgui\ImZoomSlider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Engine\UI\ObjectGizmo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -1121,6 +1142,24 @@
     <ClCompile Include="Core\Engine\ObjectPicker.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="External\Imgui\GraphEditor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImCurveEdit.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImGradient.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImGuizmo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImSequencer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Engine\UI\ObjectGizmo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\_Sample_Shader.fx" />
@@ -1272,5 +1311,6 @@
       <Filter>헤더 파일</Filter>
     </None>
     <None Include="Reference.txt" />
+    <None Include="External\Imgui\LICENSE" />
   </ItemGroup>
 </Project>

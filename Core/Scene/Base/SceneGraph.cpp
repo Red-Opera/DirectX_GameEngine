@@ -147,7 +147,12 @@ void SceneGraph::SelectObject(std::shared_ptr<Object> object)
 
     selectedObject = object;
     Engine::Inspector::GetInstance()->SetSelectObject(selectedObject);
+
     EnableOutlineForObject(selectedObject);
+
+    // 새 객체가 선택되면 ObjectGizmo에 알림
+    if (objectGizmo != nullptr)
+        objectGizmo->SetSelectedObject(selectedObject);
 }
 
 // 코드 중복을 줄이기 위해 공통 함수로 구현
@@ -199,6 +204,20 @@ void SceneGraph::OnMouseClick(int x, int y, bool cursorEnabled)
         // 새 오브젝트 선택 처리
         SelectObject(pickedObject);
     }
+}
+
+void SceneGraph::SetObjectGizmo(std::shared_ptr<Engine::ObjectGizmo> gizmo)
+{
+    objectGizmo = gizmo;
+
+    // 기존에 선택된 객체가 있으면 Gizmo에도 설정
+    if (selectedObject != nullptr && objectGizmo != nullptr)
+        objectGizmo->SetSelectedObject(selectedObject);
+}
+
+std::shared_ptr<Object> SceneGraph::GetSelectedObject() const noexcept
+{
+    return selectedObject;
 }
 
 void SceneGraph::SelectNextObjectInTree()

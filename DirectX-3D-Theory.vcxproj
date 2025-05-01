@@ -169,6 +169,7 @@
     <ClInclude Include="Core\Draw\OcclusionCulling.h" />
     <ClInclude Include="Core\Engine\ObjectPicker.h" />
     <ClInclude Include="Core\Engine\UI\Inspector.h" />
+    <ClInclude Include="Core\Engine\UI\ObjectGizmo.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
     <ClInclude Include="Core\Draw\Object\TextureCubeObject.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Core\Draw\Mesh.h" />
     <ClInclude Include="Core\Draw\BaseModel\ColorPlaneFrame.h" />
     <ClInclude Include="Core\Draw\BaseModel\CubeFrame.h" />
+    <None Include="External\Imgui\LICENSE" />
     <None Include="Reference.txt" />
     <None Include="External\Assimp\color4.inl" />
     <None Include="External\Assimp\config.h.in" />
@@ -353,6 +355,12 @@
     <ClInclude Include="External\Assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="External\Imgui\imconfig.h" />
     <ClInclude Include="External\Imgui\imgui.h" />
+    <ClInclude Include="External\Imgui\GraphEditor.h" />
+    <ClInclude Include="External\Imgui\ImCurveEdit.h" />
+    <ClInclude Include="External\Imgui\ImGradient.h" />
+    <ClInclude Include="External\Imgui\ImGuizmo.h" />
+    <ClInclude Include="External\Imgui\ImSequencer.h" />
+    <ClInclude Include="External\Imgui\ImZoomSlider.h" />
     <ClInclude Include="External\Imgui\imgui_impl_dx11.h" />
     <ClInclude Include="External\Imgui\imgui_impl_win32.h" />
     <ClInclude Include="External\Imgui\imgui_internal.h" />
@@ -421,6 +429,7 @@
     <ClCompile Include="Core\Engine\UI\FolderView.cpp" />
     <ClCompile Include="Core\Engine\UI\Inspector.cpp" />
     <ClCompile Include="Core\Engine\UI\MenuBar.cpp" />
+    <ClCompile Include="Core\Engine\UI\ObjectGizmo.cpp" />
     <ClCompile Include="Core\Engine\UI\SceneView.cpp" />
     <ClCompile Include="Core\Exception\EngineUIException.cpp" />
     <ClCompile Include="Core\Exception\ModelException.cpp" />
@@ -467,6 +476,21 @@
     <ClCompile Include="Core\Scene\EmptyScene.cpp" />
     <ClCompile Include="Core\Scene\SponzaScene.cpp" />
     <ClCompile Include="External\Imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\GraphEditor.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImCurveEdit.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImGradient.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImGuizmo.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="External\Imgui\ImSequencer.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="External\Imgui\imgui_demo.cpp">
