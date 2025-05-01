@@ -60,7 +60,7 @@ void PointLight::Reset() noexcept
 
 void PointLight::Submit(size_t channel) const NOEXCEPTRELEASE
 {
-
+	mesh->Submit(channel);
 }
 
 std::shared_ptr<Object> PointLight::GetLightViewCamera() const noexcept
@@ -81,7 +81,12 @@ void PointLight::Update()
 
 	// transform의 위치를 lightInfo와 동기화 (인스펙터 변경 반영)
 	if (transformPosition != lightInfo.position)
+	{
 		lightInfo.position = transformPosition;
+
+		std::shared_ptr<TransformComponent> viewTransform = viewCamera->GetComponent<TransformComponent>();
+		viewTransform->SetPosition(lightInfo.position);
+	}
 
 	// 기존 코드
 	auto& activeCamera = CameraContainer::GetActiveCamera();
