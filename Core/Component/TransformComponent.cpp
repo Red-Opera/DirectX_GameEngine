@@ -588,23 +588,66 @@ void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
 
 DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const noexcept
 {
-	return DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z) *
-		DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
-		DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
-}
+	// 부모가 있는 경우
+	if (HasParent())
+	{
+		// 로컬 변환 행렬 생성
+		DirectX::XMMATRIX localMatrix =
+			DirectX::XMMatrixScaling(localTransform.scale.x, localTransform.scale.y, localTransform.scale.z) *
+			DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
+			DirectX::XMMatrixTranslation(localTransform.position.x, localTransform.position.y, localTransform.position.z);
 
+		// 부모의 월드 변환 행렬을 가져옴
+		DirectX::XMMATRIX parentMatrix = parent->GetTransformMatrix();
+
+		// 로컬 변환 행렬에 부모의 월드 변환 행렬을 적용하여 자신의 월드 변환 행렬 계산
+		return localMatrix * parentMatrix;
+	}
+
+	// 부모가 없는 경우 (루트 오브젝트)
+	else
+	{
+		// 월드 변환과 로컬 변환이 동일함
+		return DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z) *
+			DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
+			DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+	}
+}
 
 DirectX::XMFLOAT4X4& TransformComponent::GetTransformMatrix4x4() noexcept
 {
-	DirectX::XMMATRIX newTransformMatrix = 
-		DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z) *
-		DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
-		DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+	DirectX::XMMATRIX finalMatrix;
 
-	DirectX::XMStoreFloat4x4(&transformMatrix, newTransformMatrix);
+	// 부모가 있는 경우
+	if (HasParent())
+	{
+		// 로컬 변환 행렬 생성
+		DirectX::XMMATRIX localMatrix =
+			DirectX::XMMatrixScaling(localTransform.scale.x, localTransform.scale.y, localTransform.scale.z) *
+			DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
+			DirectX::XMMatrixTranslation(localTransform.position.x, localTransform.position.y, localTransform.position.z);
+
+		// 부모의 월드 변환 행렬을 가져옴
+		DirectX::XMMATRIX parentMatrix = parent->GetTransformMatrix();
+
+		// 최종 월드 변환 행렬 계산
+		finalMatrix = localMatrix * parentMatrix;
+	}
+	// 부모가 없는 경우
+	else
+	{
+		finalMatrix =
+			DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z) *
+			DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
+			DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
+	}
+
+	// 계산된 행렬을 XMFLOAT4X4에 저장
+	DirectX::XMStoreFloat4x4(&transformMatrix, finalMatrix);
 
 	return transformMatrix;
 }
+
 
 DirectX::XMMATRIX TransformComponent::GetLocalTransformMatrix() const noexcept
 {
@@ -785,4 +828,5 @@ size_t TransformComponent::GetChildCount() const noexcept
 
 void TransformComponent::UpdateTransform() noexcept
 {
+
 }

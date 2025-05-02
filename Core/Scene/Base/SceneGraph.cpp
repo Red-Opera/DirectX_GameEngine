@@ -206,15 +206,6 @@ void SceneGraph::OnMouseClick(int x, int y, bool cursorEnabled)
     }
 }
 
-void SceneGraph::SetObjectGizmo(std::shared_ptr<Engine::ObjectGizmo> gizmo)
-{
-    objectGizmo = gizmo;
-
-    // 기존에 선택된 객체가 있으면 Gizmo에도 설정
-    if (selectedObject != nullptr && objectGizmo != nullptr)
-        objectGizmo->SetSelectedObject(selectedObject);
-}
-
 std::shared_ptr<Object> SceneGraph::GetSelectedObject() const noexcept
 {
     return selectedObject;

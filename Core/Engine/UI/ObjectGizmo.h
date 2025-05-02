@@ -9,27 +9,32 @@
 #include <memory>
 
 class Object;
+class SceneGraph;
 
 namespace Engine
 {
     class ObjectGizmo
     {
     public:
-        // 객체 선택 설정
-        void SetSelectedObject(std::shared_ptr<Object> object);
+		static std::shared_ptr<ObjectGizmo> instance;
 
-        // 선택된 객체에 ImGuizmo 적용
-        bool ApplyImGuizmoToObject(std::shared_ptr<Object> selectedObject, const DirectX::XMMATRIX& viewMatrix, const DirectX::XMMATRIX& projectionMatrix);
+		static std::shared_ptr<ObjectGizmo> GetInstance()
+		{
+            if (!instance)
+                instance = std::make_unique<ObjectGizmo>();
 
-        // ImGui에서 조작 유형 선택을 위한 UI 렌더링
-        void RenderGizmoUI();
+			return instance;
+		}
+
+        void SetSelectedObject(std::shared_ptr<Object> object); // 객체 선택 설정
+        void RenderGizmoUI();                                   // ImGui에서 조작 유형 선택을 위한 UI 렌더링
 
         // 게터 메서드 추가
-        ImGuizmo::OPERATION GetCurrentGizmoOperation() const { return currentGizmoOperation; }
-        ImGuizmo::MODE GetCurrentGizmoMode() const { return currentGizmoMode; }
+        ImGuizmo::OPERATION GetCurrentGizmoOperation() const { return currentGizmoSetting; }
+        ImGuizmo::MODE GetCurrentGizmoMode() const { return currentApplyMode; }
 
         // 직접 메인 화면에 렌더링하기 위한 함수 추가
-        bool ApplyImGuizmoToObjectOnMain
+        void ApplyGizmo
         (
             std::shared_ptr<Object> object,
             const DirectX::XMMATRIX& viewMatrix,
@@ -38,11 +43,18 @@ namespace Engine
             float screenHeight
         );
 
+        void Update
+        (
+            const std::shared_ptr<SceneGraph>& sceneGraph,
+            const DirectX::XMMATRIX& viewMatrix,
+            const DirectX::XMMATRIX& projMatrix
+        );
+
     private:
         // 현재 선택된 객체
         std::shared_ptr<Object> selectedObject = nullptr;
 
-        ImGuizmo::MODE currentGizmoMode = ImGuizmo::MODE::WORLD;                // ImGuizmo 작업 모드 (로컬 또는 월드)
-        ImGuizmo::OPERATION currentGizmoOperation = ImGuizmo::TRANSLATE;        // ImGuizmo 조작 유형 (이동, 회전, 크기)
+        ImGuizmo::MODE currentApplyMode = ImGuizmo::MODE::WORLD;                // ImGuizmo 작업 모드 (로컬 또는 월드)
+        ImGuizmo::OPERATION currentGizmoSetting = ImGuizmo::TRANSLATE;          // ImGuizmo 조작 유형 (이동, 회전, 크기)
     };
 }

@@ -59,7 +59,6 @@ protected:
 	std::string sceneName;									// 씬 이름
 
 	std::shared_ptr<SceneGraph> sceneGraph;					// 씬 그래프
-	std::shared_ptr<class Engine::ObjectGizmo> objectGizmo;	// 오브젝트 기즈모
 
 	CameraContainer cameras;
 	float cameraSpeed = 1.0f;

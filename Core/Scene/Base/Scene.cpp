@@ -150,9 +150,6 @@ void Scene::Initialize()
 {
 	Window::SetActiveSceneGraph(sceneGraph);
 
-	objectGizmo = std::make_shared<Engine::ObjectGizmo>();
-	sceneGraph->SetObjectGizmo(objectGizmo);
-
 	for (auto& object : objects)
 		object->Initialize();
 
@@ -194,25 +191,9 @@ void Scene::Update()
 	for (auto& object : objects)
 		object->Update();
 
+	Engine::ObjectGizmo::GetInstance()->Update(sceneGraph, viewMatrix, projMatrix);
+
 	sceneGraph->Update();
-
-	// 컨트롤 UI는 별도 창에 표시
-	ImGui::Begin("Gizmo Controls", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	objectGizmo->RenderGizmoUI();
-	ImGui::End();
-
-	auto selectedObject = sceneGraph->GetSelectedObject();
-
-	// SceneGraph에서 선택된 객체가 있을 때 메인 화면에 Gizmo 렌더링
-	if (selectedObject != nullptr && objectGizmo != nullptr)
-	{
-		// 화면 크기 가져오기
-		float screenWidth = static_cast<float>(Window::GetDxGraphic().GetWidth());
-		float screenHeight = static_cast<float>(Window::GetDxGraphic().GetHeight());
-
-		// 메인 화면에 Gizmo 렌더링
-		objectGizmo->ApplyImGuizmoToObjectOnMain(selectedObject, viewMatrix, projMatrix, screenWidth, screenHeight);
-	}
 
 	cameras.Submit(RenderingChannel::main);
 }

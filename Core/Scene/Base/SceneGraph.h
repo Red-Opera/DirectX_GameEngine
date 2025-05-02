@@ -22,8 +22,6 @@ public:
 
     void OnMouseClick(int x, int y, bool cursorEnabled);
 
-    void SetObjectGizmo(std::shared_ptr<Engine::ObjectGizmo> gizmo);
-
     std::shared_ptr<Object> GetSelectedObject() const noexcept;
 
     ~SceneGraph() = default;

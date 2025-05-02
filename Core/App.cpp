@@ -7,6 +7,7 @@
 #include "Engine/UI/FolderView.h"
 #include "Engine/UI/Inspector.h"
 #include "Engine/UI/MenuBar.h"
+#include "Engine/UI/ObjectGizmo.h"
 #include "RenderingPipeline/RenderingChannel.h"
 
 #include "Core/RenderingPipeline/RenderingManager/Pass/Base/RenderJob.h"
@@ -23,6 +24,7 @@ App::App(const std::string& commandLine)
 	Engine::FolderView::GetInstance();
 	Engine::MenuBar::GetInstance();
 	Engine::Inspector::GetInstance();
+	Engine::ObjectGizmo::GetInstance();
 
 	currentScene = SponzaScene::Create("Sponza");
 
