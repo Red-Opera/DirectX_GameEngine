@@ -1,11 +1,7 @@
 # DirectX Game Engine
 
-<h2 id="Play">실행 이미지</h2>
-2025.04.06
-<img src="https://github.com/user-attachments/assets/994328ba-8e9e-4ca2-ba8b-2c8769615352" width="100%" height="100%"/>
-
-2025.03.10
-<img src="https://github.com/user-attachments/assets/0f5f713a-4c01-4237-bd8f-869fcb69c85b" width="100%" height="100%"/>
+<h2 id="Play">실행 이미지 (2025.05.02)</h2>
+<img src="https://github.com/user-attachments/assets/24c7a91b-eb4d-46cc-88f4-9ef7afb6bce8" width="100%" height="100%"/>
 
 <h2 id="Play">Graphic 참고 레포지토리</h2>
 
@@ -40,3 +36,42 @@
         <img src="https://custom-icon-badges.demolab.com/badge/Windows-0078D6?logo=windows11&logoColor=white"/>
     </li>
 </ul>
+
+## 실행 방법 및 프로그램 종속성
+### 필수 요구 사항
+#### 1. **Windows 운영체제**  
+   - Windows 7 SP1 이상 권장
+
+#### 2. **DirectX Runtime (June 2010)**
+   - DirectX 관련 DLL이 프로그램 종속성으로 필요합니다.
+   - 아래 링크에서 다운로드 후 설치하세요.  
+     https://www.microsoft.com/ko-kr/download/details.aspx?id=35
+
+##### 3. **Visual Studio 2022 (또는 이하 버전)**
+   - C++/C# 프로젝트 빌드를 위해 필요합니다.
+   - 아래 링크에서 Community, Professional, Enterprise 중 하나를 선택해 설치하세요.  
+     https://visualstudio.microsoft.com/ko/downloads/
+
+## 소스 코드 다운로드
+```bash
+# GitHub 리포지토리 클론
+git clone https://github.com/사용자명/리포지토리명.git
+cd 리포지토리명
+
+# 또는 ZIP 파일 다운로드
+# 1. GitHub 페이지에서 초록색 "Code" 버튼 클릭
+# 2. "Download ZIP" 클릭하여 압축 해제
+# 3. 압축 해제한 폴더로 이동
+```
+## 빌드 구성 매트릭스 (Build Configuration Matrix)
+|        | Debug | Release |
+|:------:|:-----:|:-------:|
+| **x64** |  ✅   |   ❌    |
+| **x86** |  ❌   |   ❌    |
+
+## 과거 실행 사진
+2025.04.06
+<img src="https://github.com/user-attachments/assets/994328ba-8e9e-4ca2-ba8b-2c8769615352" width="100%" height="100%"/>
+
+2025.03.10
+<img src="https://github.com/user-attachments/assets/0f5f713a-4c01-4237-bd8f-869fcb69c85b" width="100%" height="100%"/>
