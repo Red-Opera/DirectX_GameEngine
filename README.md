@@ -48,14 +48,14 @@
      https://www.microsoft.com/ko-kr/download/details.aspx?id=35
 
 ##### 3. **Visual Studio 2022 (또는 이하 버전)**
-   - C++/C# 프로젝트 빌드를 위해 필요합니다.
+   - C++ / Python 프로젝트 빌드를 위해 필요합니다.
    - 아래 링크에서 Community, Professional, Enterprise 중 하나를 선택해 설치하세요.  
      https://visualstudio.microsoft.com/ko/downloads/
 
 ## 소스 코드 다운로드
 ```bash
 # GitHub 리포지토리 클론
-git clone https://github.com/사용자명/리포지토리명.git
+git clone https://github.com/Red-Opera/DirectX_GameEngine.git
 cd 리포지토리명
 
 # 또는 ZIP 파일 다운로드
