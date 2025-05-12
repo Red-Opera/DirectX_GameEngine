@@ -702,6 +702,1110 @@
     <ClInclude Include="Core\Engine\UI\ObjectGizmo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflow\nanovdb\PNanoVDB.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflow\shaders\NvFlowShaderTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflow\NvFlow.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflow\NvFlowContext.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflow\NvFlowReflect.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflow\NvFlowTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflowext\shaders\NvFlowRayMarchParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflowext\shaders\NvFlowRayMarchUtils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflowext\NvFlowExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\flow\include\nvflowext\NvFlowLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\characterkinematic\PxBoxController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\characterkinematic\PxCapsuleController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\characterkinematic\PxController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\characterkinematic\PxControllerBehavior.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\characterkinematic\PxControllerManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\characterkinematic\PxControllerObstacles.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\characterkinematic\PxExtended.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\collision\PxCollisionDefs.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\windows\PxWindowsDelayLoadHook.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxCollection.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxCoreUtilityTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxInsertionCallback.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxPhysXCommonConfig.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxProfileZone.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxRenderBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxRenderOutput.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxSerialFramework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxSerializer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxStringTable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxTolerancesScale.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\common\PxTypeInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxBVH33MidphaseDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxBVH34MidphaseDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxBVHDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\Pxc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxConvexMeshDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxCooking.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxCookingInternal.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxMidphaseDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxSDFDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxTetrahedronMeshDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cooking\PxTriangleMeshDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cudamanager\PxCudaContext.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cudamanager\PxCudaContextManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\cudamanager\PxCudaTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxBroadPhaseExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxCollectionExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxConstraintExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxConvexCoreExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxConvexMeshExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxCudaHelpersExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxCustomGeometryExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxCustomSceneQuerySystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxD6Joint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxD6JointCreate.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDefaultAllocator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDefaultCpuDispatcher.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDefaultErrorCallback.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDefaultProfiler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDefaultSimulationFilterShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDefaultStreams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDeformableSkinningExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDeformableSurfaceExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDeformableVolumeExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxDistanceJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxExtensionsAPI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxFixedJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxGearJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxGjkQueryExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxJointLimit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxMassProperties.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxParticleClothCooker.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxParticleExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxPrismaticJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRackAndPinionJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRaycastCCD.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRemeshingExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRepXSerializer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRepXSimpleType.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRevoluteJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRigidActorExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxRigidBodyExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSamplingExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSceneQueryExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSceneQuerySystemExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSerialization.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxShapeExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSimpleFactory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSmoothNormals.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSoftBodyExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxSphericalJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxStringTableExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxTetMakerExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxTetrahedronMeshAnalysisResult.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxTetrahedronMeshExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxTriangleMeshAnalysisResult.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\extensions\PxTriangleMeshExt.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\filebuf\PxFileBuf.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\neon\PxUnixNeonAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\neon\PxUnixNeonInlineAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\sse2\PxUnixSse2AoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\sse2\PxUnixSse2InlineAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\PxUnixAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\PxUnixFPU.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\PxUnixInlineAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\PxUnixIntrinsics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\PxUnixMathIntrinsics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\unix\PxUnixTrigConstants.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\windows\PxWindowsAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\windows\PxWindowsFPU.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\windows\PxWindowsInclude.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\windows\PxWindowsInlineAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\windows\PxWindowsIntrinsics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\windows\PxWindowsMathIntrinsics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\windows\PxWindowsTrigConstants.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxAlignedMalloc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxAlloca.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxAllocator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxAllocatorCallback.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxArray.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxAssert.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxAtomic.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxBasicTemplates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxBitAndData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxBitMap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxBitUtils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxBounds3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxBroadcast.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxConstructor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxErrorCallback.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxErrors.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxFlags.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxFoundation.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxFoundationConfig.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxFPU.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxHash.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxHashInternals.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxHashMap.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxHashSet.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxInlineAllocator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxInlineAoS.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxInlineArray.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxIntrinsics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxIO.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMat33.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMat34.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMat44.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMathIntrinsics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMathUtils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMemory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxMutex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxPhysicsVersion.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxPinnedArray.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxPlane.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxPool.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxPreprocessor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxProfiler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxQuat.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxSIMDHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxSimpleTypes.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxSList.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxSocket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxSort.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxSortInternals.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxStrideIterator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxString.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxSync.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxTempAllocator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxThread.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxTime.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxTransform.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxUnionCast.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxUserAllocated.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxUtilities.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVec2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVec3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVec4.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVecMath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVecMathAoSScalar.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVecMathAoSScalarInline.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVecMathSSE.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVecQuat.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\foundation\PxVecTransform.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxBoxGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxBVH.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxBVHBuildStrategy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxCapsuleGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxConvexCoreGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxConvexMesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxConvexMeshGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxCustomGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGeometryHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGeometryHit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGeometryInternal.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGeometryQuery.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGeometryQueryContext.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGeometryQueryFlags.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxGjkQuery.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxHeightField.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxHeightFieldDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxHeightFieldFlag.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxHeightFieldGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxHeightFieldSample.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxMeshQuery.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxMeshScale.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxParticleSystemGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxPlaneGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxReportCallback.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxSimpleTriangleMesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxSphereGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxTetrahedron.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxTetrahedronMesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxTetrahedronMeshGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxTriangle.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxTriangleMesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geometry\PxTriangleMeshGeometry.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geomutils\PxContactBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\geomutils\PxContactPoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\gpu\PxGpu.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\gpu\PxPhysicsGpu.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\omnipvd\PxOmniPvd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\pvd\PxPvd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\pvd\PxPvdSceneClient.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\pvd\PxPvdTransport.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\solver\PxSolverDefs.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\task\PxCpuDispatcher.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\task\PxTask.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\task\PxTaskManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\braking\PxVehicleBrakingFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\braking\PxVehicleBrakingParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\commands\PxVehicleCommandHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\commands\PxVehicleCommandParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\commands\PxVehicleCommandStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\drivetrain\PxVehicleDrivetrainComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\drivetrain\PxVehicleDrivetrainFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\drivetrain\PxVehicleDrivetrainHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\drivetrain\PxVehicleDrivetrainParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\drivetrain\PxVehicleDrivetrainStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxActor\PxVehiclePhysXActorComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxActor\PxVehiclePhysXActorFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxActor\PxVehiclePhysXActorHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxActor\PxVehiclePhysXActorStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxConstraints\PxVehiclePhysXConstraintStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\physxRoadGeometry\PxVehiclePhysXRoadGeometryState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\pvd\PxVehiclePvdComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\pvd\PxVehiclePvdFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\pvd\PxVehiclePvdHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\rigidBody\PxVehicleRigidBodyComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\rigidBody\PxVehicleRigidBodyFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\rigidBody\PxVehicleRigidBodyParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\rigidBody\PxVehicleRigidBodyStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\roadGeometry\PxVehicleRoadGeometryState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\steering\PxVehicleSteeringFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\steering\PxVehicleSteeringParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\suspension\PxVehicleSuspensionComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\suspension\PxVehicleSuspensionFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\suspension\PxVehicleSuspensionHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\suspension\PxVehicleSuspensionParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\suspension\PxVehicleSuspensionStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\tire\PxVehicleTireComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\tire\PxVehicleTireFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\tire\PxVehicleTireHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\tire\PxVehicleTireParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\tire\PxVehicleTireStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelComponents.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelHelpers.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelStates.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\PxVehicleAPI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\PxVehicleComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\PxVehicleComponentSequence.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\PxVehicleFunctions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\PxVehicleLimits.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\PxVehicleMaths.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\vehicle2\PxVehicleParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxActor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxAggregate.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxAnisotropy.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArrayConverter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArticulationFlag.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArticulationJointReducedCoordinate.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArticulationLink.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArticulationMimicJoint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArticulationReducedCoordinate.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArticulationTendon.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxArticulationTendonData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxBaseMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxBroadPhase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxClient.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxConeLimitedConstraint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxConfig.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxConstraint.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxConstraintDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxContact.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxContactModifyCallback.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableAttachment.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableBody.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableBodyFlag.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableElementFilter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableSkinning.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableSurface.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableSurfaceFlag.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableSurfaceMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableVolume.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableVolumeFlag.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeformableVolumeMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDeletionListener.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxDirectGPUAPI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxFEMMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxFEMParameter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxFEMSoftBodyMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxFiltering.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxForceMode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxImmediateMode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxIsosurfaceExtraction.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxLockedData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxNodeIndex.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxParticleBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxParticleGpu.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxParticleMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxParticleNeighborhoodProvider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxParticleSolverType.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxParticleSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxParticleSystemFlag.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxPBDMaterial.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxPBDParticleSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxPhysics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxPhysicsAPI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxPhysicsSerialization.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxPhysXConfig.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxPruningStructure.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxQueryFiltering.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxQueryReport.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxResidual.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxRigidActor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxRigidBody.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxRigidDynamic.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxRigidStatic.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSceneDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSceneLock.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSceneQueryDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSceneQuerySystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSDFBuilder.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxShape.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSimulationEventCallback.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSimulationStatistics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSmoothing.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSoftBody.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSoftBodyFlag.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxSparseGridParams.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="External\physX\physX\include\PxVisualizationParameter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -1266,6 +2370,66 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="External\Assimp\assimp-vc143-mt.lib" />
+    <Library Include="External\physX\flow\libs\debug\nvflow.lib" />
+    <Library Include="External\physX\flow\libs\debug\nvflow_rtx.lib" />
+    <Library Include="External\physX\flow\libs\debug\nvfloweditor.lib" />
+    <Library Include="External\physX\flow\libs\debug\nvflowext.lib" />
+    <Library Include="External\physX\flow\libs\debug\nvflowext_rtx.lib" />
+    <Library Include="External\physX\flow\libs\release\nvflow.lib" />
+    <Library Include="External\physX\flow\libs\release\nvflow_rtx.lib" />
+    <Library Include="External\physX\flow\libs\release\nvfloweditor.lib" />
+    <Library Include="External\physX\flow\libs\release\nvflowext.lib" />
+    <Library Include="External\physX\flow\libs\release\nvflowext_rtx.lib" />
+    <Library Include="External\physX\physX\libs\debug\LowLevel_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\LowLevelAABB_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\LowLevelDynamics_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysX_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXArticulationGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXBroadphaseGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXCharacterKinematic_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXCommon_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXCommonGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXCooking_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXCudaContextManager_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXExtensions_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXFoundation_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXGpu_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXNarrowphaseGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXPvdSDK_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXSimulationControllerGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXSolverGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXTask_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PhysXVehicle2_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\PVDRuntime_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\SceneQuery_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\SimulationController_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\SnippetRender_static_64.lib" />
+    <Library Include="External\physX\physX\libs\debug\SnippetUtils_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\LowLevel_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\LowLevelAABB_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\LowLevelDynamics_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysX_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXArticulationGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXBroadphaseGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXCharacterKinematic_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXCommon_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXCommonGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXCooking_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXCudaContextManager_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXExtensions_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXFoundation_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXGpu_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXNarrowphaseGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXPvdSDK_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXSimulationControllerGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXSolverGpu_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXTask_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PhysXVehicle2_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\PVDRuntime_64.lib" />
+    <Library Include="External\physX\physX\libs\release\SceneQuery_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\SimulationController_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\SnippetRender_static_64.lib" />
+    <Library Include="External\physX\physX\libs\release\SnippetUtils_static_64.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="External\Assimp\assimp-vc143-mt.dll" />
@@ -1312,5 +2476,358 @@
     </None>
     <None Include="Reference.txt" />
     <None Include="External\Imgui\LICENSE" />
+    <None Include="External\physX\flow\libs\debug\glfw3.dll" />
+    <None Include="External\physX\flow\libs\debug\nvflow.dll" />
+    <None Include="External\physX\flow\libs\debug\nvflow.exp" />
+    <None Include="External\physX\flow\libs\debug\nvflow.pdb" />
+    <None Include="External\physX\flow\libs\debug\nvflow_rtx.dll" />
+    <None Include="External\physX\flow\libs\debug\nvflow_rtx.exp" />
+    <None Include="External\physX\flow\libs\debug\nvflow_rtx.pdb" />
+    <None Include="External\physX\flow\libs\debug\nvfloweditor.exe" />
+    <None Include="External\physX\flow\libs\debug\nvfloweditor.exp" />
+    <None Include="External\physX\flow\libs\debug\nvfloweditor.pdb" />
+    <None Include="External\physX\flow\libs\debug\nvflowext.dll" />
+    <None Include="External\physX\flow\libs\debug\nvflowext.exp" />
+    <None Include="External\physX\flow\libs\debug\nvflowext.pdb" />
+    <None Include="External\physX\flow\libs\debug\nvflowext_rtx.dll" />
+    <None Include="External\physX\flow\libs\debug\nvflowext_rtx.exp" />
+    <None Include="External\physX\flow\libs\debug\nvflowext_rtx.pdb" />
+    <None Include="External\physX\flow\libs\debug\nvflowshadercompiler.exe" />
+    <None Include="External\physX\flow\libs\debug\nvflowshadercompiler.pdb" />
+    <None Include="External\physX\flow\libs\debug\nvflowshadertool.exe" />
+    <None Include="External\physX\flow\libs\debug\nvflowshadertool.pdb" />
+    <None Include="External\physX\flow\libs\debug\slang.dll" />
+    <None Include="External\physX\flow\libs\debug\slang-glslang.dll" />
+    <None Include="External\physX\flow\libs\release\glfw3.dll" />
+    <None Include="External\physX\flow\libs\release\nvflow.dll" />
+    <None Include="External\physX\flow\libs\release\nvflow.exp" />
+    <None Include="External\physX\flow\libs\release\nvflow.pdb" />
+    <None Include="External\physX\flow\libs\release\nvflow_rtx.dll" />
+    <None Include="External\physX\flow\libs\release\nvflow_rtx.exp" />
+    <None Include="External\physX\flow\libs\release\nvflow_rtx.pdb" />
+    <None Include="External\physX\flow\libs\release\nvfloweditor.exe" />
+    <None Include="External\physX\flow\libs\release\nvfloweditor.exp" />
+    <None Include="External\physX\flow\libs\release\nvfloweditor.pdb" />
+    <None Include="External\physX\flow\libs\release\nvflowext.dll" />
+    <None Include="External\physX\flow\libs\release\nvflowext.exp" />
+    <None Include="External\physX\flow\libs\release\nvflowext.pdb" />
+    <None Include="External\physX\flow\libs\release\nvflowext_rtx.dll" />
+    <None Include="External\physX\flow\libs\release\nvflowext_rtx.exp" />
+    <None Include="External\physX\flow\libs\release\nvflowext_rtx.pdb" />
+    <None Include="External\physX\flow\libs\release\nvflowshadercompiler.exe" />
+    <None Include="External\physX\flow\libs\release\nvflowshadercompiler.pdb" />
+    <None Include="External\physX\flow\libs\release\nvflowshadertool.exe" />
+    <None Include="External\physX\flow\libs\release\nvflowshadertool.pdb" />
+    <None Include="External\physX\flow\libs\release\slang.dll" />
+    <None Include="External\physX\flow\libs\release\slang-glslang.dll" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleTruck_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\freeglutd.dll" />
+    <None Include="External\physX\physX\libs\debug\LowLevel_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\LowLevelAABB_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\LowLevelDynamics_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysX_64.dll" />
+    <None Include="External\physX\physX\libs\debug\PhysX_64.exp" />
+    <None Include="External\physX\physX\libs\debug\PhysX_64.map" />
+    <None Include="External\physX\physX\libs\debug\PhysX_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXArticulationGpu_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXArticulationGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXBroadphaseGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXCharacterKinematic_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXCommon_64.dll" />
+    <None Include="External\physX\physX\libs\debug\PhysXCommon_64.exp" />
+    <None Include="External\physX\physX\libs\debug\PhysXCommon_64.map" />
+    <None Include="External\physX\physX\libs\debug\PhysXCommon_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXCommonGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXCooking_64.dll" />
+    <None Include="External\physX\physX\libs\debug\PhysXCooking_64.exp" />
+    <None Include="External\physX\physX\libs\debug\PhysXCooking_64.map" />
+    <None Include="External\physX\physX\libs\debug\PhysXCooking_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXCudaContextManager_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXExtensions_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXFoundation_64.dll" />
+    <None Include="External\physX\physX\libs\debug\PhysXFoundation_64.exp" />
+    <None Include="External\physX\physX\libs\debug\PhysXFoundation_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXGpu_64.dll" />
+    <None Include="External\physX\physX\libs\debug\PhysXGpu_64.exp" />
+    <None Include="External\physX\physX\libs\debug\PhysXGpu_64.map" />
+    <None Include="External\physX\physX\libs\debug\PhysXGpu_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXNarrowphaseGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXPvdSDK_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXSimulationControllerGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXSolverGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXTask_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PhysXVehicle2_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\PVDRuntime_64.dll" />
+    <None Include="External\physX\physX\libs\debug\PVDRuntime_64.exp" />
+    <None Include="External\physX\physX\libs\debug\PVDRuntime_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SceneQuery_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SimulationController_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetArticulationRC_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetArticulationRC_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetBVHStructure_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetBVHStructure_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetCCD_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetCCD_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetContactModification_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetContactModification_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetContactReport_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetContactReport_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetContactReportCCD_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetContactReportCCD_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetConvexMeshCreate_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetConvexMeshCreate_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomConvex_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomConvex_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomGeometry_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomGeometry_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomGeometryCollision_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomGeometryCollision_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomGeometryQueries_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomGeometryQueries_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomJoint_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomJoint_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomProfiler_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetCustomProfiler_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableMesh_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableMesh_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableSurface_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableSurface_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableSurfaceSkinning_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableSurfaceSkinning_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolume_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolume_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolumeAttachment_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolumeAttachment_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolumeKinematic_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolumeKinematic_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolumeSkinning_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDeformableVolumeSkinning_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDelayLoadHook_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDelayLoadHook_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetDirectGPUAPIArticulation_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetDirectGPUAPIArticulation_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetFixedTendon_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetFixedTendon_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetFrustumQuery_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetFrustumQuery_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetGearJoint_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetGearJoint_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetGeometryQuery_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetGeometryQuery_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetGyroscopic_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetGyroscopic_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetHelloGRB_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetHelloGRB_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetHelloWorld_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetHelloWorld_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetImmediateArticulation_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetImmediateArticulation_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetImmediateMode_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetImmediateMode_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetIsosurface_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetIsosurface_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetJoint_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetJoint_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetJointDrive_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetJointDrive_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetLoadCollection_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetLoadCollection_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetMassProperties_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetMassProperties_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetMBP_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetMBP_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetMimicJoint_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetMimicJoint_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetMultiPruners_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetMultiPruners_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetMultiThreading_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetMultiThreading_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetOmniPvd_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetOmniPvd_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetPathTracing_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetPathTracing_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBDCloth_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBDCloth_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBDInflatable_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBDInflatable_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBF_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBF_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBFMultiMat_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetPBFMultiMat_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetPointDistanceQuery_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetPointDistanceQuery_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetProfilerConverter_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetProfilerConverter_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetPrunerSerialization_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetPrunerSerialization_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetQuerySystemAllQueries_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetQuerySystemAllQueries_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetQuerySystemCustomCompound_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetQuerySystemCustomCompound_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetRackJoint_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetRackJoint_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetRBDirectGPUAPI_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetRBDirectGPUAPI_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetRender_static__64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetRender_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetSDF_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetSDF_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetSerialization_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetSerialization_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetSpatialTendon_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetSpatialTendon_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetSplitFetchResults_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetSplitFetchResults_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetSplitSim_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetSplitSim_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetStandaloneBroadphase_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetStandaloneBroadphase_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetStandaloneBVH_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetStandaloneBVH_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetStandaloneQuerySystem_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetStandaloneQuerySystem_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetStepper_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetStepper_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetToleranceScale_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetToleranceScale_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetTriangleMeshCreate_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetTriangleMeshCreate_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetTriggers_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetTriggers_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetUtils_static__64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetUtils_static_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleCustomSuspension_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleCustomSuspension_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleCustomTire_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleCustomTire_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleDirectDrive_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleDirectDrive_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleFourWheelDrive_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleFourWheelDrive_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleMultithreading_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleMultithreading_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleTankDrive_64.exe" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleTankDrive_64.pdb" />
+    <None Include="External\physX\physX\libs\debug\SnippetVehicleTruck_64.exe" />
+    <None Include="External\physX\physX\libs\release\freeglut.dll" />
+    <None Include="External\physX\physX\libs\release\LowLevel_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\LowLevelAABB_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\LowLevelDynamics_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysX_64.dll" />
+    <None Include="External\physX\physX\libs\release\PhysX_64.exp" />
+    <None Include="External\physX\physX\libs\release\PhysX_64.map" />
+    <None Include="External\physX\physX\libs\release\PhysX_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXArticulationGpu_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXArticulationGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXBroadphaseGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXCharacterKinematic_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXCommon_64.dll" />
+    <None Include="External\physX\physX\libs\release\PhysXCommon_64.exp" />
+    <None Include="External\physX\physX\libs\release\PhysXCommon_64.map" />
+    <None Include="External\physX\physX\libs\release\PhysXCommon_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXCommonGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXCooking_64.dll" />
+    <None Include="External\physX\physX\libs\release\PhysXCooking_64.exp" />
+    <None Include="External\physX\physX\libs\release\PhysXCooking_64.map" />
+    <None Include="External\physX\physX\libs\release\PhysXCooking_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXCudaContextManager_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXExtensions_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXFoundation_64.dll" />
+    <None Include="External\physX\physX\libs\release\PhysXFoundation_64.exp" />
+    <None Include="External\physX\physX\libs\release\PhysXFoundation_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXGpu_64.dll" />
+    <None Include="External\physX\physX\libs\release\PhysXGpu_64.exp" />
+    <None Include="External\physX\physX\libs\release\PhysXGpu_64.map" />
+    <None Include="External\physX\physX\libs\release\PhysXGpu_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXNarrowphaseGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXPvdSDK_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXSimulationControllerGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXSolverGpu_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXTask_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PhysXVehicle2_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\PVDRuntime_64.dll" />
+    <None Include="External\physX\physX\libs\release\PVDRuntime_64.exp" />
+    <None Include="External\physX\physX\libs\release\PVDRuntime_64.pdb" />
+    <None Include="External\physX\physX\libs\release\SceneQuery_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\SimulationController_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\SnippetArticulationRC_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetBVHStructure_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetCCD_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetContactModification_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetContactReport_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetContactReportCCD_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetConvexMeshCreate_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetCustomConvex_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetCustomGeometry_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetCustomGeometryCollision_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetCustomGeometryQueries_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetCustomJoint_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetCustomProfiler_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDeformableMesh_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDeformableSurface_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDeformableSurfaceSkinning_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDeformableVolume_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDeformableVolumeAttachment_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDeformableVolumeKinematic_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDeformableVolumeSkinning_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDelayLoadHook_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetDirectGPUAPIArticulation_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetFixedTendon_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetFrustumQuery_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetGearJoint_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetGeometryQuery_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetGyroscopic_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetHelloGRB_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetHelloWorld_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetImmediateArticulation_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetImmediateMode_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetIsosurface_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetJoint_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetJointDrive_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetLoadCollection_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetMassProperties_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetMBP_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetMimicJoint_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetMultiPruners_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetMultiThreading_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetOmniPvd_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetPathTracing_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetPBDCloth_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetPBDInflatable_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetPBF_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetPBFMultiMat_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetPointDistanceQuery_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetProfilerConverter_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetPrunerSerialization_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetQuerySystemAllQueries_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetQuerySystemCustomCompound_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetRackJoint_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetRBDirectGPUAPI_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetRender_static__64.pdb" />
+    <None Include="External\physX\physX\libs\release\SnippetRender_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\SnippetSDF_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetSerialization_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetSpatialTendon_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetSplitFetchResults_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetSplitSim_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetStandaloneBroadphase_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetStandaloneBVH_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetStandaloneQuerySystem_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetStepper_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetToleranceScale_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetTriangleMeshCreate_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetTriggers_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetUtils_static__64.pdb" />
+    <None Include="External\physX\physX\libs\release\SnippetUtils_static_64.pdb" />
+    <None Include="External\physX\physX\libs\release\SnippetVehicleCustomSuspension_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetVehicleCustomTire_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetVehicleDirectDrive_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetVehicleFourWheelDrive_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetVehicleMultithreading_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetVehicleTankDrive_64.exe" />
+    <None Include="External\physX\physX\libs\release\SnippetVehicleTruck_64.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="External\physX\Readme.txt" />
   </ItemGroup>
 </Project>
