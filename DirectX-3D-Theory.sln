@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectX-3D-Theory", "Direct
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "DumpImageOpen", "Utility\DumpImageOpen\DumpImageOpen.pyproj", "{A62C2DC0-0307-49BC-84BD-4C9A3F2E97AE}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "StartSetting", "Utility\StartSetting\StartSetting.pyproj", "{7003BF60-4349-4925-AE80-A18FCBA6B0CC}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PackageProject", "Utility\PackageProject\PackageProject.pyproj", "{C208E7E5-BC01-488B-B9EC-624D6C0EF22F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +39,18 @@ Global
 		{A62C2DC0-0307-49BC-84BD-4C9A3F2E97AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A62C2DC0-0307-49BC-84BD-4C9A3F2E97AE}.Release|x64.ActiveCfg = Release|Any CPU
 		{A62C2DC0-0307-49BC-84BD-4C9A3F2E97AE}.Release|x86.ActiveCfg = Release|Any CPU
+		{7003BF60-4349-4925-AE80-A18FCBA6B0CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7003BF60-4349-4925-AE80-A18FCBA6B0CC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7003BF60-4349-4925-AE80-A18FCBA6B0CC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7003BF60-4349-4925-AE80-A18FCBA6B0CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7003BF60-4349-4925-AE80-A18FCBA6B0CC}.Release|x64.ActiveCfg = Release|Any CPU
+		{7003BF60-4349-4925-AE80-A18FCBA6B0CC}.Release|x86.ActiveCfg = Release|Any CPU
+		{C208E7E5-BC01-488B-B9EC-624D6C0EF22F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C208E7E5-BC01-488B-B9EC-624D6C0EF22F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C208E7E5-BC01-488B-B9EC-624D6C0EF22F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C208E7E5-BC01-488B-B9EC-624D6C0EF22F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C208E7E5-BC01-488B-B9EC-624D6C0EF22F}.Release|x64.ActiveCfg = Release|Any CPU
+		{C208E7E5-BC01-488B-B9EC-624D6C0EF22F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
