@@ -42,26 +42,37 @@
 #### 1. **Windows 운영체제**  
    - Windows 7 SP1 이상 권장
 
-#### 2. **DirectX Runtime (June 2010)**
+### 2. **DirectX Runtime (June 2010)**
    - DirectX 관련 DLL이 프로그램 종속성으로 필요합니다.
    - 아래 링크에서 다운로드 후 설치하세요.  
      https://www.microsoft.com/ko-kr/download/details.aspx?id=35
 
-##### 3. **Visual Studio 2022 (또는 이하 버전)**
+#### 3. **Visual Studio 2022 (또는 이하 버전)**
    - C++ / Python 프로젝트 빌드를 위해 필요합니다.
    - 아래 링크에서 Community, Professional, Enterprise 중 하나를 선택해 설치하세요.  
      https://visualstudio.microsoft.com/ko/downloads/
+
+#### 4. **Python 설치 (3.10 권장)**
+   - Python 스크립트를 실행하려면 Python이 필요합니다.
+   - Python 3.10 버전을 권장하며, 공식 사이트에서 설치 가능합니다.
+     
+     https://www.python.org/downloads/release/python-3100/
 
 ## 소스 코드 다운로드
 ```bash
 # GitHub 리포지토리 클론
 git clone https://github.com/Red-Opera/DirectX_GameEngine.git
-cd 리포지토리명
+cd DirectX_3D_Theory
+
+Visual Studio 실행 → StartSetting 프로젝트를 시작 프로젝트로 설정 → 실행
+DirectX-3D-Theory 프로젝트를 시작 프로젝트로 설정 → 빌드 및 실행
 
 # 또는 ZIP 파일 다운로드
 # 1. GitHub 페이지에서 초록색 "Code" 버튼 클릭
 # 2. "Download ZIP" 클릭하여 압축 해제
 # 3. 압축 해제한 폴더로 이동
+# 4. Visual Studio 실행 → StartSetting 프로젝트를 시작 프로젝트로 설정 → 실행
+# 5. DirectX-3D-Theory 프로젝트를 시작 프로젝트로 설정 → 빌드 및 실행
 ```
 ## 빌드 구성 매트릭스 (Build Configuration Matrix)
 |        | Debug | Release |
