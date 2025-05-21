@@ -186,6 +186,8 @@
     <ClInclude Include="Core\Exception\ModelException.h" />
     <ClInclude Include="Core\Exception\RenderGraphCompileException.h" />
     <ClInclude Include="Core\Object\Object.h" />
+    <ClInclude Include="Core\Component\PhysicsComponent.h" />
+    <ClInclude Include="Core\Component\Physics\PhysicsSystem.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\OM\Stencil.h" />
@@ -1153,6 +1155,8 @@
     <ClCompile Include="Core\Exception\ModelException.cpp" />
     <ClCompile Include="Core\Exception\RenderGraphCompileException.cpp" />
     <ClCompile Include="Core\Object\Object.cpp" />
+    <ClCompile Include="Core\Component\PhysicsComponent.cpp" />
+    <ClCompile Include="Core\Component\Physics\PhysicsSystem.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\ColorBlend.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\OM\DepthStencil.cpp" />
     <ClCompile Include="Core\RenderingPipeline\Pipeline\Rasterizer\Rasterizer.cpp" />

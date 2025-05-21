@@ -4,6 +4,7 @@
 #include "Camera/Camera.h"
 #include "Core/Scene/EmptyScene.h"
 #include "Core/Scene/SponzaScene.h"
+#include "Core/Component/Physics/PhysicsSystem.h"
 #include "Engine/UI/FolderView.h"
 #include "Engine/UI/Inspector.h"
 #include "Engine/UI/MenuBar.h"
@@ -26,6 +27,9 @@ App::App(const std::string& commandLine)
 	Engine::Inspector::GetInstance();
 	Engine::ObjectGizmo::GetInstance();
 
+	// PhysX 시스템 초기화
+	PhysicsSystem::GetInstance().Initialize();
+
 	currentScene = SponzaScene::Create("Sponza");
 
 	currentScene->Initialize();
@@ -40,6 +44,8 @@ App::App(const std::string& commandLine)
 
 App::~App()
 {
+	// PhysX 시스템 정리
+	PhysicsSystem::GetInstance().Shutdown();
 }
 
 int App::Run()
@@ -74,6 +80,9 @@ void App::DoFrame(float deltaTime)
 	Window::ShowGameFrame(wnd.GetHWnd());
 
 	wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
+
+	// 물리 시스템 업데이트
+	PhysicsSystem::GetInstance().Update(deltaTime);
 
 	currentScene->Update();
 
@@ -173,6 +182,7 @@ void App::CreateSimulationWindow() noexcept
 		ImGui::SliderFloat("Speed", &playSpeed, 0.0f, 6.0f, "%.4f", ImGuiSliderFlags_Logarithmic);
 		ImGui::Text("Status: %s", wnd.keyBoard.IsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");
 	}
+
 	ImGui::End();
 }
 

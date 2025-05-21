@@ -4,6 +4,7 @@
 
 #include "Core/Component/Component.h"
 #include "Core/Component/TransformComponent.h"
+#include "Core/Component/PhysicsComponent.h"
 
 #include <unordered_map>
 #include <memory>
@@ -17,7 +18,8 @@ class Object : public EngineLoop, public std::enable_shared_from_this<Object>
 public:
 	Object(std::string name) : name(name)
     {  
-
+        // 기본적으로 물리 컴포넌트는 비활성화 상태로 시작
+        hasPhysics = false;
     }
 
 	static std::shared_ptr<Object> Create(std::string name)
@@ -132,6 +134,16 @@ public:
 	void SetActive(bool isActive) { this->isActive = isActive; }
 	bool GetActive() const { return isActive; }
 
+    // 물리 속성 활성화 메서드 추가
+    void EnablePhysics(bool useGravity = true)
+    {
+        hasPhysics = true;
+        this->useGravity = useGravity;
+    }
+
+    bool HasPhysics() const { return hasPhysics; }
+    bool UsesGravity() const { return useGravity; }
+
 	void Initialize() override;
 	void BeforeFrame() override;
 	void Start() override;
@@ -155,4 +167,6 @@ protected:
 
 	std::string name;
 	bool isActive = true;
+    bool hasPhysics = false;  // 물리 시뮬레이션 적용 여부
+    bool useGravity = true;   // 중력 적용 여부
 };

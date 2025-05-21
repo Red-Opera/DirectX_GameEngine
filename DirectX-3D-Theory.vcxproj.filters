@@ -1806,6 +1806,12 @@
     <ClInclude Include="External\physX\physX\include\PxVisualizationParameter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Component\PhysicsComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Component\Physics\PhysicsSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -2262,6 +2268,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Engine\UI\ObjectGizmo.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Component\PhysicsComponent.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Component\Physics\PhysicsSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

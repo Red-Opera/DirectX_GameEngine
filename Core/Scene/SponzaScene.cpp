@@ -2,6 +2,7 @@
 #include "SponzaScene.h"
 
 #include "Core/Camera/Camera.h"
+#include "Core/Component/PhysicsComponent.h"
 #include "Core/Draw/Light/PointLight.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/Object/ColorCubeObject.h"
@@ -44,6 +45,23 @@ void SponzaScene::Initialize()
 
 	std::shared_ptr<Object> table = AddObject(Object::Create("White Cube"));
 	table->AddComponent<ColorCubeObject>();
+    
+    // 중력이 작용하는 물리 큐브 생성 
+    std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
+    physicsCube->AddComponent<ColorCubeObject>();
+    physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 20.0f, 0.0f);
+    physicsCube->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
+    
+    // 물리 컴포넌트 추가 (질량 10, 동적 객체)
+    physicsCube->AddComponent<PhysicsComponent>(10.0f, true);
+    
+    // 바닥 평면 생성 (정적 물리 객체)
+    std::shared_ptr<Object> ground = AddObject(Object::Create("Ground Plane"));
+    ground->GetComponent<TransformComponent>()->SetPosition(0.0f, 0.0f, 0.0f);
+    ground->GetComponent<TransformComponent>()->SetScale(50.0f, 0.1f, 50.0f);
+    
+    // 정적 물리 컴포넌트 추가 (질량 0, 정적 객체)
+    ground->AddComponent<PhysicsComponent>(0.0f, false);
 
 	std::shared_ptr<Object> pointLight = AddObject(Object::Create("PointLight"));
 	std::shared_ptr<PointLight> pointComponent = pointLight->AddComponent<PointLight>();
