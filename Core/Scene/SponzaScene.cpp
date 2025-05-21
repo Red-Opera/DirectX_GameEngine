@@ -49,7 +49,7 @@ void SponzaScene::Initialize()
     // 중력이 작용하는 물리 큐브 생성 
     std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
     physicsCube->AddComponent<ColorCubeObject>();
-    physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 20.0f, 0.0f);
+    physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 2000.0f, 0.0f);
     physicsCube->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
     
     // 물리 컴포넌트 추가 (질량 10, 동적 객체)
@@ -57,8 +57,9 @@ void SponzaScene::Initialize()
     
     // 바닥 평면 생성 (정적 물리 객체)
     std::shared_ptr<Object> ground = AddObject(Object::Create("Ground Plane"));
+	ground->AddComponent<ColorCubeObject>();
     ground->GetComponent<TransformComponent>()->SetPosition(0.0f, 0.0f, 0.0f);
-    ground->GetComponent<TransformComponent>()->SetScale(50.0f, 0.1f, 50.0f);
+    ground->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
     
     // 정적 물리 컴포넌트 추가 (질량 0, 정적 객체)
     ground->AddComponent<PhysicsComponent>(0.0f, false);

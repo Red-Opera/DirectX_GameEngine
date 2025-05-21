@@ -54,9 +54,9 @@ void PhysicsComponent::Initialize()
         actor = staticActor;
     }
     
-    // 기본 박스 형태 콜라이더 추가
+    // 기본 박스 형태 콜라이더 추가 (0.5f로 변경하여 1.0 크기의 박스 생성)
     physx::PxShape* shape = physics->createShape(
-        physx::PxBoxGeometry(1.0f, 1.0f, 1.0f),
+        physx::PxBoxGeometry(0.5f, 0.5f, 0.5f),  // 절반 크기로 변경
         *physics->createMaterial(0.5f, 0.5f, 0.6f)
     );
     
@@ -198,13 +198,13 @@ void PhysicsComponent::UpdateColliderSize()
         actor->detachShape(*shapes[i]);
     }
     
-    // 새 크기로 Shape 생성
+    // 새 크기로 Shape 생성 (half-extent 적용을 위해 스케일 값을 2로 나눔)
     physx::PxPhysics* physics = PhysicsSystem::GetInstance().GetPhysics();
     physx::PxShape* shape = physics->createShape(
         physx::PxBoxGeometry(
-            transform->GetScale().x,
-            transform->GetScale().y,
-            transform->GetScale().z
+            transform->GetScale().x * 0.5f,  // 절반 크기로 변경
+            transform->GetScale().y * 0.5f,  // 절반 크기로 변경
+            transform->GetScale().z * 0.5f   // 절반 크기로 변경
         ),
         *physics->createMaterial(0.5f, 0.5f, 0.6f)
     );
