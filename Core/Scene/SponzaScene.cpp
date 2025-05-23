@@ -43,9 +43,9 @@ void SponzaScene::Initialize()
 	chair->GetComponent<TransformComponent>()->SetRotation(Math::PI / 2.0f, -Math::PI / 2.0f, 0.0f);
 	chair->GetComponent<TransformComponent>()->SetPosition(-60.0f, 6.5f, 1.5f);
 
-	std::shared_ptr<Object> table = AddObject(Object::Create("White Cube"));
-	table->AddComponent<ColorCubeObject>();
-    
+	std::shared_ptr<Object> cube = AddObject(Object::Create("White Cube"));
+	cube->AddComponent<ColorCubeObject>();
+
     // 중력이 작용하는 물리 큐브 생성 
     std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
     physicsCube->AddComponent<ColorCubeObject>();
