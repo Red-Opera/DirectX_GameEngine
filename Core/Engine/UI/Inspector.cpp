@@ -91,12 +91,12 @@ namespace Engine
                 }
 
                 // 스케일 정보
-                Scale scale = selectObject->transform->GetScale();
+                Scale scale = selectObject->transform->GetLocalScale();
                 float scl[3] = { scale.x, scale.y, scale.z };
 
                 if (ImGui::DragFloat3("Scale", scl, 0.1f))
                 {
-                    selectObject->transform->SetScale(scl[0], scl[1], scl[2]);
+                    selectObject->transform->SetLocalScale(scl[0], scl[1], scl[2]);
                     isNotMatch = true;
                 }
 
