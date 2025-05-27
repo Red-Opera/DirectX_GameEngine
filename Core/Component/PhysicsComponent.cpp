@@ -4,6 +4,9 @@
 
 #include "Core/Object/Object.h"
 
+// ì „ì—­ ì¤‘ë ¥ ì´ˆê¸°í™”
+physx::PxVec3 PhysicsComponent::globalGravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+
 PhysicsComponent::PhysicsComponent(std::shared_ptr<class Object> object, float mass, bool isDynamic)
     : Component(object), mass(mass), isDynamic(isDynamic)
 {
@@ -20,7 +23,7 @@ PhysicsComponent::~PhysicsComponent()
 
 void PhysicsComponent::Initialize()
 {
-    // PhysX ¹°¸® ¾×ÅÍ »ý¼º
+    // PhysX ì•¡í„° ìƒì„± ë¡œì§
     physx::PxPhysics* physics = PhysicsSystem::GetInstance().GetPhysics();
     physx::PxScene* scene = PhysicsSystem::GetInstance().GetScene();
 
@@ -28,42 +31,46 @@ void PhysicsComponent::Initialize()
     
     if (isDynamic)
     {
-        // µ¿Àû °­Ã¼ »ý¼º
+        // ë™ì  ê°ì²´ ìƒì„±
         physx::PxRigidDynamic* dynamicActor = physics->createRigidDynamic(
-            physx::PxTransform(physx::PxVec3(position.x,position.y, position.z))
+            physx::PxTransform(physx::PxVec3(position.x, position.y, position.z))
         );
         
-        // Áß·Â ¼³Á¤
+        // ì¤‘ë ¥ ì„¤ì •
         dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
         
-        // Áú·® ¼³Á¤
+        // ì§ˆëŸ‰ ì„¤ì •
         physx::PxRigidBodyExt::setMassAndUpdateInertia(*dynamicActor, mass);
+        
+        // ê³µê¸° ì €í•­ ì„¤ì •
+        dynamicActor->setLinearDamping(linearDamping);
+        dynamicActor->setAngularDamping(angularDamping);
         
         actor = dynamicActor;
     }
-
     else
     {
-        // Á¤Àû °­Ã¼ »ý¼º
+        // ì •ì  ê°ì²´ ìƒì„±
         physx::PxRigidStatic* staticActor = physics->createRigidStatic(
-            physx::PxTransform(
-                physx::PxVec3(position.x, position.y, position.z)
-            )
+            physx::PxTransform(physx::PxVec3(position.x, position.y, position.z))
         );
         
         actor = staticActor;
     }
     
-    // ±âº» ¹Ú½º ÇüÅÂ ÄÝ¶óÀÌ´õ Ãß°¡ (0.5f·Î º¯°æÇÏ¿© 1.0 Å©±âÀÇ ¹Ú½º »ý¼º)
+    // ê¸°ë³¸ ë°•ìŠ¤ ëª¨ì–‘ ì½œë¼ì´ë” ì¶”ê°€
     physx::PxShape* shape = physics->createShape(
-        physx::PxBoxGeometry(0.5f, 0.5f, 0.5f),  // Àý¹Ý Å©±â·Î º¯°æ
-        *physics->createMaterial(0.5f, 0.5f, 0.6f)
+        physx::PxBoxGeometry(0.5f, 0.5f, 0.5f),
+        *physics->createMaterial(staticFriction, dynamicFriction, restitution)
     );
     
     actor->attachShape(*shape);
     shape->release();
     
-    // ¹°¸® ¼¼°è¿¡ ¾×ÅÍ Ãß°¡
+    // ì œì•½ ì¡°ê±´ ì ìš©
+    UpdateConstraints();
+    
+    // ë¬¼ë¦¬ ì”¬ì— ì•¡í„° ì¶”ê°€
     scene->addActor(*actor);
 }
 
@@ -78,50 +85,50 @@ void PhysicsComponent::Update()
     {
         physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
         
-        // ÀÎ½ºÆåÅÍ³ª ±âÁî¸ð¿¡¼­ º¯°æµÈ Æ®·£½ºÆû °ªÀ» °¨ÁöÇÏ¿© ¹°¸® °´Ã¼¿¡ Àû¿ë
-        // lastTransformPositionÀ» »ç¿ëÇØ TransformÀÌ ¿ÜºÎ¿¡¼­ º¯°æµÇ¾ú´ÂÁö È®ÀÎ
+        // ï¿½Î½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ ï¿½ï¿½ï¿½ï¿½ð¿¡¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        // lastTransformPositionï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Transformï¿½ï¿½ ï¿½ÜºÎ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         if (lastTransformPosition != transform->GetPosition() ||
             lastTransformRotation != transform->GetRotation() ||
             lastTransformScale != transform->GetScale())
         {
-            // Transform -> PhysX µ¿±âÈ­
+            // Transform -> PhysX ï¿½ï¿½ï¿½ï¿½È­
             physx::PxTransform pxTransform(
                 physx::PxVec3(position.x, position.y, position.z)
             );
             
-            // È¸Àü ÄõÅÍ´Ï¾ðÀ¸·Î º¯È¯ (±¸Çö ÇÊ¿ä)
+            // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½Í´Ï¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½)
             // pxTransform.q = ConvertToQuaternion(transform->GetRotation());
             
             dynamicActor->setGlobalPose(pxTransform);
             
-            // ½ºÄÉÀÏ º¯°æ ½Ã ÄÝ¶óÀÌ´õ Å©±â Á¶Á¤
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (lastTransformScale != transform->GetScale())
             {
                 UpdateColliderSize();
             }
             
-            // ÃÖ±Ù Transform °ª ÀúÀå
+            // ï¿½Ö±ï¿½ Transform ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             lastTransformPosition = transform->GetPosition();
             lastTransformRotation = transform->GetRotation();
             lastTransformScale = transform->GetScale();
             
-            // »ç¿ëÀÚ°¡ Á÷Á¢ ¿òÁ÷ÀÎ °æ¿ì ¼Óµµ¸¦ 0À¸·Î ¸®¼ÂÇÏ¿© ´õ ÀÚ¿¬½º·´°Ô ¸¸µê
+            // ï¿½ï¿½ï¿½ï¿½Ú°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Óµï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             dynamicActor->setLinearVelocity(physx::PxVec3(0.0f, 0.0f, 0.0f));
             dynamicActor->setAngularVelocity(physx::PxVec3(0.0f, 0.0f, 0.0f));
         }
 
         else
         {
-            // PhysX -> Transform µ¿±âÈ­
+            // PhysX -> Transform ï¿½ï¿½ï¿½ï¿½È­
             physx::PxTransform pose = dynamicActor->getGlobalPose();
             
-            // ¹°¸® ¿£Áø¿¡¼­ÀÇ À§Ä¡¸¦ Transform¿¡ Àû¿ë
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Transformï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             transform->SetPosition(pose.p.x, pose.p.y, pose.p.z);
             
-            // È¸Àüµµ ¾÷µ¥ÀÌÆ® (ÄõÅÍ´Ï¾ð¿¡¼­ ¿ÀÀÏ·¯°¢À¸·Î º¯È¯ ÇÊ¿ä)
+            // È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½ï¿½ï¿½Í´Ï¾ð¿¡¼ï¿½ ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½Ê¿ï¿½)
             // transform->SetRotation(...);
             
-            // ÃÖ±Ù Transform °ª ¾÷µ¥ÀÌÆ®
+            // ï¿½Ö±ï¿½ Transform ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
             lastTransformPosition = transform->GetPosition();
             lastTransformRotation = transform->GetRotation();
         }
@@ -129,7 +136,7 @@ void PhysicsComponent::Update()
 
     else
     {
-        // Á¤Àû °´Ã¼ÀÎ °æ¿ì Transform -> PhysX¸¸ µ¿±âÈ­ (ÇÑ ¹ø¸¸)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ Transform -> PhysXï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­ (ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         if (lastTransformPosition != transform->GetPosition() ||
             lastTransformRotation != transform->GetRotation() ||
             lastTransformScale != transform->GetScale())
@@ -156,7 +163,7 @@ void PhysicsComponent::Update()
 
 void PhysicsComponent::Finalize()
 {
-    // ÇÊ¿äÇÑ Á¤¸® ÀÛ¾÷ ¼öÇà
+    // ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 }
 
 void PhysicsComponent::SetGravity(bool enable)
@@ -170,6 +177,23 @@ void PhysicsComponent::SetGravity(bool enable)
     }
 }
 
+void PhysicsComponent::SetGlobalGravity(float x, float y, float z)
+{
+    globalGravity = physx::PxVec3(x, y, z);
+    
+    // ëª¨ë“  ì”¬ì˜ ì¤‘ë ¥ ì—…ë°ì´íŠ¸
+    physx::PxScene* scene = PhysicsSystem::GetInstance().GetScene();
+    if (scene)
+    {
+        scene->setGravity(globalGravity);
+    }
+}
+
+physx::PxVec3 PhysicsComponent::GetGlobalGravity()
+{
+    return globalGravity;
+}
+
 void PhysicsComponent::SetMass(float newMass)
 {
     mass = newMass;
@@ -181,6 +205,88 @@ void PhysicsComponent::SetMass(float newMass)
     }
 }
 
+void PhysicsComponent::SetMaterial(float staticFric, float dynamicFric, float rest)
+{
+    staticFriction = staticFric;
+    dynamicFriction = dynamicFric;
+    restitution = rest;
+    
+    if (actor)
+    {
+        // ê¸°ì¡´ Shapeë“¤ì˜ ìž¬ì§ˆ ì—…ë°ì´íŠ¸
+        uint32_t numShapes = actor->getNbShapes();
+        physx::PxShape* shapes[8];
+        actor->getShapes(shapes, numShapes);
+        
+        physx::PxPhysics* physics = PhysicsSystem::GetInstance().GetPhysics();
+        physx::PxMaterial* newMaterial = physics->createMaterial(staticFriction, dynamicFriction, restitution);
+        
+        for (uint32_t i = 0; i < numShapes; i++)
+        {
+            shapes[i]->setMaterials(&newMaterial, 1);
+        }
+    }
+}
+
+void PhysicsComponent::SetLinearDamping(float damping)
+{
+    linearDamping = damping;
+    
+    if (actor && isDynamic)
+    {
+        physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
+        dynamicActor->setLinearDamping(linearDamping);
+    }
+}
+
+void PhysicsComponent::SetAngularDamping(float damping)
+{
+    angularDamping = damping;
+    
+    if (actor && isDynamic)
+    {
+        physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
+        dynamicActor->setAngularDamping(angularDamping);
+    }
+}
+
+void PhysicsComponent::SetFreezePosition(bool x, bool y, bool z)
+{
+    freezePositionX = x;
+    freezePositionY = y;
+    freezePositionZ = z;
+    
+    UpdateConstraints();
+}
+
+void PhysicsComponent::SetFreezeRotation(bool x, bool y, bool z)
+{
+    freezeRotationX = x;
+    freezeRotationY = y;
+    freezeRotationZ = z;
+    
+    UpdateConstraints();
+}
+
+void PhysicsComponent::UpdateConstraints()
+{
+    if (!actor || !isDynamic)
+        return;
+    
+    physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
+    
+    physx::PxRigidDynamicLockFlags lockFlags = physx::PxRigidDynamicLockFlag::Enum(0);
+    
+    if (freezePositionX) lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X;
+    if (freezePositionY) lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y;
+    if (freezePositionZ) lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z;
+    if (freezeRotationX) lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X;
+    if (freezeRotationY) lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y;
+    if (freezeRotationZ) lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z;
+    
+    dynamicActor->setRigidDynamicLockFlags(lockFlags);
+}
+
 std::string PhysicsComponent::GetClassName() const
 {
     return GetStaticClassName();
@@ -188,9 +294,9 @@ std::string PhysicsComponent::GetClassName() const
 
 void PhysicsComponent::UpdateColliderSize()
 {
-    // ±âÁ¸ Shape Á¦°Å
+    // ï¿½ï¿½ï¿½ï¿½ Shape ï¿½ï¿½ï¿½ï¿½
     uint32_t numShapes = actor->getNbShapes();
-    physx::PxShape* shapes[8];                  // ÃÖ´ë 8°³ Shape °¡Á¤
+    physx::PxShape* shapes[8];                  // ï¿½Ö´ï¿½ 8ï¿½ï¿½ Shape ï¿½ï¿½ï¿½ï¿½
     actor->getShapes(shapes, numShapes);
     
     for (uint32_t i = 0; i < numShapes; i++)
@@ -198,13 +304,13 @@ void PhysicsComponent::UpdateColliderSize()
         actor->detachShape(*shapes[i]);
     }
     
-    // »õ Å©±â·Î Shape »ý¼º (half-extent Àû¿ëÀ» À§ÇØ ½ºÄÉÀÏ °ªÀ» 2·Î ³ª´®)
+    // ï¿½ï¿½ Å©ï¿½ï¿½ï¿½ Shape ï¿½ï¿½ï¿½ï¿½ (half-extent ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
     physx::PxPhysics* physics = PhysicsSystem::GetInstance().GetPhysics();
     physx::PxShape* shape = physics->createShape(
         physx::PxBoxGeometry(
-            transform->GetScale().x * 0.5f,  // Àý¹Ý Å©±â·Î º¯°æ
-            transform->GetScale().y * 0.5f,  // Àý¹Ý Å©±â·Î º¯°æ
-            transform->GetScale().z * 0.5f   // Àý¹Ý Å©±â·Î º¯°æ
+            transform->GetScale().x * 0.5f,  // ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            transform->GetScale().y * 0.5f,  // ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            transform->GetScale().z * 0.5f   // ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         ),
         *physics->createMaterial(0.5f, 0.5f, 0.6f)
     );
