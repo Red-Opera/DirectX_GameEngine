@@ -21,3 +21,22 @@ std::shared_ptr<class Object> Component::GetObject()
 {
 	return object;
 }
+
+void Component::SetEnable(bool isEnable)
+{
+    if (this->isActive == isEnable)
+        return;
+        
+    bool wasActive = this->isActive;
+    this->isActive = isEnable;
+    
+    // 상태가 실제로 변경되었을 때만 이벤트 호출
+    if (wasActive != isEnable)
+    {
+        if (isEnable)
+            OnEnable();
+
+        else
+            OnDisable();
+    }
+}

@@ -31,7 +31,7 @@ public:
 	void SetObject(std::shared_ptr<class Object> object);
 	std::shared_ptr<class Object> GetObject();
 
-	void SetEnable(bool isActive) { this->isActive = isActive; }
+	void SetEnable(bool isEnable);
 	bool GetEnable() const { return isActive; }
 
 	virtual std::string GetClassName() const { return "Component"; }	// 객체의 컴포넌트 이름을 반환하는 함수

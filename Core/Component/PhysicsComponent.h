@@ -13,29 +13,29 @@ public:
     virtual void Update() override;
     virtual void Finalize() override;
 
-    // 중력 관련
+    // 중력 관련 설정
     void SetGravity(bool enable);
     bool IsGravityEnabled() const { return useGravity; }
     static void SetGlobalGravity(float x, float y, float z);
     static physx::PxVec3 GetGlobalGravity();
     
-    // 질량 관련
+    // 질량 설정
     void SetMass(float mass);
     float GetMass() const { return mass; }
     
-    // 물질 속성
+    // 물질 속성 설정 (마찰력, 반발력)
     void SetMaterial(float staticFriction, float dynamicFriction, float restitution);
     float GetStaticFriction() const { return staticFriction; }
     float GetDynamicFriction() const { return dynamicFriction; }
     float GetRestitution() const { return restitution; }
     
-    // 공기 저항
+    // 공기 저항 설정
     void SetLinearDamping(float damping);
     void SetAngularDamping(float damping);
     float GetLinearDamping() const { return linearDamping; }
     float GetAngularDamping() const { return angularDamping; }
     
-    // 제약 조건
+    // 위치/회전 제약 조건 설정
     void SetFreezePosition(bool x, bool y, bool z);
     void SetFreezeRotation(bool x, bool y, bool z);
     bool IsPositionXFrozen() const { return freezePositionX; }
@@ -45,6 +45,7 @@ public:
     bool IsRotationYFrozen() const { return freezeRotationY; }
     bool IsRotationZFrozen() const { return freezeRotationZ; }
     
+    // 콜라이더 크기와 제약 조건 업데이트
     void UpdateColliderSize();
     void UpdateConstraints();
 
@@ -53,21 +54,25 @@ public:
 
     physx::PxRigidActor* GetActor() const { return actor; }
 
+    // 컴포넌트 활성화/비활성화 처리
+    virtual void OnEnable() override;
+    virtual void OnDisable() override;
+
 private:
-    float mass = 1.0f;
-    bool isDynamic = true;
-    bool useGravity = true;
+    float mass = 1.0f;          // 물체의 질량
+    bool isDynamic = true;      // 동적 물체 여부
+    bool useGravity = true;     // 중력 적용 여부
     
     // 물질 속성
-    float staticFriction = 0.5f;
-    float dynamicFriction = 0.5f;
-    float restitution = 0.6f;
+    float staticFriction = 0.5f;    // 정적 마찰력
+    float dynamicFriction = 0.5f;   // 동적 마찰력
+    float restitution = 0.6f;       // 반발력
     
     // 공기 저항
-    float linearDamping = 0.0f;
-    float angularDamping = 0.05f;
+    float linearDamping = 0.0f;     // 선형 공기 저항
+    float angularDamping = 0.05f;   // 각도 공기 저항
     
-    // 제약 조건
+    // 제약 조건 (축별 고정 여부)
     bool freezePositionX = false;
     bool freezePositionY = false;
     bool freezePositionZ = false;
@@ -75,12 +80,13 @@ private:
     bool freezeRotationY = false;
     bool freezeRotationZ = false;
     
-    // 전역 중력
+    // 전역 중력 설정
     static physx::PxVec3 globalGravity;
     
+    // PhysX 액터 객체
     physx::PxRigidActor* actor = nullptr;
 
-    // Transform 변경 감지를 위한 값 저장
+    // Transform 변경 감지를 위한 이전 값 저장
     Position lastTransformPosition;
     Position lastTransformRotation;
     Position lastTransformScale;
