@@ -352,7 +352,7 @@ namespace Engine
                     }
                 }
 
-                // 선택된 컴포넌트의 세 부내용 표시
+                // 선택된 컴포넌트의 세부 내용 표시
                 if (selectComponent)
                 {
                     ImGui::Separator();
@@ -369,7 +369,7 @@ namespace Engine
                     if (ImGui::Checkbox("Component Active", &compIsActive))
                         selectComponent->SetEnable(compIsActive);
 
-                    // TransformComponent는 경우 추가 정보 표시
+                    // TransformComponent는 삭제할 수 없음
                     if (selectComponent->GetClassName() == "TransformComponent")
                         ImGui::TextDisabled("Transform component is always required and cannot be removed.");
 
@@ -405,17 +405,21 @@ namespace Engine
                     }
                 }
 
-                // FolderViewInspector를 활용한 추가 정보 표시
+                // 오브젝트 기본 정보 표시
                 ImGui::Separator();
                 ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Object Details");
 
                 // 활성화 상태 표시 및 변경
                 bool isActive = selectObject->GetActive();
-
                 if (ImGui::Checkbox("Active", &isActive))
                     selectObject->SetActive(isActive);
+                    
+                // 오브젝트 이름 편집
+                char objectName[256];
+                strcpy_s(objectName, 256, selectObject->GetName().c_str());
+                if (ImGui::InputText("Name", objectName, 256))
+                    selectObject->SetName(objectName);
             }
-
             else
                 ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "No object selected");
         }
@@ -484,7 +488,7 @@ namespace Engine
         // 트리 구조 표시
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Model Hierarchy");
 
-        // 모 델의 노드를 표시하고 메쉬를 컴포넌트처럼 관리하는 컨트롤러 클래스
+        // 모델의 노드를 표시하고 메쉬를 컴포넌트처럼 관리하는 컨트롤러 클래스
         class ModelHierarchyController : public ModelBase
         {
         public:
@@ -505,7 +509,7 @@ namespace Engine
                 {
                     selectedNode = &node;
 
-                    // 해 당 노드에 있는 메쉬들을 컴포넌트 리스트에 추가
+                    // 해당 노드에 있는 메쉬들을 컴포넌트 리스트에 추가
                     UpdateMeshComponents(node);
                 }
 
@@ -620,7 +624,7 @@ namespace Engine
             int selectedMeshIndex = -1;                 // 선택된 메쉬 컴포넌트 인덱스
         };
 
-        // 모 델 계층 구조 컨트롤러 생성
+        // 모델 계층 구조 컨트롤러 생성
         static ModelHierarchyController controller;
 
         // 모델 계층 구조 표시
@@ -640,7 +644,7 @@ namespace Engine
 
         auto& meshes = meshComponent->GetMeshes();
 
-        // 메쉬 배열이 비어있으면 메쉬가 표시
+        // 메쉬 배열이 비어있으면 메쉬가 없다고 표시
         if (meshes.empty())
         {
             ImGui::TextDisabled("No meshes available");
@@ -704,17 +708,69 @@ namespace Engine
         // 기본 물리 설정
         if (ImGui::CollapsingHeader("Basic Settings", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            // 중력 사용 여부
-            bool useGravity = physicsComponent->IsGravityEnabled();
+            // 운동학적 객체(Kinematic) 설정
+            bool isKinematic = physicsComponent->IsKinematic();
+            if (ImGui::Checkbox("Is Kinematic", &isKinematic))
+            {
+                physicsComponent->SetKinematic(isKinematic);
+                
+                // 키네마틱 설정 시 툴팁 표시
+                if (isKinematic && ImGui::IsItemHovered())
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Kinematic objects are controlled manually");
+                    ImGui::Text("and not affected by physics simulation");
+                    ImGui::EndTooltip();
+                }
+            }
+            
+            // 키네마틱이 아닐 때만 중력 및 질량 설정 표시
+            if (!isKinematic)
+            {
+                // 중력 사용 여부
+                bool useGravity = physicsComponent->IsGravityEnabled();
+                if (ImGui::Checkbox("Use Gravity", &useGravity))
+                    physicsComponent->SetGravity(useGravity);
+                
+                // 중력 사용 시 중력 스케일 설정
+                if (useGravity)
+                {
+                    float gravityScale = physicsComponent->GetGravityScale();
+                    if (ImGui::SliderFloat("Gravity Scale", &gravityScale, 0.0f, 5.0f, "%.2f"))
+                        physicsComponent->SetGravityScale(gravityScale);
+                    
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::BeginTooltip();
+                        ImGui::Text("Multiplier for global gravity");
+                        ImGui::Text("Default: 1.0 (normal gravity)");
+                        ImGui::EndTooltip();
+                    }
+                }
 
-            if (ImGui::Checkbox("Use Gravity", &useGravity))
-                physicsComponent->SetGravity(useGravity);
-
-            // 질량 설정
-            float mass = physicsComponent->GetMass();
-
-            if (ImGui::DragFloat("Mass", &mass, 0.1f, 0.1f, 1000.0f))
-                physicsComponent->SetMass(mass);
+                // 질량 설정
+                float mass = physicsComponent->GetMass();
+                if (ImGui::DragFloat("Mass", &mass, 0.1f, 0.1f, 1000.0f))
+                    physicsComponent->SetMass(mass);
+            }
+            
+            // 충돌 감지 모드 선택
+            static const char* collisionModes[] = { "Discrete", "Continuous", "Continuous Dynamic" };
+            int currentMode = static_cast<int>(physicsComponent->GetCollisionDetectionMode());
+            
+            if (ImGui::Combo("Collision Detection", &currentMode, collisionModes, IM_ARRAYSIZE(collisionModes)))
+            {
+                physicsComponent->SetCollisionDetectionMode(static_cast<CollisionDetectionMode>(currentMode));
+            }
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::TextUnformatted("Discrete: Basic collision detection (default)");
+                ImGui::TextUnformatted("Continuous: For fast-moving objects");
+                ImGui::TextUnformatted("Continuous Dynamic: Best for fast object collisions");
+                ImGui::EndTooltip();
+            }
         }
 
         // 전역 중력 설정
@@ -726,7 +782,11 @@ namespace Engine
             if (ImGui::DragFloat3("Gravity Force", gravityArray, 0.1f, -50.0f, 50.0f))
                 PhysicsComponent::SetGlobalGravity(gravityArray[0], gravityArray[1], gravityArray[2]);
             
-            ImGui::TextDisabled("Default : (0, -9.81, 0)");
+            if (ImGui::Button("Reset to Default", ImVec2(120, 0)))
+                PhysicsComponent::SetGlobalGravity(0.0f, -9.81f, 0.0f);
+            
+            ImGui::SameLine();
+            ImGui::TextDisabled("Default: (0, -9.81, 0)");
         }
 
         // 물질 속성
@@ -741,50 +801,160 @@ namespace Engine
             if (ImGui::SliderFloat("Static Friction", &staticFriction, 0.0f, 2.0f))
                 materialChanged = true;
             
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Friction when object is not moving");
+                ImGui::Text("0 = No friction, 1 = Normal, 2 = High");
+                ImGui::EndTooltip();
+            }
+            
             if (ImGui::SliderFloat("Dynamic Friction", &dynamicFriction, 0.0f, 2.0f))
                 materialChanged = true;
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Friction when object is moving");
+                ImGui::Text("0 = No friction, 1 = Normal, 2 = High");
+                ImGui::EndTooltip();
+            }
             
             if (ImGui::SliderFloat("Bounciness", &restitution, 0.0f, 1.0f))
                 materialChanged = true;
             
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("How bouncy the object is");
+                ImGui::Text("0 = No bounce, 1 = Perfect bounce");
+                ImGui::EndTooltip();
+            }
+            
             if (materialChanged)
                 physicsComponent->SetMaterial(staticFriction, dynamicFriction, restitution);
             
-			// 물질 속성 설명
-            ImGui::TextDisabled("Static: Friction when not moving");
-            ImGui::TextDisabled("Dynamic: Friction when moving");
-            ImGui::TextDisabled("Bounciness: How much it bounces");
+            // 미리 정의된 프리셋 버튼들
+            ImGui::Separator();
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Material Presets:");
+            
+            if (ImGui::Button("Ice", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.05f, 0.02f, 0.2f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Metal", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.6f, 0.4f, 0.5f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Wood", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.5f, 0.3f, 0.2f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Rubber", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.8f, 0.7f, 0.8f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Bouncy", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.2f, 0.2f, 0.95f);
         }
 
-        // 공기 저항
-        if (ImGui::CollapsingHeader("Damping"))
+        // 공기 저항 및 감쇠
+        if (ImGui::CollapsingHeader("Damping & Drag"))
         {
+            // 선형 감쇠 (이동 속도 감소)
             float linearDamping = physicsComponent->GetLinearDamping();
-            float angularDamping = physicsComponent->GetAngularDamping();
-            
             if (ImGui::SliderFloat("Linear Damping", &linearDamping, 0.0f, 10.0f))
                 physicsComponent->SetLinearDamping(linearDamping);
             
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Reduces linear velocity over time");
+                ImGui::Text("0 = No damping, 10 = Very high damping");
+                ImGui::EndTooltip();
+            }
+            
+            // 각 감쇠 (회전 속도 감소)
+            float angularDamping = physicsComponent->GetAngularDamping();
             if (ImGui::SliderFloat("Angular Damping", &angularDamping, 0.0f, 10.0f))
                 physicsComponent->SetAngularDamping(angularDamping);
             
-			// 공기 저항 설명
-            ImGui::TextDisabled("Linear: Air resistance for movement");
-            ImGui::TextDisabled("Angular: Air resistance for rotation");
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Reduces rotational velocity over time");
+                ImGui::Text("0 = No damping, 10 = Very high damping");
+                ImGui::EndTooltip();
+            }
+            
+            // 공기 저항 계수 (추가 감쇠)
+            float dragCoefficient = physicsComponent->GetDragCoefficient();
+            if (ImGui::SliderFloat("Drag Coefficient", &dragCoefficient, 0.0f, 5.0f, "%.2f"))
+                physicsComponent->SetDragCoefficient(dragCoefficient);
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Additional drag force (air/fluid resistance)");
+                ImGui::Text("0 = None, 1 = Air, 2-5 = Water/thick fluid");
+                ImGui::EndTooltip();
+            }
+            
+            // 프리셋 버튼들
+            ImGui::Separator();
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Environment Presets:");
+            
+            if (ImGui::Button("Air", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(0.05f);
+                physicsComponent->SetAngularDamping(0.1f);
+                physicsComponent->SetDragCoefficient(0.0f);
+            }
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Water", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(0.5f);
+                physicsComponent->SetAngularDamping(1.0f);
+                physicsComponent->SetDragCoefficient(2.0f);
+            }
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Honey", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(2.0f);
+                physicsComponent->SetAngularDamping(4.0f);
+                physicsComponent->SetDragCoefficient(4.0f);
+            }
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Space", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(0.0f);
+                physicsComponent->SetAngularDamping(0.0f);
+                physicsComponent->SetDragCoefficient(0.0f);
+            }
         }
 
         // 제약 조건
         if (ImGui::CollapsingHeader("Constraints"))
         {
             ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Freeze Position");
-            
+
             bool freezePosX = physicsComponent->IsPositionXFrozen();
             bool freezePosY = physicsComponent->IsPositionYFrozen();
             bool freezePosZ = physicsComponent->IsPositionZFrozen();
-            
+
             bool positionChanged = false;
-            
-            if (ImGui::Checkbox("X##PosX", &freezePosX)) 
+
+            if (ImGui::Checkbox("X##PosX", &freezePosX))
                 positionChanged = true;
 
             ImGui::SameLine();
@@ -794,22 +964,22 @@ namespace Engine
 
             ImGui::SameLine();
 
-            if (ImGui::Checkbox("Z##PosZ", &freezePosZ)) 
+            if (ImGui::Checkbox("Z##PosZ", &freezePosZ))
                 positionChanged = true;
-            
+
             if (positionChanged)
                 physicsComponent->SetFreezePosition(freezePosX, freezePosY, freezePosZ);
-            
+
             ImGui::Spacing();
             ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Freeze Rotation");
-            
+
             bool freezeRotX = physicsComponent->IsRotationXFrozen();
             bool freezeRotY = physicsComponent->IsRotationYFrozen();
             bool freezeRotZ = physicsComponent->IsRotationZFrozen();
-            
+
             bool rotationChanged = false;
-            
-            if (ImGui::Checkbox("X##RotX", &freezeRotX)) 
+
+            if (ImGui::Checkbox("X##RotX", &freezeRotX))
                 rotationChanged = true;
 
             ImGui::SameLine();
@@ -819,20 +989,84 @@ namespace Engine
 
             ImGui::SameLine();
 
-            if (ImGui::Checkbox("Z##RotZ", &freezeRotZ)) 
+            if (ImGui::Checkbox("Z##RotZ", &freezeRotZ))
                 rotationChanged = true;
-            
+
             if (rotationChanged)
                 physicsComponent->SetFreezeRotation(freezeRotX, freezeRotY, freezeRotZ);
+
+            // 축별 제약 조건 버튼들
+            ImGui::Separator();
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Common Constraints:");
+
+            if (ImGui::Button("Lock All", ImVec2(80, 0)))
+            {
+                physicsComponent->SetFreezePosition(true, true, true);
+                physicsComponent->SetFreezeRotation(true, true, true);
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Unlock All", ImVec2(80, 0)))
+            {
+                physicsComponent->SetFreezePosition(false, false, false);
+                physicsComponent->SetFreezeRotation(false, false, false);
+
+                // 씬이 있는지 확인
+                auto scene = Scene::GetActiveScene();
+
+                if (scene == nullptr)
+                {
+                    // 명시적으로 깨우기
+                    if (auto actor = physicsComponent->GetActor())
+                    {
+                        if (physicsComponent->IsKinematic() == false)
+                        {
+                            physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
+                            dynamicActor->wakeUp();
+
+                            // 중력이 없을 때 약간의 힘 가하기
+                            if (!physicsComponent->IsGravityEnabled())
+                            {
+                                dynamicActor->addForce(physx::PxVec3(0.0f, 0.1f, 0.0f), physx::PxForceMode::eIMPULSE);
+                            }
+                        }
+                    }
+                }
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("2D (XZ)", ImVec2(80, 0)))
+            {
+                physicsComponent->SetFreezePosition(false, true, false);
+                physicsComponent->SetFreezeRotation(true, false, true);
+            }
+        }
+
+        // 콜라이더 설정
+        if (ImGui::CollapsingHeader("Collider"))
+        {
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Collider Size:");
             
-			// 제약 조건 설명
-            ImGui::TextDisabled("Checked axes will be locked");
+            // 충돌체 크기 업데이트 버튼
+            if (ImGui::Button("Update Collider Size"))
+                physicsComponent->UpdateColliderSize();
+            
+            ImGui::SameLine();
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Updates collider to match current object scale");
+                ImGui::EndTooltip();
+            }
         }
 
         // 컴포넌트 삭제 버튼
         ImGui::Separator();
 
-        if (ImGui::Button("Remove Physics Component"))
+        if (ImGui::Button("Remove Physics Component", ImVec2(-1, 0)))
         {
             selectObject->RemoveComponent(selectComponent->GetClassName());
             selectComponent = nullptr;
