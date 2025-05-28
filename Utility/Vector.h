@@ -79,6 +79,8 @@ public:
 	bool operator==(const Vector3& vector) const;
 	bool operator==(const Vector4& vector) const;
 
+	float GetLength() const;
+
 	static const Vector2 zero;
 	static const Vector2 up;
 	static const Vector2 down;
@@ -110,6 +112,8 @@ public:
 	bool operator==(const Vector2& vector) const;
 	bool operator==(const Vector3& vector) const;
 	bool operator==(const Vector4& vector) const;
+
+	float GetLength() const;
 
 	static const Vector3 zero;
 	static const Vector3 forward;
@@ -147,6 +151,8 @@ public:
 	bool operator==(const Vector2& vector) const;
 	bool operator==(const Vector3& vector) const;
 	bool operator==(const Vector4& vector) const;
+
+	float GetLength() const;
 
 	static const Vector4 zero;
 	static const Vector4 forward;

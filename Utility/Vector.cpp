@@ -252,6 +252,12 @@ bool Vector3::operator==(const Vector4& vector) const
 	return (x == vector.x && y == vector.y && z == vector.z);
 }
 
+float Vector3::GetLength() const
+{
+	return sqrtf(x * x + y * y + z * z);
+}
+
+
 Vector2::Vector2(const Vector3& vector) noexcept : x(vector.x), y(vector.y)
 {
 
@@ -313,6 +319,11 @@ bool Vector2::operator==(const Vector3& vector) const
 bool Vector2::operator==(const Vector4& vector) const
 {
 	return (x == vector.x && y == vector.y);
+}
+
+float Vector2::GetLength() const
+{
+	return sqrtf(x * x + y * y);
 }
 
 Vector4::Vector4(const Vector3& vector) noexcept : x(vector.x), y(vector.y), z(vector.z), w(0.0f) 
@@ -381,6 +392,11 @@ bool Vector4::operator==(const Vector3& vector) const
 bool Vector4::operator==(const Vector4& vector) const
 {
 	return (x == vector.x && y == vector.y && z == vector.z && w == vector.w);
+}
+
+float Vector4::GetLength() const
+{
+	return sqrtf(x * x + y * y + z * z + w * w);
 }
 
 Vector2 operator+(const Vector2& lhs, float value)

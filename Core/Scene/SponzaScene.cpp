@@ -59,7 +59,7 @@ void SponzaScene::Initialize()
     std::shared_ptr<Object> ground = AddObject(Object::Create("Ground Plane"));
 	ground->AddComponent<ColorCubeObject>();
     ground->GetComponent<TransformComponent>()->SetPosition(0.0f, 0.0f, 0.0f);
-    ground->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
+    ground->GetComponent<TransformComponent>()->SetScale(10.0f, 1.0f, 10.0f);
     
     // 정적 물리 컴포넌트 추가 (질량 0, 정적 객체)
     ground->AddComponent<PhysicsComponent>(0.0f, false);

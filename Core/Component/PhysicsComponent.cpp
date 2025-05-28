@@ -280,17 +280,39 @@ void PhysicsComponent::SetGravity(bool enable)
     // 동적 물체인 경우 중력 설정 즉시 적용
     physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
     dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
+    
+    // 물체를 명시적으로 깨우기
+    dynamicActor->wakeUp();
 }
 
 void PhysicsComponent::SetGlobalGravity(float x, float y, float z)
 {
     globalGravity = physx::PxVec3(x, y, z);
-    
+
     // 현재 물리 씬의 중력 설정 업데이트
     physx::PxScene* scene = PhysicsSystem::GetInstance().GetScene();
 
-    if (scene != nullptr)
-        scene->setGravity(globalGravity);
+    if (scene == nullptr)
+        return;
+
+    scene->setGravity(globalGravity);
+
+    // 씬의 모든 동적 물체 깨우기
+    physx::PxU32 numActors = scene->getNbActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC);
+
+    if (numActors == 0)
+        return;
+
+    std::vector<physx::PxRigidDynamic*> actors(numActors);
+    scene->getActors(physx::PxActorTypeFlag::eRIGID_DYNAMIC, reinterpret_cast<physx::PxActor**>(&actors[0]), numActors);
+
+    for (physx::PxU32 i = 0; i < numActors; i++)
+    {
+        if (actors[i] == nullptr && !actors[i]->isSleeping())
+            continue;
+
+        actors[i]->wakeUp();
+    }
 }
 
 physx::PxVec3 PhysicsComponent::GetGlobalGravity()
