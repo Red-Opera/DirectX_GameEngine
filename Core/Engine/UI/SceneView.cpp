@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "SceneView.h"
 
 #include "Core/DxGraphic.h"
@@ -44,10 +44,10 @@ namespace Graphic
     {
         ImGui::Begin("Game Window");
 
-        // »ç¿ë °¡´ÉÇÑ ¿µ¿ª Å©±â °¡Á®¿À±â
+        // ì‚¬ìš© ê°€ëŠ¥í•œ ì˜ì—­ í¬ê¸° ê°€ì ¸ì˜¤ê¸°
         ImVec2 availSize = ImGui::GetContentRegionAvail();
 
-        // renderTargetTextureÀÇ ¿øº» Å©±â(¿©±â¼­´Â 1280x720·Î °íÁ¤µÇ¾î ÀÖÀ½)
+        // renderTargetTextureì˜ ì›ë³¸ í¬ê¸°(ì—¬ê¸°ì„œëŠ” 1280x720ë¡œ ê³ ì •ë˜ì–´ ìžˆìŒ)
         float textureWidth = 1280.0f;
         float textureHeight = 720.0f;
         float textureAspect = textureWidth / textureHeight;
@@ -55,7 +55,7 @@ namespace Graphic
 
         float drawWidth, drawHeight;
 
-        // ¿µ¿ªÀÇ ºñÀ²¿¡ µû¶ó Å©±â Á¶Á¤ (letterbox ¹æ½Ä)
+        // ì˜ì—­ì˜ ë¹„ìœ¨ì— ë”°ë¼ í¬ê¸° ì¡°ì • (letterbox ë°©ì‹)
         if (availAspect > textureAspect)
         {
             drawHeight = availSize.y;

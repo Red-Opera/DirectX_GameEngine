@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/DxGraphicResource.h"
 #include "Core/Exception/GraphicsException.h"

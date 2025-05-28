@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "SphereFrame.h"
 
 TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLayout, int latDiv, int longDiv)
@@ -15,20 +15,20 @@ TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLay
     const float latitudeAngle = Math::PI / latDiv;
     const float longitudeAngle = 2.0f * Math::PI / longDiv;
 
-    // (latDiv - 1) * longDiv + 2 °³ÀÇ Á¤Á¡
+    // (latDiv - 1) * longDiv + 2 ê°œì˜ ì •ì 
     const unsigned int vertexCount = (latDiv - 1) * longDiv + 2;
     VertexBuffer vertices(std::move(vertexLayout), vertexCount);
 
     unsigned int idx = 0;
 
-    // --- À§µµ(±Ø Á¦¿Ü) Á¤Á¡ ¹èÄ¡ ---
+    // --- ìœ„ë„(ê·¹ ì œì™¸) ì •ì  ë°°ì¹˜ ---
     for (int iLat = 1; iLat < latDiv; iLat++)
     {
-        // XÃà È¸Àü
+        // Xì¶• íšŒì „
         const auto latBase = dx::XMVector3Transform(base, dx::XMMatrixRotationX(latitudeAngle * iLat));
         for (int iLong = 0; iLong < longDiv; iLong++)
         {
-            // ZÃà È¸Àü
+            // Zì¶• íšŒì „
             auto v = dx::XMVector3Transform(latBase, dx::XMMatrixRotationZ(longitudeAngle * iLong));
 
             // Position
@@ -40,7 +40,7 @@ TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLay
         }
     }
 
-    // --- ºÏ±Ø ---
+    // --- ë¶ê·¹ ---
     const unsigned short iNorthPole = idx;
     {
         dx::XMFLOAT3 northPos;
@@ -50,7 +50,7 @@ TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLay
         idx++;
     }
 
-    // --- ³²±Ø ---
+    // --- ë‚¨ê·¹ ---
     const unsigned short iSouthPole = idx;
     {
         dx::XMFLOAT3 southPos;
@@ -60,14 +60,14 @@ TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLay
         idx++;
     }
 
-    // --- ÀÎµ¦½º °è»ê ---
+    // --- ì¸ë±ìŠ¤ ê³„ì‚° ---
     const auto calcIdx = [longDiv](unsigned short iLat, unsigned short iLong) -> unsigned short {
         return iLat * longDiv + iLong;
         };
 
     std::vector<unsigned short> indices;
 
-    // º»Ã¼(¹êµå) »ï°¢Çü
+    // ë³¸ì²´(ë°´ë“œ) ì‚¼ê°í˜•
     for (unsigned short iLat = 0; iLat < latDiv - 2; iLat++)
     {
         for (unsigned short iLong = 0; iLong < longDiv - 1; iLong++)
@@ -81,7 +81,7 @@ TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLay
             indices.push_back(calcIdx(iLat + 1, iLong + 1));
         }
 
-        // °æµµ wrap
+        // ê²½ë„ wrap
         indices.push_back(calcIdx(iLat, longDiv - 1));
         indices.push_back(calcIdx(iLat + 1, longDiv - 1));
         indices.push_back(calcIdx(iLat, 0));
@@ -91,7 +91,7 @@ TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLay
         indices.push_back(calcIdx(iLat + 1, 0));
     }
 
-    // ºÏ±Ø Ä¸
+    // ë¶ê·¹ ìº¡
     for (unsigned short iLong = 0; iLong < longDiv - 1; iLong++)
     {
         indices.push_back(iNorthPole);
@@ -104,7 +104,7 @@ TriangleIndexList SphereFrame::MakeTesselated(VertexCore::VertexLayout vertexLay
     indices.push_back(calcIdx(0, longDiv - 1));
     indices.push_back(calcIdx(0, 0));
 
-    // ³²±Ø Ä¸
+    // ë‚¨ê·¹ ìº¡
     for (unsigned short iLong = 0; iLong < longDiv - 1; iLong++)
     {
         indices.push_back(calcIdx(latDiv - 2, iLong + 1));
@@ -140,7 +140,7 @@ TriangleIndexList SphereFrame::CreateTextureFrame()
         .AddType(VertexType::Texture2D),
         12, 24);
 
-    // ÅØ½ºÃ³ ¹× ³ë¸Ö ÁÂÇ¥ °è»ê (±¸ÀÇ ±ØÀÌ ZÃà¿¡ ¸ÂÃçÁ® ÀÖÀ½, Sphere´Â SetNormalVector()¸¦ »ç¿ëÇÏÁö ¾ÊÀ½)
+    // í…ìŠ¤ì²˜ ë° ë…¸ë©€ ì¢Œí‘œ ê³„ì‚° (êµ¬ì˜ ê·¹ì´ Zì¶•ì— ë§ì¶°ì ¸ ìˆìŒ, SphereëŠ” SetNormalVector()ë¥¼ ì‚¬ìš©í•˜ì§€ ì•ŠìŒ)
     size_t vertexCount = textureVertices.vertices.count();
     for (size_t i = 0; i < vertexCount; i++)
     {
@@ -148,18 +148,18 @@ TriangleIndexList SphereFrame::CreateTextureFrame()
         auto& tex = textureVertices.vertices[i].GetValue<VertexType::Texture2D>();
         auto& normal = textureVertices.vertices[i].GetValue<VertexType::Normal>();
 
-        // º¤ÅÍ ±æÀÌ °è»ê
+        // ë²¡í„° ê¸¸ì´ ê³„ì‚°
         const float len = sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z);
-        const float theta = atan2(pos.y, pos.x);                // ¹æÀ§°¢: xyÆò¸é¿¡¼­ÀÇ °¢µµ (atan2´Â [-¥ğ, ¥ğ] ¹üÀ§)
-        const float phi = acos(pos.z / len);                    // ¼¼·Î°¢: ºÏ±Ø(+)ÀÎ ZÃàÀ» ±âÁØÀ¸·Î ÇÑ °¢µµ
+        const float theta = atan2(pos.y, pos.x);                // ë°©ìœ„ê°: xyí‰ë©´ì—ì„œì˜ ê°ë„ (atan2ëŠ” [-Ï€, Ï€] ë²”ìœ„)
+        const float phi = acos(pos.z / len);                    // ì„¸ë¡œê°: ë¶ê·¹(+)ì¸ Zì¶•ì„ ê¸°ì¤€ìœ¼ë¡œ í•œ ê°ë„
 
-        const float u = (theta + Math::PI) / (2.0f * Math::PI); // u: [0, 1] ¹üÀ§
-        const float v = phi / Math::PI;                         // v: [0, 1] ¹üÀ§
+        const float u = (theta + Math::PI) / (2.0f * Math::PI); // u: [0, 1] ë²”ìœ„
+        const float v = phi / Math::PI;                         // v: [0, 1] ë²”ìœ„
 
         tex.x = u;
         tex.y = v;
 
-        // ³ë¸Ö º¤ÅÍ °è»ê
+        // ë…¸ë©€ ë²¡í„° ê³„ì‚°
         const float x = sin(phi) * cos(theta);
         const float y = sin(phi) * sin(theta);
         const float z = cos(phi);

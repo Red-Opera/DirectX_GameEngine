@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Window.h"
 
 #include "Core/WindowResources/icon/resource.h"
@@ -16,10 +16,10 @@ std::shared_ptr<SceneGraph> Window::activeSceneGraph = nullptr;
 
 string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 {
-	// ¿¡·¯ ¸Ş¼¼Áö¸¦ ¹İÈ¯ÇÏ±â À§ÇÑ ¹®ÀÚ¿­
+	// ì—ëŸ¬ ë©”ì„¸ì§€ë¥¼ ë°˜í™˜í•˜ê¸° ìœ„í•œ ë¬¸ìì—´
 	char* errorMessage = nullptr;
 
-	// ÀÔ·ÂÇÑ ¿¡·¯ ¸Ş¼¼Áö¿¡ ´ëÇØ¼­ ÀÏÁ¤ÇÑ Çü½Ä¿¡ ¸ÂÃç º¯¿ªÇÔ
+	// ì…ë ¥í•œ ì—ëŸ¬ ë©”ì„¸ì§€ì— ëŒ€í•´ì„œ ì¼ì •í•œ í˜•ì‹ì— ë§ì¶° ë³€ì—­í•¨
 	const DWORD messageLen = FormatMessage(
 		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		nullptr, 
@@ -30,11 +30,11 @@ string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
 		nullptr
 	);
 
-	// ÀÔ·ÂÇÑ ¿¡·¯ÄÚµå°¡ ¾Ë¼ö ¾ø´Â °æ¿ì
+	// ì…ë ¥í•œ ì—ëŸ¬ì½”ë“œê°€ ì•Œìˆ˜ ì—†ëŠ” ê²½ìš°
 	if (messageLen == 0)
-		return "ÁöÁ¤µÇÁö ¾Ê´Â ¿¡·¯ ÄÚµå";
+		return "ì§€ì •ë˜ì§€ ì•ŠëŠ” ì—ëŸ¬ ì½”ë“œ";
 
-	// ¹®ÀÚ¿­À» stringÀ¸·Î º¯È¯ ÈÄ ±âÁ¸ ¹®ÀÚ¿­ µ¿Àû ÇØÁ¦
+	// ë¬¸ìì—´ì„ stringìœ¼ë¡œ ë³€í™˜ í›„ ê¸°ì¡´ ë¬¸ìì—´ ë™ì  í•´ì œ
 	string errorString = errorMessage;
 	LocalFree(errorMessage);
 
@@ -57,9 +57,9 @@ const char* Window::HRException::what() const noexcept
 {
 	ostringstream out;
 
-	out << "¿¹¿Ü°¡ ¹ß»ıÇß½À´Ï´Ù." << endl << endl << "¿¹¿Ü Á¾·ù : " <<
-		string(GetType()) << "[0x" << uppercase << hex << hr <<"]" << endl << "¿¹¿Ü ÆÄÀÏ : " <<
-		GetFile() << endl << "ÁÙ ¹øÈ£ : " + to_string(GetLine()) + "ÁÙ";
+	out << "ì˜ˆì™¸ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤." << endl << endl << "ì˜ˆì™¸ ì¢…ë¥˜ : " <<
+		string(GetType()) << "[0x" << uppercase << hex << hr <<"]" << endl << "ì˜ˆì™¸ íŒŒì¼ : " <<
+		GetFile() << endl << "ì¤„ ë²ˆí˜¸ : " + to_string(GetLine()) + "ì¤„";
 
 	exceptionText = out.str();
 	return exceptionText.c_str();
@@ -67,7 +67,7 @@ const char* Window::HRException::what() const noexcept
 
 const char* Window::HRException::GetType() const noexcept
 {
-	return "Window Ã¢ »ı¼º ¹®Á¦";
+	return "Window ì°½ ìƒì„± ë¬¸ì œ";
 }
 
 HRESULT Window::HRException::GetErrorCode() const noexcept
@@ -87,7 +87,7 @@ string Window::HRException::GetExptionContent() const noexcept
 Window::WindowClass Window::WindowClass::windowClass;
 
 Window::WindowClass::WindowClass() noexcept
-	: hInstance(GetModuleHandle(nullptr))	// ÇöÀç ½ÇÇà ÁßÀÎ WindowÃ¢À» ³Ñ°ÜÁÜ
+	: hInstance(GetModuleHandle(nullptr))	// í˜„ì¬ ì‹¤í–‰ ì¤‘ì¸ Windowì°½ì„ ë„˜ê²¨ì¤Œ
 {
 	WNDCLASSEX wcex = { 0 };
 
@@ -182,7 +182,7 @@ void Window::EnableCursor() noexcept
 {
 	cursorEnabled = true;
 
-	// Ä¿¼­¸¦ º¸¿©ÁÖ°í Ä¿¼­°¡ ¸¶À½´ë·Î ¿òÁ÷ÀÏ ¼ö ÀÖ°Ô ¼³Á¤
+	// ì»¤ì„œë¥¼ ë³´ì—¬ì£¼ê³  ì»¤ì„œê°€ ë§ˆìŒëŒ€ë¡œ ì›€ì§ì¼ ìˆ˜ ìˆê²Œ ì„¤ì •
 	ShowCursor();
 	EnableImGuiMouse();
 	FreeCursor();
@@ -192,7 +192,7 @@ void Window::DisableCursor() noexcept
 {
 	cursorEnabled = false;
 
-	// Ä¿¼­¸¦ ¾ø¾Ö°í Ä¿¼­¸¦ ¿òÁ÷ÀÌÁö ¸øÇÏ°Ô ¼³Á¤
+	// ì»¤ì„œë¥¼ ì—†ì• ê³  ì»¤ì„œë¥¼ ì›€ì§ì´ì§€ ëª»í•˜ê²Œ ì„¤ì •
 	HideCursor();
 	DisableImGuiMouse();
 	ConfineCursor();
@@ -209,7 +209,7 @@ optional<int> Window::ProcessMessages() noexcept
 
 	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
-		// »ç¿ëÀÚ·ÎºÎÅÍ Á¾·á ¸Ş½ÃÁö¸¦ ¹ŞÀº °æ¿ì
+		// ì‚¬ìš©ìë¡œë¶€í„° ì¢…ë£Œ ë©”ì‹œì§€ë¥¼ ë°›ì€ ê²½ìš°
 		if (msg.message == WM_QUIT)
 			return (int)msg.wParam;
 
@@ -217,7 +217,7 @@ optional<int> Window::ProcessMessages() noexcept
 		DispatchMessage(&msg);
 	}
 
-	// Á¾·á ¸Ş½ÃÁö¸¦ ¹ŞÁö ¾Ê¾ÒÀ» °æ¿ì ºó ¸Ş¼¼Áö¸¦ ¹İÈ¯ÇÔ
+	// ì¢…ë£Œ ë©”ì‹œì§€ë¥¼ ë°›ì§€ ì•Šì•˜ì„ ê²½ìš° ë¹ˆ ë©”ì„¸ì§€ë¥¼ ë°˜í™˜í•¨
 	return {};
 }
 
@@ -238,26 +238,26 @@ void Window::ConfineCursor() noexcept
 {
 	RECT rect;
 
-	GetClientRect(hWnd, &rect);											// ÇöÀç Å¬¶óÀÌ¾ğÆ® ¿µ¿ªÀ» °¡Á®¿È
-	MapWindowPoints(hWnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);	// Å¬¶óÀÌ¾ğÆ® ¿µ¿ª ÁÂÇ¥¸¦ À©µµ¿ì ±âÁØ¿¡¼­ È­¸é ±âÁØÀ¸·Î º¯È¯ 
-	ClipCursor(&rect);													// rect¿¡ ÀúÀåµÈ Å¬¶óÀÌ¾ğÆ® ¿µ¿ª¾ÈÀ¸·Î Á¦ÇÑ
+	GetClientRect(hWnd, &rect);											// í˜„ì¬ í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ì„ ê°€ì ¸ì˜´
+	MapWindowPoints(hWnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);	// í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ ì¢Œí‘œë¥¼ ìœˆë„ìš° ê¸°ì¤€ì—ì„œ í™”ë©´ ê¸°ì¤€ìœ¼ë¡œ ë³€í™˜ 
+	ClipCursor(&rect);													// rectì— ì €ì¥ëœ í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ì•ˆìœ¼ë¡œ ì œí•œ
 }
 
 void Window::FreeCursor() noexcept
 {
-	// Ä¿¼­ Á¦ÇÑÀÌ ¾øµµ·Ï ¼³Á¤
+	// ì»¤ì„œ ì œí•œì´ ì—†ë„ë¡ ì„¤ì •
 	ClipCursor(nullptr);
 }
 
 void Window::ShowCursor() noexcept
 {
-	// Ä¿¼­ °¨Ãß±â¸¦ ÇÑ ¸¸Å­ Ä¿¼­º¸ÀÌ±â¸¦ ÇÔ
+	// ì»¤ì„œ ê°ì¶”ê¸°ë¥¼ í•œ ë§Œí¼ ì»¤ì„œë³´ì´ê¸°ë¥¼ í•¨
 	while (::ShowCursor(TRUE) < 0);
 }
 
 void Window::HideCursor() noexcept
 {
-	// Ä¿¼­ º¸ÀÌ±â¸¦ ÇÑ ¸¸Å­ Ä¿¼­ °¨Ãß±â¸¦ ÇÔ
+	// ì»¤ì„œ ë³´ì´ê¸°ë¥¼ í•œ ë§Œí¼ ì»¤ì„œ ê°ì¶”ê¸°ë¥¼ í•¨
 	while (::ShowCursor(FALSE) >= 0);
 }
 
@@ -279,9 +279,9 @@ void Window::ShowGameFrame(HWND hWnd) noexcept
    std::stringstream ss;  
    ss << std::fixed << std::setprecision(1) << frameTime << " ms / frame (" << fps << " FPS)";  
 
-   // ¿À¸¥ÂÊ Á¤·ÄÀ» À§ÇØ °ø¹é Ãß°¡  
+   // ì˜¤ë¥¸ìª½ ì •ë ¬ì„ ìœ„í•´ ê³µë°± ì¶”ê°€  
    std::string title = ss.str();  
-   int padding = 50 - (int)title.length(); // ¿øÇÏ´Â ±æÀÌ¿¡¼­ Á¦¸ñ ±æÀÌ¸¦ »« °ª  
+   int padding = 50 - (int)title.length(); // ì›í•˜ëŠ” ê¸¸ì´ì—ì„œ ì œëª© ê¸¸ì´ë¥¼ ëº€ ê°’  
 
    if (padding > 0)  
        title.insert(0, padding, ' ');  
@@ -293,16 +293,16 @@ void Window::ShowGameFrame(HWND hWnd) noexcept
 
 LRESULT Window::WndMessageSetting(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
-	// Ã¢ÀÌ »ı¼ºµÉ ¶§ ½ÇÇà°æ¿ì (NC(Non-Client) : Å¸ÀÌÆ² ¹Ù, Å×µÎ¸® µîÀÇ ºñÅ¬¶óÀÌ¾ğÆ® ¿µ¿ªÀ» ÀÇ¹Ì)
+	// ì°½ì´ ìƒì„±ë  ë•Œ ì‹¤í–‰ê²½ìš° (NC(Non-Client) : íƒ€ì´í‹€ ë°”, í…Œë‘ë¦¬ ë“±ì˜ ë¹„í´ë¼ì´ì–¸íŠ¸ ì˜ì—­ì„ ì˜ë¯¸)
 	if (msg == WM_NCCREATE)
 	{
-		// lParam¿¡ ÀúÀåµÈ »ç¿ëÀÚ ÁöÁ¤ ¼³Á¤À» CREATESTRUCTW·Î º¯È¯ÇÏ¿© CreateWindow ÇÔ¼ö ½ÇÇà½Ã Àü´ŞµÈ µ¥ÀÌÅÍ¸¦ °¡Á®¿È
+		// lParamì— ì €ì¥ëœ ì‚¬ìš©ì ì§€ì • ì„¤ì •ì„ CREATESTRUCTWë¡œ ë³€í™˜í•˜ì—¬ CreateWindow í•¨ìˆ˜ ì‹¤í–‰ì‹œ ì „ë‹¬ëœ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜´
 		const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
 		Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
 
 		 
-		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));					// Window Ã¢À» »ç¿ëÀÚ ÁöÁ¤ ¼³Á¤´ë·Î Á¦ÀÛÇÑ´Ù°í ¾Ë¸° ÈÄ
-		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::HandleMsgThunk));  // Window Ã¢ ¸Ş¼¼Áöµµ HandleMsgThunk¸Ş¼Òµå°¡ Ã³¸®ÇÑ´Ù´Â °ÍÀ» ¾Ë¸² (Áï, ¸Ş¼¼Áö°¡ ÀÖÀ» ¶§ HandleMsgThunk ÇÔ¼ö°¡ ½ÇÇà)
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));					// Window ì°½ì„ ì‚¬ìš©ì ì§€ì • ì„¤ì •ëŒ€ë¡œ ì œì‘í•œë‹¤ê³  ì•Œë¦° í›„
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::HandleMsgThunk));  // Window ì°½ ë©”ì„¸ì§€ë„ HandleMsgThunkë©”ì†Œë“œê°€ ì²˜ë¦¬í•œë‹¤ëŠ” ê²ƒì„ ì•Œë¦¼ (ì¦‰, ë©”ì„¸ì§€ê°€ ìˆì„ ë•Œ HandleMsgThunk í•¨ìˆ˜ê°€ ì‹¤í–‰)
 
 		return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 	}
@@ -312,10 +312,10 @@ LRESULT Window::WndMessageSetting(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPa
 
 LRESULT Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
-	// WndMessageSetting¿¡¼­ ¼³Á¤ÇÑ GWLP_USERDATA¿¡ µû¸¥ µ¥ÀÌÅÍ¸¦ °¡Á®·Ò
+	// WndMessageSettingì—ì„œ ì„¤ì •í•œ GWLP_USERDATAì— ë”°ë¥¸ ë°ì´í„°ë¥¼ ê°€ì ¸ë¡¬
 	Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
-	// ÇØ¼®ÇÑ ¸Ş¼¼Áö¸¦ ¹İÈ¯ÇÔ
+	// í•´ì„í•œ ë©”ì„¸ì§€ë¥¼ ë°˜í™˜í•¨
 	return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 }
 
@@ -329,16 +329,16 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	switch (msg)
 	{
-	// Ã¢À» ´İ´Â ¸Ş¼¼Áö°¡ µé¾î¿Â °æ¿ì
+	// ì°½ì„ ë‹«ëŠ” ë©”ì„¸ì§€ê°€ ë“¤ì–´ì˜¨ ê²½ìš°
 	case WM_CLOSE:
 		PostQuitMessage(0);
 
-	// Window Ã¢¿¡¼­ Æ÷Ä¿½º¸¦ ÀÒÀ» °æ¿ì
+	// Window ì°½ì—ì„œ í¬ì»¤ìŠ¤ë¥¼ ìƒì„ ê²½ìš°
 	case WM_KILLFOCUS:
 		keyBoard.ClearState();
 		break;
 
-	// Window Ã¢ÀÌ È°¼ºÈ­ µÇ¾úÀ» °æ¿ì
+	// Window ì°½ì´ í™œì„±í™” ë˜ì—ˆì„ ê²½ìš°
 	case WM_ACTIVATE:
 		if (!cursorEnabled)
 		{
@@ -357,15 +357,15 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		break;
 
 	// =================================
-	//	Å°º¸µå ¸Ş¼¼Áö °ü·Ã ÀÌº¥Æ®
+	//	í‚¤ë³´ë“œ ë©”ì„¸ì§€ ê´€ë ¨ ì´ë²¤íŠ¸
 	// =================================
 	case WM_SYSKEYDOWN:
 	case WM_KEYDOWN:
-		// ImGui¿¡¼­ Ä¸¼Ç¿¡ Å°º¸µå·Î ÀÔ·ÂÇÏ°í ÀÖÀ» ¶§´Â Å°º¸µå Ã³¸®¸¦ ¾ÈÇÔ
+		// ImGuiì—ì„œ ìº¡ì…˜ì— í‚¤ë³´ë“œë¡œ ì…ë ¥í•˜ê³  ìˆì„ ë•ŒëŠ” í‚¤ë³´ë“œ ì²˜ë¦¬ë¥¼ ì•ˆí•¨
 		if (imGuiIO.WantCaptureKeyboard)
 			break;
 
-		// ÀÌÀü¿¡ Å°º¸µå¸¦ ´©¸¥ÀûÀÌ ¾ø°Å³ª Áö¼ÓÀûÀ¸·Î ´­·ÈÀ» ¶§ Å°´©¸£´Â °ÍÀ» ÀÎÁ¤ÇÒ °æ¿ì
+		// ì´ì „ì— í‚¤ë³´ë“œë¥¼ ëˆ„ë¥¸ì ì´ ì—†ê±°ë‚˜ ì§€ì†ì ìœ¼ë¡œ ëˆŒë ¸ì„ ë•Œ í‚¤ëˆ„ë¥´ëŠ” ê²ƒì„ ì¸ì •í•  ê²½ìš°
 		if (!(lParam & 0x40000000) || keyBoard.AutorepeatIsEnabled())
 			keyBoard.OnKeyPressed(static_cast<unsigned char>(wParam));
 		break;
@@ -386,7 +386,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		break;
 
 	// =================================
-	//	¸¶¿ì½º ¸Ş¼¼Áö °ü·Ã ÀÌº¥Æ®
+	//	ë§ˆìš°ìŠ¤ ë©”ì„¸ì§€ ê´€ë ¨ ì´ë²¤íŠ¸
 	// =================================
 	case WM_MOUSEMOVE:
 	{
@@ -404,30 +404,30 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 			break;
 		}
 
-		// ImGui¿¡ ¸¶¿ì½º¸¦ ÀÌµ¿½ÃÅ³ ¶§ Ã³¸® ¾ÈÇÔ
+		// ImGuiì— ë§ˆìš°ìŠ¤ë¥¼ ì´ë™ì‹œí‚¬ ë•Œ ì²˜ë¦¬ ì•ˆí•¨
 		if (imGuiIO.WantCaptureMouse)
 			break;
 
-		// ¸¶¿ì½º°¡ Å¬¶óÀÌ¾ğÆ® Ã¢ ¾È¿¡ ÀÖÀ» °æ¿ì
+		// ë§ˆìš°ìŠ¤ê°€ í´ë¼ì´ì–¸íŠ¸ ì°½ ì•ˆì— ìˆì„ ê²½ìš°
 		if (point.x >= 0 && point.y >= 0 && point.x < width && point.y < height)
 		{
-			// ¸¶¿ì½º À§Ä¡¸¦ ÀúÀåÇÔ
+			// ë§ˆìš°ìŠ¤ ìœ„ì¹˜ë¥¼ ì €ì¥í•¨
 			mouse.OnMouseMove(point.x, point.y);
 
-			// ÀÌÀü¿¡ ¸¶¿ì½º°¡ Ã¢ ¾È¿¡ ÀÖÁö ¾Ê¾ÒÀ» °æ¿ì 
+			// ì´ì „ì— ë§ˆìš°ìŠ¤ê°€ ì°½ ì•ˆì— ìˆì§€ ì•Šì•˜ì„ ê²½ìš° 
 			if (!mouse.IsInWindow())
 			{
-				SetCapture(hWnd);		// ÇØ´ç ÀÌ Window Ã¢À» Ä¸Ã³ÇÏ¿© ÇØ´ç Ã¢ÀÌ ¸¶¿ì½º¸¦ ÀÔ·Â¹Ş°í ´Ù¸¥ Window Ã¢Àº Àü´ŞÇÏÁö ¾Êµµ·Ï ÇÔ
+				SetCapture(hWnd);		// í•´ë‹¹ ì´ Window ì°½ì„ ìº¡ì²˜í•˜ì—¬ í•´ë‹¹ ì°½ì´ ë§ˆìš°ìŠ¤ë¥¼ ì…ë ¥ë°›ê³  ë‹¤ë¥¸ Window ì°½ì€ ì „ë‹¬í•˜ì§€ ì•Šë„ë¡ í•¨
 				mouse.OnMouseEnter();
 			}
 
 			else
 			{
-				// ¿ŞÂÊ ¸¶¿ì½º ¶Ç´Â ¿À¸¥ÂÊ ¸¶¿ì½º ¹öÆ°À» ´©¸¦ °æ¿ì
+				// ì™¼ìª½ ë§ˆìš°ìŠ¤ ë˜ëŠ” ì˜¤ë¥¸ìª½ ë§ˆìš°ìŠ¤ ë²„íŠ¼ì„ ëˆ„ë¥¼ ê²½ìš°
 				if (wParam & (MK_LBUTTON | MK_RBUTTON))
 					mouse.OnMouseMove(point.x, point.y);
 
-				// ¸¶¿ì½º¸¦ ²ø´Ù°¡ Ã¢ ¹Û¿¡¼­ ³õÀ» °æ¿ì
+				// ë§ˆìš°ìŠ¤ë¥¼ ëŒë‹¤ê°€ ì°½ ë°–ì—ì„œ ë†“ì„ ê²½ìš°
 				else
 				{
 					ReleaseCapture();
@@ -455,7 +455,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		const POINTS point = MAKEPOINTS(lParam);
 		mouse.OnLeftPressed(point.x, point.y);
 
-		// ÇöÀç È°¼ºÈ­µÈ SceneGraph¿¡ ¸¶¿ì½º Å¬¸¯ Àü´Ş
+		// í˜„ì¬ í™œì„±í™”ëœ SceneGraphì— ë§ˆìš°ìŠ¤ í´ë¦­ ì „ë‹¬
 		if (auto sceneGraph = Scene::GetActiveScene()->GetSceneGraph())
 			sceneGraph->OnMouseClick(point.x, point.y, cursorEnabled);
 
@@ -514,7 +514,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 		const POINTS point = MAKEPOINTS(lParam);
 		
-		// ¸¶¿ì½º ÈÙÀ» ¿Ã¸± °æ¿ì
+		// ë§ˆìš°ìŠ¤ íœ ì„ ì˜¬ë¦´ ê²½ìš°
 		if (GET_WHEEL_DELTA_WPARAM(wParam) > 0)
 			mouse.OnWheelUp(point.x, point.y);
 
@@ -554,5 +554,5 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 const char* Window::NoGraphicException::GetType() const noexcept
 {
-	return "Window Ã¢ »ı¼º ¿¹¿Ü (±×·¡ÇÈ Å¬·¡½º°¡ ¾øÀ½)";
+	return "Window ì°½ ìƒì„± ì˜ˆì™¸ (ê·¸ë˜í”½ í´ë˜ìŠ¤ê°€ ì—†ìŒ)";
 }

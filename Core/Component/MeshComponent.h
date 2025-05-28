@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Component/Component.h"
 #include "Core/Draw/Mesh.h"
@@ -26,7 +26,7 @@ public:
 
     std::vector<Mesh*>& GetMeshes();
 
-    // Component Å¬·¡½º ÀÌ¸§ ¹İÈ¯ ¸Ş¼­µå ¿À¹ö¶óÀÌµå
+    // Component í´ë˜ìŠ¤ ì´ë¦„ ë°˜í™˜ ë©”ì„œë“œ ì˜¤ë²„ë¼ì´ë“œ
     virtual std::string GetClassName() const override { return "MeshComponent"; }
     static std::string GetStaticClassName() { return "MeshComponent"; }
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PhysicsSystem.h"
 
 PhysicsSystem& PhysicsSystem::GetInstance()
@@ -10,27 +10,27 @@ PhysicsSystem& PhysicsSystem::GetInstance()
 
 bool PhysicsSystem::Initialize()
 {
-    // PhysX ±â¹Ý ½Ã½ºÅÛ ÃÊ±âÈ­
+    // PhysX ê¸°ë°˜ ì‹œìŠ¤í…œ ì´ˆê¸°í™”
     foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, errorCallback);
     
     if (foundation == nullptr)
         return false;
     
-    // PVD ¿¬°á ¼³Á¤ (PhysX Visual Debugger)
+    // PVD ì—°ê²° ì„¤ì • (PhysX Visual Debugger)
     pvd = PxCreatePvd(*foundation);
     physx::PxPvdTransport* transport = physx::PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
 
     if (pvd != nullptr)
         pvd->connect(*transport, physx::PxPvdInstrumentationFlag::eALL);
     
-    // PhysX ÃÊ±âÈ­
+    // PhysX ì´ˆê¸°í™”
     physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, physx::PxTolerancesScale(), true, pvd);
     if (physics == nullptr)
         return false;
     
-    // ¹°¸® Àå¸é »ý¼º
+    // ë¬¼ë¦¬ ìž¥ë©´ ìƒì„±
     physx::PxSceneDesc sceneDesc(physics->getTolerancesScale());
-    sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);  // Áß·Â ¼³Á¤
+    sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);  // ì¤‘ë ¥ ì„¤ì •
     dispatcher = physx::PxDefaultCpuDispatcherCreate(2);
     sceneDesc.cpuDispatcher = dispatcher;
     sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
@@ -41,7 +41,7 @@ bool PhysicsSystem::Initialize()
 
 void PhysicsSystem::Shutdown()
 {
-    // ¸®¼Ò½º Á¤¸®
+    // ë¦¬ì†ŒìŠ¤ ì •ë¦¬
     if (scene != nullptr)
         scene->release();
 
@@ -72,7 +72,7 @@ void PhysicsSystem::Shutdown()
 
 void PhysicsSystem::Update(float deltaTime)
 {
-    // ¹°¸® ½Ã¹Ä·¹ÀÌ¼Ç ÁøÇà (°íÁ¤ Å¸ÀÓ½ºÅÜ »ç¿ë)
+    // ë¬¼ë¦¬ ì‹œë®¬ë ˆì´ì…˜ ì§„í–‰ (ê³ ì • íƒ€ìž„ìŠ¤í… ì‚¬ìš©)
     const float stepSize = 1.0f / 60.0f;
 
     scene->simulate(stepSize);

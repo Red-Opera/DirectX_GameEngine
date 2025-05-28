@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CylinderFrame.h"
 
 #include "Utility/MathInfo.h"
@@ -14,43 +14,43 @@ TriangleIndexList CylinderFrame::MakeTesselated(VertexCore::VertexLayout vertexL
     constexpr float halfHeight = 0.5f;
     const float twoPi = Math::PI * 2;
 
-    // [¿·¸é] Á¤Á¡ °³¼ö: top rim (0 ~ divisionCount-1) + bottom rim (divisionCount ~ 2*divisionCount-1)
+    // [ì˜†ë©´] ì •ì  ê°œìˆ˜: top rim (0 ~ divisionCount-1) + bottom rim (divisionCount ~ 2*divisionCount-1)
     const unsigned int lateralVertexCount = 2 * static_cast<unsigned int>(divisionCount);
 
-    // [¹Ø¸é] Á¤Á¡ °³¼ö: center 1°³ + rim divisionCount°³
+    // [ë°‘ë©´] ì •ì  ê°œìˆ˜: center 1ê°œ + rim divisionCountê°œ
     const unsigned int bottomFaceVertexCount = 1 + static_cast<unsigned int>(divisionCount);
 
-    // [¶Ñ²±] Á¤Á¡ °³¼ö: center 1°³ + rim divisionCount°³
+    // [ëšœê»‘] ì •ì  ê°œìˆ˜: center 1ê°œ + rim divisionCountê°œ
     const unsigned int topFaceVertexCount = 1 + static_cast<unsigned int>(divisionCount);
 
-    // ÃÑ Á¤Á¡ °³¼ö = lateral + bottom + top
+    // ì´ ì •ì  ê°œìˆ˜ = lateral + bottom + top
     const unsigned int vertexCount = lateralVertexCount + bottomFaceVertexCount + topFaceVertexCount;
 
     VertexBuffer vertices(std::move(vertexLayout), vertexCount);
 
-    // [¿·¸é] Á¤Á¡ »ı¼º
-    // top rim : ÀÎµ¦½º 0 ~ divisionCount-1
-    // bottom rim : ÀÎµ¦½º divisionCount ~ 2*divisionCount-1
+    // [ì˜†ë©´] ì •ì  ìƒì„±
+    // top rim : ì¸ë±ìŠ¤ 0 ~ divisionCount-1
+    // bottom rim : ì¸ë±ìŠ¤ divisionCount ~ 2*divisionCount-1
     for (int i = 0; i < divisionCount; ++i)
     {
         float angle = twoPi * i / divisionCount;
         float x = radius * std::cos(angle);
         float z = radius * std::sin(angle);
 
-        // top rim Á¤Á¡ (¿·¸é¿ë)
+        // top rim ì •ì  (ì˜†ë©´ìš©)
         vertices[i].GetValue<VertexType::Position3D>() = { x, halfHeight, z };
 
-        // bottom rim Á¤Á¡ (¿·¸é¿ë)
+        // bottom rim ì •ì  (ì˜†ë©´ìš©)
         vertices[divisionCount + i].GetValue<VertexType::Position3D>() = { x, -halfHeight, z };
     }
 
-    // [¹Ø¸é] Á¤Á¡ »ı¼º (¿·¸éÀÇ bottom rim°ú º°°³)
-    int bottomCenterIndex = lateralVertexCount; // ½ÃÀÛ ÀÎµ¦½º for ¹Ø¸é
+    // [ë°‘ë©´] ì •ì  ìƒì„± (ì˜†ë©´ì˜ bottom rimê³¼ ë³„ê°œ)
+    int bottomCenterIndex = lateralVertexCount; // ì‹œì‘ ì¸ë±ìŠ¤ for ë°‘ë©´
 
-    // ¹Ø¸é Áß½É Á¤Á¡
+    // ë°‘ë©´ ì¤‘ì‹¬ ì •ì 
     vertices[bottomCenterIndex].GetValue<VertexType::Position3D>() = { 0.0f, -halfHeight, 0.0f };
 
-    // ¹Ø¸é µÑ·¹ Á¤Á¡
+    // ë°‘ë©´ ë‘˜ë ˆ ì •ì 
     for (int i = 0; i < divisionCount; ++i)
     {
         float angle = twoPi * i / divisionCount;
@@ -61,13 +61,13 @@ TriangleIndexList CylinderFrame::MakeTesselated(VertexCore::VertexLayout vertexL
         vertices[bottomCenterIndex + 1 + i].GetValue<VertexType::Position3D>() = { x, -halfHeight, z };
     }
 
-    // [¶Ñ²±] Á¤Á¡ »ı¼º (º°µµÀÇ Á¤Á¡ »ç¿ëÇÏ¿© ³ë¸Ö µî ¼³Á¤ °¡´É)
-    int topCenterIndex = lateralVertexCount + bottomFaceVertexCount; // ½ÃÀÛ ÀÎµ¦½º for ¶Ñ²±
+    // [ëšœê»‘] ì •ì  ìƒì„± (ë³„ë„ì˜ ì •ì  ì‚¬ìš©í•˜ì—¬ ë…¸ë©€ ë“± ì„¤ì • ê°€ëŠ¥)
+    int topCenterIndex = lateralVertexCount + bottomFaceVertexCount; // ì‹œì‘ ì¸ë±ìŠ¤ for ëšœê»‘
 
-    // ¶Ñ²± Áß½É Á¤Á¡
+    // ëšœê»‘ ì¤‘ì‹¬ ì •ì 
     vertices[topCenterIndex].GetValue<VertexType::Position3D>() = { 0.0f, halfHeight, 0.0f };
 
-    // ¶Ñ²± µÑ·¹ Á¤Á¡
+    // ëšœê»‘ ë‘˜ë ˆ ì •ì 
     for (int i = 0; i < divisionCount; ++i)
     {
         float angle = twoPi * i / divisionCount;
@@ -76,41 +76,41 @@ TriangleIndexList CylinderFrame::MakeTesselated(VertexCore::VertexLayout vertexL
         vertices[topCenterIndex + 1 + i].GetValue<VertexType::Position3D>() = { x, halfHeight, z };
     }
 
-    // ÀÎµ¦½º ¹è¿­ »ı¼º
+    // ì¸ë±ìŠ¤ ë°°ì—´ ìƒì„±
     std::vector<unsigned short> indices;
 
-    // [¿·¸é] Ãø¸é »ï°¢Çü (°¢ division¸¶´Ù 2°³ÀÇ »ï°¢ÇüÀ¸·Î Äõµå ±¸¼º)
+    // [ì˜†ë©´] ì¸¡ë©´ ì‚¼ê°í˜• (ê° divisionë§ˆë‹¤ 2ê°œì˜ ì‚¼ê°í˜•ìœ¼ë¡œ ì¿¼ë“œ êµ¬ì„±)
     for (int i = 0; i < divisionCount; ++i)
     {
         int next = (i + 1) % divisionCount;
 
-        // »ï°¢Çü 1: (top_i, bottom rim next, bottom rim i)
+        // ì‚¼ê°í˜• 1: (top_i, bottom rim next, bottom rim i)
         indices.push_back(static_cast<unsigned short>(i));                  // top rim i
         indices.push_back(static_cast<unsigned short>(divisionCount + next)); // bottom rim next
         indices.push_back(static_cast<unsigned short>(divisionCount + i));    // bottom rim i
 
-        // »ï°¢Çü 2: (top_i, top rim next, bottom rim next)
+        // ì‚¼ê°í˜• 2: (top_i, top rim next, bottom rim next)
         indices.push_back(static_cast<unsigned short>(i));                  // top rim i
         indices.push_back(static_cast<unsigned short>(next));               // top rim next
         indices.push_back(static_cast<unsigned short>(divisionCount + next)); // bottom rim next
     }
 
-    // [¹Ø¸é] »ï°¢ÆÒ ±¸¼º (winding order: center, current rim, next rim)
+    // [ë°‘ë©´] ì‚¼ê°íŒ¬ êµ¬ì„± (winding order: center, current rim, next rim)
     for (int i = 0; i < divisionCount; ++i)
     {
         int next = (i + 1) % divisionCount;
-        indices.push_back(static_cast<unsigned short>(bottomCenterIndex));                     // ¹Ø¸é Áß½É
-        indices.push_back(static_cast<unsigned short>(bottomCenterIndex + 1 + i));               // ÇöÀç µÑ·¹ Á¤Á¡
-        indices.push_back(static_cast<unsigned short>(bottomCenterIndex + 1 + next));            // ´ÙÀ½ µÑ·¹ Á¤Á¡
+        indices.push_back(static_cast<unsigned short>(bottomCenterIndex));                     // ë°‘ë©´ ì¤‘ì‹¬
+        indices.push_back(static_cast<unsigned short>(bottomCenterIndex + 1 + i));               // í˜„ì¬ ë‘˜ë ˆ ì •ì 
+        indices.push_back(static_cast<unsigned short>(bottomCenterIndex + 1 + next));            // ë‹¤ìŒ ë‘˜ë ˆ ì •ì 
     }
 
-    // [¶Ñ²±] »ï°¢ÆÒ ±¸¼º (winding order: center, next rim, current rim)
+    // [ëšœê»‘] ì‚¼ê°íŒ¬ êµ¬ì„± (winding order: center, next rim, current rim)
     for (int i = 0; i < divisionCount; ++i)
     {
         int next = (i + 1) % divisionCount;
-        indices.push_back(static_cast<unsigned short>(topCenterIndex));                        // ¶Ñ²± Áß½É
-        indices.push_back(static_cast<unsigned short>(topCenterIndex + 1 + next));               // ´ÙÀ½ µÑ·¹ Á¤Á¡
-        indices.push_back(static_cast<unsigned short>(topCenterIndex + 1 + i));                  // ÇöÀç µÑ·¹ Á¤Á¡
+        indices.push_back(static_cast<unsigned short>(topCenterIndex));                        // ëšœê»‘ ì¤‘ì‹¬
+        indices.push_back(static_cast<unsigned short>(topCenterIndex + 1 + next));               // ë‹¤ìŒ ë‘˜ë ˆ ì •ì 
+        indices.push_back(static_cast<unsigned short>(topCenterIndex + 1 + i));                  // í˜„ì¬ ë‘˜ë ˆ ì •ì 
     }
 
     return { std::move(vertices), std::move(indices) };
@@ -131,19 +131,19 @@ TriangleIndexList CylinderFrame::CreateTextureFrame()
 {
     using VertexType = VertexCore::VertexLayout::VertexType;
 
-    // VertexLayout ±¸¼º: Position3D, Normal, Texture2D
+    // VertexLayout êµ¬ì„±: Position3D, Normal, Texture2D
     VertexCore::VertexLayout layout;
     layout.AddType(VertexType::Position3D);
     layout.AddType(VertexType::Normal);
     layout.AddType(VertexType::Texture2D);
 
-    // 24ºĞÇÒ·Î ¿øÅë »ı¼º
+    // 24ë¶„í• ë¡œ ì›í†µ ìƒì„±
     auto cylinder = MakeTesselated(std::move(layout), 24);
 
     const int divisionCount = 24;
     auto& vertices = cylinder.vertices;
 
-    // [¿·¸é] Normal °è»ê: °¢ Á¤Á¡ÀÇ PositionÀÇ x, z ¼ººĞÀ» ÀÌ¿ë (¼öÆò ¹æÇâ)
+    // [ì˜†ë©´] Normal ê³„ì‚°: ê° ì •ì ì˜ Positionì˜ x, z ì„±ë¶„ì„ ì´ìš© (ìˆ˜í‰ ë°©í–¥)
     for (int i = 0; i < 2 * divisionCount; ++i)
     {
         auto pos = vertices[i].GetValue<VertexType::Position3D>();
@@ -156,14 +156,14 @@ TriangleIndexList CylinderFrame::CreateTextureFrame()
             vertices[i].GetValue<VertexType::Normal>() = { 0.0f, 0.0f, 0.0f };
     }
 
-    // [¹Ø¸é] ³ë¸ÖÀ» (0, -1, 0)À¸·Î ¼öÁ¤ÇÏ¿© ¾Æ·¡ ¹æÇâÀ» °¡¸®Å°µµ·Ï º¯°æ
+    // [ë°‘ë©´] ë…¸ë©€ì„ (0, -1, 0)ìœ¼ë¡œ ìˆ˜ì •í•˜ì—¬ ì•„ë˜ ë°©í–¥ì„ ê°€ë¦¬í‚¤ë„ë¡ ë³€ê²½
     int bottomCenterIndex = 2 * divisionCount;
     vertices[bottomCenterIndex].GetValue<VertexType::Normal>() = { 0.0f, -1.0f, 0.0f };
 
     for (int i = bottomCenterIndex + 1; i < bottomCenterIndex + 1 + divisionCount; ++i)
         vertices[i].GetValue<VertexType::Normal>() = { 0.0f, -1.0f, 0.0f };
 
-    // [¶Ñ²±] ³ë¸ÖÀ» (0, 1, 0)À¸·Î ¼öÁ¤ÇÏ¿© À§ ¹æÇâÀ» °¡¸®Å°µµ·Ï º¯°æ
+    // [ëšœê»‘] ë…¸ë©€ì„ (0, 1, 0)ìœ¼ë¡œ ìˆ˜ì •í•˜ì—¬ ìœ„ ë°©í–¥ì„ ê°€ë¦¬í‚¤ë„ë¡ ë³€ê²½
     int topCenterIndex = bottomCenterIndex + 1 + divisionCount;
     vertices[topCenterIndex].GetValue<VertexType::Normal>() = { 0.0f, 1.0f, 0.0f };
 

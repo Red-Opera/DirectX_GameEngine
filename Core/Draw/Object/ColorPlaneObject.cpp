@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ColorPlaneObject.h"
 
 #include "../BaseModel/ColorPlaneFrame.h"

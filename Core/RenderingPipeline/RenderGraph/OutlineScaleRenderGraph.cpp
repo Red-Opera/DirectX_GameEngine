@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "OutlineScaleRenderGraph.h"
 
 #include "Core/RenderingPipeline/RenderingManager/Buffer/BufferPassClear.h"

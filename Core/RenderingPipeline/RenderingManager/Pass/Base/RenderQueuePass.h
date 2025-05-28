@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "RenderJob.h"
 #include "RenderingPass.h"
@@ -16,10 +16,10 @@ namespace RenderGraphNameSpace
 
 		void Reset() NOEXCEPTRELEASE override;
 
-		// RenderingPassÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// RenderingPassì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void Execute() NOEXCEPTRELEASE override;
 
-		// ¸ğµç RenderJob¿¡ View Frustum ¼³Á¤
+		// ëª¨ë“  RenderJobì— View Frustum ì„¤ì •
 		void SetViewFrustum(const CameraViewFrustumCulling& viewFrustum);
 
 	protected:

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Exception/WindowException.h"
 
@@ -21,7 +21,7 @@
 
 namespace DynamicConstantBuffer
 {
-	// HLSL ÆÄÀÏ¿¡¼­ »ç¿ëÇÒ ¼ö ÀÖ´Â ¹öÆÛ Å¸ÀÔ
+	// HLSL íŒŒì¼ì—ì„œ ì‚¬ìš©í•  ìˆ˜ ìˆëŠ” ë²„í¼ íƒ€ì…
 	enum BufferType 
 	{
 #define TYPE_NAME(childType) childType,
@@ -32,13 +32,13 @@ namespace DynamicConstantBuffer
 	};
 
 	template<BufferType type>
-	struct BufferTypeInfo { static constexpr bool hasExistType = false; };		// Àß¸øµÈ Å¸ÀÔÀÎ °æ¿ì
+	struct BufferTypeInfo { static constexpr bool hasExistType = false; };		// ì˜ëª»ëœ íƒ€ì…ì¸ ê²½ìš°
 
 	template<> struct BufferTypeInfo<float1>
 	{
-		using SystemType = float;								// ±âº» »ç¿ë Å¸ÀÔ
-		static constexpr size_t hlslSize = sizeof(SystemType);	// HLSL ÆÄÀÏ¿¡¼­ »ç¿ëµÇ´Â Å¸ÀÔ »çÀÌÁî
-		static constexpr const char* code = "FLOAT1";			// ¼­¸í ¸¸µé ¶§ »ç¿ëÇÏ´Â ÄÚµå
+		using SystemType = float;								// ê¸°ë³¸ ì‚¬ìš© íƒ€ì…
+		static constexpr size_t hlslSize = sizeof(SystemType);	// HLSL íŒŒì¼ì—ì„œ ì‚¬ìš©ë˜ëŠ” íƒ€ì… ì‚¬ì´ì¦ˆ
+		static constexpr const char* code = "FLOAT1";			// ì„œëª… ë§Œë“¤ ë•Œ ì‚¬ìš©í•˜ëŠ” ì½”ë“œ
 		static constexpr bool hasExistType = true;
 	};
 
@@ -91,7 +91,7 @@ namespace DynamicConstantBuffer
 	};
 
 #define TYPE_NAME(childType) \
-	static_assert(BufferTypeInfo<childType>::hasExistType, #childType " Å¸ÀÔÀº HLSL¿¡¼­ »ç¿ëÇÒ ¼ö ¾øÀ½");
+	static_assert(BufferTypeInfo<childType>::hasExistType, #childType " íƒ€ì…ì€ HLSLì—ì„œ ì‚¬ìš©í•  ìˆ˜ ì—†ìŒ");
 
 	CHILD_TYPES
 #undef TYPE_NAME
@@ -118,14 +118,14 @@ namespace DynamicConstantBuffer
 
 		bool IsExist() const noexcept;
 
-		// [] ¿¬»êÀÚ´Â ±¸Á¶Ã¼¿¡¼­¸¸ ÀÌ¸§À» ÅëÇØ Á¢±ÙÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+		// [] ì—°ì‚°ìëŠ” êµ¬ì¡°ì²´ì—ì„œë§Œ ì´ë¦„ì„ í†µí•´ ì ‘ê·¼í•  ìˆ˜ ìˆë„ë¡ í•¨
 		LayoutType& operator[](const std::string& name) NOEXCEPTRELEASE;
 		const LayoutType& operator[](const std::string& name) const NOEXCEPTRELEASE;
 
-		// ¹è¿­ÀÇ ÀÎµ¦½º¿¡ µû¶ó¼­ LayoutTypeÀ» ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+		// ë°°ì—´ì˜ ì¸ë±ìŠ¤ì— ë”°ë¼ì„œ LayoutTypeì„ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
 		std::pair<size_t, const LayoutType*> GetLayoutTypeFromArray(size_t offset, size_t index) const NOEXCEPTRELEASE;
 
-		// T()´Â ¹è¿­¿¡¼­¸¸ µ¿ÀÛÇÏµµ·Ï ÇÔ
+		// T()ëŠ” ë°°ì—´ì—ì„œë§Œ ë™ì‘í•˜ë„ë¡ í•¨
 		LayoutType& T() NOEXCEPTRELEASE;
 		const LayoutType& T() const NOEXCEPTRELEASE;
 
@@ -133,13 +133,13 @@ namespace DynamicConstantBuffer
 		size_t GetOffsetEnd() const noexcept;
 		size_t GetLayoutByteSize() const noexcept;
 
-		// Struct Àü¿ë Type add ÇÔ¼ö
+		// Struct ì „ìš© Type add í•¨ìˆ˜
 		LayoutType& add(BufferType addType, std::string bufferName) NOEXCEPTRELEASE;
 		
 		template<BufferType addType>
 		LayoutType& add(const std::string bufferName) NOEXCEPTRELEASE { return add(addType, std::move(bufferName)); }
 
-		// ¹è¿­ Àü¿ë Type set ÇÔ¼ö
+		// ë°°ì—´ ì „ìš© Type set í•¨ìˆ˜
 		LayoutType& set(BufferType addType, size_t size) NOEXCEPTRELEASE;
 
 		template<BufferType setType>
@@ -155,7 +155,7 @@ namespace DynamicConstantBuffer
 #undef TYPE_NAME
 
 			default:
-				assert("ÇØ´ç Å¸ÀÔÀº HLSL¿¡¼­ »ç¿ëÇÒ ¼ö ¾øÀ½");
+				assert("í•´ë‹¹ íƒ€ì…ì€ HLSLì—ì„œ ì‚¬ìš©í•  ìˆ˜ ì—†ìŒ");
 				return 0u;
 			}
 		}
@@ -168,9 +168,9 @@ namespace DynamicConstantBuffer
 
 		static LayoutType& GetEmptyType() noexcept { static LayoutType empty{}; return empty; }
 
-		static size_t Get16ByteMemoryBlockBoundary(size_t offset) NOEXCEPTRELEASE;							// ÇöÀç ÀüÃ¼ 16 Byte ¸Ş¸ğ¸® ºí·Ï Å©±â¸¦ ±¸ÇÔ
-		static bool IsAfterInsertOver16ByteMemoryBlock(size_t offset, size_t size) NOEXCEPTRELEASE;			// µ¥ÀÌÅÍ »ğÀÔ ÈÄ 16 Byte ¸Ş¸ğ¸® ºí·ÏÀÌ ³Ñ¾î°¡´ÂÁö Ã¼Å©
-		static size_t GetAfterInsert16ByteMemoryBlockBoundary(size_t offset, size_t size) NOEXCEPTRELEASE;	// µ¥ÀÌÅÍ »ğÀÔ ÈÄ ÀüÃ¼ 16 Byte ¸Ş¸ğ¸® ºí·Ï Å©±â¸¦ ±¸ÇÔ
+		static size_t Get16ByteMemoryBlockBoundary(size_t offset) NOEXCEPTRELEASE;							// í˜„ì¬ ì „ì²´ 16 Byte ë©”ëª¨ë¦¬ ë¸”ë¡ í¬ê¸°ë¥¼ êµ¬í•¨
+		static bool IsAfterInsertOver16ByteMemoryBlock(size_t offset, size_t size) NOEXCEPTRELEASE;			// ë°ì´í„° ì‚½ì… í›„ 16 Byte ë©”ëª¨ë¦¬ ë¸”ë¡ì´ ë„˜ì–´ê°€ëŠ”ì§€ ì²´í¬
+		static size_t GetAfterInsert16ByteMemoryBlockBoundary(size_t offset, size_t size) NOEXCEPTRELEASE;	// ë°ì´í„° ì‚½ì… í›„ ì „ì²´ 16 Byte ë©”ëª¨ë¦¬ ë¸”ë¡ í¬ê¸°ë¥¼ êµ¬í•¨
 		static bool TypeNameIsValidate(const std::string& name) noexcept;
 
 		LayoutType() noexcept = default;
@@ -209,7 +209,7 @@ namespace DynamicConstantBuffer
 		friend class TypeCache;
 	public:
 		EditLayout() noexcept;
-		LayoutType& operator[] (const std::string& name) NOEXCEPTRELEASE;	// []¸¦ ÀÌ¿ëÇÏ¿© ÇØ´ç Å¸ÀÔÀ» °¡Á®¿È
+		LayoutType& operator[] (const std::string& name) NOEXCEPTRELEASE;	// []ë¥¼ ì´ìš©í•˜ì—¬ í•´ë‹¹ íƒ€ì…ì„ ê°€ì ¸ì˜´
 
 		template<BufferType bufferType>
 		LayoutType& add(const std::string& name) NOEXCEPTRELEASE
@@ -250,7 +250,7 @@ namespace DynamicConstantBuffer
 			template<typename T>
 			operator const T* () const NOEXCEPTRELEASE
 			{
-				static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "Æ÷ÀÎÅÍ º¯ÇÑ¿¡ »ç¿ëµÇÁö ¾Ê´Â ½Ã½ºÅÛ Å¸ÀÔ");
+				static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "í¬ì¸í„° ë³€í•œì— ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ì‹œìŠ¤í…œ íƒ€ì…");
 				return &static_cast<const T&>(*ref);
 			}
 
@@ -269,7 +269,7 @@ namespace DynamicConstantBuffer
 		template<typename T>
 		operator const T& () const NOEXCEPTRELEASE
 		{
-			static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "Æ÷ÀÎÅÍ º¯ÇÑ¿¡ »ç¿ëµÇÁö ¾Ê´Â ½Ã½ºÅÛ Å¸ÀÔ");
+			static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "í¬ì¸í„° ë³€í•œì— ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ì‹œìŠ¤í…œ íƒ€ì…");
 			return *reinterpret_cast<const T*>(bytes + offset + layout->get<T>());
 		}
 
@@ -294,7 +294,7 @@ namespace DynamicConstantBuffer
 			template<typename T>
 			operator T* () const NOEXCEPTRELEASE
 			{
-				static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "Æ÷ÀÎÅÍ º¯ÇÑ¿¡ »ç¿ëµÇÁö ¾Ê´Â ½Ã½ºÅÛ Å¸ÀÔ");
+				static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "í¬ì¸í„° ë³€í•œì— ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ì‹œìŠ¤í…œ íƒ€ì…");
 				return &static_cast<T&>(*ref);
 			}
 
@@ -327,14 +327,14 @@ namespace DynamicConstantBuffer
 		template<typename T>
 		operator T& () const NOEXCEPTRELEASE
 		{
-			static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "Æ÷ÀÎÅÍ º¯ÇÑ¿¡ »ç¿ëµÇÁö ¾Ê´Â ½Ã½ºÅÛ Å¸ÀÔ");
+			static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "í¬ì¸í„° ë³€í•œì— ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ì‹œìŠ¤í…œ íƒ€ì…");
 			return *reinterpret_cast<T*>(bytes + offset + layout->get<T>());
 		}
 
 		template<typename T>
 		T& operator=(const T& rhs) const NOEXCEPTRELEASE
 		{
-			static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "Æ÷ÀÎÅÍ º¯ÇÑ¿¡ »ç¿ëµÇÁö ¾Ê´Â ½Ã½ºÅÛ Å¸ÀÔ");
+			static_assert(SystemTypeInfo<std::remove_const_t<T>>::hasExistType, "í¬ì¸í„° ë³€í•œì— ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ì‹œìŠ¤í…œ íƒ€ì…");
 			return static_cast<T&>(*this) = rhs;
 		}
 

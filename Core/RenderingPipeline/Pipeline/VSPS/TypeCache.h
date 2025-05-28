@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "DynamicConstantBuffer.h"
 
@@ -6,7 +6,7 @@
 #include <memory>
 #include <unordered_map>
 
-// ·¹ÀÌ¾Æ¿ôÀÇ Å¸ÀÔÀ» ÀúÀåÇÏ´Â Å¬·¡½º
+// ë ˆì´ì•„ì›ƒì˜ íƒ€ì…ì„ ì €ì¥í•˜ëŠ” í´ë˜ìŠ¤
 namespace DynamicConstantBuffer
 {
 	class TypeCache

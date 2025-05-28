@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ImguiManager.h"
 
 #include "External/Imgui/imgui.h"

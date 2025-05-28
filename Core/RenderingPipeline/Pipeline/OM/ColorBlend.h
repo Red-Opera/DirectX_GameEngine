@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/RenderingPipeline/Render.h"
 
@@ -19,13 +19,13 @@ namespace Graphic
 		static std::string CreateID(bool blending, std::optional<float> transparency = {});
 		std::string GetID() const noexcept override;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
-		bool blending;											// ºí·»µùÀ» »ç¿ëÇÒÁö ¿©ºÎ
+		bool blending;											// ë¸”ë Œë”©ì„ ì‚¬ìš©í• ì§€ ì—¬ë¶€
 
-		std::optional<std::array<float, 4>> transparency;		// Åõ¸íµµ
+		std::optional<std::array<float, 4>> transparency;		// íˆ¬ëª…ë„
 	};
 }

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "MeshComponent.h"
 #include "Core/Object/Object.h"

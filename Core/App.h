@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Window.h"
 
@@ -36,7 +36,7 @@ private:
 
 	// ImGui
 	ImguiManager imgui;
-	bool isShowDemoWindow = false;		// ImGuiÀÇ Demo Ã¢À» ¶ç¿ï °ÍÀÎÁö ¿©ºÎ
+	bool isShowDemoWindow = false;		// ImGuiì˜ Demo ì°½ì„ ë„ìš¸ ê²ƒì¸ì§€ ì—¬ë¶€
 	
 	Window wnd;
 	GameTimer timer;

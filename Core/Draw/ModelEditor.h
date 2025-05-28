@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Component/TransformComponent.h"
 #include "Core/Draw/Mesh.h"
@@ -24,7 +24,7 @@ public:
 		using namespace std::string_literals;
 		ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, technique->GetName().c_str());
 
-		// Outline Å×Å©´ÐÀº Ã¼Å©¹Ú½º¸¦ Ç¥½ÃÇÏÁö ¾ÊÀ½
+		// Outline í…Œí¬ë‹‰ì€ ì²´í¬ë°•ìŠ¤ë¥¼ í‘œì‹œí•˜ì§€ ì•ŠìŒ
 		if (technique->GetName() != "Outline")
 		{
 			bool isActive = technique->GetAcive();

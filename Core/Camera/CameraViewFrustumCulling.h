@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <DirectXMath.h>
 
 class CameraViewFrustumCulling
@@ -6,14 +6,14 @@ class CameraViewFrustumCulling
 public:
     CameraViewFrustumCulling();
 
-    // Ä«¸Ş¶óÀÇ Çà·Ä¿¡¼­ Frustum Á¤º¸ ¾÷µ¥ÀÌÆ®
+    // ì¹´ë©”ë¼ì˜ í–‰ë ¬ì—ì„œ Frustum ì •ë³´ ì—…ë°ì´íŠ¸
     void UpdateFromMatrices(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection);
 	void UpdateFromViewProjection(const DirectX::XMMATRIX& viewProjection);
 
-    // ¹Ù¿îµù ¹Ú½º°¡ ÀıµÎÃ¼ ³»¿¡ ÀÖ´ÂÁö È®ÀÎ
+    // ë°”ìš´ë”© ë°•ìŠ¤ê°€ ì ˆë‘ì²´ ë‚´ì— ìˆëŠ”ì§€ í™•ì¸
     bool CheckBox(const DirectX::XMFLOAT3& center, const DirectX::XMFLOAT3& extents) const;
 
-    // ¹Ù¿îµù ±¸°¡ ÀıµÎÃ¼ ³»¿¡ ÀÖ´ÂÁö È®ÀÎ
+    // ë°”ìš´ë”© êµ¬ê°€ ì ˆë‘ì²´ ë‚´ì— ìˆëŠ”ì§€ í™•ì¸
     bool CheckSphere(const DirectX::XMFLOAT3& center, float radius) const;
     
 	DirectX::XMMATRIX GetViewProjection() const { return viewProjection; }
@@ -21,6 +21,6 @@ public:
 private:
     enum Plane { Near, Far, Left, Right, Top, Bottom, Count };
 
-    DirectX::XMFLOAT4 frustumPlanes[Plane::Count];  // ÀıµÎÃ¼ Æò¸é ¹æÁ¤½Ä
-	DirectX::XMMATRIX viewProjection;               // ºä - ÇÁ·ÎÁ§¼Ç Çà·Ä
+    DirectX::XMFLOAT4 frustumPlanes[Plane::Count];  // ì ˆë‘ì²´ í‰ë©´ ë°©ì •ì‹
+	DirectX::XMMATRIX viewProjection;               // ë·° - í”„ë¡œì ì…˜ í–‰ë ¬
 };

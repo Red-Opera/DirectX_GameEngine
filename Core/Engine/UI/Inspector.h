@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/Component/Component.h"
 #include "Core/Object/EngineLoop.h"
@@ -38,7 +38,7 @@ namespace Engine
 
 		~Inspector() = default;
 
-		// EngineLoop��(��) ���� ��ӵ�
+		// EngineLoop의해 상속된 가상 함수들
 		void Initialize() override;
 		void BeforeFrame() override;
 		void Start() override;
@@ -52,7 +52,7 @@ namespace Engine
 		void Reset() override;
 
 	private:
-		static std::shared_ptr<Object> selectObject;		// ���� ���õ� ������Ʈ
-		static std::shared_ptr<Component> selectComponent;	// ���� ���õ� ������Ʈ
+		static std::shared_ptr<Object> selectObject;		// 선택된 오브젝트
+		static std::shared_ptr<Component> selectComponent;	// 선택된 컴포넌트
 	};
 }

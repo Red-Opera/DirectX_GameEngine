@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "PipelineDataProvider.h"
 
 #include "Core/Exception/RenderGraphCompileException.h"

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BaseException.h"
 using namespace std;
 
@@ -15,9 +15,9 @@ BaseException::BaseException(int line, string file) noexcept
 
 const char* BaseException::what() const noexcept
 {
-	string exContent = "¿¹¿Ü°¡ ¹ß»ıÇß½À´Ï´Ù. (¿¹¿Ü Á¾·ù : " +
-		string(GetType()) + ", ¿¹¿Ü ÆÄÀÏ : " +
-		file + "ÁÙ ¹øÈ£ : " + to_string(line) + "ÁÙ)";		
+	string exContent = "ì˜ˆì™¸ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤. (ì˜ˆì™¸ ì¢…ë¥˜ : " +
+		string(GetType()) + ", ì˜ˆì™¸ íŒŒì¼ : " +
+		file + "ì¤„ ë²ˆí˜¸ : " + to_string(line) + "ì¤„)";		
 
 	exceptionText = exContent;
 
@@ -42,7 +42,7 @@ const std::string& BaseException::GetFile() const noexcept
 string BaseException::GetFileNameAndLine() const noexcept
 {
 	ostringstream out;
-	out << "[ÆÄÀÏ ÀÌ¸§] " << file << endl << "[ÁÙ ¹øÈ£] " << line;
+	out << "[íŒŒì¼ ì´ë¦„] " << file << endl << "[ì¤„ ë²ˆí˜¸] " << line;
 
 	return out.str();
 }

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TransformConstantBuffer.h"
 
 #include "Core/Window.h"
@@ -35,11 +35,11 @@ namespace Graphic
 	{
 		assert(parent != nullptr);
 
-		// ºÎ¸ğÀÇ Transformd¿¡¼­ Ä«¸Ş¶ó À§Ä¡¸¦ °öÇÏ¿© View À§Ä¡¸¦ ±¸ÇÔ
+		// ë¶€ëª¨ì˜ Transformdì—ì„œ ì¹´ë©”ë¼ ìœ„ì¹˜ë¥¼ ê³±í•˜ì—¬ View ìœ„ì¹˜ë¥¼ êµ¬í•¨
 		const auto model = parent->GetTransformMatrix();
 		const auto viewTransform = model * Window::GetDxGraphic().GetCamera();
 
-		// »ó¼ö ¹öÆÛ·Î ¸¸µé TransformÀ» ¸¸µë
+		// ìƒìˆ˜ ë²„í¼ë¡œ ë§Œë“¤ Transformì„ ë§Œë“¬
 		return
 		{
 			DirectX::XMMatrixTranspose(model),

@@ -1,4 +1,4 @@
-#include <stdafx.h>
+ï»¿#include <stdafx.h>
 
 #include "../Win.h"
 
@@ -166,7 +166,7 @@ void Mouse::OnWheelDelta(int x, int y, int delta) noexcept
 {
 	wheelDeltaCarry += delta;
 
-	// °¡¸¸È÷ ÀÖÀ» °æ¿ì 120À¸·Î ¼³Á¤µÊ
+	// ê°€ë§Œížˆ ìžˆì„ ê²½ìš° 120ìœ¼ë¡œ ì„¤ì •ë¨
 	while (wheelDeltaCarry >= WHEEL_DELTA)
 	{
 		wheelDeltaCarry -= WHEEL_DELTA;

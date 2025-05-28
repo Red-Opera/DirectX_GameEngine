@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Object/EngineLoop.h"
 #include "Core/Engine/UI/ObjectGizmo.h"
@@ -43,45 +43,45 @@ private:
     void SetOutlineForSingleObject(std::shared_ptr<Object> object, bool enable) noexcept;
     void SetOutlineForChildren(std::shared_ptr<Object> object, bool enable) noexcept;
 
-    // °´Ã¼ ¼±ÅÃ °øÅë ·ÎÁ÷
+    // ê°ì²´ ì„ íƒ ê³µí†µ ë¡œì§
     void SelectObject(std::shared_ptr<Object> object);
 
-    // Æ®¸® ³×ºñ°ÔÀÌ¼Ç ÀÌÀü/´ÙÀ½ ¿ÀºêÁ§Æ® ¼±ÅÃ ÇÔ¼ö
+    // íŠ¸ë¦¬ ë„¤ë¹„ê²Œì´ì…˜ ì´ì „/ë‹¤ìŒ ì˜¤ë¸Œì íŠ¸ ì„ íƒ í•¨ìˆ˜
     void SelectNextObjectInTree();
     void SelectPreviousObjectInTree();
 
     void CollectVisibleObjects(std::vector<std::shared_ptr<Object>>& visibleObjects);
     void CollectChildObjects(std::shared_ptr<Object> parent, std::vector<std::shared_ptr<Object>>& objects);
 
-    // ºÎ¸ğ Ä³½Ã ÃÊ±âÈ­
+    // ë¶€ëª¨ ìºì‹œ ì´ˆê¸°í™”
     void InitializeParentCache();
     void ProcessChildrenForCache(const std::shared_ptr<Object>& parentObj);
 
-    // ºÎ¸ğ °´Ã¼¸¦ Ã£´Â ¸Ş¼­µå
+    // ë¶€ëª¨ ê°ì²´ë¥¼ ì°¾ëŠ” ë©”ì„œë“œ
     std::shared_ptr<Object> FindParentObject(const std::shared_ptr<Object>& childObject);
     std::shared_ptr<Object> FindParentObjectDirect(const std::shared_ptr<Object>& childObject);
     std::shared_ptr<Object> FindParentInChildrenDirect(const std::shared_ptr<Object>& potentialParent, const std::shared_ptr<Object>& childObject);
 
-    // ³ëµå ¿­¸² »óÅÂ È®ÀÎ
+    // ë…¸ë“œ ì—´ë¦¼ ìƒíƒœ í™•ì¸
     bool IsNodeOpen(const std::shared_ptr<Object>& object) const;
 
-    // Å° Ã³¸® ÇÔ¼ö
+    // í‚¤ ì²˜ë¦¬ í•¨ìˆ˜
     void HandleRightKeyPress();
     void HandleLeftKeyPress();
 
-    // ÂüÁ¶¸¸ ÀúÀåÇØ ¸Ş¸ğ¸® ÇÒ´ç È¸ÇÇ
+    // ì°¸ì¡°ë§Œ ì €ì¥í•´ ë©”ëª¨ë¦¬ í• ë‹¹ íšŒí”¼
     std::vector<std::shared_ptr<class Object>>& sceneObjects;
     std::string sceneName;
 
     std::shared_ptr<class Object> selectedObject;
 
-    // ObjectGizmo ÂüÁ¶ Ãß°¡
+    // ObjectGizmo ì°¸ì¡° ì¶”ê°€
     std::shared_ptr<Engine::ObjectGizmo> objectGizmo;
 
-    std::unordered_map<std::shared_ptr<Object>, std::shared_ptr<Object>> parentCache;   // Ä³½ÃµÈ ºÎ¸ğ ¸Ê (ºÎ¸ğ °´Ã¼ °Ë»ö ¼º´É Çâ»ó)
-    std::unordered_map<std::shared_ptr<Object>, bool> nodeOpenState;                    // ³ëµå ÆîÄ§ »óÅÂ ÀúÀå
+    std::unordered_map<std::shared_ptr<Object>, std::shared_ptr<Object>> parentCache;   // ìºì‹œëœ ë¶€ëª¨ ë§µ (ë¶€ëª¨ ê°ì²´ ê²€ìƒ‰ ì„±ëŠ¥ í–¥ìƒ)
+    std::unordered_map<std::shared_ptr<Object>, bool> nodeOpenState;                    // ë…¸ë“œ í¼ì¹¨ ìƒíƒœ ì €ì¥
 
-    // Å° »óÅÂ ÃßÀû º¯¼ö
+    // í‚¤ ìƒíƒœ ì¶”ì  ë³€ìˆ˜
     bool keyDownPressed = false;
     bool keyUpPressed = false;
     bool keyLeftPressed = false;

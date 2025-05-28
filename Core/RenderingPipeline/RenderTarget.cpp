@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "RenderTarget.h"
 
 #include "Core/Window.h"
@@ -22,7 +22,7 @@ namespace Graphic
         width = textureDESC.Width;
         height = textureDESC.Height;
 
-        // ·»´õ¸µ °á°ú¸¦ Ãâ·ÂÇÏ±â À§ÇÏ±â À§ÇØ »ı¼º
+        // ë Œë”ë§ ê²°ê³¼ë¥¼ ì¶œë ¥í•˜ê¸° ìœ„í•˜ê¸° ìœ„í•´ ìƒì„±
         D3D11_RENDER_TARGET_VIEW_DESC renderTargetDESC = {};
         renderTargetDESC.Format = textureDESC.Format;
 
@@ -48,7 +48,7 @@ namespace Graphic
     {
         CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        // ±íÀÌ ½ºÅÙ½Ç ¹öÆÛÀÇ ÅØ½ºÃÄ Á¦ÀÛ
+        // ê¹Šì´ ìŠ¤í…ì‹¤ ë²„í¼ì˜ í…ìŠ¤ì³ ì œì‘
         D3D11_TEXTURE2D_DESC textureDesc = {};
         textureDesc.Width = width;
         textureDesc.Height = height;
@@ -56,14 +56,14 @@ namespace Graphic
         textureDesc.ArraySize = 1;
         textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-        // MSAA¸¦ »ç¿ëÇÒ °æ¿ì
+        // MSAAë¥¼ ì‚¬ìš©í•  ê²½ìš°
         if (Window::GetDxGraphic().GetMsaaUsage())
         {
             textureDesc.SampleDesc.Count = 4;
             textureDesc.SampleDesc.Quality = Window::GetDxGraphic().GetMsaaQuality() - 1;
         }
 
-        // MSAA¸¦ »ç¿ëÇÏÁö ¾ÊÀ» °æ¿ì
+        // MSAAë¥¼ ì‚¬ìš©í•˜ì§€ ì•Šì„ ê²½ìš°
         else
         {
             textureDesc.SampleDesc.Count = 1;
@@ -78,7 +78,7 @@ namespace Graphic
         Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
         GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture));
 
-        // ·»´õ¸µ °á°ú¸¦ Ãâ·ÂÇÏ±â À§ÇÏ±â À§ÇØ »ı¼º
+        // ë Œë”ë§ ê²°ê³¼ë¥¼ ì¶œë ¥í•˜ê¸° ìœ„í•˜ê¸° ìœ„í•´ ìƒì„±
         D3D11_RENDER_TARGET_VIEW_DESC renerTargetDesc = {};
         renerTargetDesc.Format = textureDesc.Format;
         renerTargetDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
@@ -258,7 +258,7 @@ namespace Graphic
         auto [textureTemp, textureDESC] = CreateStaging();
 
         if (textureDESC.Format != DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
-            throw std::runtime_error{ "ÀÌ¹ÌÁö·Î ÀúÀåÇÏ±â À§ÇÑ RenderTarget ¹öÆÛ·Î »ç¿ëÇÏ´Â Æ÷¸ËÀÌ DXGI_FORMAT_R8G8B8A8_UNORM°¡ ¾Æ´Ô" };
+            throw std::runtime_error{ "ì´ë¯¸ì§€ë¡œ ì €ì¥í•˜ê¸° ìœ„í•œ RenderTarget ë²„í¼ë¡œ ì‚¬ìš©í•˜ëŠ” í¬ë§·ì´ DXGI_FORMAT_R8G8B8A8_UNORMê°€ ì•„ë‹˜" };
 
         const auto width = GetWidth();
         const auto height = GetHeight();
@@ -358,7 +358,7 @@ namespace Graphic
         else
         {
             GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
-            throw std::runtime_error{ "´õ¹Ì °ªÀ¸·Î ÀúÀåÇÏ±â À§ÇÑ RenderTarget ¹öÆÛ·Î »ç¿ëÇÏ´Â Æ÷¸ËÀÌ Àß¸øµÇ¾úÀ½" };
+            throw std::runtime_error{ "ë”ë¯¸ ê°’ìœ¼ë¡œ ì €ì¥í•˜ê¸° ìœ„í•œ RenderTarget ë²„í¼ë¡œ ì‚¬ìš©í•˜ëŠ” í¬ë§·ì´ ì˜ëª»ë˜ì—ˆìŒ" };
         }
 
         GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
@@ -368,7 +368,7 @@ namespace Graphic
 
     void OutputOnlyRenderTarget::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        assert("OutputOnlyRenderTargetÀº Shader InputÀÌ ÀÖÀ» ¶§¸¸ »ç¿ëÇÒ ¼ö ÀÖÀ½" && false);
+        assert("OutputOnlyRenderTargetì€ Shader Inputì´ ìˆì„ ë•Œë§Œ ì‚¬ìš©í•  ìˆ˜ ìˆìŒ" && false);
     }
 
     OutputOnlyRenderTarget::OutputOnlyRenderTarget(ID3D11Texture2D* texture, std::optional<UINT> face)

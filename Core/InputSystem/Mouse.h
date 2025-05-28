@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <queue>
 #include <optional>
 
@@ -12,7 +12,7 @@ public:
 	class Event
 	{
 	public:
-		// ¸¶¿ì½º ÀÌº¥Æ®
+		// ë§ˆìš°ìŠ¤ ì´ë²¤íŠ¸
 		enum class Type
 		{
 			LPress, LRelease,
@@ -27,31 +27,31 @@ public:
 			leftIsPressed(parent.leftIsPressed), rightIsPressed(parent.rightIsPressed),
 			x(parent.x), y(parent.y) {}
 
-		// ÇØ´ç ¸¶¿ì½º ÀÌº¥Æ® Á¾·ù
+		// í•´ë‹¹ ë§ˆìš°ìŠ¤ ì´ë²¤íŠ¸ ì¢…ë¥˜
 		Type GetType() const noexcept { return type; }
 
-		// ¸¶¿ì½º ÀÌº¥Æ®°¡ ¹ß»ıÇÑ ¸¶¿ì½º Æ÷ÀÎÅÍ À§Ä¡¸¦ ¾ò´Â ¸Ş¼Òµå
+		// ë§ˆìš°ìŠ¤ ì´ë²¤íŠ¸ê°€ ë°œìƒí•œ ë§ˆìš°ìŠ¤ í¬ì¸í„° ìœ„ì¹˜ë¥¼ ì–»ëŠ” ë©”ì†Œë“œ
 		std::pair<int, int> GetPos() const noexcept { return{ x,y }; }
 		int GetPosX() const noexcept { return x; }
 		int GetPosY() const noexcept { return y; }
 
-		// ÇØ´ç ¸¶¿ì½º°¡ ´­·È´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+		// í•´ë‹¹ ë§ˆìš°ìŠ¤ê°€ ëˆŒë ¸ëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
 		bool LeftIsPressed() const noexcept { return leftIsPressed; }
 		bool RightIsPressed() const noexcept { return rightIsPressed; }
 
 	private:
-		Type type;				// ÇØ´ç ¸¶¿ì½º ÀÌº¥Æ® Å¸ÀÔ
+		Type type;				// í•´ë‹¹ ë§ˆìš°ìŠ¤ ì´ë²¤íŠ¸ íƒ€ì…
 
-		bool leftIsPressed;		// ¿ŞÂÊ Å°°¡ ´­·È´ÂÁö ¿©ºÎ
-		bool rightIsPressed;	// ¿À¸¥ÂÊ Å°°¡ ´­·È´ÂÁö ¿©ºÎ
-		int x;					// ¸¶¿ì½º xÁÂÇ¥
-		int y;					// ¸¶¿ì½º yÁÂÇ¥
+		bool leftIsPressed;		// ì™¼ìª½ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ ì—¬ë¶€
+		bool rightIsPressed;	// ì˜¤ë¥¸ìª½ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ ì—¬ë¶€
+		int x;					// ë§ˆìš°ìŠ¤ xì¢Œí‘œ
+		int y;					// ë§ˆìš°ìŠ¤ yì¢Œí‘œ
 	};
 
 public:
 	Mouse() = default;
 
-	// º¹»ç »ı¼º Á¦°Å
+	// ë³µì‚¬ ìƒì„± ì œê±°
 	Mouse(const Mouse&) = delete;
 	Mouse& operator=(const Mouse&) = delete;
 
@@ -95,14 +95,14 @@ private:
 private:
 	static constexpr unsigned int bufferSize = 16u;
 
-	int x;	// ¸¶¿ì½º xÁÂÇ¥
-	int y;	// ¸¶¿ì½º yÁÂÇ¥
+	int x;	// ë§ˆìš°ìŠ¤ xì¢Œí‘œ
+	int y;	// ë§ˆìš°ìŠ¤ yì¢Œí‘œ
 
-	bool leftIsPressed = false;		// ¿ŞÂÊ Å°°¡ ´­·È´ÂÁö ¿©ºÎ
-	bool rightIsPressed = false;	// ¿À¸¥ÂÊ Å°°¡ ´­·È´ÂÁö ¿©ºÎ
+	bool leftIsPressed = false;		// ì™¼ìª½ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ ì—¬ë¶€
+	bool rightIsPressed = false;	// ì˜¤ë¥¸ìª½ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ ì—¬ë¶€
 
-	bool isInWindow = false;		// ÇöÀç Window Ã¢ ¾È¿¡ ÀÖ´ÂÁö ¿©ºÎ
-	int wheelDeltaCarry = 0;		// ÇöÀç ¸¶¿ì½º ÈÙ ¼Óµµ
+	bool isInWindow = false;		// í˜„ì¬ Window ì°½ ì•ˆì— ìˆëŠ”ì§€ ì—¬ë¶€
+	int wheelDeltaCarry = 0;		// í˜„ì¬ ë§ˆìš°ìŠ¤ íœ  ì†ë„
 	bool rawEnabled = false;
 
 	std::queue<Event> buffer;

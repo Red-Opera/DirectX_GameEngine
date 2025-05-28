@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TextureCubeObject.h"
 
 #include "../BaseModel/CubeFrame.h"
@@ -112,7 +112,7 @@ void TextureCubeObject::Initialize()
 		AddTechnique(std::move(tech));
 	}
 
-	// ±×¸²ÀÚ ¸Ê Technique
+	// ê·¸ë¦¼ì ë§µ Technique
 	{
 		Technique shadowMap{ "ShadowMap", RenderingChannel::shadow, true };
 		{

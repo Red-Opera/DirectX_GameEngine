@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/Exception/BaseException.h"
 #include "Core/Exception/WindowException.h"

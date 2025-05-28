@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/DxGraphic.h"
 
@@ -11,7 +11,7 @@ class Mesh;
 class TechniqueBase;
 class ModelBase;
 
-// ¿ÀºêÁ§Æ®ÀÇ ÀÏºÎºĞÀ» ³ªÅ¸³»´Â Å¬·¡½º (ÀÚµ¿Â÷ÀÇ ¹ÙÄû, ÀÚµ¿Â÷ÀÇ ¸öÃ¼)
+// ì˜¤ë¸Œì íŠ¸ì˜ ì¼ë¶€ë¶„ì„ ë‚˜íƒ€ë‚´ëŠ” í´ë˜ìŠ¤ (ìë™ì°¨ì˜ ë°”í€´, ìë™ì°¨ì˜ ëª¸ì²´)
 class SceneGraphNode
 {
 	friend class Model;
@@ -31,18 +31,18 @@ public:
 
 	int GetID() const noexcept;
 	const std::string& GetName() const { return name; }
-	const std::vector<Mesh*>& GetMeshPtrs() const noexcept;	// ÀÌ ³ëµå¿¡ ¼ÓÇÑ MeshÀÇ ÁÖ¼Ò¸¦ ¹İÈ¯ÇÔ
+	const std::vector<Mesh*>& GetMeshPtrs() const noexcept;	// ì´ ë…¸ë“œì— ì†í•œ Meshì˜ ì£¼ì†Œë¥¼ ë°˜í™˜í•¨
 
 private:
-	// ÇØ´ç ¿ÀºêÁ§Æ®¿¡ ÀÚ½ÄÀ» Ãß°¡ÇÏ´Â ¸Ş¼Òµå
+	// í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ì— ìì‹ì„ ì¶”ê°€í•˜ëŠ” ë©”ì†Œë“œ
 	void AddChild(std::unique_ptr<SceneGraphNode> child) NOEXCEPTRELEASE;
 
-	std::vector<std::unique_ptr<SceneGraphNode>> childPtrs;		// ÀÚ½Ä °´Ã¼ÀÇ ³ëµåÀÇ ÁÖ¼Ò¸¦ ÀúÀåÇÏ´Â ¹è¿­
-	std::vector<Mesh*> meshPtrs;								// ÀÌ ÀÏºÎ ¿ÀºêÁ§Æ®¿¡ »ç¿ëµÇ´Â Mesh¸¦ ÀúÀåÇÏ´Â ¹è¿­
+	std::vector<std::unique_ptr<SceneGraphNode>> childPtrs;		// ìì‹ ê°ì²´ì˜ ë…¸ë“œì˜ ì£¼ì†Œë¥¼ ì €ì¥í•˜ëŠ” ë°°ì—´
+	std::vector<Mesh*> meshPtrs;								// ì´ ì¼ë¶€ ì˜¤ë¸Œì íŠ¸ì— ì‚¬ìš©ë˜ëŠ” Meshë¥¼ ì €ì¥í•˜ëŠ” ë°°ì—´
 
-	std::shared_ptr<Object> object;								// ÀÌ ³ëµå°¡ ¼ÓÇÑ ¿ÀºêÁ§Æ®
-	std::shared_ptr<TransformComponent> transformComponent;		// ÀÌ ³ëµåÀÇ TransformComponent
+	std::shared_ptr<Object> object;								// ì´ ë…¸ë“œê°€ ì†í•œ ì˜¤ë¸Œì íŠ¸
+	std::shared_ptr<TransformComponent> transformComponent;		// ì´ ë…¸ë“œì˜ TransformComponent
 
-	std::string name;	// ³ëµå ÀÌ¸§
-	int id;				// ³ëµå ID
+	std::string name;	// ë…¸ë“œ ì´ë¦„
+	int id;				// ë…¸ë“œ ID
 };

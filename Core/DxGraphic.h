@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Win.h"
 
@@ -47,7 +47,7 @@ public:
 
 		const char* what() const noexcept override;
 
-		// ¿¹¿Ü Á¤º¸¿¡ °üÇÑ ¸Ş¼Òµå
+		// ì˜ˆì™¸ ì •ë³´ì— ê´€í•œ ë©”ì†Œë“œ
 		const char* GetType() const noexcept override;
 		HRESULT GetErrorCode() const noexcept;
 		std::string GetExptionContent() const noexcept;
@@ -89,7 +89,7 @@ public:
 	DxGraphic(HWND hWnd);
 	~DxGraphic() = default;
 
-	// º¹»ç ´ëÀÔ »ı¼ºÀÚ Á¦°Å
+	// ë³µì‚¬ ëŒ€ì… ìƒì„±ì ì œê±°
 	DxGraphic(const DxGraphic&) = delete;
 	DxGraphic& operator=(const DxGraphic&) = delete;
 
@@ -121,7 +121,7 @@ public:
 	UINT GetHeight() const noexcept;
 	std::shared_ptr<Graphic::RenderTarget> GetRenderTarget();
 
-	// ImGui °ü·Ã ¸Ş¼Òµå
+	// ImGui ê´€ë ¨ ë©”ì†Œë“œ
 	void EnableImGui() noexcept;
 	void DisableImGui() noexcept;
 	bool IsImGuiEnable() noexcept;
@@ -137,18 +137,18 @@ private:
 	void CheckMSAAQuality();
 	void SwapChainSettings(HWND hWnd);
 
-	bool		isMSAAUsage;		// 4X MSAA »ç¿ë ¿©ºÎ
-	UINT		msaaQuality;		// 4X MSAAÀÇ Ç°Áú ¼öÁØ
+	bool		isMSAAUsage;		// 4X MSAA ì‚¬ìš© ì—¬ë¶€
+	UINT		msaaQuality;		// 4X MSAAì˜ í’ˆì§ˆ ìˆ˜ì¤€
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;						// Swap Chain Desc
-	std::shared_ptr<Graphic::RenderTarget> renderTarget;	// ·£´õ Å¸ÄÏ
+	std::shared_ptr<Graphic::RenderTarget> renderTarget;	// ëœë” íƒ€ì¼“
 
-	ComPtr<ID3D11Device>			device;					// D3D11 ÀåÄ¡
+	ComPtr<ID3D11Device>			device;					// D3D11 ì¥ì¹˜
 	ComPtr<ID3D11DeviceContext>		deviceContext;			// D3D11 Context
-	ComPtr<IDXGISwapChain>			swapChain;				// ÆäÀÌÁö ÀüÈ¯À» À§ÇÑ ±³È¯ »ç½½
-	ComPtr<ID3D11Texture2D>			depthStencilBuffer;		// ±íÀÌ ¨¬ ½ºÅÙ½Ç ¹öÆÛ¸¦ À§ÇÑ 2Â÷¿ø ÅØ½ºÃ³
-	ID3D11ShaderResourceView*	shaderResourceView;		// ·»´õ ´ë»ó¿ë 2Â÷¿ø ÅØ½ºÃ³
-	D3D11_VIEWPORT					viewport;				// ºäÆ÷Æ®
+	ComPtr<IDXGISwapChain>			swapChain;				// í˜ì´ì§€ ì „í™˜ì„ ìœ„í•œ êµí™˜ ì‚¬ìŠ¬
+	ComPtr<ID3D11Texture2D>			depthStencilBuffer;		// ê¹Šì´ Âº ìŠ¤í…ì‹¤ ë²„í¼ë¥¼ ìœ„í•œ 2ì°¨ì› í…ìŠ¤ì²˜
+	ID3D11ShaderResourceView*	shaderResourceView;		// ë Œë” ëŒ€ìƒìš© 2ì°¨ì› í…ìŠ¤ì²˜
+	D3D11_VIEWPORT					viewport;				// ë·°í¬íŠ¸
 
 	ComPtr<ID3D11Texture2D> backBuffer;
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Image.h"
 
 #include "Core/Window.h"
@@ -45,7 +45,7 @@ namespace GraphicResource
 
 	const char* Image::Exception::GetType() const noexcept
 	{
-		return "±×·¡ÇÈ »ı¼º ¿¹¿Ü";
+		return "ê·¸ë˜í”½ ìƒì„± ì˜ˆì™¸";
 	}
 
 	const string& Image::Exception::GetNote() const noexcept
@@ -55,11 +55,11 @@ namespace GraphicResource
 
 	Image::Image(UINT width, UINT height)
 	{
-		// ÃÊ±â ¸ÓÆ¼¸®¾ó ÀÌ¹ÌÁö ±âº» °ªÀ¸·Î »ı¼º (¹Ó¸Ê ·¹º§ 1, 1Â¥¸®)
+		// ì´ˆê¸° ë¨¸í‹°ë¦¬ì–¼ ì´ë¯¸ì§€ ê¸°ë³¸ ê°’ìœ¼ë¡œ ìƒì„± (ë°‰ë§µ ë ˆë²¨ 1, 1ì§œë¦¬)
 		HRESULT hr = scratch.Initialize2D(format, width, height, 1u, 1u);
 
 		if (FAILED(hr))
-			throw Image::Exception(__LINE__, __FILE__, "¸ÓÆ¼¸®¾ó ÀÌ¹ÌÁö¸¦ ÃÊ±âÈ­ÇÒ ¼ö ¾øÀ½ (³Êºñ : " + to_string(width) + ", ³ôÀÌ : " + to_string(height) + ")");
+			throw Image::Exception(__LINE__, __FILE__, "ë¨¸í‹°ë¦¬ì–¼ ì´ë¯¸ì§€ë¥¼ ì´ˆê¸°í™”í•  ìˆ˜ ì—†ìŒ (ë„ˆë¹„ : " + to_string(width) + ", ë†’ì´ : " + to_string(height) + ")");
 	}
 
 	void Image::Clear(Color fillColor) noexcept
@@ -71,17 +71,17 @@ namespace GraphicResource
 
 		for (size_t y = 0; y < height; y++)
 		{
-			// ÇàÀÇ ½ÃÀÛ À§Ä¡¸¦ ±¸ÇÔ
+			// í–‰ì˜ ì‹œì‘ ìœ„ì¹˜ë¥¼ êµ¬í•¨
 			auto rowStart = reinterpret_cast<Color*>(imageData.pixels + imageData.rowPitch * y);
 
-			// ÇàÀÇ ½ÃÀÛºÎÅÍ ÇàÀÇ ³¡±îÁö »öÀ» Ã¤¿ò
+			// í–‰ì˜ ì‹œì‘ë¶€í„° í–‰ì˜ ëê¹Œì§€ ìƒ‰ì„ ì±„ì›€
 			std::fill(rowStart, rowStart + imageData.width, fillColor);
 		}
 	}
 
 	void Image::SetColorPixel(UINT x, UINT y, Color c) NOEXCEPTRELEASE
 	{
-		assert("ÁöÁ¤ÇÒ ÇÈ¼¿ÀÇ À§Ä¡¸¦ ¹ş¾î³µ½À´Ï´Ù!" && x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight());
+		assert("ì§€ì •í•  í”½ì…€ì˜ ìœ„ì¹˜ë¥¼ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤!" && x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight());
 
 		auto& imageData = *scratch.GetImage(0, 0, 0);
 		reinterpret_cast<Color*>(&imageData.pixels[y * imageData.rowPitch])[x] = c;
@@ -89,7 +89,7 @@ namespace GraphicResource
 
 	Image::Color Image::GetColorPixel(UINT x, UINT y) const NOEXCEPTRELEASE
 	{
-		assert("ÁöÁ¤ÇÒ ÇÈ¼¿ÀÇ À§Ä¡¸¦ ¹ş¾î³µ½À´Ï´Ù!" && x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight());
+		assert("ì§€ì •í•  í”½ì…€ì˜ ìœ„ì¹˜ë¥¼ ë²—ì–´ë‚¬ìŠµë‹ˆë‹¤!" && x >= 0 && y >= 0 && x < GetWidth() && y < GetHeight());
 
 		auto& imageData = *scratch.GetImage(0, 0, 0);
 		return reinterpret_cast<Color*>(&imageData.pixels[y * imageData.rowPitch])[x];
@@ -127,31 +127,31 @@ namespace GraphicResource
 
 	Image Image::FromFile(const std::string& name)
 	{
-		// DDS ÆÄÀÏ º¯È¯ ÈÄ ÀúÀåÇÒ À§Ä¡, DDS ÆÄÀÏÀÇ ÀüÃ¼ °æ·Î
+		// DDS íŒŒì¼ ë³€í™˜ í›„ ì €ì¥í•  ìœ„ì¹˜, DDS íŒŒì¼ì˜ ì „ì²´ ê²½ë¡œ
 		std::wstring tempDDSFolder = L"Temp/TextureCache/";
 		std::wstring tempDDSPath = tempDDSFolder + StringConverter::ToWString((StringConverter::GetFileName(name))) + L".dds";
 
-		// ÀÌ¹ÌÁö ÆÄÀÏÀ» ·ÎµåÇÔ
+		// ì´ë¯¸ì§€ íŒŒì¼ì„ ë¡œë“œí•¨
 		DirectX::ScratchImage scratch;
 		HRESULT hr;
 
-		// ÀÓ½Ã Æú´õ°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎÇÏ°í ¾øÀ¸¸é »ı¼º
+		// ì„ì‹œ í´ë”ê°€ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸í•˜ê³  ì—†ìœ¼ë©´ ìƒì„±
 		if (!std::filesystem::exists(tempDDSFolder))
 		{
 			std::filesystem::create_directories(tempDDSFolder);
 			hr = E_FAIL;
 		}
 
-		// ÀÌ¹Ì DDS·Î Ä³½Ã ÅØ½ºÃ³°¡ ÀÖÀ¸¸é ±× ÀÌ¹ÌÁö »ç¿ë
+		// ì´ë¯¸ DDSë¡œ ìºì‹œ í…ìŠ¤ì²˜ê°€ ìˆìœ¼ë©´ ê·¸ ì´ë¯¸ì§€ ì‚¬ìš©
 		else
 			hr = LoadTempDDSTexture(tempDDSPath, scratch);
 
-		// Ä³½Ã ÅØ½ºÃ³°¡ ¾ø¾î »õ·Î ¸¸µé¾î¾ß ÇÏ´Â °æ¿ì
+		// ìºì‹œ í…ìŠ¤ì²˜ê°€ ì—†ì–´ ìƒˆë¡œ ë§Œë“¤ì–´ì•¼ í•˜ëŠ” ê²½ìš°
 		if (FAILED(hr))
 		{
 			hr = DirectX::LoadFromWICFile(StringConverter::ToWString(name).c_str(), DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, scratch);
 
-			// »õ·Î ¸¸µç ÀÌ¹ÌÁö¸¦ ÀúÀåÇÔ
+			// ìƒˆë¡œ ë§Œë“  ì´ë¯¸ì§€ë¥¼ ì €ì¥í•¨
 			if (SUCCEEDED(hr))
 			{
 				HRESULT saveHr = SaveToDDSFile(
@@ -165,7 +165,7 @@ namespace GraphicResource
 				if (FAILED(saveHr))
 				{
 					std::stringstream out;
-					out << "[" << StringConverter::ToString(tempDDSPath) << "]ÀÇ °æ·Î·Î ÀúÀåÇÒ ¼ö ¾øÀ½!";
+					out << "[" << StringConverter::ToString(tempDDSPath) << "]ì˜ ê²½ë¡œë¡œ ì €ì¥í•  ìˆ˜ ì—†ìŒ!";
 
 					throw Image::Exception(__LINE__, __FILE__, out.str());
 				}
@@ -175,12 +175,12 @@ namespace GraphicResource
 		if (FAILED(hr))
 		{
 			std::stringstream out;
-			out << name << "ÀÇ ÆÄÀÏÀ» ·ÎµåÇÒ ¼ö ¾øÀ½!";
+			out << name << "ì˜ íŒŒì¼ì„ ë¡œë“œí•  ìˆ˜ ì—†ìŒ!";
 
 			throw Image::Exception(__LINE__, __FILE__, out.str());
 		}
 
-		// ÀÌ¹ÌÁöÀÇ Æ÷¸ËÀÌ Áö¿øµÇÁö ¾Ê´Â °æ¿ì
+		// ì´ë¯¸ì§€ì˜ í¬ë§·ì´ ì§€ì›ë˜ì§€ ì•ŠëŠ” ê²½ìš°
 		if (scratch.GetImage(0, 0, 0)->format != format)
 		{
 			DirectX::ScratchImage converted;
@@ -194,7 +194,7 @@ namespace GraphicResource
 			if (FAILED(hr))
 			{
 				std::stringstream out;
-				out << name << "ÀÇ ÆÄÀÏÀ» " << format << "À¸·Î º¯È¯ÇÒ ¼ö ¾øÀ½!";
+				out << name << "ì˜ íŒŒì¼ì„ " << format << "ìœ¼ë¡œ ë³€í™˜í•  ìˆ˜ ì—†ìŒ!";
 
 				throw Image::Exception(__LINE__, __FILE__, out.str());
 			}
@@ -221,7 +221,7 @@ namespace GraphicResource
 				else if (extenstionPath == ".bmp")
 					return DirectX::WIC_CODEC_BMP;
 
-				throw Exception(__LINE__, __FILE__, fileName, "¶ó´Â ÀÌ¹ÌÁö È®ÀåÀÚ°¡ Áö¿øµÇÁö ¾ÊÀ½");
+				throw Exception(__LINE__, __FILE__, fileName, "ë¼ëŠ” ì´ë¯¸ì§€ í™•ì¥ìê°€ ì§€ì›ë˜ì§€ ì•ŠìŒ");
 			};
 
 		HRESULT hr = DirectX::SaveToWICFile(*scratch.GetImage(0, 0, 0), DirectX::WIC_FLAGS_NONE, GetWICCodec(GetCodecID(fileName)), StringConverter::ToWString(fileName).c_str());
@@ -229,7 +229,7 @@ namespace GraphicResource
 		if (FAILED(hr))
 		{
 			std::stringstream out;
-			out << fileName << "ÀÌ¸§ÀÇ ÆÄÀÏÀ» ÀúÀåÇÒ ¼ö ¾øÀ½.";
+			out << fileName << "ì´ë¦„ì˜ íŒŒì¼ì„ ì €ì¥í•  ìˆ˜ ì—†ìŒ.";
 
 			throw Exception(__LINE__, __FILE__, out.str());
 		}
@@ -263,7 +263,7 @@ namespace GraphicResource
 			CloseHandle(hFile);
 			
 			std::stringstream out;
-			out << "[" << StringConverter::ToString(filePath) << "] °æ·ÎÀÇ ÆÄÀÏÀº Àß¸øµÈ ÆÄÀÏ »çÀÌÁî";
+			out << "[" << StringConverter::ToString(filePath) << "] ê²½ë¡œì˜ íŒŒì¼ì€ ì˜ëª»ëœ íŒŒì¼ ì‚¬ì´ì¦ˆ";
 
 			throw Exception(__LINE__, __FILE__, out.str());
 
@@ -277,7 +277,7 @@ namespace GraphicResource
 			CloseHandle(hFile);
 
 			std::stringstream out;
-			out << "[" << StringConverter::ToString(filePath) << "] °æ·ÎÀÇ ÆÄÀÏ ¸ÊÇÎ ½ÇÆĞ!";
+			out << "[" << StringConverter::ToString(filePath) << "] ê²½ë¡œì˜ íŒŒì¼ ë§µí•‘ ì‹¤íŒ¨!";
 
 			throw Exception(__LINE__, __FILE__, out.str());
 
@@ -292,7 +292,7 @@ namespace GraphicResource
 			CloseHandle(hMapping);
 
 			std::stringstream out;
-			out << "[" << StringConverter::ToString(filePath) << "] °æ·ÎÀÇ ÆÄÀÏ ÆÄÀÏ ÀĞ±â ½ÇÆĞ";
+			out << "[" << StringConverter::ToString(filePath) << "] ê²½ë¡œì˜ íŒŒì¼ íŒŒì¼ ì½ê¸° ì‹¤íŒ¨";
 
 			throw Exception(__LINE__, __FILE__, out.str());
 

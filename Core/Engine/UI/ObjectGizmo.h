@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Object/Object.h"
 #include "Core/Component/TransformComponent.h"
@@ -26,14 +26,14 @@ namespace Engine
 			return instance;
 		}
 
-        void SetSelectedObject(std::shared_ptr<Object> object); // °´Ã¼ ¼±ÅÃ ¼³Á¤
-        void RenderGizmoUI();                                   // ImGui¿¡¼­ Á¶ÀÛ À¯Çü ¼±ÅÃÀ» À§ÇÑ UI ·»´õ¸µ
+        void SetSelectedObject(std::shared_ptr<Object> object); // ê°ì²´ ì„ íƒ ì„¤ì •
+        void RenderGizmoUI();                                   // ImGuiì—ì„œ ì¡°ì‘ ìœ í˜• ì„ íƒì„ ìœ„í•œ UI ë Œë”ë§
 
-        // °ÔÅÍ ¸Ş¼­µå Ãß°¡
+        // ê²Œí„° ë©”ì„œë“œ ì¶”ê°€
         ImGuizmo::OPERATION GetCurrentGizmoOperation() const { return currentGizmoSetting; }
         ImGuizmo::MODE GetCurrentGizmoMode() const { return currentApplyMode; }
 
-        // Á÷Á¢ ¸ŞÀÎ È­¸é¿¡ ·»´õ¸µÇÏ±â À§ÇÑ ÇÔ¼ö Ãß°¡
+        // ì§ì ‘ ë©”ì¸ í™”ë©´ì— ë Œë”ë§í•˜ê¸° ìœ„í•œ í•¨ìˆ˜ ì¶”ê°€
         void ApplyGizmo
         (
             std::shared_ptr<Object> object,
@@ -51,10 +51,10 @@ namespace Engine
         );
 
     private:
-        // ÇöÀç ¼±ÅÃµÈ °´Ã¼
+        // í˜„ì¬ ì„ íƒëœ ê°ì²´
         std::shared_ptr<Object> selectedObject = nullptr;
 
-        ImGuizmo::MODE currentApplyMode = ImGuizmo::MODE::WORLD;                // ImGuizmo ÀÛ¾÷ ¸ğµå (·ÎÄÃ ¶Ç´Â ¿ùµå)
-        ImGuizmo::OPERATION currentGizmoSetting = ImGuizmo::TRANSLATE;          // ImGuizmo Á¶ÀÛ À¯Çü (ÀÌµ¿, È¸Àü, Å©±â)
+        ImGuizmo::MODE currentApplyMode = ImGuizmo::MODE::WORLD;                // ImGuizmo ì‘ì—… ëª¨ë“œ (ë¡œì»¬ ë˜ëŠ” ì›”ë“œ)
+        ImGuizmo::OPERATION currentGizmoSetting = ImGuizmo::TRANSLATE;          // ImGuizmo ì¡°ì‘ ìœ í˜• (ì´ë™, íšŒì „, í¬ê¸°)
     };
 }

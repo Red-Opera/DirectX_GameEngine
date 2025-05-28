@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Texture.h"
 
 #include "Image.h"
@@ -38,22 +38,22 @@ namespace Graphic
         //const auto image = GraphicResource::Image::FromFile(path);
         //hasAlpha = image.HasAlpha();
 
-        // 2D ÅØ½ºÃ³¸¦ °¡Á®¿À±â À§ÇÑ Desc
+        // 2D í…ìŠ¤ì²˜ë¥¼ ê°€ì ¸ì˜¤ê¸° ìœ„í•œ Desc
         D3D11_TEXTURE2D_DESC textureDesc = { };
-        textureDesc.Width = image->GetWidth();	    // ¸ÓÅÍ¸®¾óÀÇ ³Êºñ¸¦ °¡Á®¿È
-        textureDesc.Height = image->GetHeight();	    // ¸ÓÅÍ¸®¾óÀÇ ³ôÀÌ¸¦ °¡Á®¿È
-        textureDesc.MipLevels = 0;					    // ¹Ó¸Ê °³¼ö ¼³Á¤
-        textureDesc.ArraySize = 1;					    // ÀÌ¹ÌÁö Å©±â
-        textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;// ÅØ½ºÃ³ÀÇ ÇÑ ÇÈ¼¿ Á¤º¸
+        textureDesc.Width = image->GetWidth();	    // ë¨¸í„°ë¦¬ì–¼ì˜ ë„ˆë¹„ë¥¼ ê°€ì ¸ì˜´
+        textureDesc.Height = image->GetHeight();	    // ë¨¸í„°ë¦¬ì–¼ì˜ ë†’ì´ë¥¼ ê°€ì ¸ì˜´
+        textureDesc.MipLevels = 0;					    // ë°‰ë§µ ê°œìˆ˜ ì„¤ì •
+        textureDesc.ArraySize = 1;					    // ì´ë¯¸ì§€ í¬ê¸°
+        textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;// í…ìŠ¤ì²˜ì˜ í•œ í”½ì…€ ì •ë³´
 
-        // MSAA¸¦ »ç¿ëÇÒ °æ¿ì
+        // MSAAë¥¼ ì‚¬ìš©í•  ê²½ìš°
         if (Window::GetDxGraphic().GetMsaaUsage())
         {
             textureDesc.SampleDesc.Count = 4;
             textureDesc.SampleDesc.Quality = Window::GetDxGraphic().GetMsaaQuality() - 1;
         }
 
-        // MSAA¸¦ »ç¿ëÇÏÁö ¾ÊÀ» °æ¿ì
+        // MSAAë¥¼ ì‚¬ìš©í•˜ì§€ ì•Šì„ ê²½ìš°
         else
         {
             textureDesc.SampleDesc.Count = 1;
@@ -65,24 +65,24 @@ namespace Graphic
         textureDesc.CPUAccessFlags = 0;
         textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
-        // D3D11_TEXTURE2D_DESC¸¦ ÅëÇØ¼­ Texture2D¸¦ »ı¼ºÇÔ
+        // D3D11_TEXTURE2D_DESCë¥¼ í†µí•´ì„œ Texture2Dë¥¼ ìƒì„±í•¨
         Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
         GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture));
 
-		// ¸ÓÅÍ¸®¾óÀÇ Á¤º¸¸¦ ÅØ½ºÃ³¿¡ ¾÷µ¥ÀÌÆ®
+		// ë¨¸í„°ë¦¬ì–¼ì˜ ì •ë³´ë¥¼ í…ìŠ¤ì²˜ì— ì—…ë°ì´íŠ¸
 		GetDeviceContext(Window::GetDxGraphic())->UpdateSubresource(texture.Get(), 0u, nullptr, image->GetConst(), image->GetWidth() * sizeof(GraphicResource::Image::Color), 0u);
 
-        // ÀÌ¹ÌÁö µ¥ÀÌÅÍ¸¦ ID3D11Texture2D¿¡ ÀúÀåÇÏ±â À§ÇÑ ¼ÎÀÌ´õ ¸®¼Ò½º ºä¸¦ ÀúÀåÇÏ±â À§ÇÑ Desc
+        // ì´ë¯¸ì§€ ë°ì´í„°ë¥¼ ID3D11Texture2Dì— ì €ì¥í•˜ê¸° ìœ„í•œ ì…°ì´ë” ë¦¬ì†ŒìŠ¤ ë·°ë¥¼ ì €ì¥í•˜ê¸° ìœ„í•œ Desc
         D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = { };
         viewDesc.Format = textureDesc.Format;
-        viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D; // ÀÌ¹ÌÁö¸¦ 2D·Î º¸¿©ÁÜ
+        viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D; // ì´ë¯¸ì§€ë¥¼ 2Dë¡œ ë³´ì—¬ì¤Œ
         viewDesc.Texture2D.MostDetailedMip = 0;
         viewDesc.Texture2D.MipLevels = -1;
 
         hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &viewDesc, &textureView);
         GRAPHIC_THROW_INFO(hr);
 
-		// ¹Ó¸Ê »ı¼º
+		// ë°‰ë§µ ìƒì„±
 		GetDeviceContext(Window::GetDxGraphic())->GenerateMips(textureView.Get());
     }
 

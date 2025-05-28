@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "HorizontalBlurPass.h"
 
 #include "Core/RenderingPipeline/Pipeline/OM/ColorBlend.h"

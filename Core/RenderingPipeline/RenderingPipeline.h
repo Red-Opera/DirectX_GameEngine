@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Pipeline/IA/PrimitiveTopology.h"
 #include "Pipeline/IA/IndexBuffer.h"

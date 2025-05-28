@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Component/Component.h"
 #include "External/physx/physX/include/PxPhysicsAPI.h"
@@ -13,29 +13,29 @@ public:
     virtual void Update() override;
     virtual void Finalize() override;
 
-    // Áß·Â °ü·Ã
+    // ì¤‘ë ¥ ê´€ë ¨
     void SetGravity(bool enable);
     bool IsGravityEnabled() const { return useGravity; }
     static void SetGlobalGravity(float x, float y, float z);
     static physx::PxVec3 GetGlobalGravity();
     
-    // Áú·® °ü·Ã
+    // ì§ˆëŸ‰ ê´€ë ¨
     void SetMass(float mass);
     float GetMass() const { return mass; }
     
-    // ¹°Áú ¼Ó¼º
+    // ë¬¼ì§ˆ ì†ì„±
     void SetMaterial(float staticFriction, float dynamicFriction, float restitution);
     float GetStaticFriction() const { return staticFriction; }
     float GetDynamicFriction() const { return dynamicFriction; }
     float GetRestitution() const { return restitution; }
     
-    // °ø±â ÀúÇ×
+    // ê³µê¸° ì €í•­
     void SetLinearDamping(float damping);
     void SetAngularDamping(float damping);
     float GetLinearDamping() const { return linearDamping; }
     float GetAngularDamping() const { return angularDamping; }
     
-    // Á¦¾à Á¶°Ç
+    // ì œì•½ ì¡°ê±´
     void SetFreezePosition(bool x, bool y, bool z);
     void SetFreezeRotation(bool x, bool y, bool z);
     bool IsPositionXFrozen() const { return freezePositionX; }
@@ -58,16 +58,16 @@ private:
     bool isDynamic = true;
     bool useGravity = true;
     
-    // ¹°Áú ¼Ó¼º
+    // ë¬¼ì§ˆ ì†ì„±
     float staticFriction = 0.5f;
     float dynamicFriction = 0.5f;
     float restitution = 0.6f;
     
-    // °ø±â ÀúÇ×
+    // ê³µê¸° ì €í•­
     float linearDamping = 0.0f;
     float angularDamping = 0.05f;
     
-    // Á¦¾à Á¶°Ç
+    // ì œì•½ ì¡°ê±´
     bool freezePositionX = false;
     bool freezePositionY = false;
     bool freezePositionZ = false;
@@ -75,12 +75,12 @@ private:
     bool freezeRotationY = false;
     bool freezeRotationZ = false;
     
-    // Àü¿ª Áß·Â
+    // ì „ì—­ ì¤‘ë ¥
     static physx::PxVec3 globalGravity;
     
     physx::PxRigidActor* actor = nullptr;
 
-    // Transform º¯°æ °¨Áö¸¦ À§ÇÑ °ª ÀúÀå
+    // Transform ë³€ê²½ ê°ì§€ë¥¼ ìœ„í•œ ê°’ ì €ì¥
     Position lastTransformPosition;
     Position lastTransformRotation;
     Position lastTransformScale;

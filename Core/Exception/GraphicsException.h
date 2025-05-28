@@ -1,4 +1,4 @@
-// GraphicsException.h
+﻿// GraphicsException.h
 
 #pragma once
 

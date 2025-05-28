@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/RenderingPipeline/Render.h"
 
@@ -14,7 +14,7 @@ namespace Graphic
 	public:
 		TextureCube(const std::string& path, UINT slot = 0);
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	private:
@@ -32,7 +32,7 @@ namespace Graphic
 
 		std::shared_ptr<OutputOnlyDepthStencil> GetDepthStencil(size_t index) const;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:
@@ -50,7 +50,7 @@ namespace Graphic
 
 		std::shared_ptr<OutputOnlyRenderTarget> GetRenderTarget(size_t index) const;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:

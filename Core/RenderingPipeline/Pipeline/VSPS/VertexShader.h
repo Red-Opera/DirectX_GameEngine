@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Core/RenderingPipeline/Render.h"
 
 namespace Graphic
@@ -10,7 +10,7 @@ namespace Graphic
 
 		ID3DBlob* GetShaderCode() const noexcept;
 
-		// BindableÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Bindableì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 		static std::shared_ptr<VertexShader> GetRender(const std::string& path);
@@ -18,7 +18,7 @@ namespace Graphic
 		std::string GetID() const noexcept override;
 
 	protected:
-		Microsoft::WRL::ComPtr<ID3DBlob> shaderCode;				// ÄÄÆÄÀÏµÈ ¼ÎÀÌ´õ ÄÚµå
+		Microsoft::WRL::ComPtr<ID3DBlob> shaderCode;				// ì»´íŒŒì¼ëœ ì…°ì´ë” ì½”ë“œ
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> vertexShader;	// Vertex Shader
 
 		std::string path;

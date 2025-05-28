@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "ConstantBuffer.h"
 
@@ -17,7 +17,7 @@ namespace Graphic
 		void Update();
 		void SetCamera(const Camera* camera) noexcept;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "ColorObject.h"
 
 #include "Core/App.h"
@@ -136,7 +136,7 @@ void ColorObject::SetRenderingPipeline(GraphicResource::Image::Color color, bool
 		AddTechnique(std::move(tech));
 	}
 
-	// ±◊∏≤¿⁄ ∏  Technique
+	// Í∑∏Î¶ºÏûê Îßµ Technique
 	if (isLit)
 	{
 		Technique shadowMap{ "ShadowMap", RenderingChannel::shadow, true };

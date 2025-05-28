@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Model.h"
 #include "Mesh.h"
 #include "SceneGraphNode.h"

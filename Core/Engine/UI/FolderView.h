@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Exception/WindowException.h"
 #include "Core/RenderingPipeline/Render.h"
@@ -35,12 +35,12 @@ namespace Engine
 		FolderView& operator=(const FolderView&) = delete;
 		FolderView& operator=(FolderView&&) = delete;
 
-		std::shared_ptr<FileItemTree> CreateFileSystem();													// ÇÁ·ÎÁ§Æ® ±¸Á¶ ¹İ¿µÇÑ ÆÄÀÏ ½Ã½ºÅÛ »ı¼º ½ÃÀÛ ¸Ş¼Òµå
-		std::shared_ptr<FileItemTree> BuildFileItemTree(const std::filesystem::directory_entry& rootPath);	// ÇÁ·ÎÁ§Æ® ±¸Á¶ ¹İ¿µÇÏ¿© ÆÄÀÏ Æ®¸®¸¦ ¸¸µå´Â ¸Ş¼Òµå
+		std::shared_ptr<FileItemTree> CreateFileSystem();													// í”„ë¡œì íŠ¸ êµ¬ì¡° ë°˜ì˜í•œ íŒŒì¼ ì‹œìŠ¤í…œ ìƒì„± ì‹œì‘ ë©”ì†Œë“œ
+		std::shared_ptr<FileItemTree> BuildFileItemTree(const std::filesystem::directory_entry& rootPath);	// í”„ë¡œì íŠ¸ êµ¬ì¡° ë°˜ì˜í•˜ì—¬ íŒŒì¼ íŠ¸ë¦¬ë¥¼ ë§Œë“œëŠ” ë©”ì†Œë“œ
 
 		void RenderFolderView(std::shared_ptr<FileItemTree> itemTree = { });
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 		~FolderView() = default;
@@ -58,7 +58,7 @@ namespace Engine
 		ID3D11ShaderResourceView* GetFileTextureResourceView(std::string fileName);
 		void LoadIconTexture(std::string fileName, IconType iconType);
 
-		// ÇïÆÛ ÇÔ¼ö: ÇöÀç Æú´õÀÇ ÀüÃ¼ °æ·Î ¹®ÀÚ¿­ »ı¼º
+		// í—¬í¼ í•¨ìˆ˜: í˜„ì¬ í´ë”ì˜ ì „ì²´ ê²½ë¡œ ë¬¸ìì—´ ìƒì„±
 		std::string GetRelativePath(const std::shared_ptr<FileItemTree>& tree);
 		std::string GetAbsolutePath(const std::shared_ptr<FileItemTree>& tree);
 
@@ -71,8 +71,8 @@ namespace Engine
 		void OpenFile(const std::shared_ptr<FileItemTree>& child);
 
 		std::shared_ptr<FileItemTree> folderTree;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> folderIconTexture;			// Æú´õ ÀÌ¹ÌÁö¸¦ ÀúÀåÇÏ´Â º¯¼ö
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> goParentFolderTexture;		// »óÀ§ Æú´õ·Î ÀÌµ¿ÇÏ±â ¹öÆ° ÀÌ¹ÌÁö º¯¼ö
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> folderIconTexture;			// í´ë” ì´ë¯¸ì§€ë¥¼ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> goParentFolderTexture;		// ìƒìœ„ í´ë”ë¡œ ì´ë™í•˜ê¸° ë²„íŠ¼ ì´ë¯¸ì§€ ë³€ìˆ˜
 
 		std::unordered_map<std::string, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> fileIconTextures;
 

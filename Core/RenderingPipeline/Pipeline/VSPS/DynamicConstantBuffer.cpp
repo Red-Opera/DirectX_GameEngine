@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #define DYNAMIC_CONSTANT_BUFFER
 #include "DynamicConstantBuffer.h"
@@ -8,7 +8,7 @@
 #include <cctype>
 #include <string>
 
-// Get___À¸·Î ÇØ´ç Å¸ÀÔ¿¡ ¸Â´Â °ªÀ» ¹İÈ¯ÇÏ´Â ¸ŞÅ©·Î
+// Get___ìœ¼ë¡œ í•´ë‹¹ íƒ€ì…ì— ë§ëŠ” ê°’ì„ ë°˜í™˜í•˜ëŠ” ë©”í¬ë¡œ
 //#define CREATE_GETMETHOD(childType)							\
 //size_t LayoutType::Get ## childType() const NOEXCEPTRELEASE	\
 //{															\
@@ -17,7 +17,7 @@
 //	return 0u;												\
 //}
 //
-//// LayoutType¸¦ È°¿ëÇÏ¿© Layout ¹öÆÛ Å¸ÀÔÀ» ¸¸µå´Â ¸ŞÅ©·Î
+//// LayoutTypeë¥¼ í™œìš©í•˜ì—¬ Layout ë²„í¼ íƒ€ì…ì„ ë§Œë“œëŠ” ë©”í¬ë¡œ
 //#define CHILD_TYPE_EX(childType, systemType, hlslSize)											\
 //size_t childType::Get ## childType() const NOEXCEPTRELEASE { return GetOffsetBegin(); }			\
 //size_t childType::GetOffsetEnd() const noexcept { return GetOffsetBegin() + SystemTypeSize(); }	\
@@ -33,10 +33,10 @@
 //
 //#define CHILD_TYPE(childType, systemType) CHILD_TYPE_EX(childType, systemType, sizeof(systemType))
 //
-//// Æ¯Á¤ ¿ä¼Ò(childType)¸¦ ½Ã½ºÅÛ Å¸ÀÔ(systemType)À¸·Î º¯È¯ÇÏ´Â ±â´É
+//// íŠ¹ì • ìš”ì†Œ(childType)ë¥¼ ì‹œìŠ¤í…œ íƒ€ì…(systemType)ìœ¼ë¡œ ë³€í™˜í•˜ëŠ” ê¸°ëŠ¥
 //#define CONVERT_REF_SYSTYPE(referenceType, childType, ...)											\
 //																									\
-///* º¯È¯ ¿¬»êÀÚ: childTypeÀ» systype ÂüÁ¶·Î º¯È¯ (DirectX::XMFLOAT3& v = obj) */							\
+///* ë³€í™˜ ì—°ì‚°ì: childTypeì„ systype ì°¸ì¡°ë¡œ ë³€í™˜ (DirectX::XMFLOAT3& v = obj) */							\
 //referenceType::operator __VA_ARGS__ childType::SystemType&() NOEXCEPTRELEASE						\
 //{																									\
 //	return *reinterpret_cast<childType::SystemType*>(bytes + offset + type->Get ## childType());	\
@@ -44,7 +44,7 @@
 //
 //#define REF_ASSIGN(referenceType, childType)														\
 //																									\
-///* ´ëÀÔ ¿¬»êÀÚ ¿À¹ö·Îµù: childTypeÀ» systype °ªÀ¸·Î º¯°æ °¡´ÉÇÏ°Ô ÇÔ */									\
+///* ëŒ€ì… ì—°ì‚°ì ì˜¤ë²„ë¡œë”©: childTypeì„ systype ê°’ìœ¼ë¡œ ë³€ê²½ ê°€ëŠ¥í•˜ê²Œ í•¨ */									\
 //childType::SystemType& referenceType::operator=(const childType::SystemType& rhs) NOEXCEPTRELEASE	\
 //{																									\
 //	return static_cast<childType::SystemType&>(*this) = rhs;										\
@@ -53,7 +53,7 @@
 //#define REF_NONCONST(referenceType, childType) CONVERT_REF_SYSTYPE(referenceType, childType) REF_ASSIGN//(referenceType, childType)
 //#define REF_CONST(referenceType, childType) CONVERT_REF_SYSTYPE(referenceType, childType, const)
 //
-//// Æ¯Á¤ ¿ä¼Ò(childType)¸¦ ½Ã½ºÅÛ Æ÷ÀÎÅÍ Å¸ÀÔ(systemType) À¸·Î º¯È¯ÇÏ´Â ±â´É
+//// íŠ¹ì • ìš”ì†Œ(childType)ë¥¼ ì‹œìŠ¤í…œ í¬ì¸í„° íƒ€ì…(systemType) ìœ¼ë¡œ ë³€í™˜í•˜ëŠ” ê¸°ëŠ¥
 //// DirectX::XMFLOAT3* ptr = obj; 
 //#define CONVERT_POINT_SYSTYPE(systemType, childType, ...)								\
 //systemType::TypePointer::operator __VA_ARGS__ childType::SystemType*() NOEXCEPTRELEASE	\
@@ -93,7 +93,7 @@ namespace DynamicConstantBuffer
 			return GetSignatureForArray();
 
 		default:
-			assert("Àß¸øµÈ HLSL Å¸ÀÔ" && false);
+			assert("ì˜ëª»ëœ HLSL íƒ€ì…" && false);
 			return "???";
 		}
 	}
@@ -112,7 +112,7 @@ namespace DynamicConstantBuffer
 		return !isEmpty && !isDigit && isAlphaNumUnderBar;
 	}
 
-	// [] ¿¬»êÀÚ´Â ±¸Á¶Ã¼¿¡¼­¸¸ ÀÌ¸§À» ÅëÇØ Á¢±ÙÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+	// [] ì—°ì‚°ìëŠ” êµ¬ì¡°ì²´ì—ì„œë§Œ ì´ë¦„ì„ í†µí•´ ì ‘ê·¼í•  ìˆ˜ ìˆë„ë¡ í•¨
 	LayoutType& LayoutType::operator[](const std::string& name) NOEXCEPTRELEASE
 	{
 		assert("Cannot access member on non Struct" && bufferType == Struct);
@@ -133,17 +133,17 @@ namespace DynamicConstantBuffer
 
 	std::pair<size_t, const LayoutType*> LayoutType::GetLayoutTypeFromArray(size_t offset, size_t index) const NOEXCEPTRELEASE
 	{
-		assert("ÇØ´ç HLSL Å¸ÀÔÀº ¹è¿­ÀÌ ¾Æ´Ô" && bufferType == Array);
+		assert("í•´ë‹¹ HLSL íƒ€ì…ì€ ë°°ì—´ì´ ì•„ë‹˜" && bufferType == Array);
 		const auto& arrayData = static_cast<CompoundData::Array&>(*compoundData);
 
 		assert(index < arrayData.size || arrayData.typeSize);
 		return { offset + arrayData.typeSize * index, &*arrayData.layoutType };
 	}
 
-	// T()´Â ¹è¿­¿¡¼­¸¸ µ¿ÀÛÇÏµµ·Ï ÇÔ
+	// T()ëŠ” ë°°ì—´ì—ì„œë§Œ ë™ì‘í•˜ë„ë¡ í•¨
 	LayoutType& LayoutType::T() NOEXCEPTRELEASE
 	{
-		assert("T´Â ¹è¿­¸¸ Á¢±ÙÇÒ ¼ö ÀÖÀ½" && bufferType == Array);
+		assert("TëŠ” ë°°ì—´ë§Œ ì ‘ê·¼í•  ìˆ˜ ìˆìŒ" && bufferType == Array);
 
 		return *static_cast<CompoundData::Array&>(*compoundData).layoutType;
 	}
@@ -179,7 +179,7 @@ namespace DynamicConstantBuffer
 		}
 
 		default:
-			assert("Àß¸øµÈ HLSL Å¸ÀÔ" && false);
+			assert("ì˜ëª»ëœ HLSL íƒ€ì…" && false);
 			return 0u;
 		}
 	}
@@ -192,14 +192,14 @@ namespace DynamicConstantBuffer
 	LayoutType& LayoutType::add(BufferType addType, std::string bufferName) noexcept(!_DEBUG)
 	{
 		assert("Cannot access member on non Struct" && bufferType == Struct);
-		assert("ÇØ´ç ¹öÆÛ ÀÌ¸§Àº ÀûÀıÇÏÁö ¾ÊÀ½" && TypeNameIsValidate(bufferName));
+		assert("í•´ë‹¹ ë²„í¼ ì´ë¦„ì€ ì ì ˆí•˜ì§€ ì•ŠìŒ" && TypeNameIsValidate(bufferName));
 
 		auto& structData = static_cast<CompoundData::Struct&>(*compoundData);
 
 		for (auto& type : structData.structData)
 		{
 			if (type.first == bufferName)
-				assert("ÀÌ¹Ì ÇØ´ç ÀÌ¸§ÀÌ ±¸Á¶Ã¼¿¡ µé¾î°¡ ÀÖÀ½" && false);
+				assert("ì´ë¯¸ í•´ë‹¹ ì´ë¦„ì´ êµ¬ì¡°ì²´ì— ë“¤ì–´ê°€ ìˆìŒ" && false);
 		}
 
 		structData.structData.emplace_back(std::move(bufferName), LayoutType(addType));
@@ -208,7 +208,7 @@ namespace DynamicConstantBuffer
 
 	LayoutType& LayoutType::set(BufferType addType, size_t size) NOEXCEPTRELEASE
 	{
-		assert("ÇØ´ç Å¸ÀÔÀº ¹è¿­ÀÌ ¾Æ´Ô" && bufferType == Array);
+		assert("í•´ë‹¹ íƒ€ì…ì€ ë°°ì—´ì´ ì•„ë‹˜" && bufferType == Array);
 		assert(size != 0u);
 
 		auto& arrayData = static_cast<CompoundData::Array&>(*compoundData);
@@ -295,7 +295,7 @@ namespace DynamicConstantBuffer
 			return FinalizeForArray(offset);
 
 		default:
-			assert("Àß¸øµÈ HLSL Å¸ÀÔ" && false);
+			assert("ì˜ëª»ëœ HLSL íƒ€ì…" && false);
 			return 0u;
 		}
 	}
@@ -350,11 +350,11 @@ namespace DynamicConstantBuffer
 
 	std::shared_ptr<LayoutType> EditLayout::GetLayout() noexcept
 	{
-		auto temp = std::move(layout);	// ÇöÀç layoutÀ» temp·Î ÀÌµ¿
-		temp->Finalize(0);				// temp ·¹ÀÌ¾Æ¿ôÀ» ÃÊ±âÈ­
+		auto temp = std::move(layout);	// í˜„ì¬ layoutì„ tempë¡œ ì´ë™
+		temp->Finalize(0);				// temp ë ˆì´ì•„ì›ƒì„ ì´ˆê¸°í™”
 
-		*this = EditLayout();			// ÇöÀç EditLayout °´Ã¼¸¦ ÃÊ±âÈ­
-		return std::move(temp);			// ÃÊ±âÈ­µÈ ·¹ÀÌ¾Æ¿ôÀ» ¹İÈ¯
+		*this = EditLayout();			// í˜„ì¬ EditLayout ê°ì²´ë¥¼ ì´ˆê¸°í™”
+		return std::move(temp);			// ì´ˆê¸°í™”ëœ ë ˆì´ì•„ì›ƒì„ ë°˜í™˜
 	}
 
 	void EditLayout::ClearLayout() noexcept

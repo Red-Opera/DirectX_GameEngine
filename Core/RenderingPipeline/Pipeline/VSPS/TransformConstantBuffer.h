@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "ConstantBuffer.h"
 
@@ -12,11 +12,11 @@ namespace Graphic
 	public:
 		TransformConstantBuffer(UINT slot = 0u);
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 		void InitializeParentReference(const Drawable& parent) noexcept override;
 
-		// RenderInstanceÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// RenderInstanceì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		std::unique_ptr<RenderInstance> Instance() const noexcept override;
 
 	protected:

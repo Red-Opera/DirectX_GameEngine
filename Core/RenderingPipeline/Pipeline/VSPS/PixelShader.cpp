@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PixelShader.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -77,23 +77,23 @@ namespace Graphic
 
         namespace fileSystem = std::filesystem;
 
-        // ÄÄÆÄÀÏµÈ Shader ÄÚµå¸¦ ÀúÀåÇÏ±â À§ÇÑ ÀÓ½Ã Æú´õ »ı¼º
+        // ì»´íŒŒì¼ëœ Shader ì½”ë“œë¥¼ ì €ì¥í•˜ê¸° ìœ„í•œ ì„ì‹œ í´ë” ìƒì„±
         if (!fileSystem::exists(tempPath))
             fileSystem::create_directories(tempPath);
 
-        // ¿øº» ¼ÎÀÌ´õÀÇ ¸¶Áö¸· ¼öÁ¤ ½Ã°£À» È®ÀÎ
+        // ì›ë³¸ ì…°ì´ë”ì˜ ë§ˆì§€ë§‰ ìˆ˜ì • ì‹œê°„ì„ í™•ì¸
         auto lastWriteTime = fileSystem::last_write_time(widePath);
         auto timePoint = std::chrono::time_point_cast<std::chrono::seconds>(lastWriteTime).time_since_epoch().count();
 
-        // Ä³½Ã ÆÄÀÏ¸í »ı¼º (Å¸ÀÓ½ºÅÆÇÁ Æ÷ÇÔ)
+        // ìºì‹œ íŒŒì¼ëª… ìƒì„± (íƒ€ì„ìŠ¤íƒ¬í”„ í¬í•¨)
         std::wstring compiledShaderPath = tempPath + shaderFileName + L"_" + std::to_wstring(timePoint) + L".cso";
 
-        // ÀÌÀü ¹öÀüÀÇ °°Àº ¼ÎÀÌ´õ Ä³½Ã ÆÄÀÏ »èÁ¦
+        // ì´ì „ ë²„ì „ì˜ ê°™ì€ ì…°ì´ë” ìºì‹œ íŒŒì¼ ì‚­ì œ
         CleanupOldShaderCaches(tempPath, shaderFileName);
 
         hr = E_FAIL;
 
-        // Ä³½Ã ÆÄÀÏÀÌ Á¸ÀçÇÏ¸é ·Îµå
+        // ìºì‹œ íŒŒì¼ì´ ì¡´ì¬í•˜ë©´ ë¡œë“œ
         if (fileSystem::exists(compiledShaderPath))
         {
             hr = LoadCacheShader(compiledShaderPath);
@@ -115,7 +115,7 @@ namespace Graphic
             hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
 
             if (FAILED(hr))
-                DXTraceW(__FILE__, (DWORD)__LINE__, hr, L"Graphic HLSL ÆÄÀÏ ÄÄÆÄÀÏ ¿¡·¯", true);
+                DXTraceW(__FILE__, (DWORD)__LINE__, hr, L"Graphic HLSL íŒŒì¼ ì»´íŒŒì¼ ì—ëŸ¬", true);
 
             if (errorMessage != 0)
             {
@@ -139,21 +139,21 @@ namespace Graphic
         namespace fileSystem = std::filesystem;
         namespace chrono = std::chrono;
 
-        // ¿øº» ¼ÎÀÌ´õ ÆÄÀÏ °æ·Î È®ÀÎ
+        // ì›ë³¸ ì…°ì´ë” íŒŒì¼ ê²½ë¡œ í™•ì¸
         std::wstring originalShaderPath = shaderPath;
 
         if (!fileSystem::exists(originalShaderPath))
-            DXTraceW(__FILE__, (DWORD)__LINE__, S_FALSE, L"Shader ÆÄÀÏÀÌ Á¸ÀçÇÏÁö ¾ÊÀ½", true);
+            DXTraceW(__FILE__, (DWORD)__LINE__, S_FALSE, L"Shader íŒŒì¼ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŒ", true);
 
-        // ¸¶Áö¸· ¼öÁ¤ ½Ã°£À» ÃÊ ´ÜÀ§·Î °¡Á®¿È
+        // ë§ˆì§€ë§‰ ìˆ˜ì • ì‹œê°„ì„ ì´ˆ ë‹¨ìœ„ë¡œ ê°€ì ¸ì˜´
         auto lastWriteTime = fileSystem::last_write_time(originalShaderPath);
         auto timePoint = chrono::time_point_cast<chrono::seconds>(lastWriteTime).time_since_epoch().count();
 
-        // ÆÄÀÏ ÀÌ¸§¿¡ Å¸ÀÓ½ºÅÆÇÁ Æ÷ÇÔ (È®ÀåÀÚ ÃßÃâ)
+        // íŒŒì¼ ì´ë¦„ì— íƒ€ì„ìŠ¤íƒ¬í”„ í¬í•¨ (í™•ì¥ì ì¶”ì¶œ)
         std::wstring shaderFileName;
         if (originalShaderPath.find(L".cso") != std::wstring::npos) 
         {
-            // ÀÌ¹Ì Ã³¸®µÈ ÆÄÀÏÀÎ °æ¿ì ¿øº» ÆÄÀÏ¸í¸¸ ÃßÃâ
+            // ì´ë¯¸ ì²˜ë¦¬ëœ íŒŒì¼ì¸ ê²½ìš° ì›ë³¸ íŒŒì¼ëª…ë§Œ ì¶”ì¶œ
             size_t lastSlash = originalShaderPath.find_last_of(L"/\\");
             size_t firstUnderscore = originalShaderPath.find(L"_", lastSlash != std::wstring::npos ? lastSlash + 1 : 0);
 
@@ -168,7 +168,7 @@ namespace Graphic
 
             else
             {
-                // ¾ğ´õ½ºÄÚ¾î°¡ ¾øÀ¸¸é È®ÀåÀÚ Àü±îÁö ÃßÃâ
+                // ì–¸ë”ìŠ¤ì½”ì–´ê°€ ì—†ìœ¼ë©´ í™•ì¥ì ì „ê¹Œì§€ ì¶”ì¶œ
                 size_t dotPos = originalShaderPath.find_last_of(L".");
 
                 shaderFileName = originalShaderPath.substr
@@ -179,7 +179,7 @@ namespace Graphic
             }
         }
 
-        // ¿øº» ¼ÎÀÌ´õ ÆÄÀÏÀÎ °æ¿ì
+        // ì›ë³¸ ì…°ì´ë” íŒŒì¼ì¸ ê²½ìš°
         else
             shaderFileName = StringConverter::ToWString(StringConverter::GetFileName(StringConverter::ToString(originalShaderPath)));
 
@@ -193,19 +193,19 @@ namespace Graphic
 
         try 
         {
-            // ÀÓ½Ã Æú´õ°¡ ¾øÀ¸¸é ÇÔ¼ö Á¾·á
+            // ì„ì‹œ í´ë”ê°€ ì—†ìœ¼ë©´ í•¨ìˆ˜ ì¢…ë£Œ
             if (!fileSystem::exists(tempPath))
                 return;
 
-            // ÀÓ½Ã Æú´õÀÇ ¸ğµç ÆÄÀÏ °Ë»ç
+            // ì„ì‹œ í´ë”ì˜ ëª¨ë“  íŒŒì¼ ê²€ì‚¬
             for (const auto& entry : fileSystem::directory_iterator(tempPath))
             {
                 const auto& filePath = entry.path().wstring();
 
-                // ÇöÀç ¼ÎÀÌ´õ¿Í µ¿ÀÏÇÑ ±âº» ÀÌ¸§À» °¡Áø ÆÄÀÏ Ã£±â (¿¹: ColorShader_1234567890.cso)
+                // í˜„ì¬ ì…°ì´ë”ì™€ ë™ì¼í•œ ê¸°ë³¸ ì´ë¦„ì„ ê°€ì§„ íŒŒì¼ ì°¾ê¸° (ì˜ˆ: ColorShader_1234567890.cso)
                 std::wstring filename = entry.path().filename().wstring();
 
-                // ÆÄÀÏ ÀÌ¸§ÀÌ "¼ÎÀÌ´õÀÌ¸§_¼ıÀÚ.cso" Çü½ÄÀÎÁö È®ÀÎÇÏ¿© ÇöÀç »ç¿ë ÁßÀÎ Ä³½Ã°¡ ¾Æ´Ï¸é »èÁ¦
+                // íŒŒì¼ ì´ë¦„ì´ "ì…°ì´ë”ì´ë¦„_ìˆ«ì.cso" í˜•ì‹ì¸ì§€ í™•ì¸í•˜ì—¬ í˜„ì¬ ì‚¬ìš© ì¤‘ì¸ ìºì‹œê°€ ì•„ë‹ˆë©´ ì‚­ì œ
                 if (filename.find(shaderFileName + L"_") == 0 && filename.find(L".cso") != std::wstring::npos)
                     fileSystem::remove(entry.path());
             }
@@ -221,11 +221,11 @@ namespace Graphic
     {
         namespace fileSystem = std::filesystem;
 
-        // Ä³½Ã ÆÄÀÏ ÀÌ¸§¿¡¼­ Å¸ÀÓ½ºÅÆÇÁ ÃßÃâ
+        // ìºì‹œ íŒŒì¼ ì´ë¦„ì—ì„œ íƒ€ì„ìŠ¤íƒ¬í”„ ì¶”ì¶œ
         std::wstring tempPath = L"Temp/ShaderCompile/";
         std::wstring expectedCachePath = GetCacheFilePathWithTimestamp(shaderPath, tempPath);
 
-        // ½ÇÁ¦ Ä³½Ã ÆÄÀÏ °æ·Î°¡ ±â´ëÇÏ´Â Å¸ÀÓ½ºÅÆÇÁ¸¦ Æ÷ÇÔÇÑ °æ·Î¿Í ÀÏÄ¡ÇÏ´ÂÁö È®ÀÎ
+        // ì‹¤ì œ ìºì‹œ íŒŒì¼ ê²½ë¡œê°€ ê¸°ëŒ€í•˜ëŠ” íƒ€ì„ìŠ¤íƒ¬í”„ë¥¼ í¬í•¨í•œ ê²½ë¡œì™€ ì¼ì¹˜í•˜ëŠ”ì§€ í™•ì¸
         return cachePath == expectedCachePath && fileSystem::exists(cachePath);
     }
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Render.h"
 
@@ -16,13 +16,13 @@ namespace Graphic
 		template<class T, typename... Params>
 		static std::shared_ptr<T> GetRender(Params&&... path) NOEXCEPTRELEASE
 		{
-			static_assert(std::is_base_of<Render, T>::value, "ÇØ´ç Å¬·¡½º´Â Rendering Pine¶óÀÎÀÇ ´ë»óÀÌ ¾Æ´Õ´Ï´Ù.");
+			static_assert(std::is_base_of<Render, T>::value, "í•´ë‹¹ í´ë˜ìŠ¤ëŠ” Rendering Pineë¼ì¸ì˜ ëŒ€ìƒì´ ì•„ë‹™ë‹ˆë‹¤.");
 
 			return Instance().GetRender_<T>(std::forward<Params>(path)...);
 		}
 
 	private:
-		// Key °ªÀ» ÀÌ¿ëÇÏ¿© RenderManager¿¡ ÀúÀåµÇ¾î ÀÖ´Â Render °´Ã¼¸¦ °¡Á®¿È
+		// Key ê°’ì„ ì´ìš©í•˜ì—¬ RenderManagerì— ì €ì¥ë˜ì–´ ìˆëŠ” Render ê°ì²´ë¥¼ ê°€ì ¸ì˜´
 		template<class T, typename... Params>
 		std::shared_ptr<T> GetRender_(Params&&... path) NOEXCEPTRELEASE
 		{

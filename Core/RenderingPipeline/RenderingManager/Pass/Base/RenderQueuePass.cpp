@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "RenderQueuePass.h"
 
 namespace RenderGraphNameSpace
@@ -23,7 +23,7 @@ namespace RenderGraphNameSpace
 	{
 		RenderAll();
 
-		// ·»´õ¸µ ÀÛ¾÷ ¼öÇà (Äõ¸® °á°ú¸¦ ±â´Ù¸®Áö ¾Ê°í ºñµ¿±âÀûÀ¸·Î Ã³¸®)
+		// ë Œë”ë§ ì‘ì—… ìˆ˜í–‰ (ì¿¼ë¦¬ ê²°ê³¼ë¥¼ ê¸°ë‹¤ë¦¬ì§€ ì•Šê³  ë¹„ë™ê¸°ì ìœ¼ë¡œ ì²˜ë¦¬)
 		for (RenderJob& job : renderJobs)
 			job.Excute(isFrustumCulling);
 	}

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/RenderingManager/Buffer/BufferResource.h"
 
@@ -7,7 +7,7 @@
 class DxGraphic;
 class Image;
 
-// ·»´õ¸µ ÇÑ °á°ú¸¦ Æ¯Á¤ ÅØ½ºÃ³¿¡ ÀúÀåÇÏ°í ÈÄÃ³¸®³ª ´Ù¸¥ ¼ÎÀÌ´õ¸¦ Àû¿ëÇÏ±â À§ÇÑ Å¬·¡½º
+// ë Œë”ë§ í•œ ê²°ê³¼ë¥¼ íŠ¹ì • í…ìŠ¤ì²˜ì— ì €ì¥í•˜ê³  í›„ì²˜ë¦¬ë‚˜ ë‹¤ë¥¸ ì…°ì´ë”ë¥¼ ì ìš©í•˜ê¸° ìœ„í•œ í´ë˜ìŠ¤
 namespace Graphic
 {
 	class DepthStencil;
@@ -50,7 +50,7 @@ namespace Graphic
 	public:
 		ShaderInputRenderTarget(UINT width, UINT height, UINT slot);
 
-		// RenderTargetÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// RenderTargetì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 
@@ -64,7 +64,7 @@ namespace Graphic
 	public:
 		OutputOnlyRenderTarget(ID3D11Texture2D* texture, std::optional<UINT> face = { });
 
-		// RenderTargetÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// RenderTargetì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 	};
 }

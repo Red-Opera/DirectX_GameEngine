@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Camera/CameraContainer.h"
 #include "Core/Scene/Base/SceneGraph.h"
@@ -15,24 +15,24 @@ public:
 
 	static std::shared_ptr<Scene> Create(std::string sceneName);
 
-	std::shared_ptr<class Object> AddObject(std::shared_ptr<class Object> object);	// ¿ÀºêÁ§Æ®¸¦ Ãß°¡ÇÏ´Â ¸Ş¼Òµå
-	std::shared_ptr<class Object> RemoveObject(const std::string& name);			// ÇØ´ç ÀÌ¸§À» °¡Áø ¿ÀºêÁ§Æ®¸¦ Á¦°ÅÇÏ´Â ¸Ş¼Òµå
-	std::shared_ptr<class Object> RemoveObject(size_t index);						// ÇØ´ç ÀÎµ¦½º¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®¸¦ Á¦°ÅÇÏ´Â ¸Ş¼Òµå
+	std::shared_ptr<class Object> AddObject(std::shared_ptr<class Object> object);	// ì˜¤ë¸Œì íŠ¸ë¥¼ ì¶”ê°€í•˜ëŠ” ë©”ì†Œë“œ
+	std::shared_ptr<class Object> RemoveObject(const std::string& name);			// í•´ë‹¹ ì´ë¦„ì„ ê°€ì§„ ì˜¤ë¸Œì íŠ¸ë¥¼ ì œê±°í•˜ëŠ” ë©”ì†Œë“œ
+	std::shared_ptr<class Object> RemoveObject(size_t index);						// í•´ë‹¹ ì¸ë±ìŠ¤ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸ë¥¼ ì œê±°í•˜ëŠ” ë©”ì†Œë“œ
 
-	std::shared_ptr<class Object> GetObject(const std::string& name);				// ÇØ´ç ÀÌ¸§À» °¡Áø ¿ÀºêÁ§Æ®¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
-	std::shared_ptr<class Object> GetObject(size_t index);							// ÇØ´ç ÀÎµ¦½º¿¡ ÀÖ´Â ¿ÀºêÁ§Æ®¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
-	std::vector<std::shared_ptr<class Object>> GetObjects();						// ¾À¿¡ Æ÷ÇÔµÈ ¸ğµç ¿ÀºêÁ§Æ®¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
-	std::shared_ptr<SceneGraph> GetSceneGraph();									// ¾À ±×·¡ÇÁ¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+	std::shared_ptr<class Object> GetObject(const std::string& name);				// í•´ë‹¹ ì´ë¦„ì„ ê°€ì§„ ì˜¤ë¸Œì íŠ¸ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
+	std::shared_ptr<class Object> GetObject(size_t index);							// í•´ë‹¹ ì¸ë±ìŠ¤ì— ìˆëŠ” ì˜¤ë¸Œì íŠ¸ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
+	std::vector<std::shared_ptr<class Object>> GetObjects();						// ì”¬ì— í¬í•¨ëœ ëª¨ë“  ì˜¤ë¸Œì íŠ¸ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
+	std::shared_ptr<SceneGraph> GetSceneGraph();									// ì”¬ ê·¸ë˜í”„ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
 
-	std::string GetName() const;													// ¾ÀÀÇ ÀÌ¸§À» ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+	std::string GetName() const;													// ì”¬ì˜ ì´ë¦„ì„ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
 
 	void CameraMoveRotation(class Window& window, const class GameTimer& timer, float deltaTime);
-	CameraContainer& GetCameraContainer() { return cameras; }						// Ä«¸Ş¶ó ÄÁÅ×ÀÌ³Ê¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+	CameraContainer& GetCameraContainer() { return cameras; }						// ì¹´ë©”ë¼ ì»¨í…Œì´ë„ˆë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
 
-	// ÇØ´ç ÀÌ¸§À» °¡Áø ¿ÀºêÁ§Æ®°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼Òµå
+	// í•´ë‹¹ ì´ë¦„ì„ ê°€ì§„ ì˜¤ë¸Œì íŠ¸ê°€ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì†Œë“œ
 	bool HasObject(const std::string& name);
 
-	// ÇöÀç È°¼ºÈ­µÈ ¾ÀÀ» ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+	// í˜„ì¬ í™œì„±í™”ëœ ì”¬ì„ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
 	static std::shared_ptr<Scene> GetActiveScene();
 
 	void Initialize() override;
@@ -50,15 +50,15 @@ public:
 	//~Scene();
 
 protected:
-	// ÇöÀç È°¼ºÈ­µÈ ¾ÀÀ» ÀúÀåÇÏ´Â Á¤Àû º¯¼ö
+	// í˜„ì¬ í™œì„±í™”ëœ ì”¬ì„ ì €ì¥í•˜ëŠ” ì •ì  ë³€ìˆ˜
 	static std::shared_ptr<Scene> activeScene;
 
-	std::unordered_map<std::string, size_t> objectIndex;	// ¿ÀºêÁ§Æ® ÀÌ¸§°ú ÀÎµ¦½º¸¦ ÀúÀåÇÏ´Â ÇØ½Ã¸Ê
-	std::vector<std::shared_ptr<class Object>> objects;		// ¾À¿¡ Æ÷ÇÔµÈ ¿ÀºêÁ§Æ®¸¦ ÀúÀåÇÏ´Â ¹è¿­
+	std::unordered_map<std::string, size_t> objectIndex;	// ì˜¤ë¸Œì íŠ¸ ì´ë¦„ê³¼ ì¸ë±ìŠ¤ë¥¼ ì €ì¥í•˜ëŠ” í•´ì‹œë§µ
+	std::vector<std::shared_ptr<class Object>> objects;		// ì”¬ì— í¬í•¨ëœ ì˜¤ë¸Œì íŠ¸ë¥¼ ì €ì¥í•˜ëŠ” ë°°ì—´
 
-	std::string sceneName;									// ¾À ÀÌ¸§
+	std::string sceneName;									// ì”¬ ì´ë¦„
 
-	std::shared_ptr<SceneGraph> sceneGraph;					// ¾À ±×·¡ÇÁ
+	std::shared_ptr<SceneGraph> sceneGraph;					// ì”¬ ê·¸ë˜í”„
 
 	CameraContainer cameras;
 	float cameraSpeed = 1.0f;

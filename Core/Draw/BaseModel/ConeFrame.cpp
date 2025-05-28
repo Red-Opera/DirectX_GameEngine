@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ConeFrame.h"
 
 TriangleIndexList ConeFrame::MakeTesselated(VertexCore::VertexLayout vertexLayout, int longDiv)
@@ -14,7 +14,7 @@ TriangleIndexList ConeFrame::MakeTesselated(VertexCore::VertexLayout vertexLayou
 	// base vertices: 0 ~ (longDiv - 1)
 	VertexBuffer vertices(std::move(vertexLayout), longDiv + 2);
 
-	// 1) ¿øÁÖ»óÀÇ Á¤Á¡µé
+	// 1) ì›ì£¼ìƒì˜ ì •ì ë“¤
 	for (int iLong = 0; iLong < longDiv; iLong++)
 	{
 		auto v = DirectX::XMVector3Transform(
@@ -27,19 +27,19 @@ TriangleIndexList ConeFrame::MakeTesselated(VertexCore::VertexLayout vertexLayou
 		);
 	}
 
-	// 2) ¿ø»Ô ¹Ø¸é Áß½É (center)
+	// 2) ì›ë¿” ë°‘ë©´ ì¤‘ì‹¬ (center)
 	vertices[longDiv].GetValue<VertexType::Position3D>() = { 0.0f, 0.0f, -1.0f };
-	const auto iCenter = (unsigned short)longDiv;   // <--- ÀÎµ¦½º: longDiv
+	const auto iCenter = (unsigned short)longDiv;   // <--- ì¸ë±ìŠ¤: longDiv
 
-	// 3) ¿ø»Ô ²ÀÁöÁ¡ (tip)
+	// 3) ì›ë¿” ê¼­ì§€ì  (tip)
 	vertices[longDiv + 1].GetValue<VertexType::Position3D>() = { 0.0f, 0.0f, 1.0f };
-	const auto iTip = (unsigned short)(longDiv + 1);   // <--- ÀÎµ¦½º: longDiv + 1
+	const auto iTip = (unsigned short)(longDiv + 1);   // <--- ì¸ë±ìŠ¤: longDiv + 1
 
-	// ÀÌÈÄ ÀÎµ¦½º ±¸¼º
+	// ì´í›„ ì¸ë±ìŠ¤ êµ¬ì„±
 	std::vector<unsigned short> indices;
 
-	// (a) ¹Ø¸é »ï°¢Çüµé
-	//    - Áß½É(iCenter)°ú iLong, (iLong+1)%longDiv·Î ÀÌ¾îÁö´Â »ï°¢Çü
+	// (a) ë°‘ë©´ ì‚¼ê°í˜•ë“¤
+	//    - ì¤‘ì‹¬(iCenter)ê³¼ iLong, (iLong+1)%longDivë¡œ ì´ì–´ì§€ëŠ” ì‚¼ê°í˜•
 	for (unsigned short iLong = 0; iLong < longDiv; iLong++)
 	{
 		indices.push_back(iCenter);
@@ -47,8 +47,8 @@ TriangleIndexList ConeFrame::MakeTesselated(VertexCore::VertexLayout vertexLayou
 		indices.push_back(iLong);
 	}
 
-	// (b) ¿·¸é »ï°¢Çüµé
-	//    - iLong, (iLong+1)%longDiv, iTip·Î ÀÌ¾îÁö´Â »ï°¢Çü
+	// (b) ì˜†ë©´ ì‚¼ê°í˜•ë“¤
+	//    - iLong, (iLong+1)%longDiv, iTipë¡œ ì´ì–´ì§€ëŠ” ì‚¼ê°í˜•
 	for (unsigned short iLong = 0; iLong < longDiv; iLong++)
 	{
 		indices.push_back(iLong);
@@ -56,7 +56,7 @@ TriangleIndexList ConeFrame::MakeTesselated(VertexCore::VertexLayout vertexLayou
 		indices.push_back(iTip);
 	}
 
-	// ÃÖÁ¾ ¸®ÅÏ
+	// ìµœì¢… ë¦¬í„´
 	return { std::move(vertices), std::move(indices) };
 }
 
@@ -67,19 +67,19 @@ TriangleIndexList ConeFrame::MakeTesselatedSeparateBottom(VertexCore::VertexLayo
 
 	assert(longDiv >= 3);
 
-	// ¿ø»Ô ¹Ø¸é°ú ¿·¸éÀ» ³ª´©¾î »ı¼ºÇÏ±â À§ÇØ
-	//  - ¹Ø¸é ¿øÁÖ: 0 ~ (longDiv - 1)
-	//  - ¿·¸é ¿øÁÖ: longDiv ~ (2*longDiv - 1)
-	//  - ¹Ø¸é Áß½É(iCenter): 2*longDiv
-	//  - ²ÀÁöÁ¡(iTip): 2*longDiv + 1
+	// ì›ë¿” ë°‘ë©´ê³¼ ì˜†ë©´ì„ ë‚˜ëˆ„ì–´ ìƒì„±í•˜ê¸° ìœ„í•´
+	//  - ë°‘ë©´ ì›ì£¼: 0 ~ (longDiv - 1)
+	//  - ì˜†ë©´ ì›ì£¼: longDiv ~ (2*longDiv - 1)
+	//  - ë°‘ë©´ ì¤‘ì‹¬(iCenter): 2*longDiv
+	//  - ê¼­ì§€ì (iTip): 2*longDiv + 1
 	//
-	// ÃÑ Á¤Á¡ ¼ö = 2*longDiv + 2
+	// ì´ ì •ì  ìˆ˜ = 2*longDiv + 2
 	VertexBuffer vertices(std::move(vertexLayout), 2 * longDiv + 2);
 
 	// ----------------------
-	// 1) ¹Ø¸é ¿øÁÖ (Bottom Ring) Á¤Á¡: Normal = (0,0,-1)
+	// 1) ë°‘ë©´ ì›ì£¼ (Bottom Ring) ì •ì : Normal = (0,0,-1)
 	// ----------------------
-	// pos: (cos¥è, sin¥è, -1) ÇüÅÂ(È¸Àü º¯È¯ »ç¿ë)
+	// pos: (cosÎ¸, sinÎ¸, -1) í˜•íƒœ(íšŒì „ ë³€í™˜ ì‚¬ìš©)
 	const auto base = DirectX::XMVectorSet(1.0f, 0.0f, -1.0f, 0.0f);
 	const float dTheta = 2.0f * Math::PI / longDiv;
 
@@ -94,12 +94,12 @@ TriangleIndexList ConeFrame::MakeTesselatedSeparateBottom(VertexCore::VertexLayo
 			&vertices[i].GetValue<VertexType::Position3D>(),
 			v
 		);
-		// ¹Ø¸é¿ë Á¤Á¡ ³ë¸ÖÀº -Z
+		// ë°‘ë©´ìš© ì •ì  ë…¸ë©€ì€ -Z
 		vertices[i].GetValue<VertexType::Normal>() = { 0.0f, 0.0f, -1.0f };
 	}
 
 	// ----------------------
-	// 2) ¿·¸é ¿øÁÖ (Side Ring) Á¤Á¡: ¿·¸é ³ë¸Ö º°µµ °è»ê
+	// 2) ì˜†ë©´ ì›ì£¼ (Side Ring) ì •ì : ì˜†ë©´ ë…¸ë©€ ë³„ë„ ê³„ì‚°
 	// ----------------------
 	for (int i = 0; i < longDiv; i++)
 	{
@@ -108,17 +108,17 @@ TriangleIndexList ConeFrame::MakeTesselatedSeparateBottom(VertexCore::VertexLayo
 			base,
 			DirectX::XMMatrixRotationZ(theta)
 		);
-		const int idx = longDiv + i; // ¿·¸é ¿øÁÖ À§Ä¡
+		const int idx = longDiv + i; // ì˜†ë©´ ì›ì£¼ ìœ„ì¹˜
 		DirectX::XMStoreFloat3(
 			&vertices[idx].GetValue<VertexType::Position3D>(),
 			v
 		);
-		// ÀÏ´Ü 0À¸·Î ÃÊ±âÈ­ ÈÄ, ¾Æ·¡¿¡¼­ ¿·¸é ³ë¸Ö °è»ê
+		// ì¼ë‹¨ 0ìœ¼ë¡œ ì´ˆê¸°í™” í›„, ì•„ë˜ì—ì„œ ì˜†ë©´ ë…¸ë©€ ê³„ì‚°
 		vertices[idx].GetValue<VertexType::Normal>() = { 0.0f, 0.0f, 0.0f };
 	}
 
 	// ----------------------
-	// 3) ¹Ø¸é Áß½É (iCenter) & ²ÀÁöÁ¡ (iTip)
+	// 3) ë°‘ë©´ ì¤‘ì‹¬ (iCenter) & ê¼­ì§€ì  (iTip)
 	// ----------------------
 	const auto iCenter = static_cast<unsigned short>(2 * longDiv);
 	vertices[iCenter].GetValue<VertexType::Position3D>() = { 0.0f, 0.0f, -1.0f };
@@ -129,13 +129,13 @@ TriangleIndexList ConeFrame::MakeTesselatedSeparateBottom(VertexCore::VertexLayo
 	vertices[iTip].GetValue<VertexType::Normal>() = { 0.0f, 0.0f, 1.0f };
 
 	// ----------------------
-	// ÀÎµ¦½º ¹öÆÛ ±¸¼º
+	// ì¸ë±ìŠ¤ ë²„í¼ êµ¬ì„±
 	// ----------------------
 	std::vector<unsigned short> indices;
-	indices.reserve(6 * longDiv); // ´ë·« »ï°¢Çü 2*longDiv °³
+	indices.reserve(6 * longDiv); // ëŒ€ëµ ì‚¼ê°í˜• 2*longDiv ê°œ
 
-	// (a) ¹Ø¸é »ï°¢Çü
-	//     - [iCenter, i, i+1] ±¸Á¶
+	// (a) ë°‘ë©´ ì‚¼ê°í˜•
+	//     - [iCenter, i, i+1] êµ¬ì¡°
 	for (unsigned short i = 0; i < longDiv; i++)
 	{
 		unsigned short iNext = (i + 1) % longDiv;
@@ -144,13 +144,13 @@ TriangleIndexList ConeFrame::MakeTesselatedSeparateBottom(VertexCore::VertexLayo
 		indices.push_back(i);
 	}
 
-	// (b) ¿·¸é »ï°¢Çü
-	//     - [i, i+1, iTip], ´Ü i°¡ "¿·¸é ¿øÁÖ ÀÎµ¦½º"¿©¾ß ÇÏ¹Ç·Î offset ÇÊ¿ä
+	// (b) ì˜†ë©´ ì‚¼ê°í˜•
+	//     - [i, i+1, iTip], ë‹¨ iê°€ "ì˜†ë©´ ì›ì£¼ ì¸ë±ìŠ¤"ì—¬ì•¼ í•˜ë¯€ë¡œ offset í•„ìš”
 	for (unsigned short i = 0; i < longDiv; i++)
 	{
 		const unsigned short iNext = (i + 1) % longDiv;
-		const unsigned short i0 = longDiv + i;      // ¿·¸é ring
-		const unsigned short i1 = longDiv + iNext;  // ¿·¸é ring
+		const unsigned short i0 = longDiv + i;      // ì˜†ë©´ ring
+		const unsigned short i1 = longDiv + iNext;  // ì˜†ë©´ ring
 
 		indices.push_back(i0);
 		indices.push_back(i1);
@@ -158,9 +158,9 @@ TriangleIndexList ConeFrame::MakeTesselatedSeparateBottom(VertexCore::VertexLayo
 	}
 
 	// ----------------------
-	// ¿·¸é ¿øÁÖ ³ë¸Ö °è»ê
+	// ì˜†ë©´ ì›ì£¼ ë…¸ë©€ ê³„ì‚°
 	// ----------------------
-	// pos = (cos¥è, sin¥è, -1) ÇüÅÂÀÌ¹Ç·Î, ±âÁ¸ ÄÚµåÃ³·³ s = sqrt(1^2 + 2^2) = sqrt(5)
+	// pos = (cosÎ¸, sinÎ¸, -1) í˜•íƒœì´ë¯€ë¡œ, ê¸°ì¡´ ì½”ë“œì²˜ëŸ¼ s = sqrt(1^2 + 2^2) = sqrt(5)
 	const float s = sqrtf(5.0f);
 	for (int i = 0; i < longDiv; i++)
 	{
@@ -168,7 +168,7 @@ TriangleIndexList ConeFrame::MakeTesselatedSeparateBottom(VertexCore::VertexLayo
 		auto& pos = vertices[idx].GetValue<VertexType::Position3D>();
 		auto& normal = vertices[idx].GetValue<VertexType::Normal>();
 
-		float theta = atan2f(pos.y, pos.x); // pos°¡ (r*cos¥è, r*sin¥è, -1)ÀÌ¹Ç·Î
+		float theta = atan2f(pos.y, pos.x); // posê°€ (r*cosÎ¸, r*sinÎ¸, -1)ì´ë¯€ë¡œ
 		normal.x = (2.0f * cosf(theta)) / s;
 		normal.y = (2.0f * sinf(theta)) / s;
 		normal.z = 1.0f / s;
@@ -263,13 +263,13 @@ TriangleIndexList ConeFrame::CreateTextureFrameSeparateBottom()
 {
 	using VertexType = VertexCore::VertexLayout::VertexType;
 
-	// ¿øÇÏ´Â VertexLayout ±¸¼º
+	// ì›í•˜ëŠ” VertexLayout êµ¬ì„±
 	VertexCore::VertexLayout layout;
 	layout.AddType(VertexType::Position3D);
 	layout.AddType(VertexType::Normal);
 	layout.AddType(VertexType::Texture2D);
 
-	// 24ºĞÇÒ·Î ¿ø»Ô »ı¼º (¹Ø¸é/¿·¸é ºĞ¸®)
+	// 24ë¶„í• ë¡œ ì›ë¿” ìƒì„± (ë°‘ë©´/ì˜†ë©´ ë¶„ë¦¬)
 	auto cone = MakeTesselatedSeparateBottom(std::move(layout), 24);
 
 	return cone;

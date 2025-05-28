@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "TransformConstantBuffer.h"
 #include "DynamicConstantBuffer.h"

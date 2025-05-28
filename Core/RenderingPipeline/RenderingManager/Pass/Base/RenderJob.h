@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Exception/WindowException.h"
 #include "Core/Draw/OcclusionCulling.h"
@@ -19,24 +19,24 @@ namespace RenderGraphNameSpace
 
 		void Excute(bool isPassFrustumCulling = true) NOEXCEPTRELEASE;
 
-		// Occlusion Culling È°¼ºÈ­/ºñÈ°¼ºÈ­
+		// Occlusion Culling í™œì„±í™”/ë¹„í™œì„±í™”
 		void EnableOcclusionCulling(bool enable);
 
-		// Occlusion Culling »óÅÂ È®ÀÎ
+		// Occlusion Culling ìƒíƒœ í™•ì¸
 		bool IsOcclusionCullingEnabled() const;
 
-		// Occlusion Query ½ÃÀÛ
+		// Occlusion Query ì‹œì‘
 		void BeginOcclusionQuery();
 
-		// Occlusion Query Á¾·á
+		// Occlusion Query ì¢…ë£Œ
 		void EndOcclusionQuery();
 
-		// ¿ÀºêÁ§Æ®°¡ º¸ÀÌ´ÂÁö È®ÀÎ
+		// ì˜¤ë¸Œì íŠ¸ê°€ ë³´ì´ëŠ”ì§€ í™•ì¸
 		bool IsVisibleAfterOcclusionTest() const;
 
 		bool UpdateOcclusionVisibility();
 
-		// Frustum Culling °ü·Ã ±â´É Ãß°¡
+		// Frustum Culling ê´€ë ¨ ê¸°ëŠ¥ ì¶”ê°€
 		void EnableFrustumCulling(bool enable);
 		bool IsFrustumCullingEnabled() const;
 
@@ -51,7 +51,7 @@ namespace RenderGraphNameSpace
 		static std::unique_ptr<class OcclusionCulling> m_occlusionCulling;
 		bool m_useOcclusionCulling = false;
 
-		// Frustum Culling °ü·Ã Ãß°¡
+		// Frustum Culling ê´€ë ¨ ì¶”ê°€
 		static CameraViewFrustumCulling viewFrustumCulling;
 		static bool useViewFrustum;
 	};

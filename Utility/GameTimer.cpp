@@ -1,11 +1,11 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GameTimer.h"
 
-// GameTimer ÃÊ±âÈ­
+// GameTimer ì´ˆê¸°í™”
 GameTimer::GameTimer() : secondsPerFrame(0.0), deltaTime(-1.0), totalTime(0), pauseTime(0),
 						 prevTime(0), currentTime(0), isStopped(false), stopTime(0), beforeTimePoint(0)
 {
-	// ÃÊ´ç ÇÁ·¹ÀÓÀ» ¼³Á¤ÇÔ
+	// ì´ˆë‹¹ í”„ë ˆìž„ì„ ì„¤ì •í•¨
 	__int64 framePerSec;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&framePerSec);
 
@@ -18,76 +18,76 @@ void GameTimer::Reset()
 	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 
 	totalTime = currentTime;
-	prevTime = currentTime;		// ÀÌÀü ÇÁ·¹ÀÓÀÌ ¾øÀ¸¹Ç·Î ÇöÀç ÇÁ·¹ÀÓÀ¸·Î ¼³Á¤
+	prevTime = currentTime;		// ì´ì „ í”„ë ˆìž„ì´ ì—†ìœ¼ë¯€ë¡œ í˜„ìž¬ í”„ë ˆìž„ìœ¼ë¡œ ì„¤ì •
 	stopTime = 0;
 
 	isStopped = false;
 }
 
-// ÀÏ½ÃÁ¤ÁöÇÑ ½Ã°£À» ´Ù½Ã Àç»ýÇÏ´Â ¸Þ¼Òµå
+// ì¼ì‹œì •ì§€í•œ ì‹œê°„ì„ ë‹¤ì‹œ ìž¬ìƒí•˜ëŠ” ë©”ì†Œë“œ
 void GameTimer::Start()
 {
-	// Áß´Ü »óÅÂ°¡ ¾Æ´Ñ °æ¿ì ¾Æ¹«°Íµµ ÇÏÁö ¾ÊÀ½
+	// ì¤‘ë‹¨ ìƒíƒœê°€ ì•„ë‹Œ ê²½ìš° ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•ŠìŒ
 	if (!this->isStopped)
 		return;
 
 	/*
-		Áß´Ü°ú ½ÃÀÛ(Àç°³) »çÀÌ¿¡ Èå¸¥ ½Ã°£À» ´©ÀûÇÑ´Ù.
+		ì¤‘ë‹¨ê³¼ ì‹œìž‘(ìž¬ê°œ) ì‚¬ì´ì— íë¥¸ ì‹œê°„ì„ ëˆ„ì í•œë‹¤.
 
 							|<-------d---------->|
-		--------------------*--------------------*--------------------> ½Ã°£
+		--------------------*--------------------*--------------------> ì‹œê°„
 						stopTime			 startTIme
 	*/
 
 	__int64 startTime;
 	QueryPerformanceCounter((LARGE_INTEGER*)&startTime);
 
-	// ÀÏ½ÃÁ¤Áö ½Ã°£À» ´©ÀûÇÔ
+	// ì¼ì‹œì •ì§€ ì‹œê°„ì„ ëˆ„ì í•¨
 	this->pauseTime += (startTime - stopTime);
 
-	this->prevTime = startTime;	// ÀÌÀü ÇÁ·¹ÀÓÀ» ÃÊ±âÈ­ÇÔ
+	this->prevTime = startTime;	// ì´ì „ í”„ë ˆìž„ì„ ì´ˆê¸°í™”í•¨
 
-	// ÀÏ½ÃÁ¤½Ã ½Ã°£ ÃÊ±âÈ­
+	// ì¼ì‹œì •ì‹œ ì‹œê°„ ì´ˆê¸°í™”
 	this->stopTime = 0;	
 	this->isStopped = false;
 }
 
-// Å¸ÀÓ¸ÓÀÇ ½Ã°£À» ÀÏ½Ã Á¤ÁöÇÏ±â À§ÇÑ ¸Þ¼Òµå
+// íƒ€ìž„ë¨¸ì˜ ì‹œê°„ì„ ì¼ì‹œ ì •ì§€í•˜ê¸° ìœ„í•œ ë©”ì†Œë“œ
 void GameTimer::Stop()
 {
-	// ÀÌ¹Ì Å¸ÀÌ¸Ó°¡ ¸ØÃçÀÖ´Ù¸é ¾Æ¹«°Íµµ ÇÏÁö ¾ÊÀ½
+	// ì´ë¯¸ íƒ€ì´ë¨¸ê°€ ë©ˆì¶°ìžˆë‹¤ë©´ ì•„ë¬´ê²ƒë„ í•˜ì§€ ì•ŠìŒ
 	if (this->isStopped)
 		return;
 
 	__int64 currentTime;
 	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 
-	// Å¸ÀÓ¸ÓÀÇ ÀÏ½Ã ÁßÁö½Ã°£À» ÇöÀç ½Ã°£À¸·Î Á¤ÇÏ°í Á¤Áö ¿©ºÎ¸¦ true·Î ¼³Á¤
+	// íƒ€ìž„ë¨¸ì˜ ì¼ì‹œ ì¤‘ì§€ì‹œê°„ì„ í˜„ìž¬ ì‹œê°„ìœ¼ë¡œ ì •í•˜ê³  ì •ì§€ ì—¬ë¶€ë¥¼ trueë¡œ ì„¤ì •
 	this->stopTime = currentTime;
 	isStopped = true;
 }
 
-// ÇöÀç ÇÁ·¹ÀÓ ´ç ½Ã°£(deltaTime)À» ±¸ÇÔ
+// í˜„ìž¬ í”„ë ˆìž„ ë‹¹ ì‹œê°„(deltaTime)ì„ êµ¬í•¨
 void GameTimer::Tick()
 {
-	// ÇöÀç °ÔÀÓÀ» ¸ØÃâ °æ¿ì 0.0f·Î ¼³Á¤
+	// í˜„ìž¬ ê²Œìž„ì„ ë©ˆì¶œ ê²½ìš° 0.0fë¡œ ì„¤ì •
 	if (isStopped)
 	{
 		deltaTime = 0.0f;
 		return;
 	}
 
-	// ÇöÀç ÇÁ·¹ÀÓÀÇ ½Ã°£À» ±¸ÇÔ
+	// í˜„ìž¬ í”„ë ˆìž„ì˜ ì‹œê°„ì„ êµ¬í•¨
 	__int64 currentTime;
 	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
 	this->currentTime = currentTime;
 
-	// ÇöÀç ÇÁ·¹ÀÓ°ú ÀÌÀü ÇÁ·¹ÀÓÀÇ Â÷¸¦ ÀÌ¿ëÇÏ¿© ÇÁ·¹ÀÓ ´ç ½Ã°£À» ±¸ÇÑ´Ù.
+	// í˜„ìž¬ í”„ë ˆìž„ê³¼ ì´ì „ í”„ë ˆìž„ì˜ ì°¨ë¥¼ ì´ìš©í•˜ì—¬ í”„ë ˆìž„ ë‹¹ ì‹œê°„ì„ êµ¬í•œë‹¤.
 	this->deltaTime = (currentTime - prevTime) * secondsPerFrame;
 
 	this->prevTime = this->currentTime;
 
-	// deltaTimeÀÌ À½¼ö°¡ µÇÁö ¾Êµµ·Ï ¼³Á¤
+	// deltaTimeì´ ìŒìˆ˜ê°€ ë˜ì§€ ì•Šë„ë¡ ì„¤ì •
 	if (this->deltaTime < 0.0)
 		this->deltaTime = 0.0;
 }
@@ -108,13 +108,13 @@ float GameTimer::DeltaTime() const { return (float)deltaTime; }
 float GameTimer::TotalTime() const
 {
 	/*
-		ÇöÀç Å¸ÀÌ¸Ó°¡ Áß´Ü »óÅÂÀÌ¸é Áß´ÜµÈ ÈÄ·ÎºÎÅÍ Èå¸¥ ½Ã°£Àº °è»êÇÏÁö ¾Ê´Â´Ù.
-		¶ÇÇÑ ÀÌÀü¿¡ ÀÏ½Ã Á¤ÁöµÈ ÀûÀÌ ÀÖ´Ù¸é ±× ½Ã°£µµ ÀüÃ¼ ½Ã°£¿¡ Æ÷ÇÔ½ÃÅ°Áö ¾Ê´Â´Ù.
-		ÀÌ¸¦ À§ÇØ stopTime¿¡¼­ ÀÏ½ÃÁ¤Áö ½Ã°£À» –A´Ù.
+		í˜„ìž¬ íƒ€ì´ë¨¸ê°€ ì¤‘ë‹¨ ìƒíƒœì´ë©´ ì¤‘ë‹¨ëœ í›„ë¡œë¶€í„° íë¥¸ ì‹œê°„ì€ ê³„ì‚°í•˜ì§€ ì•ŠëŠ”ë‹¤.
+		ë˜í•œ ì´ì „ì— ì¼ì‹œ ì •ì§€ëœ ì ì´ ìžˆë‹¤ë©´ ê·¸ ì‹œê°„ë„ ì „ì²´ ì‹œê°„ì— í¬í•¨ì‹œí‚¤ì§€ ì•ŠëŠ”ë‹¤.
+		ì´ë¥¼ ìœ„í•´ stopTimeì—ì„œ ì¼ì‹œì •ì§€ ì‹œê°„ì„ ëº¸ë‹¤.
 
-				   ÀÌÀüÀÇ ÀÏ½ÃÁ¤Áö ½Ã°£
+				   ì´ì „ì˜ ì¼ì‹œì •ì§€ ì‹œê°„
 				    |<-----d------>|
-		-*----------*--------------*---*-----------*----> ½Ã°£
+		-*----------*--------------*---*-----------*----> ì‹œê°„
 		totalTime					 stopTime	currentTime
 	*/
 
@@ -122,14 +122,14 @@ float GameTimer::TotalTime() const
 		return (float)(((this->stopTime - this->pauseTime) - totalTime) * secondsPerFrame);
 
 	/*
-		½Ã°£Â÷ currentTime - totalTime¿¡´Â ÀÏ½Ã Á¤ÁöµÈ ½Ã°£ÀÌ Æ÷ÇÔµÇ¾î ÀÖ´Ù.
-		ÀÌ¸¦ ÀüÃ¼ ½Ã°£¿¡ Æ÷ÇÔ½ÃÅ°¸é ¾È µÇ¹Ç·Î, ±× ½Ã°£À» currentTime¿¡¼­ Á¦°ÅÇÑ´Ù.
+		ì‹œê°„ì°¨ currentTime - totalTimeì—ëŠ” ì¼ì‹œ ì •ì§€ëœ ì‹œê°„ì´ í¬í•¨ë˜ì–´ ìžˆë‹¤.
+		ì´ë¥¼ ì „ì²´ ì‹œê°„ì— í¬í•¨ì‹œí‚¤ë©´ ì•ˆ ë˜ë¯€ë¡œ, ê·¸ ì‹œê°„ì„ currentTimeì—ì„œ ì œê±°í•œë‹¤.
 
 			(currentTime - pausedTime) - totalTime
 
-				   ÀÌÀüÀÇ ÀÏ½ÃÁ¤Áö ½Ã°£
+				   ì´ì „ì˜ ì¼ì‹œì •ì§€ ì‹œê°„
 					|<-----d------>|
-		-*----------*--------------*-------------*----> ½Ã°£
+		-*----------*--------------*-------------*----> ì‹œê°„
 		totalTime  stopTime	    startTime	currentTime
 	*/
 

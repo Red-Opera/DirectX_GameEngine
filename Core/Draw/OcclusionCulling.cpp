@@ -1,9 +1,9 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "OcclusionCulling.h"
 
 #include "Core/Window.h"
 #include "Core/DxGraphic.h"
-#include "d3d11.h" // Ãß°¡µÈ Çì´õ ÆÄÀÏ
+#include "d3d11.h" // ì¶”ê°€ëœ í—¤ë” íŒŒì¼
 
 #include <cassert>
 #include <thread>
@@ -38,7 +38,7 @@ bool OcclusionCulling::UpdateVisibility()
 {
     UINT64 sampleCount = 0;
 
-    // ³íºí·ÎÅ· ¹æ½ÄÀ¸·Î Äõ¸® °á°ú ¹Ş±â (±â´Ù¸®Áö ¾ÊÀ½)
+    // ë…¼ë¸”ë¡œí‚¹ ë°©ì‹ìœ¼ë¡œ ì¿¼ë¦¬ ê²°ê³¼ ë°›ê¸° (ê¸°ë‹¤ë¦¬ì§€ ì•ŠìŒ)
     HRESULT hr = Window::GetDxGraphic().GetDeviceContext()->GetData(
         occlusionQuery.Get(),
         &sampleCount,
@@ -47,15 +47,15 @@ bool OcclusionCulling::UpdateVisibility()
 
     if (hr == S_OK)
     {
-        // °á°ú¸¦ ¹Ş¾ÒÀ» °æ¿ì¿¡¸¸ »óÅÂ ¾÷µ¥ÀÌÆ®
+        // ê²°ê³¼ë¥¼ ë°›ì•˜ì„ ê²½ìš°ì—ë§Œ ìƒíƒœ ì—…ë°ì´íŠ¸
         m_lastFrameVisible = (sampleCount > 0);
         m_resultReady = true;
     }
 
     else if (hr == S_FALSE)
     {
-        // °á°ú°¡ ¾ÆÁ÷ ÁØºñµÇÁö ¾ÊÀ½ - ÀÌÀü ÇÁ·¹ÀÓ °ª »ç¿ë
-        // ·Î±× Ãâ·Â Á¦°Å (¼º´É ÀúÇÏ ¿øÀÎ)
+        // ê²°ê³¼ê°€ ì•„ì§ ì¤€ë¹„ë˜ì§€ ì•ŠìŒ - ì´ì „ í”„ë ˆì„ ê°’ ì‚¬ìš©
+        // ë¡œê·¸ ì¶œë ¥ ì œê±° (ì„±ëŠ¥ ì €í•˜ ì›ì¸)
     }
 
     return m_lastFrameVisible;

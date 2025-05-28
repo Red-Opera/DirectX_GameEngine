@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PointLight.h"
 
 #include "Core/App.h"
@@ -79,7 +79,7 @@ void PointLight::Update()
 
 	const auto& transformPosition = transform->GetPosition();
 
-	// transformÀÇ À§Ä¡¸¦ lightInfo¿Í µ¿±âÈ­ (ÀÎ½ºÆåÅÍ º¯°æ ¹Ý¿µ)
+	// transformì˜ ìœ„ì¹˜ë¥¼ lightInfoì™€ ë™ê¸°í™” (ì¸ìŠ¤íŽ™í„° ë³€ê²½ ë°˜ì˜)
 	if (transformPosition != lightInfo.position)
 	{
 		lightInfo.position = transformPosition;
@@ -88,7 +88,7 @@ void PointLight::Update()
 		viewTransform->SetPosition(lightInfo.position);
 	}
 
-	// ±âÁ¸ ÄÚµå
+	// ê¸°ì¡´ ì½”ë“œ
 	auto& activeCamera = CameraContainer::GetActiveCamera();
 	const DirectX::FXMMATRIX view = activeCamera.GetMatrix();
 

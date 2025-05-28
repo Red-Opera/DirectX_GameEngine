@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TexturePreprocessor.h"
 
 #include "Core/Exception/ModelException.h"
@@ -44,46 +44,46 @@ void TexturePreprocessor::FilpYNormalMap(const std::string& pathIn, const std::s
 
 void TexturePreprocessor::VaildateNormalMap(const std::string& pathIn, float thresholdMin, float thresholdMax)
 {
-    // ÀÔ·ÂµÈ °æ·ÎÀÇ ³ë¸» ¸ÊÀ» °ËÁõ ½ÃÀÛ
+    // ì…ë ¥ëœ ê²½ë¡œì˜ ë…¸ë§ ë§µì„ ê²€ì¦ ì‹œì‘
     OutputDebugStringA(("Validating normal map : [" + pathIn + "]\n").c_str());
 
     using namespace DirectX;
     auto sum = XMVectorZero();
 
-    // °¢ º¤ÅÍ¸¦ Ã³¸®ÇÏ´Â ¶÷´Ù ÇÔ¼ö Á¤ÀÇ
+    // ê° ë²¡í„°ë¥¼ ì²˜ë¦¬í•˜ëŠ” ëŒë‹¤ í•¨ìˆ˜ ì •ì˜
     const auto process = [thresholdMin, thresholdMax, &sum](XMVECTOR vector, int x, int y) -> XMVECTOR
     {
-        // º¤ÅÍÀÇ ±æÀÌ¸¦ °è»ê
+        // ë²¡í„°ì˜ ê¸¸ì´ë¥¼ ê³„ì‚°
         const auto length = XMVectorGetX(XMVector3Length(vector));
         const float z = XMVectorGetZ(vector);
 
-        // º¤ÅÍÀÇ ±æÀÌ°¡ ÀÓ°è°ª ¹üÀ§¸¦ ¹ş¾î³ª´ÂÁö È®ÀÎ
+        // ë²¡í„°ì˜ ê¸¸ì´ê°€ ì„ê³„ê°’ ë²”ìœ„ë¥¼ ë²—ì–´ë‚˜ëŠ”ì§€ í™•ì¸
         if (length < thresholdMin || length > thresholdMax)
         {
             XMFLOAT3 vec;
             XMStoreFloat3(&vec, vector);
 
-            // Àß¸øµÈ ³ë¸» º¤ÅÍ¿¡ ´ëÇÑ µğ¹ö±× ¸Ş½ÃÁö Ãâ·Â
+            // ì˜ëª»ëœ ë…¸ë§ ë²¡í„°ì— ëŒ€í•œ ë””ë²„ê·¸ ë©”ì‹œì§€ ì¶œë ¥
             std::ostringstream oss;
             oss << "Bad normal at (" << x << ", " << y << ") with length " << length << "\n";
             OutputDebugStringA(oss.str().c_str());
         }
 
-        // º¤ÅÍÀÇ ÇÕÀ» °è»ê
+        // ë²¡í„°ì˜ í•©ì„ ê³„ì‚°
         sum = XMVectorAdd(sum, vector);
 
         return vector;
     };
 
-    // ÆÄÀÏ¿¡¼­ ÀÌ¹ÌÁö¸¦ ·Îµå
+    // íŒŒì¼ì—ì„œ ì´ë¯¸ì§€ë¥¼ ë¡œë“œ
     auto image = GraphicResource::Image::FromFile(pathIn);
-    TransformImage(image, process);           // ¸ÓÆ¼¸®¾ó¿¡ ´ëÇØ ¶÷´Ù ÇÔ¼ö¸¦ Àû¿ë
+    TransformImage(image, process);           // ë¨¸í‹°ë¦¬ì–¼ì— ëŒ€í•´ ëŒë‹¤ í•¨ìˆ˜ë¥¼ ì ìš©
 
     {
         XMFLOAT2 sumVector;
         XMStoreFloat2(&sumVector, sum);
 
-        // ³ë¸» º¤ÅÍÀÇ ÇÕ¿¡ ´ëÇÑ µğ¹ö±× ¸Ş½ÃÁö Ãâ·Â
+        // ë…¸ë§ ë²¡í„°ì˜ í•©ì— ëŒ€í•œ ë””ë²„ê·¸ ë©”ì‹œì§€ ì¶œë ¥
         std::ostringstream oss;
         oss << "Sum of normals: (" << sumVector.x << ", " << sumVector.y << ")\n";
         OutputDebugStringA(oss.str().c_str());
@@ -93,8 +93,8 @@ void TexturePreprocessor::VaildateNormalMap(const std::string& pathIn, float thr
 void TexturePreprocessor::MakeStripes(const std::string& pathOut, int size, int stripeWidth)
 {
     auto power = log2(size);
-	assert("ÅØ½ºÃ³ Å©±â°¡ 2ÀÇ °ÅµìÁ¦°öÀÌ ¾Æ´Õ´Ï´Ù!" && modf(power, &power) == 0.0);
-	assert("½ºÆ®¶óÀÌÇÁ ³Êºñ°¡ ÅØ½ºÃ³ Å©±âº¸´Ù Å®´Ï´Ù!" && stripeWidth < size / 2);
+	assert("í…ìŠ¤ì²˜ í¬ê¸°ê°€ 2ì˜ ê±°ë“­ì œê³±ì´ ì•„ë‹™ë‹ˆë‹¤!" && modf(power, &power) == 0.0);
+	assert("ìŠ¤íŠ¸ë¼ì´í”„ ë„ˆë¹„ê°€ í…ìŠ¤ì²˜ í¬ê¸°ë³´ë‹¤ í½ë‹ˆë‹¤!" && stripeWidth < size / 2);
 
 	GraphicResource::Image material(size, size);
 

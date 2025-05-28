@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "App.h"
 
 #include "Camera/Camera.h"
@@ -27,7 +27,7 @@ App::App(const std::string& commandLine)
 	Engine::Inspector::GetInstance();
 	Engine::ObjectGizmo::GetInstance();
 
-	// PhysX ½Ã½ºÅÛ ÃÊ±âÈ­
+	// PhysX ì‹œìŠ¤í…œ ì´ˆê¸°í™”
 	PhysicsSystem::GetInstance().Initialize();
 
 	currentScene = SponzaScene::Create("Sponza");
@@ -44,7 +44,7 @@ App::App(const std::string& commandLine)
 
 App::~App()
 {
-	// PhysX ½Ã½ºÅÛ Á¤¸®
+	// PhysX ì‹œìŠ¤í…œ ì •ë¦¬
 	PhysicsSystem::GetInstance().Shutdown();
 }
 
@@ -81,7 +81,7 @@ void App::DoFrame(float deltaTime)
 
 	wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
 
-	// ¹°¸® ½Ã½ºÅÛ ¾÷µ¥ÀÌÆ®
+	// ë¬¼ë¦¬ ì‹œìŠ¤í…œ ì—…ë°ì´íŠ¸
 	PhysicsSystem::GetInstance().Update(deltaTime);
 
 	currentScene->Update();
@@ -112,7 +112,7 @@ void App::DoFrame(float deltaTime)
 	Engine::MenuBar::menuBar->RenderMenuBar();
 	Engine::Inspector::instance->Update();
 
-	wnd.GetDxGraphic().EndFrame();	// ±×·¡ÇÈ ¸¶Áö¸·¿¡ ½ÇÇàÇÒ ³»¿ë
+	wnd.GetDxGraphic().EndFrame();	// ê·¸ë˜í”½ ë§ˆì§€ë§‰ì— ì‹¤í–‰í•  ë‚´ìš©
 
 	App::GetRenderGraph().Reset();
 }

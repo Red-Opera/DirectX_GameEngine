@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "SamplerState.h"
 
 #include "Core/Window.h"
@@ -14,7 +14,7 @@ namespace Graphic
 		CREATEINFOMANAGER(Window::GetDxGraphic());
 
 		D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
-		samplerDesc.Filter = [textureFilter]()			// È®´ë(MAG) Ãà¼Ò(MIN)ÇÒ ¶§ »ç¿ëÇÒ ÇÊÅÍ¸µ ¹æ¹ý
+		samplerDesc.Filter = [textureFilter]()			// í™•ëŒ€(MAG) ì¶•ì†Œ(MIN)í•  ë•Œ ì‚¬ìš©í•  í•„í„°ë§ ë°©ë²•
 		{
 			switch (textureFilter)
 			{
@@ -30,16 +30,16 @@ namespace Graphic
 			}
 		}();
 
-		samplerDesc.AddressU = useReflect ? D3D11_TEXTURE_ADDRESS_MIRROR : D3D11_TEXTURE_ADDRESS_WRAP;		// ÀÏ¹ÝÀûÀÎ Å©±âº¸´Ù Å¬ ¶§ ¹Ýº¹ÀûÀÎ ÆÐÅÏÀ¸·Î º¸ÀÌµµ·Ï ¼³Á¤
+		samplerDesc.AddressU = useReflect ? D3D11_TEXTURE_ADDRESS_MIRROR : D3D11_TEXTURE_ADDRESS_WRAP;		// ì¼ë°˜ì ì¸ í¬ê¸°ë³´ë‹¤ í´ ë•Œ ë°˜ë³µì ì¸ íŒ¨í„´ìœ¼ë¡œ ë³´ì´ë„ë¡ ì„¤ì •
 		samplerDesc.AddressV = useReflect ? D3D11_TEXTURE_ADDRESS_MIRROR : D3D11_TEXTURE_ADDRESS_WRAP;
 		//samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 
-		samplerDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;	// ÇÊÅÍ¸µ¿¡ »ç¿ëÇÒ ÃÖ´ë »ùÇÃ¸µ ºñÀ² (1 ~ 16)
-		//samplerDesc.MipLODBias = 0.0f;							// ¹Ó¸Ê ·¹º§À» °áÁ¤ÇÒ ¶§ »ç¿ëÇÒ ¹ÙÀÌ¾î½º °ª
-		//samplerDesc.MinLOD = 0.0f;								// ÅØ½ºÃ³ÀÇ ÃÖ¼Ò LOD ·¹º§
-		//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;					// ÅØ½ºÃ³ÀÇ ÃÖ´ë LOD ·¹º§
+		samplerDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;	// í•„í„°ë§ì— ì‚¬ìš©í•  ìµœëŒ€ ìƒ˜í”Œë§ ë¹„ìœ¨ (1 ~ 16)
+		//samplerDesc.MipLODBias = 0.0f;							// ë°‰ë§µ ë ˆë²¨ì„ ê²°ì •í•  ë•Œ ì‚¬ìš©í•  ë°”ì´ì–´ìŠ¤ ê°’
+		//samplerDesc.MinLOD = 0.0f;								// í…ìŠ¤ì²˜ì˜ ìµœì†Œ LOD ë ˆë²¨
+		//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;					// í…ìŠ¤ì²˜ì˜ ìµœëŒ€ LOD ë ˆë²¨
 
-		// Sampler State¸¦ »ý¼ºÇÔ
+		// Sampler Stateë¥¼ ìƒì„±í•¨
 		hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
 		GRAPHIC_THROW_INFO(hr);
 	}
@@ -48,7 +48,7 @@ namespace Graphic
 	{
 		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		// SamplerState¸¦ ·»´õ¸µ ÆÄÀÌÇÁ ¶óÀÎ¿¡ ÀÔ·Â
+		// SamplerStateë¥¼ ë Œë”ë§ íŒŒì´í”„ ë¼ì¸ì— ìž…ë ¥
 		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(slot, 1, samplerState.GetAddressOf()));
 	}
 

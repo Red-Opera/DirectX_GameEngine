@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 DirectX::XMMATRIX Math::MultipleMatrixScale(DirectX::XMMATRIX matrix, float scale)
 {

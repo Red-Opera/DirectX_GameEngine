@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class Object;
 
@@ -7,14 +7,14 @@ namespace Engine
     class ObjectPicker
     {
     public:
-        // ½Ì±ÛÅæ ÀÎ½ºÅÏ½º ¾ò±â
+        // ì‹±ê¸€í†¤ ì¸ìŠ¤í„´ìŠ¤ ì–»ê¸°
         static ObjectPicker& Get()
         {
             static ObjectPicker instance;
             return instance;
         }
 
-        // È­¸é ÁÂÇ¥¿¡¼­ ·¹ÀÌ¸¦ »ı¼ºÇÏ´Â ÇÔ¼ö
+        // í™”ë©´ ì¢Œí‘œì—ì„œ ë ˆì´ë¥¼ ìƒì„±í•˜ëŠ” í•¨ìˆ˜
         void CreateRayFromScreenPoint
         (
             int screenX, int screenY,
@@ -25,7 +25,7 @@ namespace Engine
             int screenWidth, int screenHeight
         );
 
-        // ¸ğµç ¿ÀºêÁ§Æ®¿¡ ´ëÇØ ·¹ÀÌ Ä³½ºÆÃ ¼öÇà
+        // ëª¨ë“  ì˜¤ë¸Œì íŠ¸ì— ëŒ€í•´ ë ˆì´ ìºìŠ¤íŒ… ìˆ˜í–‰
         std::shared_ptr<Object> PickObjectAtScreenPoint
         (
             int screenX, int screenY,
@@ -39,7 +39,7 @@ namespace Engine
         ObjectPicker() = default;
         ~ObjectPicker() = default;
 
-        // ·¹ÀÌ-¿ÀºêÁ§Æ® ±³Â÷ °Ë»ç ÇÔ¼ö
+        // ë ˆì´-ì˜¤ë¸Œì íŠ¸ êµì°¨ ê²€ì‚¬ í•¨ìˆ˜
         bool IntersectRayWithObject
         (
             const DirectX::XMVECTOR& rayOrigin,

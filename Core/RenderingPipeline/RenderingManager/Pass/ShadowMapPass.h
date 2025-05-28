@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base/RenderQueuePass.h"
 #include "Base/RenderJob.h"
@@ -68,7 +68,7 @@ namespace RenderGraphNameSpace
 
 			isFrustumCulling = true;
 
-			// °¢ ¹æÇâº° Frustum CullingÀ» À§ÇÑ CameraViewFrustumCulling ¹è¿­ ÃÊ±âÈ­
+			// ê° ë°©í–¥ë³„ Frustum Cullingì„ ìœ„í•œ CameraViewFrustumCulling ë°°ì—´ ì´ˆê¸°í™”
 			shadowFrustums.resize(6);
 		}
 
@@ -79,7 +79,7 @@ namespace RenderGraphNameSpace
 
 			Window::GetDxGraphic().SetProjection(XMLoadFloat4x4(&projection));
 
-			// ÇöÀç ¼³Á¤µÈ Ä«¸Ş¶ó ¹× Frustum ÀúÀå
+			// í˜„ì¬ ì„¤ì •ëœ ì¹´ë©”ë¼ ë° Frustum ì €ì¥
 			XMMATRIX activateCamera = Window::GetDxGraphic().GetCamera();
 			CameraViewFrustumCulling activateFrustum = RenderJob::GetViewFrustum();
 			XMMATRIX cameraViewProjection = RenderJob::GetViewFrustum().GetViewProjection();
@@ -95,10 +95,10 @@ namespace RenderGraphNameSpace
 				const auto viewMatrix = XMMatrixLookAtLH(Vector::ConvertXMVECTOR(position), Vector::ConvertXMVECTOR(lookAt), XMLoadFloat3(&cameraUp[i]));
 				const auto projMatrix = XMLoadFloat4x4(&projection);
 
-				// ÇöÀç ¹æÇâÀÇ ±×¸²ÀÚ Ä«¸Ş¶ó View Frustum ¾÷µ¥ÀÌÆ®
+				// í˜„ì¬ ë°©í–¥ì˜ ê·¸ë¦¼ì ì¹´ë©”ë¼ View Frustum ì—…ë°ì´íŠ¸
 				shadowFrustums[i].UpdateFromMatrices(viewMatrix, projMatrix);
 
-				// ¸ğµç RenderJob¿¡ ÇöÀç ¹æÇâÀÇ ±×¸²ÀÚ Ä«¸Ş¶ó View Frustum ¼³Á¤
+				// ëª¨ë“  RenderJobì— í˜„ì¬ ë°©í–¥ì˜ ê·¸ë¦¼ì ì¹´ë©”ë¼ View Frustum ì„¤ì •
 				RenderJob::SetViewFrustum(shadowFrustums[i]);
 
 				Window::GetDxGraphic().SetCamera(viewMatrix);
@@ -106,7 +106,7 @@ namespace RenderGraphNameSpace
 				RenderQueuePass::Execute();
 			}
 
-			// ´Ù½Ã ¼³Á¤ÇÑ Ä«¸Ş¶ó ¹× FrustumÀ¸·Î º¹¿ø
+			// ë‹¤ì‹œ ì„¤ì •í•œ ì¹´ë©”ë¼ ë° Frustumìœ¼ë¡œ ë³µì›
 			Window::GetDxGraphic().SetCamera(activateCamera);
 			RenderJob::SetViewFrustum(activateFrustum);
 		}
@@ -135,7 +135,7 @@ namespace RenderGraphNameSpace
 
 		std::vector<DirectX::XMFLOAT3> cameraUp{ 6 };
 		std::vector<DirectX::XMFLOAT3> cameraDirections{ 6 };
-		std::vector<CameraViewFrustumCulling> shadowFrustums; // 6¹æÇâÀÇ ±×¸²ÀÚ Ä«¸Ş¶ó View Frustum
+		std::vector<CameraViewFrustumCulling> shadowFrustums; // 6ë°©í–¥ì˜ ê·¸ë¦¼ì ì¹´ë©”ë¼ View Frustum
 
 		DirectX::XMFLOAT4X4 projection;
 

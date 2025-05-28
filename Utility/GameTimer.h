@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 
 class GameTimer
 {
 public:
 	GameTimer();
 
-	float TotalTime() const;	// ÃÊ ´ÜÀ§
-	float DeltaTime() const;	// ÃÊ ´ÜÀ§
+	float TotalTime() const;	// ì´ˆ ë‹¨ìœ„
+	float DeltaTime() const;	// ì´ˆ ë‹¨ìœ„
 
-	void Reset();		// ¸Ş¼¼Áö ·çÇÁ ÀÌÀü¿¡ È£ÃâÇØ¾ß ÇÔ
-	void Start();		// Å¸ÀÓ¸Ó ½ÃÀÛ¨¬Àç°³ ½Ã È£ÃâÇØ¾ß ÇÔ
-	void Stop();		// ÀÏ½ÃÁ¤Áö½Ã È£ÃâÇØ¾ß ÇÔ
-	void Tick();		// ¸Å ÇÁ·¹ÀÓ¸¶´Ù È£ÃâÇØ¾ß ÇÔ
-	float CheckTime();	// ÀÌÀü Å¸ÀÓ¸Ó ½Ã°£ (ms)
+	void Reset();		// ë©”ì„¸ì§€ ë£¨í”„ ì´ì „ì— í˜¸ì¶œí•´ì•¼ í•¨
+	void Start();		// íƒ€ì„ë¨¸ ì‹œì‘Âºì¬ê°œ ì‹œ í˜¸ì¶œí•´ì•¼ í•¨
+	void Stop();		// ì¼ì‹œì •ì§€ì‹œ í˜¸ì¶œí•´ì•¼ í•¨
+	void Tick();		// ë§¤ í”„ë ˆì„ë§ˆë‹¤ í˜¸ì¶œí•´ì•¼ í•¨
+	float CheckTime();	// ì´ì „ íƒ€ì„ë¨¸ ì‹œê°„ (ms)
 
 private:
 	double secondsPerFrame;

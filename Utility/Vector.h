@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <DirectXMath.h>
 
@@ -14,7 +14,7 @@ class Vector
 {
 public:
 	// ==============================================
-	//			XMFLOAT3 : 3¬˜ø¯ ∫§≈Õ
+	//			XMFLOAT3 : 3Ï∞®Ïõê Î≤°ÌÑ∞
 	// ==============================================
 
 	static constexpr XMFLOAT3 forward	= XMFLOAT3( 0.0f,  0.0f,  1.0f);
@@ -26,7 +26,7 @@ public:
 	static constexpr XMFLOAT3 allDir	= XMFLOAT3( 1.0f,  1.0f,  1.0f);
 
 	// ==============================================
-	//			XMVECTOR : 4¬˜ø¯ ∫§≈Õ
+	//			XMVECTOR : 4Ï∞®Ïõê Î≤°ÌÑ∞
 	// ==============================================
 
 	static const XMVECTOR forwardV;

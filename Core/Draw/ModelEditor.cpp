@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ModelEditor.h"
 
 #include "Core/Draw/Model.h"

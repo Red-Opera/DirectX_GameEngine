@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "RenderStep.h"
 
 #include "Core/Draw/Base/Drawable.h"

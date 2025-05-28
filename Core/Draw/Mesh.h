@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 
 #include "Core/DxGraphic.h"
@@ -9,7 +9,7 @@ class FrameCommander;
 class Material;
 struct aiMesh;
 
-// ¿ÀºêÁ§Æ® ÀÏºÎºĞÀÇ Mesh ºÎºĞÀ» ¿ªÇÒÇÏ´Â Å¬·¡½º
+// ì˜¤ë¸Œì íŠ¸ ì¼ë¶€ë¶„ì˜ Mesh ë¶€ë¶„ì„ ì—­í• í•˜ëŠ” í´ë˜ìŠ¤
 class Mesh : public Drawable
 {
 public:
@@ -17,13 +17,13 @@ public:
 
 	void Submit(size_t channel, DirectX::XMMATRIX parentWorldTransform) const NOEXCEPTRELEASE;
 
-	void SetVisible(bool visible) noexcept;	// MeshÀÇ °¡½Ã¼º ¿©ºÎ¸¦ ¼³Á¤ÇÔ
-	bool GetVisible() const noexcept;		// MeshÀÇ °¡½Ã¼º ¿©ºÎ¸¦ ¹İÈ¯ÇÔ
+	void SetVisible(bool visible) noexcept;	// Meshì˜ ê°€ì‹œì„± ì—¬ë¶€ë¥¼ ì„¤ì •í•¨
+	bool GetVisible() const noexcept;		// Meshì˜ ê°€ì‹œì„± ì—¬ë¶€ë¥¼ ë°˜í™˜í•¨
 
-	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;	// MeshÀÇ World Çà·ÄÀ» ¹İÈ¯ÇÔ
+	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;	// Meshì˜ World í–‰ë ¬ì„ ë°˜í™˜í•¨
 
 private:
-	mutable DirectX::XMFLOAT4X4 transform;	// MeshÀÇ World Çà·ÄÀ» ÀúÀåÇÏ´Â Çà·Ä
+	mutable DirectX::XMFLOAT4X4 transform;	// Meshì˜ World í–‰ë ¬ì„ ì €ì¥í•˜ëŠ” í–‰ë ¬
 
-	bool isVisible = true;					// MeshÀÇ °¡½Ã¼º ¿©ºÎ
+	bool isVisible = true;					// Meshì˜ ê°€ì‹œì„± ì—¬ë¶€
 };

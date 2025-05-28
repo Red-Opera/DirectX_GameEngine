@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Vector.h"
 
 #include <xmmintrin.h>
@@ -120,21 +120,21 @@ Vector4 operator/(const Vector4& lhs, const Vector4 rhs)
 
 float Vector::GetLength(const XMVECTOR& vec)
 {
-	// º¤ÅÍÀÇ °¢ ¼ººĞÀ» Á¦°ö
+	// ë²¡í„°ì˜ ê° ì„±ë¶„ì„ ì œê³±
 	XMVECTOR vSquared = XMVectorMultiply(vec, vec);
 
-	// Ã¹ ¼¼ ¼ººĞÀÇ ÇÕÀ¸·Î Á¦°ö ±æÀÌ °è»ê
+	// ì²« ì„¸ ì„±ë¶„ì˜ í•©ìœ¼ë¡œ ì œê³± ê¸¸ì´ ê³„ì‚°
 	float lenSq = _mm_cvtss_f32(_mm_dp_ps(vSquared, _mm_setr_ps(1.f, 1.f, 1.f, 0.f), 0x71));
 
-	// Á¦°ö ±æÀÌÀÇ ±Ù»ç ¿ªÁ¦°ö±Ù °è»ê (_mm_rsqrt_ss »ç¿ë)
+	// ì œê³± ê¸¸ì´ì˜ ê·¼ì‚¬ ì—­ì œê³±ê·¼ ê³„ì‚° (_mm_rsqrt_ss ì‚¬ìš©)
 	__m128 lenSqVec = _mm_set_ss(lenSq);
 	__m128 approxInvSqrt = _mm_rsqrt_ss(lenSqVec);
 	float invSqrt = _mm_cvtss_f32(approxInvSqrt);
 
-	// ´ºÅÏ-·¦½¼ º¸Á¤: Á¤È®µµ¸¦ ³ôÀÌ±â À§ÇÑ 1È¸ ¹İº¹
+	// ë‰´í„´-ë©ìŠ¨ ë³´ì •: ì •í™•ë„ë¥¼ ë†’ì´ê¸° ìœ„í•œ 1íšŒ ë°˜ë³µ
 	invSqrt = invSqrt * (1.5f - 0.5f * lenSq * invSqrt * invSqrt);
 
-	// ÃÖÁ¾ º¤ÅÍ ±æÀÌ °è»ê: length = lenSq * (1/¡îlenSq)
+	// ìµœì¢… ë²¡í„° ê¸¸ì´ ê³„ì‚°: length = lenSq * (1/âˆšlenSq)
 	return lenSq * invSqrt;
 }
 

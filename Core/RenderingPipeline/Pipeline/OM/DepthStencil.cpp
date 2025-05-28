@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "DepthStencil.h"
 
 #include "Core/Window.h"
@@ -23,7 +23,7 @@ namespace Graphic
         case Graphic::DepthStencil::Usage::ShadowDepth:
             return DXGI_FORMAT::DXGI_FORMAT_R32_TYPELESS;
 
-            throw std::runtime_error("ÇØ´ç DepthStencilÀÇ »ç¿ë ¿©ºÎ´Â Á¸ÀçÇÏÁö ¾ÊÀ½");
+            throw std::runtime_error("í•´ë‹¹ DepthStencilì˜ ì‚¬ìš© ì—¬ë¶€ëŠ” ì¡´ì¬í•˜ì§€ ì•ŠìŒ");
         }
 
         return DXGI_FORMAT::DXGI_FORMAT_YUY2;
@@ -39,7 +39,7 @@ namespace Graphic
         case Graphic::DepthStencil::Usage::ShadowDepth:
             return DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT;
 
-            throw std::runtime_error("ÇØ´ç DepthStencilÀÇ »ç¿ë ¿©ºÎ´Â Á¸ÀçÇÏÁö ¾ÊÀ½");
+            throw std::runtime_error("í•´ë‹¹ DepthStencilì˜ ì‚¬ìš© ì—¬ë¶€ëŠ” ì¡´ì¬í•˜ì§€ ì•ŠìŒ");
         }
 
         return DXGI_FORMAT::DXGI_FORMAT_YUY2;
@@ -55,7 +55,7 @@ namespace Graphic
         case Graphic::DepthStencil::Usage::ShadowDepth:
             return DXGI_FORMAT::DXGI_FORMAT_R32_FLOAT;
 
-            throw std::runtime_error("ÇØ´ç DepthStencilÀÇ »ç¿ë ¿©ºÎ´Â Á¸ÀçÇÏÁö ¾ÊÀ½");
+            throw std::runtime_error("í•´ë‹¹ DepthStencilì˜ ì‚¬ìš© ì—¬ë¶€ëŠ” ì¡´ì¬í•˜ì§€ ì•ŠìŒ");
         }
 
         return DXGI_FORMAT::DXGI_FORMAT_YUY2;
@@ -66,7 +66,7 @@ namespace Graphic
     {
         CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        // ±íÀÌ ½ºÅÙ½Ç ¹öÆÛÀÇ ÅØ½ºÃÄ Á¦ÀÛ
+        // ê¹Šì´ ìŠ¤í…ì‹¤ ë²„í¼ì˜ í…ìŠ¤ì³ ì œì‘
         Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencil;
 
         D3D11_TEXTURE2D_DESC descDepth = {};
@@ -74,7 +74,7 @@ namespace Graphic
         descDepth.Height = height;
         descDepth.MipLevels = 1;
         descDepth.ArraySize = 1;
-        descDepth.Format = GetUsageTypeless(usage);       // ±íÀÌ Á¤º¸¸¦ ´ã´Â 32ºñÆ® floatÇü µ¥ÀÌÅÍ·Î ¼³Á¤
+        descDepth.Format = GetUsageTypeless(usage);       // ê¹Šì´ ì •ë³´ë¥¼ ë‹´ëŠ” 32ë¹„íŠ¸ floatí˜• ë°ì´í„°ë¡œ ì„¤ì •
         descDepth.SampleDesc.Count = 1;
         descDepth.SampleDesc.Quality = 0;
 
@@ -235,7 +235,7 @@ namespace Graphic
                 }
 
                 else
-                    throw std::runtime_error("ÇØ´ç DXGI_FORMAT Æ÷¸ËÀº Image¿¡ ÀúÀåÇÒ ¼ö ¾øÀ½");
+                    throw std::runtime_error("í•´ë‹¹ DXGI_FORMAT í¬ë§·ì€ Imageì— ì €ì¥í•  ìˆ˜ ì—†ìŒ");
             }
         }
 
@@ -263,7 +263,7 @@ namespace Graphic
         auto bytes = static_cast<const char*>(mapped.pData);
 
         if (textureDESC.Format != DXGI_FORMAT::DXGI_FORMAT_R32_TYPELESS)
-            throw std::runtime_error{ "´õ¹Ì °ªÀ¸·Î ÀúÀåÇÏ±â À§ÇÑ Depth Stencil ¹öÆÛ·Î »ç¿ëÇÏ´Â Æ÷¸ËÀÌ DXGI_FORMAT_R32_TYPELESS°¡ ¾Æ´Ô" };
+            throw std::runtime_error{ "ë”ë¯¸ ê°’ìœ¼ë¡œ ì €ì¥í•˜ê¸° ìœ„í•œ Depth Stencil ë²„í¼ë¡œ ì‚¬ìš©í•˜ëŠ” í¬ë§·ì´ DXGI_FORMAT_R32_TYPELESSê°€ ì•„ë‹˜" };
 
         for (UINT y = 0; y < height; y++)
         {
@@ -344,6 +344,6 @@ namespace Graphic
 
     void OutputOnlyDepthStencil::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        assert("OutputOnlyDepthStencilÀº Shader InputÀÌ ÀÖÀ» ¶§¸¸ »ç¿ëÇÒ ¼ö ÀÖÀ½" && false);
+        assert("OutputOnlyDepthStencilì€ Shader Inputì´ ìˆì„ ë•Œë§Œ ì‚¬ìš©í•  ìˆ˜ ìˆìŒ" && false);
     }
 }

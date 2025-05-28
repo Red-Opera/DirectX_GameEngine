@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "SceneGraph.h"
 
 #include "Core/Component/MeshComponent.h"
@@ -15,11 +15,11 @@
 SceneGraph::SceneGraph(std::string sceneName, std::vector<std::shared_ptr<Object>>& sceneObjects)
     : EngineLoop(), sceneName(sceneName), sceneObjects(sceneObjects)
 {
-    // ÃÊ±âÈ­ ½Ã ¸ğµç ¿ÀºêÁ§Æ®ÀÇ Outline ºñÈ°¼ºÈ­
+    // ì´ˆê¸°í™” ì‹œ ëª¨ë“  ì˜¤ë¸Œì íŠ¸ì˜ Outline ë¹„í™œì„±í™”
     for (auto& object : sceneObjects)
         DisableOutlineForObject(object);
 
-    // ºÎ¸ğ °´Ã¼ Ä³½Ã ÃÊ±âÈ­ (¸í½ÃÀûÀ¸·Î ¸ğµç °ü°è Ä³½Ì)
+    // ë¶€ëª¨ ê°ì²´ ìºì‹œ ì´ˆê¸°í™” (ëª…ì‹œì ìœ¼ë¡œ ëª¨ë“  ê´€ê³„ ìºì‹±)
     InitializeParentCache();
 }
 
@@ -27,7 +27,7 @@ void SceneGraph::ShowNodeChildren(std::shared_ptr<Object> object) noexcept
 {
     const auto& children = object->transform->GetChildrens();
 
-    // ÀÚ½Ä ¼øÈ¸ ½Ã º¹»ç ¹æÁö
+    // ìì‹ ìˆœíšŒ ì‹œ ë³µì‚¬ ë°©ì§€
     for (const auto& child : children)
     {
         auto childObject = child->GetObject();
@@ -37,15 +37,15 @@ void SceneGraph::ShowNodeChildren(std::shared_ptr<Object> object) noexcept
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-		// ÀÚ½ÄÀÌ ¾øÀ¸¸é Leaf ÇÃ·¡±× ¼³Á¤
+		// ìì‹ì´ ì—†ìœ¼ë©´ Leaf í”Œë˜ê·¸ ì„¤ì •
         if (child->GetChildCount() == 0)
             flags |= ImGuiTreeNodeFlags_Leaf;
 
-		// ¼±ÅÃµÈ ¿ÀºêÁ§Æ®¿Í ºñ±³ÇÏ¿© ¼±ÅÃ ÇÃ·¡±× ¼³Á¤
+		// ì„ íƒëœ ì˜¤ë¸Œì íŠ¸ì™€ ë¹„êµí•˜ì—¬ ì„ íƒ í”Œë˜ê·¸ ì„¤ì •
         if (selectedObject && selectedObject == childObject)
             flags |= ImGuiTreeNodeFlags_Selected;
 
-        // ¸í½ÃÀûÀ¸·Î ³ëµå »óÅÂ ¼³Á¤
+        // ëª…ì‹œì ìœ¼ë¡œ ë…¸ë“œ ìƒíƒœ ì„¤ì •
         auto it = nodeOpenState.find(childObject);
 
         if (it != nodeOpenState.end())
@@ -71,16 +71,16 @@ void SceneGraph::UpdateSceneGraph() noexcept
 {
     if (ImGui::Begin("Scene Graph", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
     {
-        // Å° ÀÔ·ÂÀ» Ã³¸®ÇÏ±â À§ÇØ SceneGraph°¡ Æ÷Ä¿½º¸¦ °¡Áö°í ÀÖ´ÂÁö È®ÀÎ
+        // í‚¤ ì…ë ¥ì„ ì²˜ë¦¬í•˜ê¸° ìœ„í•´ SceneGraphê°€ í¬ì»¤ìŠ¤ë¥¼ ê°€ì§€ê³  ìˆëŠ”ì§€ í™•ì¸
         bool isFocused = ImGui::IsWindowFocused(ImGuiFocusedFlags_ChildWindows);
 
-        // Å° ÀÔ·Â »óÅÂ Àç¼³Á¤ (¼º´É Çâ»ó)
+        // í‚¤ ì…ë ¥ ìƒíƒœ ì¬ì„¤ì • (ì„±ëŠ¥ í–¥ìƒ)
         bool currentKeyDownPressed = isFocused && ImGui::IsKeyPressed(ImGuiKey_DownArrow, false);
         bool currentKeyUpPressed = isFocused && ImGui::IsKeyPressed(ImGuiKey_UpArrow, false);
         bool currentKeyRightPressed = isFocused && ImGui::IsKeyPressed(ImGuiKey_RightArrow, false);
         bool currentKeyLeftPressed = isFocused && ImGui::IsKeyPressed(ImGuiKey_LeftArrow, false);
 
-        // ¼±ÅÃµÈ ³ëµå¿¡ ´ëÇÑ Å° ÀÔ·Â Ã³¸®
+        // ì„ íƒëœ ë…¸ë“œì— ëŒ€í•œ í‚¤ ì…ë ¥ ì²˜ë¦¬
         if (selectedObject && isFocused)
         {
             if (currentKeyDownPressed && !keyDownPressed)
@@ -95,14 +95,14 @@ void SceneGraph::UpdateSceneGraph() noexcept
             else if (currentKeyLeftPressed && !keyLeftPressed)
                 HandleLeftKeyPress();
 
-            // Å° »óÅÂ ±â·Ï
+            // í‚¤ ìƒíƒœ ê¸°ë¡
             keyDownPressed = currentKeyDownPressed;
             keyUpPressed = currentKeyUpPressed;
             keyRightPressed = currentKeyRightPressed;
             keyLeftPressed = currentKeyLeftPressed;
         }
 
-        // ³ëµå Æ®¸® ·»´õ¸µ
+        // ë…¸ë“œ íŠ¸ë¦¬ ë Œë”ë§
         for (auto& object : sceneObjects)
         {
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
@@ -113,16 +113,16 @@ void SceneGraph::UpdateSceneGraph() noexcept
             if (selectedObject && selectedObject == object)
                 flags |= ImGuiTreeNodeFlags_Selected;
 
-            // ¸í½ÃÀûÀ¸·Î ³ëµå »óÅÂ ¼³Á¤
+            // ëª…ì‹œì ìœ¼ë¡œ ë…¸ë“œ ìƒíƒœ ì„¤ì •
             auto it = nodeOpenState.find(object);
 
-            // ³ëµå »óÅÂ¸¦ ¸í½ÃÀûÀ¸·Î ¼³Á¤
+            // ë…¸ë“œ ìƒíƒœë¥¼ ëª…ì‹œì ìœ¼ë¡œ ì„¤ì •
             if (it != nodeOpenState.end())
                 ImGui::SetNextItemOpen(it->second);
 
             bool nodeOpen = ImGui::TreeNodeEx(object->GetName().c_str(), flags);
 
-            // ½ÇÁ¦ ¿­¸² »óÅÂ ¹İ¿µ
+            // ì‹¤ì œ ì—´ë¦¼ ìƒíƒœ ë°˜ì˜
             nodeOpenState[object] = nodeOpen;
 
             if (ImGui::IsItemClicked())
@@ -139,7 +139,7 @@ void SceneGraph::UpdateSceneGraph() noexcept
     ImGui::End();
 }
 
-// °´Ã¼ ¼±ÅÃ °øÅë ·ÎÁ÷ - Áßº¹ ÄÚµå Á¦°Å
+// ê°ì²´ ì„ íƒ ê³µí†µ ë¡œì§ - ì¤‘ë³µ ì½”ë“œ ì œê±°
 void SceneGraph::SelectObject(std::shared_ptr<Object> object)
 {
     if (selectedObject && selectedObject != object)
@@ -150,18 +150,18 @@ void SceneGraph::SelectObject(std::shared_ptr<Object> object)
 
     EnableOutlineForObject(selectedObject);
 
-    // »õ °´Ã¼°¡ ¼±ÅÃµÇ¸é ObjectGizmo¿¡ ¾Ë¸²
+    // ìƒˆ ê°ì²´ê°€ ì„ íƒë˜ë©´ ObjectGizmoì— ì•Œë¦¼
     if (objectGizmo != nullptr)
         objectGizmo->SetSelectedObject(selectedObject);
 }
 
-// ÄÚµå Áßº¹À» ÁÙÀÌ±â À§ÇØ °øÅë ÇÔ¼ö·Î ±¸Çö
+// ì½”ë“œ ì¤‘ë³µì„ ì¤„ì´ê¸° ìœ„í•´ ê³µí†µ í•¨ìˆ˜ë¡œ êµ¬í˜„
 void SceneGraph::SetOutlineForObject(std::shared_ptr<Object> object, bool enable) noexcept
 {
-    // ÇöÀç ¿ÀºêÁ§Æ®ÀÇ ÄÄÆ÷³ÍÆ®¸¦ Ã³¸®
+    // í˜„ì¬ ì˜¤ë¸Œì íŠ¸ì˜ ì»´í¬ë„ŒíŠ¸ë¥¼ ì²˜ë¦¬
     SetOutlineForSingleObject(object, enable);
 
-    // ÀÚ½Ä ¿ÀºêÁ§Æ®µéµµ recursiveÇÏ°Ô Ã³¸®
+    // ìì‹ ì˜¤ë¸Œì íŠ¸ë“¤ë„ recursiveí•˜ê²Œ ì²˜ë¦¬
     SetOutlineForChildren(object, enable);
 }
 
@@ -177,31 +177,31 @@ void SceneGraph::DisableOutlineForObject(std::shared_ptr<Object> object) noexcep
 
 void SceneGraph::OnMouseClick(int x, int y, bool cursorEnabled)
 {
-    // Ä¿¼­°¡ È°¼ºÈ­µÇ¾úÀ» ¶§¸¸ Ã³¸®
+    // ì»¤ì„œê°€ í™œì„±í™”ë˜ì—ˆì„ ë•Œë§Œ ì²˜ë¦¬
     if (!cursorEnabled)
         return;
 
-    // ÇöÀç Ä«¸Ş¶ó ¹× ÇÁ·ÎÁ§¼Ç Çà·Ä °¡Á®¿À±â
+    // í˜„ì¬ ì¹´ë©”ë¼ ë° í”„ë¡œì ì…˜ í–‰ë ¬ ê°€ì ¸ì˜¤ê¸°
     auto& graphic = Window::GetDxGraphic();
     DirectX::XMMATRIX viewMatrix = graphic.GetCamera();
     DirectX::XMMATRIX projMatrix = graphic.GetProjection();
 
-    // È­¸é Å©±â °¡Á®¿À±â
+    // í™”ë©´ í¬ê¸° ê°€ì ¸ì˜¤ê¸°
     int screenWidth = graphic.GetWidth();
     int screenHeight = graphic.GetHeight();
 
-    // ¿ÀºêÁ§Æ® ÇÇÄ¿¸¦ »ç¿ëÇÏ¿© Å¬¸¯ÇÑ À§Ä¡ÀÇ ¿ÀºêÁ§Æ® Ã£±â
+    // ì˜¤ë¸Œì íŠ¸ í”¼ì»¤ë¥¼ ì‚¬ìš©í•˜ì—¬ í´ë¦­í•œ ìœ„ì¹˜ì˜ ì˜¤ë¸Œì íŠ¸ ì°¾ê¸°
     auto pickedObject = Engine::ObjectPicker::Get().PickObjectAtScreenPoint(
         x, y, sceneObjects, viewMatrix, projMatrix, screenWidth, screenHeight);
 
-    // ¿ÀºêÁ§Æ®°¡ ¼±ÅÃµÇ¾úÀ¸¸é ¼±ÅÃ Ã³¸®
+    // ì˜¤ë¸Œì íŠ¸ê°€ ì„ íƒë˜ì—ˆìœ¼ë©´ ì„ íƒ ì²˜ë¦¬
     if (pickedObject)
     {
-        // ±âÁ¸ ¼±ÅÃµÈ ¿ÀºêÁ§Æ®ÀÇ ¾Æ¿ô¶óÀÎ ºñÈ°¼ºÈ­
+        // ê¸°ì¡´ ì„ íƒëœ ì˜¤ë¸Œì íŠ¸ì˜ ì•„ì›ƒë¼ì¸ ë¹„í™œì„±í™”
         if (selectedObject)
             DisableOutlineForObject(selectedObject);
 
-        // »õ ¿ÀºêÁ§Æ® ¼±ÅÃ Ã³¸®
+        // ìƒˆ ì˜¤ë¸Œì íŠ¸ ì„ íƒ ì²˜ë¦¬
         SelectObject(pickedObject);
     }
 }
@@ -213,21 +213,21 @@ std::shared_ptr<Object> SceneGraph::GetSelectedObject() const noexcept
 
 void SceneGraph::SelectNextObjectInTree()
 {
-    // ÇöÀç º¸ÀÌ´Â °´Ã¼µé¸¸ ¼öÁı
+    // í˜„ì¬ ë³´ì´ëŠ” ê°ì²´ë“¤ë§Œ ìˆ˜ì§‘
     std::vector<std::shared_ptr<Object>> visibleObjects;
     CollectVisibleObjects(visibleObjects);
 
     if (visibleObjects.empty())
         return;
 
-    // ÇöÀç ¼±ÅÃµÈ °´Ã¼°¡ ¾øÀ¸¸é Ã¹ ¹øÂ° °´Ã¼¸¦ ¼±ÅÃ
+    // í˜„ì¬ ì„ íƒëœ ê°ì²´ê°€ ì—†ìœ¼ë©´ ì²« ë²ˆì§¸ ê°ì²´ë¥¼ ì„ íƒ
     if (!selectedObject)
     {
         SelectObject(visibleObjects[0]);
         return;
     }
 
-    // ÇöÀç ¼±ÅÃµÈ °´Ã¼ ´ÙÀ½ÀÇ º¸ÀÌ´Â °´Ã¼¸¦ Ã£À½
+    // í˜„ì¬ ì„ íƒëœ ê°ì²´ ë‹¤ìŒì˜ ë³´ì´ëŠ” ê°ì²´ë¥¼ ì°¾ìŒ
     for (size_t i = 0; i < visibleObjects.size() - 1; ++i)
     {
         if (visibleObjects[i] == selectedObject)
@@ -240,21 +240,21 @@ void SceneGraph::SelectNextObjectInTree()
 
 void SceneGraph::SelectPreviousObjectInTree()
 {
-    // ÇöÀç º¸ÀÌ´Â °´Ã¼µé¸¸ ¼öÁı
+    // í˜„ì¬ ë³´ì´ëŠ” ê°ì²´ë“¤ë§Œ ìˆ˜ì§‘
     std::vector<std::shared_ptr<Object>> visibleObjects;
     CollectVisibleObjects(visibleObjects);
 
     if (visibleObjects.empty())
         return;
 
-    // ÇöÀç ¼±ÅÃµÈ °´Ã¼°¡ ¾øÀ¸¸é Ã¹ ¹øÂ° °´Ã¼¸¦ ¼±ÅÃ
+    // í˜„ì¬ ì„ íƒëœ ê°ì²´ê°€ ì—†ìœ¼ë©´ ì²« ë²ˆì§¸ ê°ì²´ë¥¼ ì„ íƒ
     if (!selectedObject)
     {
         SelectObject(visibleObjects[0]);
         return;
     }
 
-    // ÇöÀç ¼±ÅÃµÈ °´Ã¼ ÀÌÀüÀÇ º¸ÀÌ´Â °´Ã¼¸¦ Ã£À½
+    // í˜„ì¬ ì„ íƒëœ ê°ì²´ ì´ì „ì˜ ë³´ì´ëŠ” ê°ì²´ë¥¼ ì°¾ìŒ
     for (size_t i = 1; i < visibleObjects.size(); ++i)
     {
         if (visibleObjects[i] == selectedObject)
@@ -267,16 +267,16 @@ void SceneGraph::SelectPreviousObjectInTree()
 
 void SceneGraph::SetOutlineForSingleObject(std::shared_ptr<Object> object, bool enable) noexcept
 {
-    // ObjectÀÇ ¸ğµç ÄÄÆ÷³ÍÆ®¸¦ ÇÑ ¹ø¸¸ °¡Á®¿À±â
+    // Objectì˜ ëª¨ë“  ì»´í¬ë„ŒíŠ¸ë¥¼ í•œ ë²ˆë§Œ ê°€ì ¸ì˜¤ê¸°
     const auto& components = object->GetAllComponents();
 
     for (const auto& component : components)
     {
-        // dynamic_cast ÃÖÀûÈ­¸¦ À§ÇØ Å¸ÀÔ È®ÀÎ ¸ÕÀú ¼öÇà
+        // dynamic_cast ìµœì í™”ë¥¼ ìœ„í•´ íƒ€ì… í™•ì¸ ë¨¼ì € ìˆ˜í–‰
         if (auto drawable = std::dynamic_pointer_cast<Drawable>(component))
         {
             drawable->SetTechniqueActive("Outline", enable);
-            continue;                                                           // °°Àº ÄÄÆ÷³ÍÆ®°¡ µÎ Å¸ÀÔ ¸ğµÎ »ó¼Ó¹ŞÁö ¾ÊÀ¸¹Ç·Î °è¼Ó °Ë»çÇÒ ÇÊ¿ä ¾øÀ½
+            continue;                                                           // ê°™ì€ ì»´í¬ë„ŒíŠ¸ê°€ ë‘ íƒ€ì… ëª¨ë‘ ìƒì†ë°›ì§€ ì•Šìœ¼ë¯€ë¡œ ê³„ì† ê²€ì‚¬í•  í•„ìš” ì—†ìŒ
         }
 
         if (auto meshComponent = std::dynamic_pointer_cast<MeshComponent>(component))
@@ -294,7 +294,7 @@ void SceneGraph::SetOutlineForSingleObject(std::shared_ptr<Object> object, bool 
 
 void SceneGraph::SetOutlineForChildren(std::shared_ptr<Object> object, bool enable) noexcept
 {
-    // ÀÚ½Ä ¿ÀºêÁ§Æ® ÂüÁ¶ (º¹»ç ¹æÁö)
+    // ìì‹ ì˜¤ë¸Œì íŠ¸ ì°¸ì¡° (ë³µì‚¬ ë°©ì§€)
     const auto& children = object->transform->GetChildrens();
 
     for (const auto& childTransform : children)
@@ -310,15 +310,15 @@ void SceneGraph::SetOutlineForChildren(std::shared_ptr<Object> object, bool enab
 
 void SceneGraph::CollectVisibleObjects(std::vector<std::shared_ptr<Object>>& visibleObjects)
 {
-    // ¿¹»ó ¿ë·® ¹Ì¸® ÇÒ´çÀ¸·Î ÀçÇÒ´ç ÁÙÀÌ±â
+    // ì˜ˆìƒ ìš©ëŸ‰ ë¯¸ë¦¬ í• ë‹¹ìœ¼ë¡œ ì¬í• ë‹¹ ì¤„ì´ê¸°
     visibleObjects.reserve(sceneObjects.size() * 2);
 
-    // ¸ÕÀú ·çÆ® ¿ÀºêÁ§Æ®µéÀ» Ãß°¡
+    // ë¨¼ì € ë£¨íŠ¸ ì˜¤ë¸Œì íŠ¸ë“¤ì„ ì¶”ê°€
     for (const auto& rootObj : sceneObjects)
     {
         visibleObjects.push_back(rootObj);
 
-        // ·çÆ® ¿ÀºêÁ§Æ®°¡ ¿­·ÁÀÖÀ» ¶§¸¸ ÀÚ½Ä ¼öÁı
+        // ë£¨íŠ¸ ì˜¤ë¸Œì íŠ¸ê°€ ì—´ë ¤ìˆì„ ë•Œë§Œ ìì‹ ìˆ˜ì§‘
         if (IsNodeOpen(rootObj))
         {
             const auto& children = rootObj->transform->GetChildrens();
@@ -329,7 +329,7 @@ void SceneGraph::CollectVisibleObjects(std::vector<std::shared_ptr<Object>>& vis
 
                 visibleObjects.push_back(childObject);
 
-                // Àç±ÍÀûÀ¸·Î ¿­¸° ÀÚ½Ä ³ëµåµé¸¸ Ãß°¡ (ºÒÇÊ¿äÇÑ °´Ã¼ ¼öÁı ¹æÁö)
+                // ì¬ê·€ì ìœ¼ë¡œ ì—´ë¦° ìì‹ ë…¸ë“œë“¤ë§Œ ì¶”ê°€ (ë¶ˆí•„ìš”í•œ ê°ì²´ ìˆ˜ì§‘ ë°©ì§€)
                 if (IsNodeOpen(childObject))
                 {
                     std::function<void(const std::shared_ptr<Object>&)> collectOpenChildren 
@@ -362,7 +362,7 @@ void SceneGraph::CollectChildObjects(std::shared_ptr<Object> parent, std::vector
 {
     const auto& children = parent->transform->GetChildrens();
 
-    // ÇÊ¿äÇÑ °æ¿ì¿¡¸¸ ¿¹¾à °ø°£ È®º¸
+    // í•„ìš”í•œ ê²½ìš°ì—ë§Œ ì˜ˆì•½ ê³µê°„ í™•ë³´
     if (objects.capacity() < objects.size() + children.size())
         objects.reserve(objects.size() + children.size());
 
@@ -400,14 +400,14 @@ void SceneGraph::HandleRightKeyPress()
     if (!selectedObject)
         return;
 
-    // ÀÚ½ÄÀÌ ÀÖ´Â ³ëµåÀÇ °æ¿ì¸¸ È®Àå
+    // ìì‹ì´ ìˆëŠ” ë…¸ë“œì˜ ê²½ìš°ë§Œ í™•ì¥
     if (selectedObject->transform->GetChildCount() > 0)
     {
-        // ¿­¸° »óÅÂ°¡ ¾Æ´Ò ¶§¸¸ Ã³¸®
+        // ì—´ë¦° ìƒíƒœê°€ ì•„ë‹ ë•Œë§Œ ì²˜ë¦¬
         if (!IsNodeOpen(selectedObject))
         {
             nodeOpenState[selectedObject] = true;
-            // ´ÙÀ½ ÇÁ·¹ÀÓ¿¡ ¹İ¿µ
+            // ë‹¤ìŒ í”„ë ˆì„ì— ë°˜ì˜
             ImGui::SetNextItemOpen(true);
         }
     }
@@ -418,7 +418,7 @@ void SceneGraph::HandleLeftKeyPress()
     if (!selectedObject)
         return;
 
-    // ÇöÀç ¼±ÅÃµÈ °´Ã¼°¡ ·çÆ® °´Ã¼ÀÎÁö È®ÀÎ (ºÎ¸ğ°¡ ¾ø´Â °æ¿ì)
+    // í˜„ì¬ ì„ íƒëœ ê°ì²´ê°€ ë£¨íŠ¸ ê°ì²´ì¸ì§€ í™•ì¸ (ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš°)
     bool isRootObject = false;
 
     for (const auto& rootObj : sceneObjects)
@@ -430,66 +430,66 @@ void SceneGraph::HandleLeftKeyPress()
         }
     }
 
-    // ·çÆ® °´Ã¼°¡ ¾Æ´Ï¶ó¸é ºÎ¸ğ¸¦ Ã£À½
+    // ë£¨íŠ¸ ê°ì²´ê°€ ì•„ë‹ˆë¼ë©´ ë¶€ëª¨ë¥¼ ì°¾ìŒ
     if (!isRootObject)
     {
-        // Ä³½Ã¿¡¼­ ºÎ¸ğ °Ë»ö
+        // ìºì‹œì—ì„œ ë¶€ëª¨ ê²€ìƒ‰
         auto parentObject = FindParentObject(selectedObject);
 
-        // Ä³½Ã¿¡ ¾øÀ¸¸é Á÷Á¢ °Ë»ö (¹é¾÷ ¹æ¹ı)
+        // ìºì‹œì— ì—†ìœ¼ë©´ ì§ì ‘ ê²€ìƒ‰ (ë°±ì—… ë°©ë²•)
         if (!parentObject)
         {
             parentObject = FindParentObjectDirect(selectedObject);
 
-            // Ã£Àº ºÎ¸ğ¸¦ Ä³½Ã¿¡ Ãß°¡
+            // ì°¾ì€ ë¶€ëª¨ë¥¼ ìºì‹œì— ì¶”ê°€
             if (parentObject)
                 parentCache[selectedObject] = parentObject;
         }
 
-        // ºÎ¸ğ°¡ ÀÖÀ¸¸é ºÎ¸ğ·Î ÀÌµ¿
+        // ë¶€ëª¨ê°€ ìˆìœ¼ë©´ ë¶€ëª¨ë¡œ ì´ë™
         if (parentObject)
         {
-            // ÀÌÀü ¼±ÅÃ ÇØÁ¦
+            // ì´ì „ ì„ íƒ í•´ì œ
             DisableOutlineForObject(selectedObject);
 
-            // ºÎ¸ğ ¼±ÅÃ
+            // ë¶€ëª¨ ì„ íƒ
             selectedObject = parentObject;
             Engine::Inspector::GetInstance()->SetSelectObject(selectedObject);
             EnableOutlineForObject(selectedObject);
 
-            // ºÎ¸ğ ³ëµåÀÇ »óÅÂ ¾÷µ¥ÀÌÆ® (Á¢±â)
+            // ë¶€ëª¨ ë…¸ë“œì˜ ìƒíƒœ ì—…ë°ì´íŠ¸ (ì ‘ê¸°)
             nodeOpenState[parentObject] = false;
             return;
         }
     }
 
-    // ºÎ¸ğ°¡ ¾ø´Â °æ¿ì (·çÆ® °´Ã¼) ÇöÀç ³ëµå¸¦ Á¢±â
+    // ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° (ë£¨íŠ¸ ê°ì²´) í˜„ì¬ ë…¸ë“œë¥¼ ì ‘ê¸°
     nodeOpenState[selectedObject] = false;
 }
 
 void SceneGraph::InitializeParentCache()
 {
-    // Ä³½Ã ÃÊ±âÈ­
+    // ìºì‹œ ì´ˆê¸°í™”
     parentCache.clear();
 
-    // ·çÆ® °´Ã¼ Ã³¸®
+    // ë£¨íŠ¸ ê°ì²´ ì²˜ë¦¬
     for (auto& rootObj : sceneObjects)
     {
-        // ·çÆ® °´Ã¼ÀÇ ºÎ¸ğ´Â nullptr
+        // ë£¨íŠ¸ ê°ì²´ì˜ ë¶€ëª¨ëŠ” nullptr
         parentCache[rootObj] = nullptr;
 
-        // °¢ ·çÆ® °´Ã¼ÀÇ ¸ğµç ÀÚ½ÄÀ» Ã³¸®
+        // ê° ë£¨íŠ¸ ê°ì²´ì˜ ëª¨ë“  ìì‹ì„ ì²˜ë¦¬
         ProcessChildrenForCache(rootObj);
     }
 }
 
 void SceneGraph::ProcessChildrenForCache(const std::shared_ptr<Object>& parentObj)
 {
-    // ÀÚ½ÄÀÌ ¾øÀ¸¸é Á¾·á
+    // ìì‹ì´ ì—†ìœ¼ë©´ ì¢…ë£Œ
     if (!parentObj || !parentObj->transform) 
         return;
 
-	// ÀÚ½Ä °´Ã¼µé °¡Á®¿À±â
+	// ìì‹ ê°ì²´ë“¤ ê°€ì ¸ì˜¤ê¸°
     const auto& children = parentObj->transform->GetChildrens();
 
     for (const auto& childTransform : children)
@@ -498,10 +498,10 @@ void SceneGraph::ProcessChildrenForCache(const std::shared_ptr<Object>& parentOb
 
         if (childObject)
         {
-            // ÀÚ½ÄÀÇ ºÎ¸ğ¸¦ ¸í½ÃÀûÀ¸·Î ¼³Á¤
+            // ìì‹ì˜ ë¶€ëª¨ë¥¼ ëª…ì‹œì ìœ¼ë¡œ ì„¤ì •
             parentCache[childObject] = parentObj;
 
-            // Àç±ÍÀûÀ¸·Î ÀÌ ÀÚ½ÄÀÇ ¸ğµç ÀÚ½Äµµ Ã³¸®
+            // ì¬ê·€ì ìœ¼ë¡œ ì´ ìì‹ì˜ ëª¨ë“  ìì‹ë„ ì²˜ë¦¬
             ProcessChildrenForCache(childObject);
         }
     }
@@ -509,10 +509,10 @@ void SceneGraph::ProcessChildrenForCache(const std::shared_ptr<Object>& parentOb
 
 std::shared_ptr<Object> SceneGraph::FindParentObjectDirect(const std::shared_ptr<Object>& childObject)
 {
-    // ¸ğµç ·çÆ® °´Ã¼ È®ÀÎ
+    // ëª¨ë“  ë£¨íŠ¸ ê°ì²´ í™•ì¸
     for (const auto& rootObj : sceneObjects)
     {
-        // Á÷Á¢ ÀÚ½ÄÀÎÁö È®ÀÎ
+        // ì§ì ‘ ìì‹ì¸ì§€ í™•ì¸
         const auto& rootChildren = rootObj->transform->GetChildrens();
 
         for (const auto& childTransform : rootChildren)
@@ -521,7 +521,7 @@ std::shared_ptr<Object> SceneGraph::FindParentObjectDirect(const std::shared_ptr
                 return rootObj;
         }
 
-        // Àç±ÍÀûÀ¸·Î ´õ ±íÀº ·¹º§ È®ÀÎ
+        // ì¬ê·€ì ìœ¼ë¡œ ë” ê¹Šì€ ë ˆë²¨ í™•ì¸
         auto result = FindParentInChildrenDirect(rootObj, childObject);
 
         if (result)
@@ -542,7 +542,7 @@ std::shared_ptr<Object> SceneGraph::FindParentInChildrenDirect(const std::shared
         if (!child) 
             continue;
 
-        // ÀÌ ÀÚ½ÄÀÇ ÀÚ½Äµé È®ÀÎ
+        // ì´ ìì‹ì˜ ìì‹ë“¤ í™•ì¸
         const auto& grandChildren = child->transform->GetChildrens();
 
         for (const auto& grandChildTransform : grandChildren)
@@ -551,7 +551,7 @@ std::shared_ptr<Object> SceneGraph::FindParentInChildrenDirect(const std::shared
                 return child;
         }
 
-        // ´õ ±íÀº ·¹º§ È®ÀÎ
+        // ë” ê¹Šì€ ë ˆë²¨ í™•ì¸
         auto result = FindParentInChildrenDirect(child, childObject);
 
         if (result)

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Camera.h"
 
 #include "Core/Window.h"
@@ -26,14 +26,14 @@ DirectX::XMMATRIX Camera::GetMatrix() const noexcept
     DirectX::XMFLOAT3 position = { pos.x, pos.y, pos.z };
 	auto rotation = this->object->transform->GetRotation();
 
-	// Ä«¸Ş¶óÀÇ ¾Õ ¹æÇâ Vector¿Í À§Ä¡ Vector¸¦ ±¸ÇÔ
+	// ì¹´ë©”ë¼ì˜ ì• ë°©í–¥ Vectorì™€ ìœ„ì¹˜ Vectorë¥¼ êµ¬í•¨
 	const DirectX::XMVECTOR lookVector = DirectX::XMVector3Transform(Vector::forwardV, DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, 0.0f));
 	const DirectX::XMVECTOR positionVector = DirectX::XMLoadFloat3(&position);
 
-	// Ä«¸Ş¶ó°¡ ¹Ù¶óº¸´Â ¸ñÇ¥ À§Ä¡
+	// ì¹´ë©”ë¼ê°€ ë°”ë¼ë³´ëŠ” ëª©í‘œ ìœ„ì¹˜
 	const DirectX::XMVECTOR cameraTarget = positionVector + lookVector;
 
-	// EyePosition°ú FocusPositionÀ» ´Ù¸£°Ô ¼³Á¤ÇÕ´Ï´Ù.
+	// EyePositionê³¼ FocusPositionì„ ë‹¤ë¥´ê²Œ ì„¤ì •í•©ë‹ˆë‹¤.
 	return DirectX::XMMatrixLookAtLH(positionVector, cameraTarget, Vector::upV);
 }
 
@@ -47,17 +47,17 @@ void Camera::SpawnControlWidgets() noexcept
 	auto& position = this->object->transform->GetPosition();
 	auto& rotation = this->object->transform->GetRotation();
 
-	// ÇÁ·ÎÁ§¼Ç ¼³Á¤Àº À¯Áö
+	// í”„ë¡œì ì…˜ ì„¤ì •ì€ ìœ ì§€
 	projection.RenderWidgets();
 
-	// Ä«¸Ş¶ó ½Ã°¢È­ ¿É¼Çµµ À¯Áö
+	// ì¹´ë©”ë¼ ì‹œê°í™” ì˜µì…˜ë„ ìœ ì§€
 	ImGui::Checkbox("Enable Camera Indicator", &isEnableIndicator);
 	ImGui::Checkbox("Enable Frustum Indicator", &isEnableFrustumIndicator);
 
 	if (ImGui::Button("Reset"))
 		Reset();
 
-	// TransformÀÌ ¿ÜºÎ(Inspector)¿¡¼­ º¯°æµÇ¾úÀ» ¶§ indicator¿Í projection ¾÷µ¥ÀÌÆ®
+	// Transformì´ ì™¸ë¶€(Inspector)ì—ì„œ ë³€ê²½ë˜ì—ˆì„ ë•Œ indicatorì™€ projection ì—…ë°ì´íŠ¸
 	indicator.SetPosition(position);
 	projection.SetPosition(position);
 
