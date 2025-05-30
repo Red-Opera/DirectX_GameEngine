@@ -1,22 +1,15 @@
 ﻿#pragma once
+#include "Transform.h"
 
 #include "Core/Object/EngineLoop.h"
 
-#include "Component.h"
-#include "Utility/Vector.h"
+#include "../Component.h"
 
 #include <DirectXMath.h>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-struct Transform final
-{
-	Position position;
-	Rotation rotation;
-	Scale scale;
-};
 
 class TransformComponent : public Component, public std::enable_shared_from_this<TransformComponent>
 {

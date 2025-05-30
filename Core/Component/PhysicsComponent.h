@@ -3,12 +3,33 @@
 #include "Core/Component/Component.h"
 #include "External/physx/physX/include/PxPhysicsAPI.h"
 
-// 충돌 감지 모드를 위한 열거형 추가
+#include "Core/Component/Transform/Transform.h"
+
+// 충돌 감지 모드를 위한 열거형
 enum class CollisionDetectionMode
 {
     Discrete,           // 기본 충돌 감지 방식
     Continuous,         // 빠르게 움직이는 물체를 위한 고급 충돌 감지
     ContinuousDynamic   // 빠르게 움직이는 물체 간 충돌을 위한 고급 충돌 감지
+};
+
+// 축 고정 플래그를 위한 열거형
+enum ConstraintFlags
+{
+    // 위치 고정 플래그
+    FREEZE_POSITION_X = (1 << 0),
+    FREEZE_POSITION_Y = (1 << 1),
+    FREEZE_POSITION_Z = (1 << 2),
+    
+    // 회전 고정 플래그
+    FREEZE_ROTATION_X = (1 << 3),
+    FREEZE_ROTATION_Y = (1 << 4),
+    FREEZE_ROTATION_Z = (1 << 5),
+    
+    // 편의를 위한 조합 플래그
+    FREEZE_POSITION = (FREEZE_POSITION_X | FREEZE_POSITION_Y | FREEZE_POSITION_Z),
+    FREEZE_ROTATION = (FREEZE_ROTATION_X | FREEZE_ROTATION_Y | FREEZE_ROTATION_Z),
+    FREEZE_ALL = (FREEZE_POSITION | FREEZE_ROTATION)
 };
 
 class PhysicsComponent : public Component
@@ -59,15 +80,23 @@ public:
     void SetDragCoefficient(float coefficient);
     float GetDragCoefficient() const { return dragCoefficient; }
     
-    // 위치 / 회전 제약 조건 설정
+    // 제약 조건 설정 (비트 마스크 사용)
+    void SetConstraints(uint32_t constraintFlags);
+    void AddConstraints(uint32_t constraintFlags);
+    void RemoveConstraints(uint32_t constraintFlags);
+    uint32_t GetConstraints() const { return constraints; }
+    
+    // 위치 / 회전 제약 조건 설정 (기존 인터페이스 유지)
     void SetFreezePosition(bool x, bool y, bool z);
     void SetFreezeRotation(bool x, bool y, bool z);
-    bool IsPositionXFrozen() const { return freezePositionX; }
-    bool IsPositionYFrozen() const { return freezePositionY; }
-    bool IsPositionZFrozen() const { return freezePositionZ; }
-    bool IsRotationXFrozen() const { return freezeRotationX; }
-    bool IsRotationYFrozen() const { return freezeRotationY; }
-    bool IsRotationZFrozen() const { return freezeRotationZ; }
+    
+    // 개별 축 제약 조건 확인 (비트 연산으로 구현)
+    bool IsPositionXFrozen() const { return (constraints & FREEZE_POSITION_X) != 0; }
+    bool IsPositionYFrozen() const { return (constraints & FREEZE_POSITION_Y) != 0; }
+    bool IsPositionZFrozen() const { return (constraints & FREEZE_POSITION_Z) != 0; }
+    bool IsRotationXFrozen() const { return (constraints & FREEZE_ROTATION_X) != 0; }
+    bool IsRotationYFrozen() const { return (constraints & FREEZE_ROTATION_Y) != 0; }
+    bool IsRotationZFrozen() const { return (constraints & FREEZE_ROTATION_Z) != 0; }
     
     // 콜라이더 크기와 제약 조건 업데이트
     void UpdateColliderSize();
@@ -113,13 +142,8 @@ private:
     float linearDamping = 0.0f;     // 선형 공기 저항
     float angularDamping = 0.05f;   // 각도 공기 저항
     
-    // 제약 조건 (축별 고정 여부)
-    bool freezePositionX = false;
-    bool freezePositionY = false;
-    bool freezePositionZ = false;
-    bool freezeRotationX = false;
-    bool freezeRotationY = false;
-    bool freezeRotationZ = false;
+    // 제약 조건 (비트 마스크 사용)
+    uint32_t constraints = 0;       // 모든 축 제약 조건을 비트로 관리
     
     // 전역 중력 설정
     static physx::PxVec3 globalGravity;
@@ -128,7 +152,5 @@ private:
     physx::PxRigidActor* actor = nullptr;
 
     // Transform 변경 감지를 위한 이전 값 저장
-    Position lastTransformPosition;
-    Position lastTransformRotation;
-    Position lastTransformScale;
+    Transform lastTransform;
 };

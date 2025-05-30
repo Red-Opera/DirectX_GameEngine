@@ -2,7 +2,7 @@
 #include "SceneGraph.h"
 
 #include "Core/Component/MeshComponent.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Draw/Base/Drawable.h"
 #include "Core/Draw/Mesh.h"
 #include "Core/Draw/SceneGraphNode.h"

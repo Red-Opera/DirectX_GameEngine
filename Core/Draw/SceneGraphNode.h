@@ -3,7 +3,7 @@
 #include "Core/DxGraphic.h"
 
 #include "Core/Object/Object.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 
 #include <memory>
 

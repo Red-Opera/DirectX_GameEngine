@@ -1,8 +1,9 @@
 ﻿#include "stdafx.h"
 #include "PhysicsComponent.h"
-#include "Physics/PhysicsSystem.h"
 
+#include "Core/Component/Transform/Transform.h"
 #include "Core/Object/Object.h"
+#include "Physics/PhysicsSystem.h"
 
 // 전역 중력 기본값 설정 (지구 중력)
 physx::PxVec3 PhysicsComponent::globalGravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
@@ -35,19 +36,15 @@ void PhysicsComponent::Initialize()
     if (isDynamic)
     {
         // 동적 물체 생성 (중력의 영향을 받고 이동 가능)
-        physx::PxRigidDynamic* dynamicActor = physics->createRigidDynamic(physx::PxTransform(physx::PxVec3(position.x, position.y, position.z)));
+        physx::PxRigidDynamic* dynamicActor = physics->createRigidDynamic(physx::PxTransform(Position::ConvertPxVec3(position)));
         
-        // 중력 설정 적용
+        // 중력 설정 적용 (사용자 정의 중력 스케일이 있으면 기본 중력 비활성화)
         if (gravityScale != 1.0f && useGravity)
-        {
-            // 사용자 정의 중력 스케일이 있으면 기본 중력 비활성화
             dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
-        }
+
+        // 일반 중력 설정
         else
-        {
-            // 일반 중력 설정
             dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
-        }
         
         // 운동학적 객체 설정
         dynamicActor->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isKinematic);
@@ -64,6 +61,7 @@ void PhysicsComponent::Initialize()
         
         actor = dynamicActor;
     }
+
     else
     {
         // 정적 물체 생성 (움직이지 않는 고정 물체)
@@ -73,7 +71,8 @@ void PhysicsComponent::Initialize()
     }
     
     // 기본 박스 형태의 충돌 형상 생성
-    physx::PxShape* shape = physics->createShape(
+    physx::PxShape* shape = physics->createShape
+    (
         physx::PxBoxGeometry(0.5f, 0.5f, 0.5f),
         *physics->createMaterial(staticFriction, dynamicFriction, restitution)
     );
@@ -83,17 +82,14 @@ void PhysicsComponent::Initialize()
     shape->release();
     
     // 물리 시뮬레이션 씬에 액터 추가 (여기로 이동)
-    if (scene != nullptr) {
+    if (scene != nullptr)
         scene->addActor(*actor);
-    }
     
     // 제약 조건 적용 (씬에 추가한 후에 호출)
     UpdateConstraints();
     
     // 초기 Transform 값 저장
-    lastTransformPosition = transform->GetPosition();
-    lastTransformRotation = transform->GetRotation();
-    lastTransformScale = transform->GetScale();
+	lastTransform = transform->GetTransform();
 }
 
 void PhysicsComponent::OnEnable()
@@ -109,20 +105,15 @@ void PhysicsComponent::OnEnable()
     {
         physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
 
-        // 중력 설정 복원
+        // 중력 설정 복원 (사용자 정의 중력 스케일이 있으면 기본 중력 비활성화)
         if (gravityScale != 1.0f && useGravity)
-        {
-            // 사용자 정의 중력 스케일이 있으면 기본 중력 비활성화
             dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
-        }
+
         else if (useGravity)
-        {
             dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, false);
-        }
+
         else
-        {
             dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
-        }
         
         // 운동학적 객체 설정 복원
         dynamicActor->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, isKinematic);
@@ -207,11 +198,10 @@ void PhysicsComponent::Update()
 
             actor->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
         }
+
+        // 활성화: 시뮬레이션 활성화
         else
-        {
-            // 활성화: 시뮬레이션 활성화
             actor->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, false);
-        }
     }
 
     // 컴포넌트가 비활성화되어 있으면 물리 업데이트 중단
@@ -226,17 +216,13 @@ void PhysicsComponent::Update()
         
         // 사용자 정의 중력 적용 (필요한 경우)
         if (useGravity && gravityScale != 1.0f && !isKinematic)
-        {
             ApplyCustomGravity();
-        }
         
         // 키네마틱 모드인 경우 Transform에서 PhysX로 동기화만 수행
         if (isKinematic)
         {
             // Transform에서 PhysX로 위치 동기화
-            physx::PxTransform pxTransform(
-                physx::PxVec3(position.x, position.y, position.z)
-            );
+            physx::PxTransform pxTransform(Position::ConvertPxVec3(position));
             
             // 회전 쿼터니언도 변환 필요 (현재 간단히 구현)
             Rotation rotation = transform->GetRotation();
@@ -245,21 +231,16 @@ void PhysicsComponent::Update()
             dynamicActor->setKinematicTarget(pxTransform);
             
             // 최신 Transform 값 저장
-            lastTransformPosition = transform->GetPosition();
-            lastTransformRotation = transform->GetRotation();
-            lastTransformScale = transform->GetScale();
+			lastTransform = transform->GetTransform();
         }
+
         else
         {
             // Inspector나 외부에서 Transform이 변경되었는지 확인
-            if (lastTransformPosition != transform->GetPosition() ||
-                lastTransformRotation != transform->GetRotation() ||
-                lastTransformScale != transform->GetScale())
+            if (lastTransform != transform->GetTransform())
             {
                 // Transform에서 PhysX로 위치 동기화 (외부 변경 반영)
-                physx::PxTransform pxTransform(
-                    physx::PxVec3(position.x, position.y, position.z)
-                );
+                physx::PxTransform pxTransform(Position::ConvertPxVec3(position));
                 
                 // 회전 쿼터니언도 변환 필요 (현재 미구현)
                 // pxTransform.q = ConvertToQuaternion(transform->GetRotation());
@@ -267,13 +248,11 @@ void PhysicsComponent::Update()
                 dynamicActor->setGlobalPose(pxTransform);
                 
                 // 스케일이 변경된 경우 콜라이더 크기도 업데이트
-                if (lastTransformScale != transform->GetScale())
+                if (lastTransform.GetScale() != transform->GetScale())
                     UpdateColliderSize();
                 
                 // 최신 Transform 값 저장
-                lastTransformPosition = transform->GetPosition();
-                lastTransformRotation = transform->GetRotation();
-                lastTransformScale = transform->GetScale();
+				lastTransform = transform->GetTransform();
                 
                 // 사용자가 직접 이동한 경우 속도를 0으로 초기화하여 자연스럽게 정지
                 dynamicActor->setLinearVelocity(physx::PxVec3(0.0f, 0.0f, 0.0f));
@@ -282,6 +261,7 @@ void PhysicsComponent::Update()
                 // 잠자고 있는 액터를 깨우기
                 dynamicActor->wakeUp();
             }
+
             else
             {
                 // PhysX에서 Transform으로 위치 동기화 (물리 시뮬레이션 결과 반영)
@@ -294,36 +274,28 @@ void PhysicsComponent::Update()
                 // transform->SetRotation(...);
                 
                 // 최신 Transform 값 업데이트
-                lastTransformPosition = transform->GetPosition();
-                lastTransformRotation = transform->GetRotation();
+				lastTransform = transform->GetTransform();
             }
         }
     }
+
     else
     {
         // 정적 물체의 경우 Transform에서 PhysX로만 동기화 (물리 영향 없음)
-        if (lastTransformPosition != transform->GetPosition() ||
-            lastTransformRotation != transform->GetRotation() ||
-            lastTransformScale != transform->GetScale())
+		if (lastTransform != transform->GetTransform())
         {
             physx::PxRigidStatic* staticActor = static_cast<physx::PxRigidStatic*>(actor);
             
-            physx::PxTransform pxTransform(
-                physx::PxVec3(position.x, position.y, position.z)
-            );
+            physx::PxTransform pxTransform(Position::ConvertPxVec3(position));
             
             staticActor->setGlobalPose(pxTransform);
             
             // 스케일 변경 시 콜라이더 크기 업데이트
-            if (lastTransformScale != transform->GetScale())
-            {
+            if (lastTransform.GetScale() != transform->GetScale())
                 UpdateColliderSize();
-            }
             
             // 최신 값 저장
-            lastTransformPosition = transform->GetPosition();
-            lastTransformRotation = transform->GetRotation();
-            lastTransformScale = transform->GetScale();
+			lastTransform = transform->GetTransform();
         }
     }
 }
@@ -387,16 +359,13 @@ void PhysicsComponent::SetGravityScale(float scale)
     
     physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
     
+    // 표준 중력으로 돌아가는 경우 기본 중력 사용
     if (gravityScale == 1.0f)
-    {
-        // 표준 중력으로 돌아가는 경우 기본 중력 사용
         dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, false);
-    }
+
+    // 사용자 정의 중력을 적용하는 경우 기본 중력 비활성화
     else
-    {
-        // 사용자 정의 중력을 적용하는 경우 기본 중력 비활성화
         dynamicActor->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
-    }
     
     // 액터 깨우기
     dynamicActor->wakeUp();
@@ -426,7 +395,7 @@ void PhysicsComponent::SetKinematic(bool kinematic)
         
         // 현재 위치로 키네마틱 타겟 설정
         Position position = transform->GetPosition();
-        physx::PxTransform pxTransform(physx::PxVec3(position.x, position.y, position.z));
+        physx::PxTransform pxTransform(Position::ConvertPxVec3(position));
         dynamicActor->setKinematicTarget(pxTransform);
     }
     
@@ -532,26 +501,24 @@ void PhysicsComponent::SetMaterial(float staticFric, float dynamicFric, float re
     staticFriction = staticFric;
     dynamicFriction = dynamicFric;
     restitution = rest;
-    
-    if (actor)
-    {
-        // 액터에 연결된 모든 Shape의 재질 속성 업데이트
-        uint32_t numShapes = actor->getNbShapes();
-        physx::PxShape* shapes[8];  // 최대 8개의 Shape 지원
-        actor->getShapes(shapes, numShapes);
-        
-        physx::PxPhysics* physics = PhysicsSystem::GetInstance().GetPhysics();
-        physx::PxMaterial* newMaterial = physics->createMaterial(staticFriction, dynamicFriction, restitution);
-        
-        // 모든 Shape에 새로운 재질 적용
-        for (uint32_t i = 0; i < numShapes; i++)
-        {
-            shapes[i]->setMaterials(&newMaterial, 1);
-        }
-        
-        // 재질 해제
-        newMaterial->release();
-    }
+
+    if (actor == nullptr)
+        return;
+
+    // 액터에 연결된 모든 Shape의 재질 속성 업데이트
+    uint32_t numShapes = actor->getNbShapes();
+    physx::PxShape* shapes[8];  // 최대 8개의 Shape 지원
+    actor->getShapes(shapes, numShapes);
+
+    physx::PxPhysics* physics = PhysicsSystem::GetInstance().GetPhysics();
+    physx::PxMaterial* newMaterial = physics->createMaterial(staticFriction, dynamicFriction, restitution);
+
+    // 모든 Shape에 새로운 재질 적용
+    for (uint32_t i = 0; i < numShapes; i++)
+        shapes[i]->setMaterials(&newMaterial, 1);
+
+    // 재질 해제
+    newMaterial->release();
 }
 
 void PhysicsComponent::SetLinearDamping(float damping)
@@ -584,48 +551,89 @@ void PhysicsComponent::SetAngularDamping(float damping)
     dynamicActor->setAngularDamping(effectiveDamping);
 }
 
-void PhysicsComponent::SetFreezePosition(bool x, bool y, bool z)
+void PhysicsComponent::SetConstraints(uint32_t constraintFlags)
 {
-    bool wasFullyFrozen = freezePositionX && freezePositionY && freezePositionZ;
+    // 이전 상태와 동일한지 확인
+    if (constraints == constraintFlags)
+        return;
     
-    freezePositionX = x;
-    freezePositionY = y;
-    freezePositionZ = z;
+    // 제약 조건 플래그 업데이트
+    constraints = constraintFlags;
     
     // 제약 조건 즉시 적용
     UpdateConstraints();
     
-    // 제약 조건이 완전히 해제되었다면 물체 깨우기 (씬 확인 추가)
-    if (actor != nullptr && isDynamic && wasFullyFrozen && !x && !y && !z && IsActorInScene())
+    // 모든 제약 조건이 해제되었고 액터가 씬에 있다면 깨우기
+    if (actor != nullptr && isDynamic && constraints == 0 && IsActorInScene())
     {
         physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
         dynamicActor->wakeUp();
         
         // 중력이 꺼져있을 경우 작은 임펄스를 줘서 움직임 시작
         if (!useGravity)
-        {
             dynamicActor->addForce(physx::PxVec3(0.0f, 0.1f, 0.0f), physx::PxForceMode::eIMPULSE);
-        }
     }
+}
+
+void PhysicsComponent::AddConstraints(uint32_t constraintFlags)
+{
+    // 이미 설정된 플래그를 추가하면 변화 없음
+    if ((constraints & constraintFlags) == constraintFlags)
+        return;
+    
+    // 기존 플래그에 새 플래그 추가
+    SetConstraints(constraints | constraintFlags);
+}
+
+void PhysicsComponent::RemoveConstraints(uint32_t constraintFlags)
+{
+    // 제거할 플래그가 설정되어 있지 않으면 변화 없음
+    if ((constraints & constraintFlags) == 0)
+        return;
+    
+    // 기존 플래그에서 지정된 플래그 제거
+    SetConstraints(constraints & ~constraintFlags);
+}
+
+void PhysicsComponent::SetFreezePosition(bool x, bool y, bool z)
+{
+    // 임시 변수에 현재 회전 제약 조건 저장 (유지해야 함)
+    uint32_t rotationConstraints = constraints & FREEZE_ROTATION;
+    
+    // 새로운 위치 제약 조건 계산
+    uint32_t positionConstraints = 0;
+    if (x) 
+        positionConstraints |= FREEZE_POSITION_X;
+
+    if (y) 
+        positionConstraints |= FREEZE_POSITION_Y;
+
+    if (z) 
+        positionConstraints |= FREEZE_POSITION_Z;
+    
+    // 전체 제약 조건 업데이트 (회전 제약 조건은 유지)
+    SetConstraints(rotationConstraints | positionConstraints);
 }
 
 void PhysicsComponent::SetFreezeRotation(bool x, bool y, bool z)
 {
-    bool wasFullyFrozen = freezeRotationX && freezeRotationY && freezeRotationZ;
+    // 임시 변수에 현재 위치 제약 조건 저장 (유지해야 함)
+    uint32_t positionConstraints = constraints & FREEZE_POSITION;
     
-    freezeRotationX = x;
-    freezeRotationY = y;
-    freezeRotationZ = z;
+    // 새로운 회전 제약 조건 계산
+    uint32_t rotationConstraints = 0;
+
+    if (x)
+        rotationConstraints |= FREEZE_ROTATION_X;
+
+    if (y)
+        rotationConstraints |= FREEZE_ROTATION_Y;
+
+    if (z)
+        rotationConstraints |= FREEZE_ROTATION_Z;
     
-    // 제약 조건 즉시 적용
-    UpdateConstraints();
-    
-    // 제약 조건이 완전히 해제되었다면 물체 깨우기
-    if (actor != nullptr && isDynamic && wasFullyFrozen && !x && !y && !z)
-    {
-        physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
-        dynamicActor->wakeUp();
-    }
+    // 전체 제약 조건 업데이트 (위치 제약 조건은 유지)
+    SetConstraints(positionConstraints | rotationConstraints);
 }
 
 void PhysicsComponent::UpdateConstraints()
@@ -640,24 +648,24 @@ void PhysicsComponent::UpdateConstraints()
     physx::PxRigidDynamicLockFlags lockFlags = physx::PxRigidDynamicLockFlag::Enum(0);
     
     // 위치 제약 조건 설정
-    if (freezePositionX) 
+    if (constraints & FREEZE_POSITION_X) 
         lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X;
 
-    if (freezePositionY) 
+    if (constraints & FREEZE_POSITION_Y) 
         lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Y;
 
-    if (freezePositionZ) 
+    if (constraints & FREEZE_POSITION_Z) 
         lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z;
     
     // 회전 제약 조건 설정
-    if (freezeRotationX) 
+    if (constraints & FREEZE_ROTATION_X) 
         lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X;
 
-    if (freezeRotationY) 
+    if (constraints & FREEZE_ROTATION_Y) 
         lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y;
 
-    if (freezeRotationZ) 
-        lockFlags|= physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z;
+    if (constraints & FREEZE_ROTATION_Z) 
+        lockFlags |= physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z;
     
     // 제약 조건 액터에 적용
     dynamicActor->setRigidDynamicLockFlags(lockFlags);

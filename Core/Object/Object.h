@@ -3,7 +3,7 @@
 #include "EngineLoop.h"
 
 #include "Core/Component/Component.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Component/PhysicsComponent.h"
 
 #include <unordered_map>

@@ -6,7 +6,7 @@
 #include "Core/Object/Object.h"
 #include "Core/Component/Component.h"
 #include "Core/Draw/Object/ColorSphereObject.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/RenderingPipeline/RenderingChannel.h"
 
 #include "Utility/MathInfo.h"

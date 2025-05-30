@@ -627,7 +627,7 @@
     <ClInclude Include="Core\Object\EngineLoop.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Component\TransformComponent.h">
+    <ClInclude Include="Core\Component\Transform\TransformComponent.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Core\Draw\Object\ColorCubeObject.h">
@@ -1812,6 +1812,9 @@
     <ClInclude Include="Core\Component\Physics\PhysicsSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Component\Transform\Transform.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -2186,7 +2189,7 @@
     <ClCompile Include="Core\Component\Component.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Component\TransformComponent.cpp">
+    <ClCompile Include="Core\Component\Transform\TransformComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\BaseModel\CubeFrame.cpp">
@@ -2274,6 +2277,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Component\Physics\PhysicsSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Component\Transform\Transform.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

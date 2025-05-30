@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Core/Object/Object.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 
 #include "External/Imgui/imgui.h"
 #include "External/Imgui/ImGuizmo.h"

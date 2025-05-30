@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Draw/Mesh.h"
 #include "Core/Draw/ModelBase.h"
 #include "Core/Draw/SceneGraphNode.h"

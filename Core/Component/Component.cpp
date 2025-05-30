@@ -2,7 +2,7 @@
 #include "Component.h"
 
 #include "Core/Object/Object.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 
 Component::Component(std::shared_ptr<Object> object)
 {

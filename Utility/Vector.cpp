@@ -151,6 +151,11 @@ GraphicResource::Image::Color Vector::ConvertColor(DirectX::XMVECTOR vector)
 	return { (UCHAR)round(toFloat.x), (UCHAR)round(toFloat.y), (UCHAR)round(toFloat.z) };
 }
 
+Vector3 Vector::ConvertVector3(const DirectX::XMFLOAT3& vector3)
+{
+	return { vector3.x, vector3.y, vector3.z };
+}
+
 XMVECTOR Vector::ConvertXMVECTOR(const Vector3& vector3)
 {
 	return XMVectorSet(vector3.x, vector3.y, vector3.z, 0.0f);
@@ -161,7 +166,7 @@ XMVECTOR Vector::ConvertXMVECTOR(const Vector4& vector4)
 	return XMVectorSet(vector4.x, vector4.y, vector4.z, vector4.w);
 }
 
-DirectX::XMFLOAT3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
+Vector3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
 {
 	DirectX::XMFLOAT3 euler;
 
@@ -179,7 +184,7 @@ DirectX::XMFLOAT3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
 		euler.z = atan2f(-matrix._21, matrix._11);	// Roll
 	}
 
-	return euler;
+	return { euler.x, euler.y, euler.z };
 }
 
 DirectX::XMFLOAT3 Vector::GetPosition(const DirectX::XMFLOAT4X4& matrix)
@@ -250,6 +255,11 @@ bool Vector3::operator==(const Vector3& vector) const
 bool Vector3::operator==(const Vector4& vector) const
 {
 	return (x == vector.x && y == vector.y && z == vector.z);
+}
+
+physx::PxVec3 Vector3::ConvertPxVec3(const Vector3& vector3)
+{
+	return physx::PxVec3(vector3.x, vector3.y, vector3.z);
 }
 
 float Vector3::GetLength() const

@@ -4,7 +4,7 @@
 #include "ModelBase.h"
 
 #include "Core/Component/MeshComponent.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Object/Object.h"
 #include "External/Imgui/imgui.h"
 

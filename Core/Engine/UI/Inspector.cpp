@@ -5,7 +5,7 @@
 #include "Core/Camera/CameraContainer.h"
 #include "Core/Component/MeshComponent.h"
 #include "Core/Component/PhysicsComponent.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Draw/Light/PointLight.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/ModelEditor.h"
@@ -417,9 +417,11 @@ namespace Engine
                 // 오브젝트 이름 편집
                 char objectName[256];
                 strcpy_s(objectName, 256, selectObject->GetName().c_str());
+
                 if (ImGui::InputText("Name", objectName, 256))
                     selectObject->SetName(objectName);
             }
+
             else
                 ImGui::TextColored({ 1.0f, 0.0f, 0.0f, 1.0f }, "No object selected");
         }
@@ -710,6 +712,7 @@ namespace Engine
         {
             // 운동학적 객체(Kinematic) 설정
             bool isKinematic = physicsComponent->IsKinematic();
+
             if (ImGui::Checkbox("Is Kinematic", &isKinematic))
             {
                 physicsComponent->SetKinematic(isKinematic);
@@ -750,6 +753,7 @@ namespace Engine
 
                 // 질량 설정
                 float mass = physicsComponent->GetMass();
+
                 if (ImGui::DragFloat("Mass", &mass, 0.1f, 0.1f, 1000.0f))
                     physicsComponent->SetMass(mass);
             }
@@ -759,9 +763,7 @@ namespace Engine
             int currentMode = static_cast<int>(physicsComponent->GetCollisionDetectionMode());
             
             if (ImGui::Combo("Collision Detection", &currentMode, collisionModes, IM_ARRAYSIZE(collisionModes)))
-            {
                 physicsComponent->SetCollisionDetectionMode(static_cast<CollisionDetectionMode>(currentMode));
-            }
             
             if (ImGui::IsItemHovered())
             {
@@ -1027,9 +1029,7 @@ namespace Engine
 
                             // 중력이 없을 때 약간의 힘 가하기
                             if (!physicsComponent->IsGravityEnabled())
-                            {
                                 dynamicActor->addForce(physx::PxVec3(0.0f, 0.1f, 0.0f), physx::PxForceMode::eIMPULSE);
-                            }
                         }
                     }
                 }
