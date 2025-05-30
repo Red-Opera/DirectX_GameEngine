@@ -28,7 +28,7 @@ void ColorObject::SetRenderingPipeline(GraphicResource::Image::Color color, bool
 
 	Scale scale = transform->GetLocalScale();
 
-	model.Transform(DirectX::XMMatrixScaling(scale.x, scale.y, scale.z));
+	model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f));
 
 	const auto geometryTag = "$ColorCone.X" + std::to_string(scale.x) + "Y" + std::to_string(scale.y) + "Z" + std::to_string(scale.z);
 	vertexBuffer = VertexBuffer::GetRender(geometryTag, model.vertices);

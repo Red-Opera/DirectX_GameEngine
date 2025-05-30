@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+癤#include "stdafx.h"
 #include "Inspector.h"
 
 #include "Core/Camera/Camera.h"
@@ -54,13 +54,13 @@ namespace Engine
                     selectObject->GetName().c_str()
                 );
 
-                // 기본 속성 표시
+                // 湲곕낯  
                 ImGui::Separator();
                 ImGui::Text("Transform Information");
 
                 bool isNotMatch = false;
 
-                // 위치 설정
+                // 移 ㅼ
                 Position position = selectObject->transform->GetPosition();
                 float pos[3] = { position.x, position.y, position.z };
 
@@ -70,7 +70,7 @@ namespace Engine
                     isNotMatch = true;
                 }
 
-                // 회전 설정
+                // � ㅼ
                 Rotation rotation = selectObject->transform->GetRotation();
                 rotation.x = rotation.x * 180.0f / Math::PI;
                 rotation.y = rotation.y * 180.0f / Math::PI;
@@ -91,18 +91,18 @@ namespace Engine
                     selectObject->transform->SetRotation(rot[0], rot[1], rot[2]);
                     isNotMatch = true;
                 }
-
-                // 스케일 설정
-                Scale scale = selectObject->transform->GetScale();
+              
+                // 스케일 정보
+                Scale scale = selectObject->transform->GetLocalScale();
                 float scl[3] = { scale.x, scale.y, scale.z };
 
                 if (ImGui::DragFloat3("Scale", scl, 0.1f))
                 {
-                    selectObject->transform->SetScale(scl[0], scl[1], scl[2]);
+                    selectObject->transform->SetLocalScale(scl[0], scl[1], scl[2]);
                     isNotMatch = true;
                 }
 
-                // 컴포넌트 목록 표시
+                // 而댄щ 紐⑸ 
                 ImGui::Separator();
                 ImGui::Text("Components");
 
@@ -110,22 +110,22 @@ namespace Engine
 
                 for (const auto& component : components)
                 {
-                    ImGui::PushID(component.get());  // 고유 ID 부여
+                    ImGui::PushID(component.get());  // 怨 ID 遺
 
-                    // 컴포넌트 활성화/비활성화 체크박스
+                    // 而댄щ 깊/鍮깊 泥댄щ
                     bool isActive = component->GetEnable();
                     if (ImGui::Checkbox("##ComponentActive", &isActive))
                         component->SetEnable(isActive);
 
                     ImGui::SameLine();
 
-                    // 선택된 컴포넌트 하이라이트 표시
+                    //  而댄щ 대쇱댄 
                     bool isSelected = (selectComponent == component);
 
                     if (isSelected)
                         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.6f, 0.8f, 1.0f));
 
-                    // 컴포넌트 이름을 버튼으로 표시하여 선택 가능하게 함
+                    // 而댄щ 대 踰쇱쇰   媛ν寃 
                     if (ImGui::Button(component->GetClassName().c_str(), ImVec2(-1, 0)))
                     {
                         selectComponent = component;
@@ -137,26 +137,26 @@ namespace Engine
                     ImGui::PopID();
                 }
 
-                // Model 컴포넌트가 있는지 확인하고 자동으로 Mesh 컴포넌트 표시
+                // Model 而댄щ멸 吏 명怨 쇰 Mesh 而댄щ 
                 if (auto modelComponent = selectObject->GetComponent("Model"))
                 {
-                    // Model 컴포넌트가 선택되어 있지 않다면 Mesh 정보 표시
-                    if (selectComponent != modelComponent) // Model 컴포넌트가 이미 선택되어 있다면 중복 표시 방지
+                    // Model 而댄щ멸  吏 ㅻ㈃ Mesh �蹂 
+                    if (selectComponent != modelComponent) // Model 而댄щ멸 대�  ㅻ㈃ 以蹂  諛⑹
                     {
-                        // 모 델의 노드를 표시하고 메쉬를 컴포넌트처럼 관리하는 컨트롤러 클래스
+                        // 紐 몄 몃瑜 怨 硫щ� 而댄щ몄 愿由ы 而⑦몃· 대
                         class MeshComponentsController : public ModelBase
                         {
                         public:
                             bool push(SceneGraphNode& node) override
                             {
-                                // 첫 번째 노드를 자동으로 선택
+                                // 泥 踰吏 몃瑜 쇰 
                                 if (selectedNode == nullptr)
                                 {
                                     selectedNode = &node;
                                     UpdateMeshComponents(node);
                                 }
 
-                                // 트리를 확장하지 않음 (간단하게 메쉬만 표시)
+                                // 몃━瑜 ν吏  (媛⑦寃 硫щ )
                                 return false; 
                             }
 
@@ -188,22 +188,22 @@ namespace Engine
 
                                     ImGui::PushID(static_cast<int>(i));
 
-                                    // 메쉬 보이기 상태를 위한 체크박스
+                                    // 硫 蹂댁닿린 瑜  泥댄щ
                                     bool isVisible = comp.mesh->GetVisible();
                                     if (ImGui::Checkbox("##MeshVisible", &isVisible))
                                         comp.mesh->SetVisible(isVisible);
 
                                     ImGui::SameLine();
 
-                                    // 메쉬 이름 표시 (버튼으로 한다면 아래 주석 해제)
+                                    // 硫 대  (踰쇱쇰 ㅻ㈃  二쇱 댁)
                                     ImGui::Text("%s", comp.name.c_str());
 
-                                    // 속성 바로 표시
+                                    //  諛濡 
                                     ImGui::Indent();
                                     ImGui::TextColored({ 0.7f, 0.7f, 0.7f, 1.0f }, "Properties:");
                                     ImGui::Indent();
 
-                                    // 메쉬 보이기 상태
+                                    // 硫 蹂댁닿린 
                                     ImGui::Checkbox("Visible", &isVisible);
                                     if (isVisible != comp.mesh->GetVisible())
                                         comp.mesh->SetVisible(isVisible);
@@ -223,28 +223,28 @@ namespace Engine
                                 bool isSelected = false;
                             };
 
-                            SceneGraphNode* selectedNode = nullptr;     // 현재 선택된 노드
-                            std::vector<MeshComponent> meshComponents;  // 메쉬 컴포넌트 목록
-                            int selectedMeshIndex = -1;                 // 선택된 메쉬 컴포넌트 인덱스
+                            SceneGraphNode* selectedNode = nullptr;     //   몃
+                            std::vector<MeshComponent> meshComponents;  // 硫 而댄щ 紐⑸
+                            int selectedMeshIndex = -1;                 //  硫 而댄щ 몃깆
                         };
 
                         static MeshComponentsController meshController;
                         auto modelObj = std::static_pointer_cast<Model>(modelComponent);
 
-                        // 모델 내부 구조에서 메쉬 수집
+                        // 紐⑤ 대 援ъ“ 硫 吏
                         modelObj->Accept(meshController);
 
-                        // 메쉬 컴포넌트 목록 표시
+                        // 硫 而댄щ 紐⑸ 
                         meshController.ShowMeshComponents();
                     }
                 }
 
                 else if (auto meshComponent = selectObject->GetComponent("MeshComponent"))
                 {
-                    // MeshComponent가 선택되어 있지 않다면 Mesh 정보 표시
-                    if (selectComponent != meshComponent) // 이미 선택되어 있다면 중복 표시 방지
+                    // MeshComponent媛  吏 ㅻ㈃ Mesh �蹂 
+                    if (selectComponent != meshComponent) // 대�  ㅻ㈃ 以蹂  諛⑹
                     {
-                        // MeshComponent에서 메쉬들을 표시하는 클래스
+                        // MeshComponent 硫щㅼ  대
                         class MeshInfoController
                         {
                         public:
@@ -273,14 +273,14 @@ namespace Engine
 
                                     ImGui::PushID(static_cast<int>(i));
 
-                                    // 메쉬 보이기 상태를 위한 체크박스
+                                    // 硫 蹂댁닿린 瑜  泥댄щ
                                     bool isVisible = comp.mesh->GetVisible();
                                     if (ImGui::Checkbox("##MeshVisible", &isVisible))
                                         comp.mesh->SetVisible(isVisible);
 
                                     ImGui::SameLine();
 
-                                    // 메쉬 선택 버튼
+                                    // 硫  踰
                                     bool isSelected = (selectedMeshIndex == static_cast<int>(i));
 
                                     if (isSelected)
@@ -291,7 +291,7 @@ namespace Engine
                                         selectedMeshIndex = static_cast<int>(i);
                                         comp.isSelected = true;
 
-                                        // 다른 메쉬는 선택 해제
+                                        // ㅻⅨ 硫щ  댁
                                         for (size_t j = 0; j < meshComponents.size(); j++)
                                         {
                                             if (j != i)
@@ -305,14 +305,14 @@ namespace Engine
                                     ImGui::PopID();
                                 }
 
-                                // 선택된 메쉬의 속성 표시
+                                //  硫ъ  
                                 if (selectedMeshIndex >= 0 && selectedMeshIndex < meshComponents.size())
                                 {
                                     ShowSelectedMeshProperties(meshComponents[selectedMeshIndex].mesh);
                                 }
                             }
 
-                            // 선택된 메쉬에 대한 속성 창을 표시
+                            //  硫ъ   李쎌 
                             void ShowSelectedMeshProperties(Mesh* mesh)
                             {
                                 if (!mesh)
@@ -321,12 +321,12 @@ namespace Engine
                                 ImGui::Separator();
                                 ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Mesh Properties");
 
-                                // 메쉬 보이기 상태
+                                // 硫 蹂댁닿린 
                                 bool isVisible = mesh->GetVisible();
                                 if (ImGui::Checkbox("Visible", &isVisible))
                                     mesh->SetVisible(isVisible);
 
-                                // TechniqueEditor를 사용하여 메쉬의 기타 속성 표시
+                                // TechniqueEditor瑜 ъ⑺ 硫ъ 湲고  
                                 TechniqueEditor editor;
                                 mesh->Accept(editor);
                             }
@@ -339,8 +339,8 @@ namespace Engine
                                 bool isSelected = false;
                             };
 
-                            std::vector<MeshInfo> meshComponents;   // 메쉬 컴포넌트 목록
-                            int selectedMeshIndex = -1;             // 선택된 메쉬 컴포넌트 인덱스
+                            std::vector<MeshInfo> meshComponents;   // 硫 而댄щ 紐⑸
+                            int selectedMeshIndex = -1;             //  硫 而댄щ 몃깆
                         };
 
                         static MeshInfoController meshInfoController;
@@ -352,7 +352,7 @@ namespace Engine
                     }
                 }
 
-                // 선택된 컴포넌트의 세부 내용 표시
+                //  而댄щ몄 몃 댁 
                 if (selectComponent)
                 {
                     ImGui::Separator();
@@ -363,13 +363,13 @@ namespace Engine
                         selectComponent->GetClassName().c_str()
                     );
 
-                    // 컴포넌트 속성 표시 - 기본 속성부터 표시
+                    // 而댄щ   - 湲곕낯 깅 
                     bool compIsActive = selectComponent->GetEnable();
 
                     if (ImGui::Checkbox("Component Active", &compIsActive))
                         selectComponent->SetEnable(compIsActive);
 
-                    // TransformComponent는 삭제할 수 없음
+                    // TransformComponent �  
                     if (selectComponent->GetClassName() == "TransformComponent")
                         ImGui::TextDisabled("Transform component is always required and cannot be removed.");
 
@@ -394,7 +394,7 @@ namespace Engine
                     else if (selectComponent->GetClassName() == "PhysicsComponent")
                         PhysicsComponentEditor();
 
-                    // 다른 컴포넌트 타입에 대한 특정 UI를 여기에 추가
+                    // ㅻⅨ 而댄щ   뱀 UI瑜 ш린 異媛
                     else
                     {
                         if (ImGui::Button("Remove Component"))
@@ -405,16 +405,16 @@ namespace Engine
                     }
                 }
 
-                // 오브젝트 기본 정보 표시
+                // ㅻ� 湲곕낯 �蹂 
                 ImGui::Separator();
                 ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Object Details");
 
-                // 활성화 상태 표시 및 변경
+                // 깊   諛 蹂寃
                 bool isActive = selectObject->GetActive();
                 if (ImGui::Checkbox("Active", &isActive))
                     selectObject->SetActive(isActive);
                     
-                // 오브젝트 이름 편집
+                // ㅻ� 대 몄
                 char objectName[256];
                 strcpy_s(objectName, 256, selectObject->GetName().c_str());
 
@@ -439,7 +439,7 @@ namespace Engine
                 using namespace std::string_literals;
                 ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, technique->GetName().c_str());
 
-                // Outline 테크닉은 체크박스를 표시하지 않음
+                // Outline щ 泥댄щㅻ� 吏 
                 if (technique->GetName() != "Outline")
                 {
                     bool isActive = technique->GetAcive();
@@ -487,16 +487,16 @@ namespace Engine
     {
         auto modelObject = std::static_pointer_cast<Model>(selectComponent);
 
-        // 트리 구조 표시
+        // 몃━ 援ъ“ 
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Model Hierarchy");
 
-        // 모델의 노드를 표시하고 메쉬를 컴포넌트처럼 관리하는 컨트롤러 클래스
+        // 紐⑤몄 몃瑜 怨 硫щ� 而댄щ몄 愿由ы 而⑦몃· 대
         class ModelHierarchyController : public ModelBase
         {
         public:
             bool push(SceneGraphNode& node) override
             {
-                // 노드 표시 (트리처럼)
+                // 몃  (몃━泥)
                 const bool isExpanded = ImGui::TreeNodeEx
                 (
                     (void*)(intptr_t)node.GetID(),
@@ -506,12 +506,12 @@ namespace Engine
                     "%s", node.GetName().c_str()
                 );
 
-                // 노드 클릭 처리
+                // 몃 대┃ 泥由
                 if (ImGui::IsItemClicked())
                 {
                     selectedNode = &node;
 
-                    // 해당 노드에 있는 메쉬들을 컴포넌트 리스트에 추가
+                    // 대 몃  硫щㅼ 而댄щ 由ъㅽ몄 異媛
                     UpdateMeshComponents(node);
                 }
 
@@ -523,7 +523,7 @@ namespace Engine
                 ImGui::TreePop();
             }
 
-            // 선택된 메쉬들을 컴포넌트 리스트로 업데이트
+            //  硫щㅼ 而댄щ 由ъㅽ몃 곗댄
             void UpdateMeshComponents(SceneGraphNode& node)
             {
                 meshComponents.clear();
@@ -539,7 +539,7 @@ namespace Engine
                 }
             }
 
-            // 메쉬 컴포넌트 목록 표시
+            // 硫 而댄щ 紐⑸ 
             void ShowMeshComponents()
             {
                 if (meshComponents.empty())
@@ -554,7 +554,7 @@ namespace Engine
 
                     ImGui::PushID(static_cast<int>(i));
 
-                    // 메쉬 보이기 상태를 위한 체크박스
+                    // 硫 蹂댁닿린 瑜  泥댄щ
                     bool isVisible = comp.mesh->GetVisible();
 
                     if (ImGui::Checkbox("##MeshVisible", &isVisible))
@@ -562,7 +562,7 @@ namespace Engine
 
                     ImGui::SameLine();
 
-                    // 컴포넌트 선택 버튼
+                    // 而댄щ  踰
                     bool isSelected = (selectedMeshIndex == static_cast<int>(i));
 
                     if (isSelected)
@@ -573,7 +573,7 @@ namespace Engine
                         selectedMeshIndex = static_cast<int>(i);
                         comp.isSelected = true;
 
-                        // 다른 메쉬는 선택 해제
+                        // ㅻⅨ 硫щ  댁
                         for (size_t j = 0; j < meshComponents.size(); j++)
                         {
                             if (j != i)
@@ -587,12 +587,12 @@ namespace Engine
                     ImGui::PopID();
                 }
 
-                // 선택된 메쉬의 속성 표시
+                //  硫ъ  
                 if (selectedMeshIndex >= 0 && selectedMeshIndex < meshComponents.size())
                     ShowSelectedMeshProperties(meshComponents[selectedMeshIndex].mesh);
             }
 
-            // 선택된 메쉬에 대한 속성 창을 표시
+            //  硫ъ   李쎌 
             void ShowSelectedMeshProperties(Mesh* mesh)
             {
                 if (!mesh)
@@ -601,13 +601,13 @@ namespace Engine
                 ImGui::Separator();
                 ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Mesh Properties");
 
-                // 메쉬 보이기 상태
+                // 硫 蹂댁닿린 
                 bool isVisible = mesh->GetVisible();
 
                 if (ImGui::Checkbox("Visible", &isVisible))
                     mesh->SetVisible(isVisible);
 
-                // TechniqueEditor를 사용하여 메쉬의 기타 속성 표시
+                // TechniqueEditor瑜 ъ⑺ 硫ъ 湲고  
                 TechniqueEditor editor;
                 mesh->Accept(editor);
             }
@@ -620,19 +620,19 @@ namespace Engine
                 bool isSelected = false;
             };
 
-            SceneGraphNode* selectedNode = nullptr;     // 현재 선택된 노드    
-            std::vector<MeshComponent> meshComponents;  // 메쉬 컴포넌트 목록
+            SceneGraphNode* selectedNode = nullptr;     //   몃    
+            std::vector<MeshComponent> meshComponents;  // 硫 而댄щ 紐⑸
 
-            int selectedMeshIndex = -1;                 // 선택된 메쉬 컴포넌트 인덱스
+            int selectedMeshIndex = -1;                 //  硫 而댄щ 몃깆
         };
 
-        // 모델 계층 구조 컨트롤러 생성
+        // 紐⑤ 怨痢 援ъ“ 而⑦몃· 
         static ModelHierarchyController controller;
 
-        // 모델 계층 구조 표시
+        // 紐⑤ 怨痢 援ъ“ 
         modelObject->Accept(controller);
 
-        // 메쉬 컴포넌트 목록 표시
+        // 硫 而댄щ 紐⑸ 
         controller.ShowMeshComponents();
     }
 
@@ -640,36 +640,36 @@ namespace Engine
     {
         auto meshComponent = std::static_pointer_cast<MeshComponent>(selectComponent);
 
-        // 메쉬 목록 표시
+        // 硫 紐⑸ 
         ImGui::Separator();
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Meshes");
 
         auto& meshes = meshComponent->GetMeshes();
 
-        // 메쉬 배열이 비어있으면 메쉬가 없다고 표시
+        // 硫 諛곗댁 鍮댁쇰㈃ 硫ш ㅺ� 
         if (meshes.empty())
         {
             ImGui::TextDisabled("No meshes available");
             return;
         }
 
-        // 각 메쉬 표시
+        // 媛 硫 
         for (size_t i = 0; i < meshes.size(); i++)
         {
             auto mesh = meshes[i];
 
             ImGui::PushID(static_cast<int>(i));
 
-            // 메쉬 속성 접기식 메뉴
+            // 硫  �湲곗 硫
             if (ImGui::TreeNode(("Properties##" + std::to_string(i)).c_str()))
             {
-                // 메쉬 보이기
+                // 硫 蹂댁닿린
                 bool isVisible = mesh->GetVisible();
 
                 if (ImGui::Checkbox("Visible##Detail", &isVisible))
                     mesh->SetVisible(isVisible);
 
-                // 기타 속성 표시
+                // 湲고  
                 TechniqueEditor editor;
                 mesh->Accept(editor);
 
@@ -682,20 +682,20 @@ namespace Engine
 
     void Inspector::CameraEditor() noexcept
     {
-        // CameraContainer의 전역 UI를 먼저 표시
+        // CameraContainer � UI瑜 癒쇱 
         ImGui::TextColored({ 0.4f, 0.8f, 1.0f, 1.0f }, "Camera Selection");
 
-        // CameraContainer 인스턴스 가져오기
+        // CameraContainer 몄ㅽ댁 媛�몄ㅺ린
         auto scene = Scene::GetActiveScene();
         auto& cameraContainer = scene->GetCameraContainer();
 
-        // CameraContainer가 Inspector에 UI 창을 표시
+        // CameraContainer媛 Inspector UI 李쎌 
         cameraContainer.SpawnInspectorWidgets();
 
         ImGui::Separator();
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Camera Properties");
 
-        // 카메라 컴포넌트의 개별 속성 표시
+        // 移대 而댄щ몄 媛蹂  
         auto cameraComponent = std::static_pointer_cast<Camera>(selectComponent);
         cameraComponent->SpawnControlWidgets();
     }
@@ -707,17 +707,17 @@ namespace Engine
         ImGui::Separator();
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Physics Properties");
 
-        // 기본 물리 설정
+        // 湲곕낯 臾쇰━ ㅼ
         if (ImGui::CollapsingHeader("Basic Settings", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            // 운동학적 객체(Kinematic) 설정
+            // 대� 媛泥(Kinematic) ㅼ
             bool isKinematic = physicsComponent->IsKinematic();
 
             if (ImGui::Checkbox("Is Kinematic", &isKinematic))
             {
                 physicsComponent->SetKinematic(isKinematic);
                 
-                // 키네마틱 설정 시 툴팁 표시
+                // ㅻㅻ ㅼ  댄 
                 if (isKinematic && ImGui::IsItemHovered())
                 {
                     ImGui::BeginTooltip();
@@ -727,15 +727,15 @@ namespace Engine
                 }
             }
             
-            // 키네마틱이 아닐 때만 중력 및 질량 설정 표시
+            // ㅻㅻ깆  留 以� 諛 吏 ㅼ 
             if (!isKinematic)
             {
-                // 중력 사용 여부
+                // 以� ъ щ
                 bool useGravity = physicsComponent->IsGravityEnabled();
                 if (ImGui::Checkbox("Use Gravity", &useGravity))
                     physicsComponent->SetGravity(useGravity);
                 
-                // 중력 사용 시 중력 스케일 설정
+                // 以� ъ  以� ㅼ ㅼ
                 if (useGravity)
                 {
                     float gravityScale = physicsComponent->GetGravityScale();
@@ -751,14 +751,14 @@ namespace Engine
                     }
                 }
 
-                // 질량 설정
+                // 吏 ㅼ
                 float mass = physicsComponent->GetMass();
 
                 if (ImGui::DragFloat("Mass", &mass, 0.1f, 0.1f, 1000.0f))
                     physicsComponent->SetMass(mass);
             }
             
-            // 충돌 감지 모드 선택
+            // 異⑸ 媛吏 紐⑤ 
             static const char* collisionModes[] = { "Discrete", "Continuous", "Continuous Dynamic" };
             int currentMode = static_cast<int>(physicsComponent->GetCollisionDetectionMode());
             
@@ -775,7 +775,7 @@ namespace Engine
             }
         }
 
-        // 전역 중력 설정
+        // � 以� ㅼ
         if (ImGui::CollapsingHeader("Global Gravity"))
         {
             physx::PxVec3 gravity = PhysicsComponent::GetGlobalGravity();
@@ -791,7 +791,7 @@ namespace Engine
             ImGui::TextDisabled("Default: (0, -9.81, 0)");
         }
 
-        // 물질 속성
+        // 臾쇱 
         if (ImGui::CollapsingHeader("Material Properties"))
         {
             float staticFriction = physicsComponent->GetStaticFriction();
@@ -836,7 +836,7 @@ namespace Engine
             if (materialChanged)
                 physicsComponent->SetMaterial(staticFriction, dynamicFriction, restitution);
             
-            // 미리 정의된 프리셋 버튼들
+            // 誘몃━ � 由ъ 踰쇰
             ImGui::Separator();
             ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Material Presets:");
             
@@ -864,10 +864,10 @@ namespace Engine
                 physicsComponent->SetMaterial(0.2f, 0.2f, 0.95f);
         }
 
-        // 공기 저항 및 감쇠
+        // 怨듦린 � 諛 媛
         if (ImGui::CollapsingHeader("Damping & Drag"))
         {
-            // 선형 감쇠 (이동 속도 감소)
+            //  媛 (대  媛)
             float linearDamping = physicsComponent->GetLinearDamping();
             if (ImGui::SliderFloat("Linear Damping", &linearDamping, 0.0f, 10.0f))
                 physicsComponent->SetLinearDamping(linearDamping);
@@ -880,7 +880,7 @@ namespace Engine
                 ImGui::EndTooltip();
             }
             
-            // 각 감쇠 (회전 속도 감소)
+            // 媛 媛 (�  媛)
             float angularDamping = physicsComponent->GetAngularDamping();
             if (ImGui::SliderFloat("Angular Damping", &angularDamping, 0.0f, 10.0f))
                 physicsComponent->SetAngularDamping(angularDamping);
@@ -893,7 +893,7 @@ namespace Engine
                 ImGui::EndTooltip();
             }
             
-            // 공기 저항 계수 (추가 감쇠)
+            // 怨듦린 � 怨 (異媛 媛)
             float dragCoefficient = physicsComponent->GetDragCoefficient();
             if (ImGui::SliderFloat("Drag Coefficient", &dragCoefficient, 0.0f, 5.0f, "%.2f"))
                 physicsComponent->SetDragCoefficient(dragCoefficient);
@@ -906,7 +906,7 @@ namespace Engine
                 ImGui::EndTooltip();
             }
             
-            // 프리셋 버튼들
+            // 由ъ 踰쇰
             ImGui::Separator();
             ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Environment Presets:");
             
@@ -945,7 +945,7 @@ namespace Engine
             }
         }
 
-        // 제약 조건
+        // � 議곌굔
         if (ImGui::CollapsingHeader("Constraints"))
         {
             ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Freeze Position");
@@ -997,7 +997,7 @@ namespace Engine
             if (rotationChanged)
                 physicsComponent->SetFreezeRotation(freezeRotX, freezeRotY, freezeRotZ);
 
-            // 축별 제약 조건 버튼들
+            // 異蹂 � 議곌굔 踰쇰
             ImGui::Separator();
             ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Common Constraints:");
 
@@ -1014,12 +1014,12 @@ namespace Engine
                 physicsComponent->SetFreezePosition(false, false, false);
                 physicsComponent->SetFreezeRotation(false, false, false);
 
-                // 씬이 있는지 확인
+                // ъ 吏 
                 auto scene = Scene::GetActiveScene();
 
                 if (scene == nullptr)
                 {
-                    // 명시적으로 깨우기
+                    // 紐�쇰 源⑥곌린
                     if (auto actor = physicsComponent->GetActor())
                     {
                         if (physicsComponent->IsKinematic() == false)
@@ -1027,7 +1027,7 @@ namespace Engine
                             physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
                             dynamicActor->wakeUp();
 
-                            // 중력이 없을 때 약간의 힘 가하기
+                            // 以�μ   쎄  媛湲
                             if (!physicsComponent->IsGravityEnabled())
                                 dynamicActor->addForce(physx::PxVec3(0.0f, 0.1f, 0.0f), physx::PxForceMode::eIMPULSE);
                         }
@@ -1044,12 +1044,12 @@ namespace Engine
             }
         }
 
-        // 콜라이더 설정
+        // 肄쇱대 ㅼ
         if (ImGui::CollapsingHeader("Collider"))
         {
             ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Collider Size:");
             
-            // 충돌체 크기 업데이트 버튼
+            // 異⑸泥 ш린 곗댄 踰
             if (ImGui::Button("Update Collider Size"))
                 physicsComponent->UpdateColliderSize();
             
@@ -1063,7 +1063,7 @@ namespace Engine
             }
         }
 
-        // 컴포넌트 삭제 버튼
+        // 而댄щ � 踰
         ImGui::Separator();
 
         if (ImGui::Button("Remove Physics Component", ImVec2(-1, 0)))

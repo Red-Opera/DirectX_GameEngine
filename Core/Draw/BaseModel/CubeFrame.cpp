@@ -94,6 +94,7 @@ TriangleIndexList CubeFrame::CreateTextureFrame()
 		.AddType(VertexType::Texture2D)
 	));
 
+	// ÅØ½ºÃ³ ÁÂÇ¥ ¼³Á¤
 	textureVertices.vertices[0].GetValue<VertexType::Texture2D>() = { 0.0f,0.0f };
 	textureVertices.vertices[1].GetValue<VertexType::Texture2D>() = { 1.0f,0.0f };
 	textureVertices.vertices[2].GetValue<VertexType::Texture2D>() = { 0.0f,1.0f };
@@ -118,6 +119,31 @@ TriangleIndexList CubeFrame::CreateTextureFrame()
 	textureVertices.vertices[21].GetValue<VertexType::Texture2D>() = { 1.0f,0.0f };
 	textureVertices.vertices[22].GetValue<VertexType::Texture2D>() = { 0.0f,1.0f };
 	textureVertices.vertices[23].GetValue<VertexType::Texture2D>() = { 1.0f,1.0f };
+
+	// ³ë¸Ö º¤ÅÍ ¼³Á¤
+	// ¾Õ¸é (Front): z = -1
+	for (int i = 0; i < 4; i++)
+		textureVertices.vertices[i].GetValue<VertexType::Normal>() = { 0.0f, 0.0f, -1.0f };
+	
+	// µÞ¸é (Back): z = 1
+	for (int i = 4; i < 8; i++)
+		textureVertices.vertices[i].GetValue<VertexType::Normal>() = { 0.0f, 0.0f, 1.0f };
+	
+	// ¿ÞÂÊ¸é (Left): x = -1
+	for (int i = 8; i < 12; i++)
+		textureVertices.vertices[i].GetValue<VertexType::Normal>() = { -1.0f, 0.0f, 0.0f };
+	
+	// ¿À¸¥ÂÊ¸é (Right): x = 1
+	for (int i = 12; i < 16; i++)
+		textureVertices.vertices[i].GetValue<VertexType::Normal>() = { 1.0f, 0.0f, 0.0f };
+	
+	// ¾Æ·¡¸é (Bottom): y = -1
+	for (int i = 16; i < 20; i++)
+		textureVertices.vertices[i].GetValue<VertexType::Normal>() = { 0.0f, -1.0f, 0.0f };
+	
+	// À­¸é (Top): y = 1
+	for (int i = 20; i < 24; i++)
+		textureVertices.vertices[i].GetValue<VertexType::Normal>() = { 0.0f, 1.0f, 0.0f };
 
 	return textureVertices;
 }

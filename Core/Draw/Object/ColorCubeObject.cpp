@@ -15,9 +15,6 @@ void ColorCubeObject::Initialize()
 {
 	auto model = isLit ? CubeFrame::CreateTextureFrame() : CubeFrame::CreateFrame();
 
-	if (isLit)
-		model.SetNormalVector();
-
 	SetRenderingPipeline(color, isLit, model);
 
 	ColorObject::Initialize();
