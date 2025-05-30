@@ -1,4 +1,4 @@
-癤#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SponzaScene.h"
 
 #include "Core/Camera/Camera.h"
@@ -47,23 +47,24 @@ void SponzaScene::Initialize()
 	std::shared_ptr<Object> cube = AddObject(Object::Create("White Cube"));
 	cube->AddComponent<ColorCubeObject>();
 
-    // 중력이 작용하는 물리 큐브 생성 
-    std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
-    physicsCube->AddComponent<ColorCubeObject>();
-    physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 2000.0f, 0.0f);
-    physicsCube->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
-    
-    // 臾쇰━ 而댄щ 異媛 (吏 10, � 媛泥)
-    physicsCube->AddComponent<PhysicsComponent>(10.0f, true);
-    
-    // 諛 硫  (�� 臾쇰━ 媛泥)
-    std::shared_ptr<Object> ground = AddObject(Object::Create("Ground Plane"));
+	// 중력이 작용하는 물리 큐브 생성 
+	std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
+	physicsCube->AddComponent<ColorCubeObject>();
+	physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 20.0f, 0.0f);
+	physicsCube->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
+
+	// 물리 컴포넌트 추가 (질량 10, 동적 객체)
+	physicsCube->AddComponent<PhysicsComponent>(10.0f, true);
+
+	// 바닥 평면 생성 (정적 물리 객체)
+	std::shared_ptr<Object> ground = AddObject(Object::Create("Ground Plane"));
 	ground->AddComponent<ColorCubeObject>();
-    ground->GetComponent<TransformComponent>()->SetPosition(0.0f, 0.0f, 0.0f);
-    ground->GetComponent<TransformComponent>()->SetScale(10.0f, 1.0f, 10.0f);
-    
-    // �� 臾쇰━ 而댄щ 異媛 (吏 0, �� 媛泥)
-    ground->AddComponent<PhysicsComponent>(0.0f, false);
+	ground->GetComponent<TransformComponent>()->SetPosition(0.0f, 0.0f, 0.0f);
+	ground->GetComponent<TransformComponent>()->SetScale(20.0f, 0.1f, 20.0f);
+	ground->GetComponent<ColorCubeObject>()->SetColor(GraphicResource::Image::Color(0, 255, 0));
+
+	// 정적 물리 컴포넌트 추가 (질량 0, 정적 객체)
+	ground->AddComponent<PhysicsComponent>(0.0f, false);
 
 	std::shared_ptr<Object> pointLight = AddObject(Object::Create("PointLight"));
 	std::shared_ptr<PointLight> pointComponent = pointLight->AddComponent<PointLight>();
