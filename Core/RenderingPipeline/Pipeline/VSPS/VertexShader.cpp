@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "VertexShader.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -46,7 +46,7 @@ namespace Graphic
     {
         CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-        // Vertex Shader ´Ü°è¸¦ ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ ´Ü°è¿¡ ¹­À½
+        // Vertex Shader ë‹¨ê³„ë¥¼ ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ë‹¨ê³„ì— ë¬¶ìŒ
         GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetShader(vertexShader.Get(), nullptr, 0));
     }
 

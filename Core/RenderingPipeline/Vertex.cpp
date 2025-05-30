@@ -1,4 +1,4 @@
-#pragma warning(disable: 4603)
+ï»¿#pragma warning(disable: 4603)
 
 #include "stdafx.h"
 #define USE_VERTEX_CODE
@@ -18,7 +18,7 @@ namespace VertexCore
 		static constexpr auto Run() noexcept { return VertexLayout::Map<type>::code; }
 	};
 
-	// Input Layout DESC¸¦ ¸¸µé¾îÁÖ´Â ¸Ş¼Òµå
+	// Input Layout DESCë¥¼ ë§Œë“¤ì–´ì£¼ëŠ” ë©”ì†Œë“œ
 	template<VertexLayout::VertexType type>
 	struct CreateInputDESC
 	{
@@ -195,21 +195,21 @@ namespace VertexCore
 
 	Vertex VertexBuffer::back() NOEXCEPTRELEASE
 	{
-		assert("Á¤Á¡ Å¸ÀÔ Á¤º¸°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù." && (buffer.size() != 0));
+		assert("ì •ì  íƒ€ì… ì •ë³´ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤." && (buffer.size() != 0));
 
-		// ¾²·¡±â °ªÀÌ ÀÖ´õ¶óµµ ±× °ªÀ» ¹İÈ¯ ÇÔ
+		// ì“°ë˜ê¸° ê°’ì´ ìˆë”ë¼ë„ ê·¸ ê°’ì„ ë°˜í™˜ í•¨
 		return Vertex{ buffer.data() + buffer.size() - vertexLayout.size(), vertexLayout };
 	}
 
 	Vertex VertexBuffer::front() NOEXCEPTRELEASE
 	{
-		assert("Á¤Á¡ Å¸ÀÔ Á¤º¸°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù." && (buffer.size() != 0));
+		assert("ì •ì  íƒ€ì… ì •ë³´ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤." && (buffer.size() != 0));
 		return Vertex{ buffer.data(), vertexLayout };
 	}
 
 	Vertex VertexBuffer::operator[](size_t i) NOEXCEPTRELEASE
 	{
-		assert("Á¤Á¡ Å¸ÀÔ Á¤º¸ ¹è¿­ ±æÀÌ¸¦ ³Ñ¾ú½À´Ï´Ù." && (i < count()));
+		assert("ì •ì  íƒ€ì… ì •ë³´ ë°°ì—´ ê¸¸ì´ë¥¼ ë„˜ì—ˆìŠµë‹ˆë‹¤." && (i < count()));
 		return Vertex{ buffer.data() + vertexLayout.size() * i, vertexLayout };
 	}
 

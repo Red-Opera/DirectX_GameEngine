@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "stdafx.h"
 #include "DxGraphic.h"
@@ -36,7 +36,7 @@ public:
 
 		const char* what() const noexcept override;
 		
-		// ¿¹¿Ü Á¤º¸¿¡ °üÇÑ ¸Ş¼Òµå
+		// ì˜ˆì™¸ ì •ë³´ì— ê´€í•œ ë©”ì†Œë“œ
 		const char* GetType() const noexcept override;
 		HRESULT GetErrorCode() const noexcept;
 		std::string GetExptionContent() const noexcept;
@@ -64,38 +64,38 @@ public:
 
 	static void SetTitle(HWND hWnd, const std::string title);
 
-	// Ä¿¼­ °ü·Ã ¸Ş¼Òµå
-	void EnableCursor() noexcept;				// Ä¿¼­¸¦ »ç¿ëÇÒ ¼ö ÀÖµµ·Ï ¼³Á¤ÇÏ´Â ¸Ş¼Òµå
-	void DisableCursor() noexcept;				// Ä¿¼­¸¦ »ç¿ëÇÒ ¼ö ¾øµµ·Ï ¼³Á¤ÇÏ´Â ¸Ş¼Òµå
-	bool GetCursorEnabled() const noexcept;		// Ä¿¼­ »ç¿ëÇÒ ¼ö ÀÖ´Â ¿©ºÎ¸¦ ¹İÈ¯ÇÏ´Â ¸Ş¼Òµå
+	// ì»¤ì„œ ê´€ë ¨ ë©”ì†Œë“œ
+	void EnableCursor() noexcept;				// ì»¤ì„œë¥¼ ì‚¬ìš©í•  ìˆ˜ ìˆë„ë¡ ì„¤ì •í•˜ëŠ” ë©”ì†Œë“œ
+	void DisableCursor() noexcept;				// ì»¤ì„œë¥¼ ì‚¬ìš©í•  ìˆ˜ ì—†ë„ë¡ ì„¤ì •í•˜ëŠ” ë©”ì†Œë“œ
+	bool GetCursorEnabled() const noexcept;		// ì»¤ì„œ ì‚¬ìš©í•  ìˆ˜ ìˆëŠ” ì—¬ë¶€ë¥¼ ë°˜í™˜í•˜ëŠ” ë©”ì†Œë“œ
 
-	// È°¼º SceneGraph ¼³Á¤/°¡Á®¿À±â
+	// í™œì„± SceneGraph ì„¤ì •/ê°€ì ¸ì˜¤ê¸°
 	static void SetActiveSceneGraph(std::shared_ptr<SceneGraph> sceneGraph) { activeSceneGraph = sceneGraph; }
 	static std::shared_ptr<SceneGraph> GetActiveSceneGraph() { return activeSceneGraph; }
 
 	static std::optional<int> ProcessMessages() noexcept;
 	static void ShowGameFrame(HWND hWnd) noexcept;
 
-	int GetClientWidht() { return width; }			// Å¬¶óÀÌ¾ğÆ® Ã¢ ³Êºñ
-	int GetClientHeight() { return height; }		// Å¬¶óÀÌ¾ğÆ® Ã¢ ³ôÀÌ
+	int GetClientWidht() { return width; }			// í´ë¼ì´ì–¸íŠ¸ ì°½ ë„ˆë¹„
+	int GetClientHeight() { return height; }		// í´ë¼ì´ì–¸íŠ¸ ì°½ ë†’ì´
 
-	static void SetDxGraphic(std::unique_ptr<DxGraphic> graphic);	// ±×·¡ÇÈ °ü·Ã Å¬·¡½º¸¦ ¼³Á¤ÇÏ´Â ¸Ş¼Òµå
-	static DxGraphic& GetDxGraphic();								// ±×·¡ÇÈ °ü·Ã Å¬·¡½º¸¦ ¾ò´Â ¸Ş¼Òµå
+	static void SetDxGraphic(std::unique_ptr<DxGraphic> graphic);	// ê·¸ë˜í”½ ê´€ë ¨ í´ë˜ìŠ¤ë¥¼ ì„¤ì •í•˜ëŠ” ë©”ì†Œë“œ
+	static DxGraphic& GetDxGraphic();								// ê·¸ë˜í”½ ê´€ë ¨ í´ë˜ìŠ¤ë¥¼ ì–»ëŠ” ë©”ì†Œë“œ
 	HWND GetHWnd() const { return hWnd; }
 
 	// =================================
 	//	Class Parameter
 	// =================================
 
-	Keyboard keyBoard;	// Å°º¸µå Å¬·¡½º
-	Mouse mouse;		// ¸¶¿ì½º Å¬·¡½º
+	Keyboard keyBoard;	// í‚¤ë³´ë“œ í´ë˜ìŠ¤
+	Mouse mouse;		// ë§ˆìš°ìŠ¤ í´ë˜ìŠ¤
 
 private:
 	// =================================
 	//	Inner Class
 	// =================================
 
-	// Window Ã¢Àº ÇÑ°³ÀÌ±â ¶§¹®¿¡ ½Ì±ÛÅæÀ¸·Î ÀÛ¼º
+	// Window ì°½ì€ í•œê°œì´ê¸° ë•Œë¬¸ì— ì‹±ê¸€í†¤ìœ¼ë¡œ ì‘ì„±
 	class WindowClass
 	{
 	public:
@@ -106,7 +106,7 @@ private:
 		WindowClass() noexcept;
 		~WindowClass();
 
-		// º¹»ç ´ëÀÔ ±İÁö
+		// ë³µì‚¬ ëŒ€ì… ê¸ˆì§€
 		WindowClass(const WindowClass&) = delete;
 		WindowClass& operator=(const WindowClass&) = delete;
 
@@ -120,11 +120,11 @@ private:
 	//	Class Method
 	// =================================
 
-	// Ä¿¼­ °ü·Ã ¸Ş¼Òµå
-	void ConfineCursor() noexcept;			// Ä¿¼­¸¦ Æ¯Á¤ ¿µ¿ª¾È¿¡ Á¦ÇÑÇÏ´Â ¸Ş¼Òµå
-	void FreeCursor() noexcept;				// Ä¿¼­ ÀÌµ¿Á¦ÇÑÀÌ ¾øµµ·Ï ¼³Á¤ÇÏ´Â ¸Ş¼Òµå
-	void ShowCursor() noexcept;				// Ä¿¼­¸¦ º¸ÀÌ±â À§ÇÑ ¸Ş¼Òµå
-	void HideCursor() noexcept;				// Ä¿¼­¸¦ °¨Ãß±â À§ÇÑ ¸Ş¼Òµå
+	// ì»¤ì„œ ê´€ë ¨ ë©”ì†Œë“œ
+	void ConfineCursor() noexcept;			// ì»¤ì„œë¥¼ íŠ¹ì • ì˜ì—­ì•ˆì— ì œí•œí•˜ëŠ” ë©”ì†Œë“œ
+	void FreeCursor() noexcept;				// ì»¤ì„œ ì´ë™ì œí•œì´ ì—†ë„ë¡ ì„¤ì •í•˜ëŠ” ë©”ì†Œë“œ
+	void ShowCursor() noexcept;				// ì»¤ì„œë¥¼ ë³´ì´ê¸° ìœ„í•œ ë©”ì†Œë“œ
+	void HideCursor() noexcept;				// ì»¤ì„œë¥¼ ê°ì¶”ê¸° ìœ„í•œ ë©”ì†Œë“œ
 	void EnableImGuiMouse() noexcept;
 	void DisableImGuiMouse() noexcept;
 	
@@ -137,14 +137,14 @@ private:
 	//	Class Parameter
 	// =================================
 
-	bool cursorEnabled = true;			// Ä¿¼­°¡ º¸ÀÌ´Â ¿©ºÎ
+	bool cursorEnabled = true;			// ì»¤ì„œê°€ ë³´ì´ëŠ” ì—¬ë¶€
 	
-	int width;							// Å¬¶óÀÌ¾ğÆ® Ã¢ ³Êºñ
-	int height;							// Å¬¶óÀÌ¾ğÆ® Ã¢ ³ôÀÌ
+	int width;							// í´ë¼ì´ì–¸íŠ¸ ì°½ ë„ˆë¹„
+	int height;							// í´ë¼ì´ì–¸íŠ¸ ì°½ ë†’ì´
 
 	HWND hWnd;
 
-	static std::unique_ptr<DxGraphic> graphic; // DierctX 3D ±×·¡ÇÈ Å¬·¡½º
+	static std::unique_ptr<DxGraphic> graphic; // DierctX 3D ê·¸ë˜í”½ í´ë˜ìŠ¤
 	static std::shared_ptr<SceneGraph> activeSceneGraph;
 
 	std::vector<BYTE> rawBuffer;

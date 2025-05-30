@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "CameraProjection.h"
 #include "CameraIndicator.h"
@@ -21,17 +21,17 @@ public:
 		bool isTethered = false
 	) noexcept;
 
-	DirectX::XMMATRIX GetMatrix() const noexcept;			// Ä«¸Ş¶óÀÇ Matrix¸¦ ¹İÈ¯ÇÔ
+	DirectX::XMMATRIX GetMatrix() const noexcept;			// ì¹´ë©”ë¼ì˜ Matrixë¥¼ ë°˜í™˜í•¨
 	DirectX::XMMATRIX GetProjection() const noexcept;
 	
-	void SpawnControlWidgets() noexcept;					// Ä«¸Ş¶ó¸¦ Á¶ÀıÇÒ ¼ö ÀÖ´Â ImGui¸¦ »ı¼ºÇÔ
-	void Reset() noexcept;									// Ä«¸Ş¶ó À§Ä¡ ÃÊ±âÈ­
+	void SpawnControlWidgets() noexcept;					// ì¹´ë©”ë¼ë¥¼ ì¡°ì ˆí•  ìˆ˜ ìˆëŠ” ImGuië¥¼ ìƒì„±í•¨
+	void Reset() noexcept;									// ì¹´ë©”ë¼ ìœ„ì¹˜ ì´ˆê¸°í™”
 	
 	void Rotate(float dx, float dy) noexcept;
 	void Translate(Position translation) noexcept;
 
 	void SetPosition(const Position& position) noexcept;
-	Position& GetPosition() const noexcept;					// Ä«¸Ş¶ó À§Ä¡¸¦ ¹İÈ¯ÇÔ
+	Position& GetPosition() const noexcept;					// ì¹´ë©”ë¼ ìœ„ì¹˜ë¥¼ ë°˜í™˜í•¨
 	const std::string GetName() const noexcept;
 
 	void LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph);
@@ -52,8 +52,8 @@ private:
 	CameraIndicator indicator;
 	CameraProjection projection;
 
-	static constexpr float moveSpeed = 12.0f;		// Ä«¸Ş¶ó ÀÌµ¿ ¼Óµµ
-	static constexpr float rotationSpeed = 0.0004f;	// Ä«¸Ş¶ó È¸Àü ¼Óµµ
+	static constexpr float moveSpeed = 12.0f;		// ì¹´ë©”ë¼ ì´ë™ ì†ë„
+	static constexpr float rotationSpeed = 0.0004f;	// ì¹´ë©”ë¼ íšŒì „ ì†ë„
 
 	bool isEnableIndicator = false;
 	bool isEnableFrustumIndicator = false;

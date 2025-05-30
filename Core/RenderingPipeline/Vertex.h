@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <vector>
 #include <type_traits>
@@ -164,7 +164,7 @@ namespace VertexCore
 #undef TYPE
 			}
 
-			assert("ÇØ´ç Vertex TypeÀº Á¸ÀçÇÏÁö ¾ÊÀ½" && false);
+			assert("í•´ë‹¹ Vertex Typeì€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ" && false);
 
 			return VertexTypeTarget<VertexLayout::Count>::Run(std::forward<Args>(data)...);
 		}
@@ -174,50 +174,50 @@ namespace VertexCore
 		public:
 			VertexInfo(VertexType type, size_t offset);
 
-			// ÀÔ·ÂµÈ VertexType¿¡ ´Ù¶ó ½ÇÁ¦ ¸Ş¸ğ¸® Å©±â¸¦ ÄÄÆÄÀÏ Å¸ÀÓ¿¡ ¹İÈ¯ÇØÁÖ´Â ÇÔ¼ö
+			// ì…ë ¥ëœ VertexTypeì— ë‹¤ë¼ ì‹¤ì œ ë©”ëª¨ë¦¬ í¬ê¸°ë¥¼ ì»´íŒŒì¼ íƒ€ì„ì— ë°˜í™˜í•´ì£¼ëŠ” í•¨ìˆ˜
 			static const constexpr size_t GetTypeSize(VertexType type) NOEXCEPTRELEASE;
 
-			size_t GetNextOffset() const NOEXCEPTRELEASE;					// ÀÌ µ¥ÀÌÅÍ Æ÷ÇÔÇßÀ» ¶§ ´ÙÀ½ µ¥ÀÌÅÍ À§Ä¡¸¦ ³ªÅ¸³»´Â ¸Ş¼Òµå
-			size_t GetOffset() const;										// ÀÌ µ¥ÀÌÅÍ°¡ ½ÃÀÛÇÏ´Â À§Ä¡
-			size_t size() const NOEXCEPTRELEASE;							// ÀÌ µ¥ÀÌÅÍ Å¸ÀÔÀÇ Å©±â
+			size_t GetNextOffset() const NOEXCEPTRELEASE;					// ì´ ë°ì´í„° í¬í•¨í–ˆì„ ë•Œ ë‹¤ìŒ ë°ì´í„° ìœ„ì¹˜ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë©”ì†Œë“œ
+			size_t GetOffset() const;										// ì´ ë°ì´í„°ê°€ ì‹œì‘í•˜ëŠ” ìœ„ì¹˜
+			size_t size() const NOEXCEPTRELEASE;							// ì´ ë°ì´í„° íƒ€ì…ì˜ í¬ê¸°
 
-			VertexType GetType() const noexcept;							// Å¸ÀÔ Á¤º¸¸¦ °¡Á®¿À´Â ¸Ş¼Òµå
-			D3D11_INPUT_ELEMENT_DESC GetInputDESC() const NOEXCEPTRELEASE;	// Input LayoutÀÇ DESC¸¦ °¡Á®¿À´Â ¸Ş¼Òµå
+			VertexType GetType() const noexcept;							// íƒ€ì… ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ëŠ” ë©”ì†Œë“œ
+			D3D11_INPUT_ELEMENT_DESC GetInputDESC() const NOEXCEPTRELEASE;	// Input Layoutì˜ DESCë¥¼ ê°€ì ¸ì˜¤ëŠ” ë©”ì†Œë“œ
 
 			const char* GetCode() const noexcept;
 
 		private:
-			// Input Layout DESC¸¦ ¸¸µé¾îÁÖ´Â ¸Ş¼Òµå
+			// Input Layout DESCë¥¼ ë§Œë“¤ì–´ì£¼ëŠ” ë©”ì†Œë“œ
 			//template<VertexType type>
 			//static constexpr D3D11_INPUT_ELEMENT_DESC CreateInputDESC(size_t offset) noexcept
 			//{
 			//	return { Map<type>::semantic, 0, Map<type>::dxgiFormat, 0, (UINT)offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 			//}
 
-			VertexType type;	// Á¤Á¡ Å¸ÀÔ
-			size_t offset;		// ÇØ´ç Á¤Á¡ Å¸ÀÔÀÇ ½ÃÀÛ ¸Ş¸ğ¸® À§Ä¡
+			VertexType type;	// ì •ì  íƒ€ì…
+			size_t offset;		// í•´ë‹¹ ì •ì  íƒ€ì…ì˜ ì‹œì‘ ë©”ëª¨ë¦¬ ìœ„ì¹˜
 		};
 
-		// ÇØÀå Á¤Á¡ Å¸ÀÔÀÌ ÀúÀåµÇ¾î ÀÖ´Â Á¤º¸¸¦ °¡Á®¿À´Â ¸Ş¼Òµå
+		// í•´ì¥ ì •ì  íƒ€ì…ì´ ì €ì¥ë˜ì–´ ìˆëŠ” ì •ë³´ë¥¼ ê°€ì ¸ì˜¤ëŠ” ë©”ì†Œë“œ
 		template<VertexType Type>
 		const VertexInfo GetVertexInfo() const NOEXCEPTRELEASE
 		{
-			// ÇØ´ç Å¸ÀÔÀÇ Á¤·Î
+			// í•´ë‹¹ íƒ€ì…ì˜ ì •ë¡œ
 			for (auto& info : vertexInfo)
 			{
 				if (info.GetType() == Type)
 					return info;
 			}
 
-			assert("µî·ÏµÈ Á¤Á¡ Á¤º¸°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù." && false);
+			assert("ë“±ë¡ëœ ì •ì  ì •ë³´ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤." && false);
 
 			return vertexInfo.front();
 		}
 
-		const VertexInfo& GetVertexInfoFromIndex(size_t i) const NOEXCEPTRELEASE;	// ÀÎµ¦½º¸¦ ÅëÇØ¼­ Á¤Á¡ Å¸ÀÔÀ» °¡Á®¿À´Â ¸Ş¼Òµå
-		VertexLayout& AddType(VertexType type) NOEXCEPTRELEASE;						// Á¤Á¡ Å¸ÀÔ¿¡ ÇØ´ç Å¸ÀÔÀÇ Á¤º¸¸¦ Ãß°¡ÇÏ´Â ¸Ş¼Òµå
+		const VertexInfo& GetVertexInfoFromIndex(size_t i) const NOEXCEPTRELEASE;	// ì¸ë±ìŠ¤ë¥¼ í†µí•´ì„œ ì •ì  íƒ€ì…ì„ ê°€ì ¸ì˜¤ëŠ” ë©”ì†Œë“œ
+		VertexLayout& AddType(VertexType type) NOEXCEPTRELEASE;						// ì •ì  íƒ€ì…ì— í•´ë‹¹ íƒ€ì…ì˜ ì •ë³´ë¥¼ ì¶”ê°€í•˜ëŠ” ë©”ì†Œë“œ
 
-		// Á¤Á¡ Å¸ÀÔµéÀÇ ÃÑ Å©±â, Á¤Á¡ °³¼ö
+		// ì •ì  íƒ€ì…ë“¤ì˜ ì´ í¬ê¸°, ì •ì  ê°œìˆ˜
 		size_t size() const NOEXCEPTRELEASE;
 		size_t count() const noexcept;
 		std::vector<D3D11_INPUT_ELEMENT_DESC> GetInputElement() const NOEXCEPTRELEASE;
@@ -234,7 +234,7 @@ namespace VertexCore
 		friend class VertexBuffer;
 
 	public:
-		// ÇØ´ç Å¸ÀÔ¿¡ ¸Â´Â Vertex Á¤º¸¿¡¼­ Type¿¡ ¸Â´Â °ªÀ» ¹İÈ¯ÇÔ
+		// í•´ë‹¹ íƒ€ì…ì— ë§ëŠ” Vertex ì •ë³´ì—ì„œ Typeì— ë§ëŠ” ê°’ì„ ë°˜í™˜í•¨
 		template<VertexLayout::VertexType Type>
 		auto& GetValue() NOEXCEPTRELEASE
 		{
@@ -266,7 +266,7 @@ namespace VertexCore
 			}
 		};
 
-		// ¿©·¯°³ Á¤Á¡ Å¸ÀÔÀ» ¹Ş°í Àç±Í¸¦ ÅëÇØ¼­ ÇÑ°³¾¿ Ã³¸®¸¦ ÇÏ°í ±× ÇÑ°³´Â 
+		// ì—¬ëŸ¬ê°œ ì •ì  íƒ€ì…ì„ ë°›ê³  ì¬ê·€ë¥¼ í†µí•´ì„œ í•œê°œì”© ì²˜ë¦¬ë¥¼ í•˜ê³  ê·¸ í•œê°œëŠ” 
 		template<typename First, typename ...Rest>
 		void SetVertexFromIndex(size_t i, First&& first, Rest&&... rest) NOEXCEPTRELEASE
 		{
@@ -283,14 +283,14 @@ namespace VertexCore
 				*reinterpret_cast<Dest*>(vertex) = val;
 
 			else
-				assert("º¯¼ö Å¸ÀÔÀÌ ÀÏÄ¡ÇÏÁö ¾ÊÀ½" && false);
+				assert("ë³€ìˆ˜ íƒ€ì…ì´ ì¼ì¹˜í•˜ì§€ ì•ŠìŒ" && false);
 		}
 
 		char* data = nullptr;
 		const VertexLayout& vertexLayout;
 	};
 
-	// Á¤Á¡ µ¥ÀÌÅÍ¸¦ ºÁ²Ü ¼ö ¾ø´Â Á¤Á¡ (ÀĞ±â Àü¿ë)
+	// ì •ì  ë°ì´í„°ë¥¼ ë´ê¿€ ìˆ˜ ì—†ëŠ” ì •ì  (ì½ê¸° ì „ìš©)
 	class ConstVertex
 	{
 	public:
@@ -327,18 +327,18 @@ namespace VertexCore
 		template<typename ...Params>
 		void emplace_back(Params&&... params) NOEXCEPTRELEASE
 		{
-			// ÀÔ·ÂÇÑ Vertex Å¸ÀÔ Á¤º¸ °³¼ö¿Í ÀúÀåµÈ Á¤Á¡ Å¸ÀÔ °³¼ö°¡ ¸Â´ÂÁö È®ÀÎ
-			assert(sizeof...(params) == vertexLayout.count() && "ÀÔ·ÂÇÑ Á¤Á¡ Å¸ÀÔ °³¼ö°¡ Ãß°¡ÇÑ Vertex Layout °³¼ö¿Í ÀÏÄ¡ÇÏÁö ¾ÊÀ½");
+			// ì…ë ¥í•œ Vertex íƒ€ì… ì •ë³´ ê°œìˆ˜ì™€ ì €ì¥ëœ ì •ì  íƒ€ì… ê°œìˆ˜ê°€ ë§ëŠ”ì§€ í™•ì¸
+			assert(sizeof...(params) == vertexLayout.count() && "ì…ë ¥í•œ ì •ì  íƒ€ì… ê°œìˆ˜ê°€ ì¶”ê°€í•œ Vertex Layout ê°œìˆ˜ì™€ ì¼ì¹˜í•˜ì§€ ì•ŠìŒ");
 
-			// Ãß°¡µÇ´Â layoutÀÇ »çÀÌÁî¸¸Å­ ´Ã¸²
+			// ì¶”ê°€ë˜ëŠ” layoutì˜ ì‚¬ì´ì¦ˆë§Œí¼ ëŠ˜ë¦¼
 			buffer.resize(buffer.size() + vertexLayout.size());
 
 			back().SetVertexFromIndex(0, std::forward<Params>(params)...);
 		}
 
 	private:
-		std::vector<char> buffer;	// Vertex BufferÀÇ µ¥ÀÌÅÍ
-		VertexLayout vertexLayout;	// Vertex BufferÀÇ Vertex Layout
+		std::vector<char> buffer;	// Vertex Bufferì˜ ë°ì´í„°
+		VertexLayout vertexLayout;	// Vertex Bufferì˜ Vertex Layout
 	};
 }
 

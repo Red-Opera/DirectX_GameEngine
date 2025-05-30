@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/RenderingPipeline/Render.h"
 
@@ -13,7 +13,7 @@ namespace Graphic
 		static std::string CreateID();
 		std::string GetID() const noexcept override;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 	};
 }

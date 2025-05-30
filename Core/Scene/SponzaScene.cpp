@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ç™¤#include "stdafx.h"
 #include "SponzaScene.h"
 
 #include "Core/Camera/Camera.h"
@@ -43,24 +43,26 @@ void SponzaScene::Initialize()
 	chair->GetComponent<TransformComponent>()->SetRotation(Math::PI / 2.0f, -Math::PI / 2.0f, 0.0f);
 	chair->GetComponent<TransformComponent>()->SetPosition(-60.0f, 6.5f, 1.5f);
 
+
 	std::shared_ptr<Object> cube = AddObject(Object::Create("White Cube"));
 	cube->AddComponent<ColorCubeObject>();
 
-    // Áß·ÂÀÌ ÀÛ¿ëÇÏ´Â ¹°¸® Å¥ºê »ı¼º 
+    // ì¤‘ë ¥ì´ ì‘ìš©í•˜ëŠ” ë¬¼ë¦¬ íë¸Œ ìƒì„± 
     std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
     physicsCube->AddComponent<ColorCubeObject>();
-    physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 20.0f, 0.0f);
+    physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 2000.0f, 0.0f);
     physicsCube->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
     
-    // ¹°¸® ÄÄÆ÷³ÍÆ® Ãß°¡ (Áú·® 10, µ¿Àû °´Ã¼)
+    // è‡¾ì‡°â” è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ç•°Â”åª›Â€ (ï§ÂˆÂŸÂ‰ 10, Â™ï¿½Â åª›Âï§£)
     physicsCube->AddComponent<PhysicsComponent>(10.0f, true);
     
-    // ¹Ù´Ú Æò¸é »ı¼º (Á¤Àû ¹°¸® °´Ã¼)
+    // è«›Â”Â‹ Â‰ï§ ÂƒÂÂ„ (ï¿½Â•ï¿½Â è‡¾ì‡°â” åª›Âï§£)
     std::shared_ptr<Object> ground = AddObject(Object::Create("Ground Plane"));
+	ground->AddComponent<ColorCubeObject>();
     ground->GetComponent<TransformComponent>()->SetPosition(0.0f, 0.0f, 0.0f);
-    ground->GetComponent<TransformComponent>()->SetScale(50.0f, 0.1f, 50.0f);
+    ground->GetComponent<TransformComponent>()->SetScale(10.0f, 1.0f, 10.0f);
     
-    // Á¤Àû ¹°¸® ÄÄÆ÷³ÍÆ® Ãß°¡ (Áú·® 0, Á¤Àû °´Ã¼)
+    // ï¿½Â•ï¿½Â è‡¾ì‡°â” è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ç•°Â”åª›Â€ (ï§ÂˆÂŸÂ‰ 0, ï¿½Â•ï¿½Â åª›Âï§£)
     ground->AddComponent<PhysicsComponent>(0.0f, false);
 
 	std::shared_ptr<Object> pointLight = AddObject(Object::Create("PointLight"));

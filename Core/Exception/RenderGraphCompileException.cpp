@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "RenderGraphCompileException.h"
 
 #include <sstream>
@@ -25,7 +25,7 @@ namespace RenderGraphNameSpace
 
 	const char* RenderGraphicCompileException::GetType() const noexcept
 	{
-		return "Render Graphic ÄÄÆÄÀÏ ¿¹¿Ü";
+		return "Render Graphic ì»´íŒŒì¼ ì˜ˆì™¸";
 	}
 
 	const std::string& RenderGraphicCompileException::GetMessage() const noexcept

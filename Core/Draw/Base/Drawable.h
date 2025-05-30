@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../../DxGraphic.h"
 
@@ -48,10 +48,10 @@ public:
 	DirectX::XMFLOAT3 GetBoundingSphereCenter() const noexcept;
 	float GetBoundingSphereRadius() const noexcept;
 
-	// View Frustum Culling Ã¼Å©
+	// View Frustum Culling ì²´í¬
 	bool IsInViewFrustum(const CameraViewFrustumCulling& viewFrustum) const noexcept;
 
-	virtual DirectX::XMMATRIX GetTransformMatrix() const noexcept = 0;	// ¿ÀºêÁ§Æ®ÀÇ TransformÀÇ Çà·ÄÀ» ¹İÈ¯
+	virtual DirectX::XMMATRIX GetTransformMatrix() const noexcept = 0;	// ì˜¤ë¸Œì íŠ¸ì˜ Transformì˜ í–‰ë ¬ì„ ë°˜í™˜
 	virtual ~Drawable();
 
 protected:
@@ -61,7 +61,7 @@ protected:
 	std::shared_ptr<Graphic::VertexBuffer> vertexBuffer;
 	std::shared_ptr<Graphic::PrimitiveTopology> primitiveTopology;
 
-	// ¹Ù¿îµù ±¸ Á¤º¸ Ãß°¡
+	// ë°”ìš´ë”© êµ¬ ì •ë³´ ì¶”ê°€
 	DirectX::XMFLOAT3 m_boundingSphereCenter = { 0.0f, 0.0f, 0.0f };
 	float m_boundingSphereRadius = 1.0f;
 };

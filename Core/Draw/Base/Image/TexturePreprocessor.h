@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 
 #include "Image.h"
@@ -39,19 +39,19 @@ inline void TexturePreprocessor::TransformFile(const std::string& pathIn, const 
 template<typename FUNCTION>
 inline void TexturePreprocessor::TransformImage(GraphicResource::Image& image, FUNCTION&& func)
 {
-	// ¸ÓÆ¼¸®¾óÀÇ ³Êºñ¿Í ³ôÀÌ¸¦ °¡Á®¿È
+	// ë¨¸í‹°ë¦¬ì–¼ì˜ ë„ˆë¹„ì™€ ë†’ì´ë¥¼ ê°€ì ¸ì˜´
 	const auto width = image.GetWidth();
 	const auto height = image.GetHeight();
 
-	// °¢ ÇÈ¼¿¿¡ ´ëÇØ º¯È¯ ÇÔ¼ö¸¦ Àû¿ë
+	// ê° í”½ì…€ì— ëŒ€í•´ ë³€í™˜ í•¨ìˆ˜ë¥¼ ì ìš©
 	for (UINT y = 0; y < height; y++)
 	{
 		for (UINT x = 0; x < width; x++)
 		{
-			// ÇöÀç ÇÈ¼¿ÀÇ »ö»óÀ» º¤ÅÍ·Î º¯È¯
+			// í˜„ì¬ í”½ì…€ì˜ ìƒ‰ìƒì„ ë²¡í„°ë¡œ ë³€í™˜
 			const auto noraml = GraphicResource::Image::Color::ConvertVector(image.GetColorPixel(x, y));
 
-			// º¯È¯ ÇÔ¼ö¸¦ Àû¿ëÇÑ ÈÄ ´Ù½Ã »ö»óÀ¸·Î º¯È¯ÇÏ¿© ÇÈ¼¿¿¡ ¼³Á¤
+			// ë³€í™˜ í•¨ìˆ˜ë¥¼ ì ìš©í•œ í›„ ë‹¤ì‹œ ìƒ‰ìƒìœ¼ë¡œ ë³€í™˜í•˜ì—¬ í”½ì…€ì— ì„¤ì •
 			image.SetColorPixel(x, y, Vector::ConvertColor(func(noraml, x, y)));
 		}
 	}

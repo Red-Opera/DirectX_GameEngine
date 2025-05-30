@@ -1,10 +1,10 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "SceneGraphNode.h"
 #include "Mesh.h"
 #include "ModelBase.h"
 
 #include "Core/Component/MeshComponent.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Object/Object.h"
 #include "External/Imgui/imgui.h"
 
@@ -29,15 +29,15 @@ SceneGraphNode::SceneGraphNode(int id, const std::string& name, std::vector<Mesh
 
 void SceneGraphNode::Submit(size_t channel, DirectX::FXMMATRIX parentWorldTransform) const NOEXCEPTRELEASE
 {
-	// ºÎ¸ð¸¦ °ÉÃÄ º¯ÇÑ transform °ªÀ» ÀÌ ¿ÀºêÁ§Æ®¸¦ °öÇÏ¿© ÀÌ ¿ÀºêÁ§Æ®ÀÇ World Transform °ªÀ» ±¸ÇÔ
+	// ë¶€ëª¨ë¥¼ ê±¸ì³ ë³€í•œ transform ê°’ì„ ì´ ì˜¤ë¸Œì íŠ¸ë¥¼ ê³±í•˜ì—¬ ì´ ì˜¤ë¸Œì íŠ¸ì˜ World Transform ê°’ì„ êµ¬í•¨
 	const auto thisLocalTransform = transformComponent->GetLocalTransformMatrix();
 	const auto thisWorldTransform = thisLocalTransform * parentWorldTransform;
 
-	// Mesh¸¦ ±×¸²
+	// Meshë¥¼ ê·¸ë¦¼
 	for (const auto meshPtr : meshPtrs)
 		meshPtr->Submit(channel, thisWorldTransform);
 
-	// ÀÚ½Äµµ ÀÌ ³ëµåÃ³·³ ±×¸®µµ·Ï Áö½Ã
+	// ìžì‹ë„ ì´ ë…¸ë“œì²˜ëŸ¼ ê·¸ë¦¬ë„ë¡ ì§€ì‹œ
 	for (const auto& child : childPtrs)
 		child->Submit(channel, thisWorldTransform);
 }
@@ -86,7 +86,7 @@ const std::vector<Mesh*>& SceneGraphNode::GetMeshPtrs() const noexcept
 
 void SceneGraphNode::AddChild(std::unique_ptr<SceneGraphNode> child) NOEXCEPTRELEASE
 {
-	assert(child && "Ãß°¡ÇÒ ÀÚ½Ä ³ëµå°¡ À¯È¿ÇÏÁö ¾Ê½À´Ï´Ù.");
+	assert(child && "ì¶”ê°€í•  ìžì‹ ë…¸ë“œê°€ ìœ íš¨í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
 
 	child->transformComponent->SetParent(transformComponent);
 	transformComponent->AddChild(child->transformComponent);

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ShadowSamplerState.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -76,7 +76,7 @@ namespace Graphic
 
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 
-		// Sampler State¸¦ »ý¼ºÇÔ
+		// Sampler Stateë¥¼ ìƒì„±í•¨
 		hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
 		GRAPHIC_THROW_INFO(hr);
 

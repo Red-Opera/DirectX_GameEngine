@@ -1,8 +1,9 @@
-#pragma once
+Ôªø#pragma once
 
 #include <DirectXMath.h>
 
 #include "Core/Draw/Base/Image/Image.h"
+#include "External/physx/physX/include/foundation/PxVec3.h"
 
 using namespace DirectX;
 
@@ -14,7 +15,7 @@ class Vector
 {
 public:
 	// ==============================================
-	//			XMFLOAT3 : 3¬˜ø¯ ∫§≈Õ
+	//			XMFLOAT3 : 3Ï∞®Ïõê Î≤°ÌÑ∞
 	// ==============================================
 
 	static constexpr XMFLOAT3 forward	= XMFLOAT3( 0.0f,  0.0f,  1.0f);
@@ -26,7 +27,7 @@ public:
 	static constexpr XMFLOAT3 allDir	= XMFLOAT3( 1.0f,  1.0f,  1.0f);
 
 	// ==============================================
-	//			XMVECTOR : 4¬˜ø¯ ∫§≈Õ
+	//			XMVECTOR : 4Ï∞®Ïõê Î≤°ÌÑ∞
 	// ==============================================
 
 	static const XMVECTOR forwardV;
@@ -40,10 +41,11 @@ public:
 	static float GetLength(const XMVECTOR& vec);
 
 	// ==============================================
-	//			XMFLOAT3, XMVECTOR to Convert
+	//					Convert
 	// ==============================================
 
 	static GraphicResource::Image::Color ConvertColor(DirectX::XMVECTOR vector);
+	static Vector3 ConvertVector3(const DirectX::XMFLOAT3& vector3);
 	static XMVECTOR ConvertXMVECTOR(const class Vector3& vector3);
 	static XMVECTOR ConvertXMVECTOR(const class Vector4& vector4);
 
@@ -51,7 +53,7 @@ public:
 	//			XMFLOAT4X4 to Position, Rotate
 	// ==============================================
 
-	static DirectX::XMFLOAT3 GetEulerAngle(const DirectX::XMFLOAT4X4& matrix);
+	static Vector3 GetEulerAngle(const DirectX::XMFLOAT4X4& matrix);
 	static DirectX::XMFLOAT3 GetPosition(const DirectX::XMFLOAT4X4& matrix);
 };
 
@@ -78,6 +80,8 @@ public:
 	bool operator==(const Vector2& vector) const;
 	bool operator==(const Vector3& vector) const;
 	bool operator==(const Vector4& vector) const;
+
+	float GetLength() const;
 
 	static const Vector2 zero;
 	static const Vector2 up;
@@ -110,6 +114,10 @@ public:
 	bool operator==(const Vector2& vector) const;
 	bool operator==(const Vector3& vector) const;
 	bool operator==(const Vector4& vector) const;
+
+	static physx::PxVec3 ConvertPxVec3(const class Vector3& vector3);
+
+	float GetLength() const;
 
 	static const Vector3 zero;
 	static const Vector3 forward;
@@ -147,6 +155,8 @@ public:
 	bool operator==(const Vector2& vector) const;
 	bool operator==(const Vector3& vector) const;
 	bool operator==(const Vector4& vector) const;
+
+	float GetLength() const;
 
 	static const Vector4 zero;
 	static const Vector4 forward;

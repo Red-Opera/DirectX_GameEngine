@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Drawable.h"
 
 #include "Core/Draw/Base/Material.h"
@@ -20,7 +20,7 @@ Drawable::Drawable(const Material& material, const aiMesh& mesh, float scale) no
 	for (auto& tech : material.GetTechnique())
 		AddTechnique(std::move(tech));
 
-	// ¸Ş½Ã¿¡¼­ ¹Ù¿îµù ½ºÇÇ¾î °è»ê
+	// ë©”ì‹œì—ì„œ ë°”ìš´ë”© ìŠ¤í”¼ì–´ ê³„ì‚°
 	CalculateBoundingSphere(mesh, scale);
 }
 
@@ -87,7 +87,7 @@ void Drawable::CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept
 {
 #undef max
 #undef min
-    // ¸Ş½Ã¿¡ Á¤Á¡ÀÌ ¾ø´Â °æ¿ì ±âº» ¹Ù¿îµù ½ºÇÇ¾î »ç¿ë
+    // ë©”ì‹œì— ì •ì ì´ ì—†ëŠ” ê²½ìš° ê¸°ë³¸ ë°”ìš´ë”© ìŠ¤í”¼ì–´ ì‚¬ìš©
     if (mesh.mNumVertices == 0)
     {
         m_boundingSphereCenter = { 0.0f, 0.0f, 0.0f };
@@ -95,46 +95,46 @@ void Drawable::CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept
         return;
     }
 
-    // ¸Ş½ÃÀÇ AABB(Axis-Aligned Bounding Box) ±¸ÇÏ±â
+    // ë©”ì‹œì˜ AABB(Axis-Aligned Bounding Box) êµ¬í•˜ê¸°
     XMFLOAT3 minPoint = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
     XMFLOAT3 maxPoint = { std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest(), std::numeric_limits<float>::lowest() };
 
-    // ¸ğµç Á¤Á¡À» °Ë»çÇÏ¿© ÃÖ¼Ò/ÃÖ´ë ÁÂÇ¥ Ã£±â
+    // ëª¨ë“  ì •ì ì„ ê²€ì‚¬í•˜ì—¬ ìµœì†Œ/ìµœëŒ€ ì¢Œí‘œ ì°¾ê¸°
     for (unsigned int i = 0; i < mesh.mNumVertices; i++)
     {
         float x = mesh.mVertices[i].x * scale;
         float y = mesh.mVertices[i].y * scale;
         float z = mesh.mVertices[i].z * scale;
 
-        // ÃÖ¼Ò°ª ¾÷µ¥ÀÌÆ®
+        // ìµœì†Œê°’ ì—…ë°ì´íŠ¸
         minPoint.x = std::min(minPoint.x, x);
         minPoint.y = std::min(minPoint.y, y);
         minPoint.z = std::min(minPoint.z, z);
 
-        // ÃÖ´ë°ª ¾÷µ¥ÀÌÆ®
+        // ìµœëŒ€ê°’ ì—…ë°ì´íŠ¸
         maxPoint.x = std::max(maxPoint.x, x);
         maxPoint.y = std::max(maxPoint.y, y);
         maxPoint.z = std::max(maxPoint.z, z);
     }
 
-    // AABBÀÇ Áß½ÉÁ¡ °è»ê
+    // AABBì˜ ì¤‘ì‹¬ì  ê³„ì‚°
     m_boundingSphereCenter.x = (minPoint.x + maxPoint.x) * 0.5f;
     m_boundingSphereCenter.y = (minPoint.y + maxPoint.y) * 0.5f;
     m_boundingSphereCenter.z = (minPoint.z + maxPoint.z) * 0.5f;
 
-    // ¹Ù¿îµù ½ºÇÇ¾î ¹İÁö¸§ °è»ê
-    // AABB ´ë°¢¼±ÀÇ Àı¹İ ±æÀÌ¸¦ »ç¿ëÇÏ´Â ¹æ½Ä
+    // ë°”ìš´ë”© ìŠ¤í”¼ì–´ ë°˜ì§€ë¦„ ê³„ì‚°
+    // AABB ëŒ€ê°ì„ ì˜ ì ˆë°˜ ê¸¸ì´ë¥¼ ì‚¬ìš©í•˜ëŠ” ë°©ì‹
     XMVECTOR minVec = XMLoadFloat3(&minPoint);
     XMVECTOR maxVec = XMLoadFloat3(&maxPoint);
     XMVECTOR diagonal = XMVectorSubtract(maxVec, minVec);
 
-    // ¹İÁö¸§ = ´ë°¢¼± ±æÀÌÀÇ Àı¹İ
+    // ë°˜ì§€ë¦„ = ëŒ€ê°ì„  ê¸¸ì´ì˜ ì ˆë°˜
     m_boundingSphereRadius = Vector::GetLength(diagonal) * 0.5f;
 }
 
 DirectX::XMFLOAT3 Drawable::GetBoundingSphereCenter() const noexcept
 {
-    // ¿ÀºêÁ§Æ®ÀÇ º¯È¯ Çà·ÄÀ» Àû¿ëÇÏ¿© ¿ùµå °ø°£¿¡¼­ÀÇ Áß½ÉÁ¡ °è»ê
+    // ì˜¤ë¸Œì íŠ¸ì˜ ë³€í™˜ í–‰ë ¬ì„ ì ìš©í•˜ì—¬ ì›”ë“œ ê³µê°„ì—ì„œì˜ ì¤‘ì‹¬ì  ê³„ì‚°
     XMVECTOR centerVec = XMLoadFloat3(&m_boundingSphereCenter);
     XMVECTOR transformedCenter = XMVector3Transform(centerVec, GetTransformMatrix());
 
@@ -146,26 +146,26 @@ DirectX::XMFLOAT3 Drawable::GetBoundingSphereCenter() const noexcept
 
 float Drawable::GetBoundingSphereRadius() const noexcept
 {
-    // º¯È¯ Çà·Ä¿¡¼­ ÃÖ´ë ½ºÄÉÀÏ ¿ä¼Ò ÃßÃâ
+    // ë³€í™˜ í–‰ë ¬ì—ì„œ ìµœëŒ€ ìŠ¤ì¼€ì¼ ìš”ì†Œ ì¶”ì¶œ
     XMMATRIX transformMatrix = GetTransformMatrix();
 
-    // °¡Àå Å« ½ºÄÉÀÏ Ã£±â
+    // ê°€ì¥ í° ìŠ¤ì¼€ì¼ ì°¾ê¸°
     float scaleX = Vector::GetLength(transformMatrix.r[0]);
     float scaleY = Vector::GetLength(transformMatrix.r[1]);
     float scaleZ = Vector::GetLength(transformMatrix.r[2]);
     float maxScale = std::max(scaleX, std::max(scaleY, scaleZ));
 
-    // ¿ø·¡ ¹İÁö¸§¿¡ ÃÖ´ë ½ºÄÉÀÏ Àû¿ë
+    // ì›ë˜ ë°˜ì§€ë¦„ì— ìµœëŒ€ ìŠ¤ì¼€ì¼ ì ìš©
     return m_boundingSphereRadius * maxScale;
 }
 
 bool Drawable::IsInViewFrustum(const CameraViewFrustumCulling& viewFrustum) const noexcept
 {
-    // ¿ùµå °ø°£¿¡¼­ÀÇ ¹Ù¿îµù ½ºÇÇ¾î Áß½É°ú ¹İÁö¸§ ±¸ÇÏ±â
+    // ì›”ë“œ ê³µê°„ì—ì„œì˜ ë°”ìš´ë”© ìŠ¤í”¼ì–´ ì¤‘ì‹¬ê³¼ ë°˜ì§€ë¦„ êµ¬í•˜ê¸°
     DirectX::XMFLOAT3 worldCenter = GetBoundingSphereCenter();
     float worldRadius = GetBoundingSphereRadius();
 
-    // Ä«¸Ş¶ó ÀıµÎÃ¼ ³»¿¡ ¹Ù¿îµù ½ºÇÇ¾î°¡ ÀÖ´ÂÁö È®ÀÎ
+    // ì¹´ë©”ë¼ ì ˆë‘ì²´ ë‚´ì— ë°”ìš´ë”© ìŠ¤í”¼ì–´ê°€ ìˆëŠ”ì§€ í™•ì¸
     return viewFrustum.CheckSphere(worldCenter, worldRadius);
 }
 

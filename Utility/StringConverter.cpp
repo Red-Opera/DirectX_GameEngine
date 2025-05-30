@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "StringConverter.h"
 
 #include <iomanip>
@@ -57,7 +57,7 @@ bool StringConverter::IsStringContain(std::string_view text, std::string_view fi
 
 std::string StringConverter::GetAbsolutePath(const std::filesystem::path& relativePath)
 {
-	// Ã¹ ¹øÂ° //±îÁö Á¦°Å
+	// ì²« ë²ˆì§¸ //ê¹Œì§€ ì œê±°
 	std::string relativePathStr = relativePath.string();
 
 	size_t pos = relativePathStr.find("/");

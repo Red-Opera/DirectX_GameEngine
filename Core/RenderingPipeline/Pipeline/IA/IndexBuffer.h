@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/RenderManager.h"
 
@@ -10,7 +10,7 @@ namespace Graphic
 		IndexBuffer(const std::vector<unsigned short>& indices);
 		IndexBuffer(std::string path, const std::vector<USHORT>& indices);
 
-		// BindableÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Bindableì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 		UINT GetIndexCount() const noexcept;
 

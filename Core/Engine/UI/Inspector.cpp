@@ -1,10 +1,11 @@
-#include "stdafx.h"
+ç™¤#include "stdafx.h"
 #include "Inspector.h"
 
 #include "Core/Camera/Camera.h"
 #include "Core/Camera/CameraContainer.h"
 #include "Core/Component/MeshComponent.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/PhysicsComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Draw/Light/PointLight.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/ModelEditor.h"
@@ -53,13 +54,13 @@ namespace Engine
                     selectObject->GetName().c_str()
                 );
 
-                // ±âº» Á¤º¸ Ç¥½Ã
+                // æ¹²ê³•ë‚¯ Â†ÂÂ„ Â‘ÂœÂ‹Âœ
                 ImGui::Separator();
                 ImGui::Text("Transform Information");
 
                 bool isNotMatch = false;
 
-                // À§Ä¡ Á¤º¸
+                // ÂœÂ„ç§»Â˜ Â„ã…¼Â•
                 Position position = selectObject->transform->GetPosition();
                 float pos[3] = { position.x, position.y, position.z };
 
@@ -69,11 +70,12 @@ namespace Engine
                     isNotMatch = true;
                 }
 
-                // È¸Àü Á¤º¸
+                // ÂšÂŒï¿½Â„ Â„ã…¼Â•
                 Rotation rotation = selectObject->transform->GetRotation();
                 rotation.x = rotation.x * 180.0f / Math::PI;
                 rotation.y = rotation.y * 180.0f / Math::PI;
                 rotation.z = rotation.z * 180.0f / Math::PI;
+
                 float rot[3] = { rotation.x, rotation.y, rotation.z };
 
                 if (ImGui::DragFloat3("Rotation", rot, 0.1f))
@@ -89,8 +91,8 @@ namespace Engine
                     selectObject->transform->SetRotation(rot[0], rot[1], rot[2]);
                     isNotMatch = true;
                 }
-
-                // ½ºÄÉÀÏ Á¤º¸
+              
+                // ìŠ¤ì¼€ì¼ ì •ë³´
                 Scale scale = selectObject->transform->GetLocalScale();
                 float scl[3] = { scale.x, scale.y, scale.z };
 
@@ -100,7 +102,7 @@ namespace Engine
                     isNotMatch = true;
                 }
 
-                // ÄÄÆ÷³ÍÆ® ¸ñ·Ï Ç¥½Ã
+                // è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ï§â‘¸Â Â‘ÂœÂ‹Âœ
                 ImGui::Separator();
                 ImGui::Text("Components");
 
@@ -108,22 +110,22 @@ namespace Engine
 
                 for (const auto& component : components)
                 {
-                    ImGui::PushID(component.get());  // °íÀ¯ ID ºÎ¿©
+                    ImGui::PushID(component.get());  // æ€¨Âœ ID éºÂ€Â—
 
-                    // ÄÄÆ÷³ÍÆ® È°¼ºÈ­/ºñÈ°¼ºÈ­ Ã¼Å©¹Ú½º
+                    // è€ŒëŒ„Ñ‰Â„ÂŒÂŠ Â™ÂœÂ„ê¹ŠÂ™Â”/é®Â„Â™ÂœÂ„ê¹ŠÂ™Â” ï§£ëŒ„ÂÑ‰Â•ÂŠ
                     bool isActive = component->GetEnable();
                     if (ImGui::Checkbox("##ComponentActive", &isActive))
                         component->SetEnable(isActive);
 
                     ImGui::SameLine();
 
-                    // ¼±ÅÃµÈ ÄÄÆ÷³ÍÆ® ÇÏÀÌ¶óÀÌÆ® Ç¥½Ã
+                    // Â„ÂƒÂÂÂœ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ Â•Â˜ÂëŒ€Âì‡±ÂëŒ„ÂŠ Â‘ÂœÂ‹Âœ
                     bool isSelected = (selectComponent == component);
 
                     if (isSelected)
                         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.6f, 0.8f, 1.0f));
 
-                    // ÄÄÆ÷³ÍÆ® ÀÌ¸§À» ¹öÆ°À¸·Î Ç¥½ÃÇÏ¿© ¼±ÅÃ °¡´ÉÇÏ°Ô ÇÔ
+                    // è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ÂëŒ€Â„ÂÂ„ è¸°Â„ÂŠì‡±Âœì‡°Âœ Â‘ÂœÂ‹ÂœÂ•Â˜Â— Â„ÂƒÂ åª›Â€ÂŠÎ½Â•Â˜å¯ƒÂŒ Â•
                     if (ImGui::Button(component->GetClassName().c_str(), ImVec2(-1, 0)))
                     {
                         selectComponent = component;
@@ -135,26 +137,26 @@ namespace Engine
                     ImGui::PopID();
                 }
 
-                // Model ÄÄÆ÷³ÍÆ®°¡ ÀÖ´ÂÁö È®ÀÎÇÏ°í ÀÚµ¿À¸·Î Mesh ÄÄÆ÷³ÍÆ® Ç¥½Ã
+                // Model è€ŒëŒ„Ñ‰Â„ÂŒÂŠë©¸Â€ ÂÂˆÂŠÂ”ï§Â€ Â™Â•Âëª…Â•Â˜æ€¨ ÂÂÂ™Âœì‡°Âœ Mesh è€ŒëŒ„Ñ‰Â„ÂŒÂŠ Â‘ÂœÂ‹Âœ
                 if (auto modelComponent = selectObject->GetComponent("Model"))
                 {
-                    // Model ÄÄÆ÷³ÍÆ®°¡ ¼±ÅÃµÇ¾î ÀÖÁö ¾Ê´õ¶óµµ Mesh Á¤º¸¸¦ Ç¥½Ã
-                    if (selectComponent != modelComponent) // Model ÄÄÆ÷³ÍÆ®°¡ ÀÌ¹Ì ¼±ÅÃµÇ¾î ÀÖÀ¸¸é Áßº¹ Ç¥½Ã ¹æÁö
+                    // Model è€ŒëŒ„Ñ‰Â„ÂŒÂŠë©¸Â€ Â„ÂƒÂÂÂ˜Â– ÂÂˆï§Â€ Â•ÂŠÂ‹ã…»ãˆƒ Mesh ï¿½Â•è¹‚ Â‘ÂœÂ‹Âœ
+                    if (selectComponent != modelComponent) // Model è€ŒëŒ„Ñ‰Â„ÂŒÂŠë©¸Â€ ÂëŒ€ï¿½ Â„ÂƒÂÂÂ˜Â– ÂÂˆÂ‹ã…»ãˆƒ ä»¥Â‘è¹‚ Â‘ÂœÂ‹Âœ è«›â‘¹Â€
                     {
-                        // ¸ğµ¨ °èÃş ±¸Á¶¸¦ Ç¥½ÃÇÏ°í ¸Ş½Ã¸¦ ÄÄÆ÷³ÍÆ®Ã³·³ º¸¿©ÁÖ´Â ÄÁÆ®·Ñ·¯ Å¬·¡½º
+                        // ï§ Âëª„ÂÂ˜ Â…ëªƒÂ“Âœç‘œ Â‘ÂœÂ‹ÂœÂ•Â˜æ€¨ ï§Â”Â‰Ñ‰ï¿½ è€ŒëŒ„Ñ‰Â„ÂŒÂŠëª„Â˜ÂŸ æ„¿Â€ç”±Ñ‹Â•Â˜ÂŠÂ” è€Œâ‘¦ÂŠëªƒÂ·ÂŸ ÂëŒ€ÂÂ˜ÂŠ
                         class MeshComponentsController : public ModelBase
                         {
                         public:
                             bool push(SceneGraphNode& node) override
                             {
-                                // Ã¹ ¹øÂ° ³ëµå¸¦ ÀÚµ¿À¸·Î ¼±ÅÃ
+                                // ï§£ è¸°Âˆï§ Â…ëªƒÂ“Âœç‘œ ÂÂÂ™Âœì‡°Âœ Â„ÂƒÂ
                                 if (selectedNode == nullptr)
                                 {
                                     selectedNode = &node;
                                     UpdateMeshComponents(node);
                                 }
 
-                                // Æ®¸®¸¦ È®ÀåÇÏÁö ¾ÊÀ½ (°£·«ÇÏ°Ô ¸Ş½Ã¸¸ Ç¥½Ã)
+                                // ÂŠëªƒâ”ç‘œ Â™Â•ÂÎ½Â•Â˜ï§Â€ Â•ÂŠÂÂŒ (åª›Â„Â‹â‘¦Â•Â˜å¯ƒÂŒ ï§Â”Â‰Ñ‰ÂŒ Â‘ÂœÂ‹Âœ)
                                 return false; 
                             }
 
@@ -186,22 +188,22 @@ namespace Engine
 
                                     ImGui::PushID(static_cast<int>(i));
 
-                                    // ¸Ş½Ã °¡½Ã¼º Åä±ÛÀ» À§ÇÑ Ã¼Å©¹Ú½º
+                                    // ï§Â”Â‰ è¹‚ëŒÂë‹¿ë¦° ÂƒÂÂƒÂœç‘œ ÂœÂ„Â•Âœ ï§£ëŒ„ÂÑ‰Â•ÂŠ
                                     bool isVisible = comp.mesh->GetVisible();
                                     if (ImGui::Checkbox("##MeshVisible", &isVisible))
                                         comp.mesh->SetVisible(isVisible);
 
                                     ImGui::SameLine();
 
-                                    // ¸Ş½Ã ÀÌ¸§ Ç¥½Ã (¹öÆ°À¸·Î ÇÑ´Ù¸é ¾Æ·¡ ÁÖ¼® ÇØÁ¦)
+                                    // ï§Â”Â‰ ÂëŒ€Â„ Â‘ÂœÂ‹Âœ (è¸°Â„ÂŠì‡±Âœì‡°Âœ Â•ÂœÂ‹ã…»ãˆƒ Â•Â„ÂÂ˜ äºŒì‡±Â„Â Â•ëŒÂœ)
                                     ImGui::Text("%s", comp.name.c_str());
 
-                                    // ¼Ó¼º ¹Ù·Î Ç¥½Ã
+                                    // Â†ÂÂ„ è«›Â”æ¿¡Âœ Â‘ÂœÂ‹Âœ
                                     ImGui::Indent();
                                     ImGui::TextColored({ 0.7f, 0.7f, 0.7f, 1.0f }, "Properties:");
                                     ImGui::Indent();
 
-                                    // ¸Ş½Ã °¡½Ã¼º ¼³Á¤
+                                    // ï§Â”Â‰ è¹‚ëŒÂë‹¿ë¦° ÂƒÂÂƒÂœ
                                     ImGui::Checkbox("Visible", &isVisible);
                                     if (isVisible != comp.mesh->GetVisible())
                                         comp.mesh->SetVisible(isVisible);
@@ -221,28 +223,28 @@ namespace Engine
                                 bool isSelected = false;
                             };
 
-                            SceneGraphNode* selectedNode = nullptr;     // ÇöÀç ¼±ÅÃµÈ ³ëµå
-                            std::vector<MeshComponent> meshComponents;  // ¸Ş½Ã ÄÄÆ÷³ÍÆ® ¸ñ·Ï
-                            int selectedMeshIndex = -1;                 // ¼±ÅÃµÈ ¸Ş½Ã ÄÄÆ÷³ÍÆ® ÀÎµ¦½º
+                            SceneGraphNode* selectedNode = nullptr;     // Â˜Â„Â Â„ÂƒÂÂÂœ Â…ëªƒÂ“Âœ
+                            std::vector<MeshComponent> meshComponents;  // ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ï§â‘¸Â
+                            int selectedMeshIndex = -1;                 // Â„ÂƒÂÂÂœ ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ÂëªƒÂê¹†ÂŠ
                         };
 
                         static MeshComponentsController meshController;
                         auto modelObj = std::static_pointer_cast<Model>(modelComponent);
 
-                        // ¸ğµ¨ÀÇ °èÃş ±¸Á¶¿¡¼­ ¸Ş½Ã ÃßÃâ
+                        // ï§â‘¤Â Â‚ëŒ€Â€ æ´ÑŠâ€œÂ—ÂÂ„Âœ ï§Â”Â‰ ÂˆÂ˜ï§Â‘
                         modelObj->Accept(meshController);
 
-                        // ¸Ş½Ã ÄÄÆ÷³ÍÆ® ¸ñ·Ï Ç¥½Ã
+                        // ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ï§â‘¸Â Â‘ÂœÂ‹Âœ
                         meshController.ShowMeshComponents();
                     }
                 }
 
                 else if (auto meshComponent = selectObject->GetComponent("MeshComponent"))
                 {
-                    // MeshComponent°¡ ¼±ÅÃµÇ¾î ÀÖÁö ¾Ê´õ¶óµµ Mesh Á¤º¸¸¦ Ç¥½Ã
-                    if (selectComponent != meshComponent) // ÀÌ¹Ì ¼±ÅÃµÇ¾î ÀÖÀ¸¸é Áßº¹ Ç¥½Ã ¹æÁö
+                    // MeshComponentåª›Â€ Â„ÂƒÂÂÂ˜Â– ÂÂˆï§Â€ Â•ÂŠÂ‹ã…»ãˆƒ Mesh ï¿½Â•è¹‚ Â‘ÂœÂ‹Âœ
+                    if (selectComponent != meshComponent) // ÂëŒ€ï¿½ Â„ÂƒÂÂÂ˜Â– ÂÂˆÂ‹ã…»ãˆƒ ä»¥Â‘è¹‚ Â‘ÂœÂ‹Âœ è«›â‘¹Â€
                     {
-                        // MeshComponent¿¡¼­ ¸Ş½ÃµéÀ» Ç¥½ÃÇÏ´Â Å¬·¡½º
+                        // MeshComponentÂ—ÂÂ„Âœ ï§Â”Â‰Ñ‰Â“ã…¼ÂÂ„ Â‘ÂœÂ‹ÂœÂ•Â˜ÂŠÂ” ÂëŒ€ÂÂ˜ÂŠ
                         class MeshInfoController
                         {
                         public:
@@ -271,14 +273,14 @@ namespace Engine
 
                                     ImGui::PushID(static_cast<int>(i));
 
-                                    // ¸Ş½Ã °¡½Ã¼º Åä±ÛÀ» À§ÇÑ Ã¼Å©¹Ú½º
+                                    // ï§Â”Â‰ è¹‚ëŒÂë‹¿ë¦° ÂƒÂÂƒÂœç‘œ ÂœÂ„Â•Âœ ï§£ëŒ„ÂÑ‰Â•ÂŠ
                                     bool isVisible = comp.mesh->GetVisible();
                                     if (ImGui::Checkbox("##MeshVisible", &isVisible))
                                         comp.mesh->SetVisible(isVisible);
 
                                     ImGui::SameLine();
 
-                                    // ¸Ş½Ã ¼±ÅÃ ¹öÆ°
+                                    // ï§Â”Â‰ Â„ÂƒÂ è¸°Â„ÂŠ
                                     bool isSelected = (selectedMeshIndex == static_cast<int>(i));
 
                                     if (isSelected)
@@ -289,7 +291,7 @@ namespace Engine
                                         selectedMeshIndex = static_cast<int>(i);
                                         comp.isSelected = true;
 
-                                        // ´Ù¸¥ ¸Ş½Ã´Â ¼±ÅÃ ÇØÁ¦
+                                        // Â‹ã…»â…¨ ï§Â”Â‰Ñ‰ÂŠÂ” Â„ÂƒÂ Â•ëŒÂœ
                                         for (size_t j = 0; j < meshComponents.size(); j++)
                                         {
                                             if (j != i)
@@ -303,14 +305,14 @@ namespace Engine
                                     ImGui::PopID();
                                 }
 
-                                // ¼±ÅÃµÈ ¸Ş½ÃÀÇ ¼Ó¼º Ç¥½Ã
+                                // Â„ÂƒÂÂÂœ ï§Â”Â‰ÑŠÂÂ˜ Â†ÂÂ„ Â‘ÂœÂ‹Âœ
                                 if (selectedMeshIndex >= 0 && selectedMeshIndex < meshComponents.size())
                                 {
                                     ShowSelectedMeshProperties(meshComponents[selectedMeshIndex].mesh);
                                 }
                             }
 
-                            // ¼±ÅÃµÈ ¸Ş½Ã¿¡ ´ëÇÑ ¼Ó¼º ÆíÁı±â Ç¥½Ã
+                            // Â„ÂƒÂÂÂœ ï§Â”Â‰ÑŠÂ—Â ÂŒÂ€Â•Âœ Â†ÂÂ„ ï§¡ìŒÂÂ„ Â‘ÂœÂ‹Âœ
                             void ShowSelectedMeshProperties(Mesh* mesh)
                             {
                                 if (!mesh)
@@ -319,12 +321,12 @@ namespace Engine
                                 ImGui::Separator();
                                 ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Mesh Properties");
 
-                                // ¸Ş½Ã °¡½Ã¼º ¼³Á¤
+                                // ï§Â”Â‰ è¹‚ëŒÂë‹¿ë¦° ÂƒÂÂƒÂœ
                                 bool isVisible = mesh->GetVisible();
                                 if (ImGui::Checkbox("Visible", &isVisible))
                                     mesh->SetVisible(isVisible);
 
-                                // TechniqueEditor¸¦ »ç¿ëÇÏ¿© ¸Ş½ÃÀÇ ÀçÁú ¼Ó¼º Ç¥½Ã
+                                // TechniqueEditorç‘œ Â‚ÑŠÂšâ‘ºÂ•Â˜Â— ï§Â”Â‰ÑŠÂÂ˜ æ¹²ê³ ÂƒÂ€ Â†ÂÂ„ Â‘ÂœÂ‹Âœ
                                 TechniqueEditor editor;
                                 mesh->Accept(editor);
                             }
@@ -337,8 +339,8 @@ namespace Engine
                                 bool isSelected = false;
                             };
 
-                            std::vector<MeshInfo> meshComponents;   // ¸Ş½Ã ÄÄÆ÷³ÍÆ® ¸ñ·Ï
-                            int selectedMeshIndex = -1;             // ¼±ÅÃµÈ ¸Ş½Ã ÄÄÆ÷³ÍÆ® ÀÎµ¦½º
+                            std::vector<MeshInfo> meshComponents;   // ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ï§â‘¸Â
+                            int selectedMeshIndex = -1;             // Â„ÂƒÂÂÂœ ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ÂëªƒÂê¹†ÂŠ
                         };
 
                         static MeshInfoController meshInfoController;
@@ -350,7 +352,7 @@ namespace Engine
                     }
                 }
 
-                // ¼±ÅÃµÈ ÄÄÆ÷³ÍÆ®ÀÇ »ó¼¼ Á¤º¸ Ç¥½Ã
+                // Â„ÂƒÂÂÂœ è€ŒëŒ„Ñ‰Â„ÂŒÂŠëª„ÂÂ˜ Â„ëªƒÂ€ Â‚ëŒÂš Â‘ÂœÂ‹Âœ
                 if (selectComponent)
                 {
                     ImGui::Separator();
@@ -361,13 +363,13 @@ namespace Engine
                         selectComponent->GetClassName().c_str()
                     );
 
-                    // ÄÄÆ÷³ÍÆ® ¼Ó¼º Ç¥½Ã - ±âº» ¼Ó¼º¸¸ Ç¥½Ã
+                    // è€ŒëŒ„Ñ‰Â„ÂŒÂŠ Â†ÂÂ„ Â‘ÂœÂ‹Âœ - æ¹²ê³•ë‚¯ Â†ÂÂ„ê¹…Â€Â„ Â‘ÂœÂ‹Âœ
                     bool compIsActive = selectComponent->GetEnable();
 
                     if (ImGui::Checkbox("Component Active", &compIsActive))
                         selectComponent->SetEnable(compIsActive);
 
-                    // TransformComponentÀÎ °æ¿ì Ãß°¡ Á¤º¸ Ç¥½Ã
+                    // TransformComponentÂŠÂ” Â‚ï¿½ÂœÂ• ÂˆÂ˜ Â—Â†ÂÂŒ
                     if (selectComponent->GetClassName() == "TransformComponent")
                         ImGui::TextDisabled("Transform component is always required and cannot be removed.");
 
@@ -389,7 +391,10 @@ namespace Engine
                     else if (selectComponent->GetClassName() == "CameraComponent")
                         CameraEditor();
 
-                    // ´Ù¸¥ ÄÄÆ÷³ÍÆ® Å¸ÀÔ¿¡ µû¸¥ Æ¯¼ö UI´Â ¿©±â¿¡ Ãß°¡
+                    else if (selectComponent->GetClassName() == "PhysicsComponent")
+                        PhysicsComponentEditor();
+
+                    // Â‹ã…»â…¨ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ÂƒÂ€ÂÂ…Â—Â ÂŒÂ€Â•Âœ ÂŠë±€Â• UIç‘œ Â—Ñˆë¦°Â—Â ç•°Â”åª›Â€
                     else
                     {
                         if (ImGui::Button("Remove Component"))
@@ -400,15 +405,21 @@ namespace Engine
                     }
                 }
 
-                // FolderViewInspector¸¦ È°¿ëÇÑ Ãß°¡ Á¤º¸ Ç¥½Ã
+                // Â˜ã…»ÂŒï¿½ÂÂŠ æ¹²ê³•ë‚¯ ï¿½Â•è¹‚ Â‘ÂœÂ‹Âœ
                 ImGui::Separator();
                 ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Object Details");
 
-                // È°¼ºÈ­ »óÅÂ Ç¥½Ã ¹× º¯°æ
+                // Â™ÂœÂ„ê¹ŠÂ™Â” ÂƒÂÂƒÂœ Â‘ÂœÂ‹Âœ è«› è¹‚Â€å¯ƒ
                 bool isActive = selectObject->GetActive();
-
                 if (ImGui::Checkbox("Active", &isActive))
                     selectObject->SetActive(isActive);
+                    
+                // Â˜ã…»ÂŒï¿½ÂÂŠ ÂëŒ€Â„ ëª„Â‘
+                char objectName[256];
+                strcpy_s(objectName, 256, selectObject->GetName().c_str());
+
+                if (ImGui::InputText("Name", objectName, 256))
+                    selectObject->SetName(objectName);
             }
 
             else
@@ -420,15 +431,15 @@ namespace Engine
 
     void Inspector::ColorObjectEditor() noexcept
     {
-		class Probe : public TechniqueBase
-		{
-		public:
-			void OnSetTechnique() override
-			{
-				using namespace std::string_literals;
-				ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, technique->GetName().c_str());
+        class Probe : public TechniqueBase
+        {
+        public:
+            void OnSetTechnique() override
+            {
+                using namespace std::string_literals;
+                ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, technique->GetName().c_str());
 
-                // Outline Å×Å©´ĞÀº Ã¼Å©¹Ú½º¸¦ Ç¥½ÃÇÏÁö ¾ÊÀ½
+                // Outline Â…ÂŒÂÑ‰Â‹Â‰ÂÂ€ ï§£ëŒ„ÂÑ‰Â•ÂŠã…»ï¿½ Â‘ÂœÂ‹ÂœÂ•Â˜ï§Â€ Â•ÂŠÂÂŒ
                 if (technique->GetName() != "Outline")
                 {
                     bool isActive = technique->GetAcive();
@@ -436,56 +447,56 @@ namespace Engine
 
                     technique->SetActive(isActive);
                 }
-			}
+            }
 
-			bool OnVisitBuffer(DynamicConstantBuffer::Buffer& buffer) override
-			{
-				float isNotMatch = false;
-				const auto IsNotMatch = [&isNotMatch](bool changed) { isNotMatch = isNotMatch || changed; };
-				auto Tag = [tagScratch = std::string{}, tagString = "##" + std::to_string(bufferIndex)](const char* label) mutable
-				{
-					tagScratch = label + tagString;
+            bool OnVisitBuffer(DynamicConstantBuffer::Buffer& buffer) override
+            {
+                float isNotMatch = false;
+                const auto IsNotMatch = [&isNotMatch](bool changed) { isNotMatch = isNotMatch || changed; };
+                auto Tag = [tagScratch = std::string{}, tagString = "##" + std::to_string(bufferIndex)](const char* label) mutable
+                {
+                    tagScratch = label + tagString;
 
-					return tagScratch.c_str();
-				};
+                    return tagScratch.c_str();
+                };
 
-				if (auto data = buffer["materialColor"]; data.IsExist())
-					IsNotMatch(ImGui::ColorEdit3(Tag("Material Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(data))));
+                if (auto data = buffer["materialColor"]; data.IsExist())
+                    IsNotMatch(ImGui::ColorEdit3(Tag("Material Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(data))));
 
-				if (auto data = buffer["scale"]; data.IsExist())
-					IsNotMatch(ImGui::SliderFloat(Tag("Scale"), &data, 1.0f, 2.0f, "%.3f"));
+                if (auto data = buffer["scale"]; data.IsExist())
+                    IsNotMatch(ImGui::SliderFloat(Tag("Scale"), &data, 1.0f, 2.0f, "%.3f"));
 
-				if (auto data = buffer["color"]; data.IsExist())
-					IsNotMatch(ImGui::ColorPicker4(Tag("Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT4&>(data))));
+                if (auto data = buffer["color"]; data.IsExist())
+                    IsNotMatch(ImGui::ColorPicker4(Tag("Color"), reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT4&>(data))));
 
-				if (auto data = buffer["specularIntensity"]; data.IsExist())
-					IsNotMatch(ImGui::SliderFloat(Tag("Specular Intensity"), &data, 0.0f, 1.0f));
+                if (auto data = buffer["specularIntensity"]; data.IsExist())
+                    IsNotMatch(ImGui::SliderFloat(Tag("Specular Intensity"), &data, 0.0f, 1.0f));
 
-				if (auto data = buffer["specularPower"]; data.IsExist())
-					IsNotMatch(ImGui::SliderFloat(Tag("Glassiness"), &data, 0.0f, 1.0f, "%.1f"));
+                if (auto data = buffer["specularPower"]; data.IsExist())
+                    IsNotMatch(ImGui::SliderFloat(Tag("Glassiness"), &data, 0.0f, 1.0f, "%.1f"));
 
-				return isNotMatch;
-			}
-		} probe;
+                return isNotMatch;
+            }
+        } probe;
 
-		auto colorObject = std::static_pointer_cast<ColorObject>(selectComponent);
-		colorObject->Accept(probe);
+        auto colorObject = std::static_pointer_cast<ColorObject>(selectComponent);
+        colorObject->Accept(probe);
     }
 
     void Inspector::ModelEditor() noexcept
     {
         auto modelObject = std::static_pointer_cast<Model>(selectComponent);
 
-        // Æ®¸® ±¸Á¶ Çì´õ
+        // ÂŠëªƒâ” æ´ÑŠâ€œ Â‘ÂœÂ‹Âœ
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Model Hierarchy");
 
-        // ¸ğµ¨ °èÃş ±¸Á¶¸¦ Ç¥½ÃÇÏ°í ¸Ş½Ã¸¦ ÄÄÆ÷³ÍÆ®Ã³·³ º¸¿©ÁÖ´Â ÄÁÆ®·Ñ·¯ Å¬·¡½º
+        // ï§â‘¤Âëª„ÂÂ˜ Â…ëªƒÂ“Âœç‘œ Â‘ÂœÂ‹ÂœÂ•Â˜æ€¨ ï§Â”Â‰Ñ‰ï¿½ è€ŒëŒ„Ñ‰Â„ÂŒÂŠëª„Â˜ÂŸ æ„¿Â€ç”±Ñ‹Â•Â˜ÂŠÂ” è€Œâ‘¦ÂŠëªƒÂ·ÂŸ ÂëŒ€ÂÂ˜ÂŠ
         class ModelHierarchyController : public ModelBase
         {
         public:
             bool push(SceneGraphNode& node) override
             {
-                // ³ëµå Ç¥½Ã (Æú´õÃ³·³)
+                // Â…ëªƒÂ“Âœ Â‘ÂœÂ‹Âœ (ÂŠëªƒâ”ï§£Â˜ÂŸ)
                 const bool isExpanded = ImGui::TreeNodeEx
                 (
                     (void*)(intptr_t)node.GetID(),
@@ -495,12 +506,12 @@ namespace Engine
                     "%s", node.GetName().c_str()
                 );
 
-                // ³ëµå Å¬¸¯ Ã³¸®
+                // Â…ëªƒÂ“Âœ ÂëŒ€â”ƒ ï§£Â˜ç”±
                 if (ImGui::IsItemClicked())
                 {
                     selectedNode = &node;
 
-                    // ÀÌ ³ëµå¿¡ ÀÖ´Â ¸Ş½ÃµéÀ» ÄÄÆ÷³ÍÆ® ¸®½ºÆ®¿¡ Ãß°¡
+                    // Â•ëŒ€Â‹ Â…ëªƒÂ“ÂœÂ—Â ÂÂˆÂŠÂ” ï§Â”Â‰Ñ‰Â“ã…¼ÂÂ„ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ç”±ÑŠÂŠã…½ÂŠëª„Â—Â ç•°Â”åª›Â€
                     UpdateMeshComponents(node);
                 }
 
@@ -512,7 +523,7 @@ namespace Engine
                 ImGui::TreePop();
             }
 
-            // ³ëµåÀÇ ¸Ş½ÃµéÀ» ÄÄÆ÷³ÍÆ® ¸®½ºÆ®·Î ¾÷µ¥ÀÌÆ®
+            // Â„ÂƒÂÂÂœ ï§Â”Â‰Ñ‰Â“ã…¼ÂÂ„ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ç”±ÑŠÂŠã…½ÂŠëªƒÂœ Â—Â…Âê³—ÂëŒ„ÂŠ
             void UpdateMeshComponents(SceneGraphNode& node)
             {
                 meshComponents.clear();
@@ -528,7 +539,7 @@ namespace Engine
                 }
             }
 
-            // ¸Ş½Ã ÄÄÆ÷³ÍÆ® ¸ñ·Ï Ç¥½Ã
+            // ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ï§â‘¸Â Â‘ÂœÂ‹Âœ
             void ShowMeshComponents()
             {
                 if (meshComponents.empty())
@@ -543,7 +554,7 @@ namespace Engine
 
                     ImGui::PushID(static_cast<int>(i));
 
-                    // ¸Ş½Ã °¡½Ã¼º Åä±ÛÀ» À§ÇÑ Ã¼Å©¹Ú½º
+                    // ï§Â”Â‰ è¹‚ëŒÂë‹¿ë¦° ÂƒÂÂƒÂœç‘œ ÂœÂ„Â•Âœ ï§£ëŒ„ÂÑ‰Â•ÂŠ
                     bool isVisible = comp.mesh->GetVisible();
 
                     if (ImGui::Checkbox("##MeshVisible", &isVisible))
@@ -551,7 +562,7 @@ namespace Engine
 
                     ImGui::SameLine();
 
-                    // ÄÄÆ÷³ÍÆ® ¼±ÅÃ ¹öÆ°
+                    // è€ŒëŒ„Ñ‰Â„ÂŒÂŠ Â„ÂƒÂ è¸°Â„ÂŠ
                     bool isSelected = (selectedMeshIndex == static_cast<int>(i));
 
                     if (isSelected)
@@ -562,7 +573,7 @@ namespace Engine
                         selectedMeshIndex = static_cast<int>(i);
                         comp.isSelected = true;
 
-                        // ´Ù¸¥ ¸Ş½Ã´Â ¼±ÅÃ ÇØÁ¦
+                        // Â‹ã…»â…¨ ï§Â”Â‰Ñ‰ÂŠÂ” Â„ÂƒÂ Â•ëŒÂœ
                         for (size_t j = 0; j < meshComponents.size(); j++)
                         {
                             if (j != i)
@@ -576,12 +587,12 @@ namespace Engine
                     ImGui::PopID();
                 }
 
-                // ¼±ÅÃµÈ ¸Ş½ÃÀÇ ¼Ó¼º Ç¥½Ã
+                // Â„ÂƒÂÂÂœ ï§Â”Â‰ÑŠÂÂ˜ Â†ÂÂ„ Â‘ÂœÂ‹Âœ
                 if (selectedMeshIndex >= 0 && selectedMeshIndex < meshComponents.size())
                     ShowSelectedMeshProperties(meshComponents[selectedMeshIndex].mesh);
             }
 
-            // ¼±ÅÃµÈ ¸Ş½Ã¿¡ ´ëÇÑ ¼Ó¼º ÆíÁı±â Ç¥½Ã
+            // Â„ÂƒÂÂÂœ ï§Â”Â‰ÑŠÂ—Â ÂŒÂ€Â•Âœ Â†ÂÂ„ ï§¡ìŒÂÂ„ Â‘ÂœÂ‹Âœ
             void ShowSelectedMeshProperties(Mesh* mesh)
             {
                 if (!mesh)
@@ -590,13 +601,13 @@ namespace Engine
                 ImGui::Separator();
                 ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Mesh Properties");
 
-                // ¸Ş½Ã °¡½Ã¼º ¼³Á¤
+                // ï§Â”Â‰ è¹‚ëŒÂë‹¿ë¦° ÂƒÂÂƒÂœ
                 bool isVisible = mesh->GetVisible();
 
                 if (ImGui::Checkbox("Visible", &isVisible))
                     mesh->SetVisible(isVisible);
 
-                // TechniqueEditor¸¦ »ç¿ëÇÏ¿© ¸Ş½ÃÀÇ ÀçÁú ¼Ó¼º Ç¥½Ã
+                // TechniqueEditorç‘œ Â‚ÑŠÂšâ‘ºÂ•Â˜Â— ï§Â”Â‰ÑŠÂÂ˜ æ¹²ê³ ÂƒÂ€ Â†ÂÂ„ Â‘ÂœÂ‹Âœ
                 TechniqueEditor editor;
                 mesh->Accept(editor);
             }
@@ -609,19 +620,19 @@ namespace Engine
                 bool isSelected = false;
             };
 
-            SceneGraphNode* selectedNode = nullptr;     // ÇöÀç ¼±ÅÃµÈ ³ëµå    
-            std::vector<MeshComponent> meshComponents;  // ¸Ş½Ã ÄÄÆ÷³ÍÆ® ¸ñ·Ï
+            SceneGraphNode* selectedNode = nullptr;     // Â˜Â„Â Â„ÂƒÂÂÂœ Â…ëªƒÂ“Âœ    
+            std::vector<MeshComponent> meshComponents;  // ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ï§â‘¸Â
 
-            int selectedMeshIndex = -1;                 // ¼±ÅÃµÈ ¸Ş½Ã ÄÄÆ÷³ÍÆ® ÀÎµ¦½º
+            int selectedMeshIndex = -1;                 // Â„ÂƒÂÂÂœ ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ÂëªƒÂê¹†ÂŠ
         };
 
-        // ¸ğµ¨ °èÃş ±¸Á¶ ÄÁÆ®·Ñ·¯ »ı¼º
+        // ï§â‘¤Â æ€¨Â„ï§¥ æ´ÑŠâ€œ è€Œâ‘¦ÂŠëªƒÂ·ÂŸ ÂƒÂÂ„
         static ModelHierarchyController controller;
 
-        // ¸ğµ¨ÀÇ °èÃş ±¸Á¶ Ç¥½Ã
+        // ï§â‘¤Â æ€¨Â„ï§¥ æ´ÑŠâ€œ Â‘ÂœÂ‹Âœ
         modelObject->Accept(controller);
 
-        // ¸Ş½Ã ÄÄÆ÷³ÍÆ® ¸ñ·Ï Ç¥½Ã
+        // ï§Â”Â‰ è€ŒëŒ„Ñ‰Â„ÂŒÂŠ ï§â‘¸Â Â‘ÂœÂ‹Âœ
         controller.ShowMeshComponents();
     }
 
@@ -629,36 +640,36 @@ namespace Engine
     {
         auto meshComponent = std::static_pointer_cast<MeshComponent>(selectComponent);
 
-        // ¸Ş½Ã ¸ñ·Ï Ç¥½Ã
+        // ï§Â”Â‰ ï§â‘¸Â Â‘ÂœÂ‹Âœ
         ImGui::Separator();
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Meshes");
 
         auto& meshes = meshComponent->GetMeshes();
 
-        // ¸Ş½Ã ¸ñ·ÏÀÌ ¾øÀ¸¸é ¸Ş½ÃÁö Ç¥½Ã
+        // ï§Â”Â‰ è«›ê³—Â—ëŒÂ é®Â„Â–ëŒÂÂˆÂœì‡°ãˆƒ ï§Â”Â‰ÑˆÂ€ Â—Â†Â‹ã…ºï¿½ Â‘ÂœÂ‹Âœ
         if (meshes.empty())
         {
             ImGui::TextDisabled("No meshes available");
             return;
         }
 
-        // °¢ ¸Ş½Ã Ç¥½Ã
+        // åª›Â ï§Â”Â‰ Â‘ÂœÂ‹Âœ
         for (size_t i = 0; i < meshes.size(); i++)
         {
             auto mesh = meshes[i];
 
             ImGui::PushID(static_cast<int>(i));
 
-            // ¸Ş½Ã ¼Ó¼º ÆîÃÄ¼­ º¸±â
+            // ï§Â”Â‰ Â†ÂÂ„ ï¿½Â‘æ¹²ê³—Â‹Â ï§Â”Â‰
             if (ImGui::TreeNode(("Properties##" + std::to_string(i)).c_str()))
             {
-                // ¸Ş½Ã °¡½Ã¼º
+                // ï§Â”Â‰ è¹‚ëŒÂë‹¿ë¦°
                 bool isVisible = mesh->GetVisible();
 
                 if (ImGui::Checkbox("Visible##Detail", &isVisible))
                     mesh->SetVisible(isVisible);
 
-                // ÀçÁú ¼Ó¼º Ç¥½Ã
+                // æ¹²ê³ ÂƒÂ€ Â†ÂÂ„ Â‘ÂœÂ‹Âœ
                 TechniqueEditor editor;
                 mesh->Accept(editor);
 
@@ -671,76 +682,449 @@ namespace Engine
 
     void Inspector::CameraEditor() noexcept
     {
-        // CameraContainerÀÇ ¼±ÅÃ UI¸¦ ¸ÕÀú Ç¥½Ã
+        // CameraContainerÂÂ˜ ï¿½Â„Â— UIç‘œ ç™’ì‡±Â€ Â‘ÂœÂ‹Âœ
         ImGui::TextColored({ 0.4f, 0.8f, 1.0f, 1.0f }, "Camera Selection");
 
-        // CameraContainer ÀÎ½ºÅÏ½º °¡Á®¿À±â
+        // CameraContainer Âëª„ÂŠã…½Â„ëŒÂŠ åª›Â€ï¿½ëª„Â˜ã…ºë¦°
         auto scene = Scene::GetActiveScene();
         auto& cameraContainer = scene->GetCameraContainer();
 
-        // CameraContainerÀÇ Inspector¿ë UI ¿ä¼Ò Ç¥½Ã
+        // CameraContaineråª›Â€ InspectorÂ—Â UI ï§¡ìŒÂÂ„ Â‘ÂœÂ‹Âœ
         cameraContainer.SpawnInspectorWidgets();
 
         ImGui::Separator();
         ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Camera Properties");
 
-        // Ä«¸Ş¶ó ÄÄÆ÷³ÍÆ®ÀÇ °íÀ¯ ¼Ó¼º Ç¥½Ã
+        // ç§»ëŒ€Â”Â è€ŒëŒ„Ñ‰Â„ÂŒÂŠëª„ÂÂ˜ åª›Âœè¹‚Â„ Â†ÂÂ„ Â‘ÂœÂ‹Âœ
         auto cameraComponent = std::static_pointer_cast<Camera>(selectComponent);
         cameraComponent->SpawnControlWidgets();
     }
 
-	void Inspector::Initialize()
-	{
+    void Inspector::PhysicsComponentEditor() noexcept
+    {
+        auto physicsComponent = std::static_pointer_cast<PhysicsComponent>(selectComponent);
 
-	}
+        ImGui::Separator();
+        ImGui::TextColored({ 0.4f, 1.0f, 0.6f, 1.0f }, "Physics Properties");
 
-	void Inspector::BeforeFrame()
-	{
+        // æ¹²ê³•ë‚¯ è‡¾ì‡°â” Â„ã…¼Â•
+        if (ImGui::CollapsingHeader("Basic Settings", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            // ÂšëŒ€Â™Â•Â™ï¿½Â åª›Âï§£(Kinematic) Â„ã…¼Â•
+            bool isKinematic = physicsComponent->IsKinematic();
 
-	}
+            if (ImGui::Checkbox("Is Kinematic", &isKinematic))
+            {
+                physicsComponent->SetKinematic(isKinematic);
+                
+                // Â‚ã…»Â„ã…»ÂˆÂ‹ Â„ã…¼Â• Â‹Âœ ÂˆëŒ„ÂŒÂ Â‘ÂœÂ‹Âœ
+                if (isKinematic && ImGui::IsItemHovered())
+                {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Kinematic objects are controlled manually");
+                    ImGui::Text("and not affected by physics simulation");
+                    ImGui::EndTooltip();
+                }
+            }
+            
+            // Â‚ã…»Â„ã…»ÂˆÂ‹ê¹†Â Â•Â„Â‹Â Â•ÂŒï§ÂŒ ä»¥Â‘ï¿½ è«› ï§ÂˆÂŸÂ‰ Â„ã…¼Â• Â‘ÂœÂ‹Âœ
+            if (!isKinematic)
+            {
+                // ä»¥Â‘ï¿½ Â‚ÑŠÂš Â—Ñ‰Â€
+                bool useGravity = physicsComponent->IsGravityEnabled();
+                if (ImGui::Checkbox("Use Gravity", &useGravity))
+                    physicsComponent->SetGravity(useGravity);
+                
+                // ä»¥Â‘ï¿½ Â‚ÑŠÂš Â‹Âœ ä»¥Â‘ï¿½ ÂŠã…¼Â€Â Â„ã…¼Â•
+                if (useGravity)
+                {
+                    float gravityScale = physicsComponent->GetGravityScale();
+                    if (ImGui::SliderFloat("Gravity Scale", &gravityScale, 0.0f, 5.0f, "%.2f"))
+                        physicsComponent->SetGravityScale(gravityScale);
+                    
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::BeginTooltip();
+                        ImGui::Text("Multiplier for global gravity");
+                        ImGui::Text("Default: 1.0 (normal gravity)");
+                        ImGui::EndTooltip();
+                    }
+                }
 
-	void Inspector::Start()
-	{
+                // ï§ÂˆÂŸÂ‰ Â„ã…¼Â•
+                float mass = physicsComponent->GetMass();
 
-	}
+                if (ImGui::DragFloat("Mass", &mass, 0.1f, 0.1f, 1000.0f))
+                    physicsComponent->SetMass(mass);
+            }
+            
+            // ç•°â‘¸ÂŒ åª›Âï§Â€ ï§â‘¤Â“Âœ Â„ÂƒÂ
+            static const char* collisionModes[] = { "Discrete", "Continuous", "Continuous Dynamic" };
+            int currentMode = static_cast<int>(physicsComponent->GetCollisionDetectionMode());
+            
+            if (ImGui::Combo("Collision Detection", &currentMode, collisionModes, IM_ARRAYSIZE(collisionModes)))
+                physicsComponent->SetCollisionDetectionMode(static_cast<CollisionDetectionMode>(currentMode));
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::TextUnformatted("Discrete: Basic collision detection (default)");
+                ImGui::TextUnformatted("Continuous: For fast-moving objects");
+                ImGui::TextUnformatted("Continuous Dynamic: Best for fast object collisions");
+                ImGui::EndTooltip();
+            }
+        }
 
-	void Inspector::LateStart()
-	{
+        // ï¿½Â„Â— ä»¥Â‘ï¿½ Â„ã…¼Â•
+        if (ImGui::CollapsingHeader("Global Gravity"))
+        {
+            physx::PxVec3 gravity = PhysicsComponent::GetGlobalGravity();
+            float gravityArray[3] = { gravity.x, gravity.y, gravity.z };
+            
+            if (ImGui::DragFloat3("Gravity Force", gravityArray, 0.1f, -50.0f, 50.0f))
+                PhysicsComponent::SetGlobalGravity(gravityArray[0], gravityArray[1], gravityArray[2]);
+            
+            if (ImGui::Button("Reset to Default", ImVec2(120, 0)))
+                PhysicsComponent::SetGlobalGravity(0.0f, -9.81f, 0.0f);
+            
+            ImGui::SameLine();
+            ImGui::TextDisabled("Default: (0, -9.81, 0)");
+        }
 
-	}
+        // è‡¾ì‡±Âˆ Â†ÂÂ„
+        if (ImGui::CollapsingHeader("Material Properties"))
+        {
+            float staticFriction = physicsComponent->GetStaticFriction();
+            float dynamicFriction = physicsComponent->GetDynamicFriction();
+            float restitution = physicsComponent->GetRestitution();
+            
+            bool materialChanged = false;
+            
+            if (ImGui::SliderFloat("Static Friction", &staticFriction, 0.0f, 2.0f))
+                materialChanged = true;
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Friction when object is not moving");
+                ImGui::Text("0 = No friction, 1 = Normal, 2 = High");
+                ImGui::EndTooltip();
+            }
+            
+            if (ImGui::SliderFloat("Dynamic Friction", &dynamicFriction, 0.0f, 2.0f))
+                materialChanged = true;
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Friction when object is moving");
+                ImGui::Text("0 = No friction, 1 = Normal, 2 = High");
+                ImGui::EndTooltip();
+            }
+            
+            if (ImGui::SliderFloat("Bounciness", &restitution, 0.0f, 1.0f))
+                materialChanged = true;
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("How bouncy the object is");
+                ImGui::Text("0 = No bounce, 1 = Perfect bounce");
+                ImGui::EndTooltip();
+            }
+            
+            if (materialChanged)
+                physicsComponent->SetMaterial(staticFriction, dynamicFriction, restitution);
+            
+            // èª˜ëªƒâ” ï¿½Â•ÂÂ˜ÂÂœ Â”Â„ç”±ÑŠÂ…Â‹ è¸°Â„ÂŠì‡°Â“
+            ImGui::Separator();
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Material Presets:");
+            
+            if (ImGui::Button("Ice", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.05f, 0.02f, 0.2f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Metal", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.6f, 0.4f, 0.5f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Wood", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.5f, 0.3f, 0.2f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Rubber", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.8f, 0.7f, 0.8f);
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Bouncy", ImVec2(60, 0)))
+                physicsComponent->SetMaterial(0.2f, 0.2f, 0.95f);
+        }
 
-	void Inspector::Update()
-	{
+        // æ€¨ë“¦ë¦° ï¿½Â€Â• è«› åª›ÂÂ‡
+        if (ImGui::CollapsingHeader("Damping & Drag"))
+        {
+            // Â„Â˜Â• åª›ÂÂ‡ (ÂëŒ€Â™ Â†ÂÂ„ åª›ÂÂ†ÂŒ)
+            float linearDamping = physicsComponent->GetLinearDamping();
+            if (ImGui::SliderFloat("Linear Damping", &linearDamping, 0.0f, 10.0f))
+                physicsComponent->SetLinearDamping(linearDamping);
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Reduces linear velocity over time");
+                ImGui::Text("0 = No damping, 10 = Very high damping");
+                ImGui::EndTooltip();
+            }
+            
+            // åª›Â åª›ÂÂ‡ (ÂšÂŒï¿½Â„ Â†ÂÂ„ åª›ÂÂ†ÂŒ)
+            float angularDamping = physicsComponent->GetAngularDamping();
+            if (ImGui::SliderFloat("Angular Damping", &angularDamping, 0.0f, 10.0f))
+                physicsComponent->SetAngularDamping(angularDamping);
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Reduces rotational velocity over time");
+                ImGui::Text("0 = No damping, 10 = Very high damping");
+                ImGui::EndTooltip();
+            }
+            
+            // æ€¨ë“¦ë¦° ï¿½Â€Â• æ€¨Â„ÂˆÂ˜ (ç•°Â”åª›Â€ åª›ÂÂ‡)
+            float dragCoefficient = physicsComponent->GetDragCoefficient();
+            if (ImGui::SliderFloat("Drag Coefficient", &dragCoefficient, 0.0f, 5.0f, "%.2f"))
+                physicsComponent->SetDragCoefficient(dragCoefficient);
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Additional drag force (air/fluid resistance)");
+                ImGui::Text("0 = None, 1 = Air, 2-5 = Water/thick fluid");
+                ImGui::EndTooltip();
+            }
+            
+            // Â”Â„ç”±ÑŠÂ…Â‹ è¸°Â„ÂŠì‡°Â“
+            ImGui::Separator();
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Environment Presets:");
+            
+            if (ImGui::Button("Air", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(0.05f);
+                physicsComponent->SetAngularDamping(0.1f);
+                physicsComponent->SetDragCoefficient(0.0f);
+            }
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Water", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(0.5f);
+                physicsComponent->SetAngularDamping(1.0f);
+                physicsComponent->SetDragCoefficient(2.0f);
+            }
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Honey", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(2.0f);
+                physicsComponent->SetAngularDamping(4.0f);
+                physicsComponent->SetDragCoefficient(4.0f);
+            }
+                
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Space", ImVec2(60, 0)))
+            {
+                physicsComponent->SetLinearDamping(0.0f);
+                physicsComponent->SetAngularDamping(0.0f);
+                physicsComponent->SetDragCoefficient(0.0f);
+            }
+        }
+
+        // ï¿½ÂœÂ• è­°ê³Œêµ”
+        if (ImGui::CollapsingHeader("Constraints"))
+        {
+            ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Freeze Position");
+
+            bool freezePosX = physicsComponent->IsPositionXFrozen();
+            bool freezePosY = physicsComponent->IsPositionYFrozen();
+            bool freezePosZ = physicsComponent->IsPositionZFrozen();
+
+            bool positionChanged = false;
+
+            if (ImGui::Checkbox("X##PosX", &freezePosX))
+                positionChanged = true;
+
+            ImGui::SameLine();
+
+            if (ImGui::Checkbox("Y##PosY", &freezePosY))
+                positionChanged = true;
+
+            ImGui::SameLine();
+
+            if (ImGui::Checkbox("Z##PosZ", &freezePosZ))
+                positionChanged = true;
+
+            if (positionChanged)
+                physicsComponent->SetFreezePosition(freezePosX, freezePosY, freezePosZ);
+
+            ImGui::Spacing();
+            ImGui::TextColored({ 1.0f, 0.8f, 0.0f, 1.0f }, "Freeze Rotation");
+
+            bool freezeRotX = physicsComponent->IsRotationXFrozen();
+            bool freezeRotY = physicsComponent->IsRotationYFrozen();
+            bool freezeRotZ = physicsComponent->IsRotationZFrozen();
+
+            bool rotationChanged = false;
+
+            if (ImGui::Checkbox("X##RotX", &freezeRotX))
+                rotationChanged = true;
+
+            ImGui::SameLine();
+
+            if (ImGui::Checkbox("Y##RotY", &freezeRotY))
+                rotationChanged = true;
+
+            ImGui::SameLine();
+
+            if (ImGui::Checkbox("Z##RotZ", &freezeRotZ))
+                rotationChanged = true;
+
+            if (rotationChanged)
+                physicsComponent->SetFreezeRotation(freezeRotX, freezeRotY, freezeRotZ);
+
+            // ç•°Â•è¹‚Â„ ï¿½ÂœÂ• è­°ê³Œêµ” è¸°Â„ÂŠì‡°Â“
+            ImGui::Separator();
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Common Constraints:");
+
+            if (ImGui::Button("Lock All", ImVec2(80, 0)))
+            {
+                physicsComponent->SetFreezePosition(true, true, true);
+                physicsComponent->SetFreezeRotation(true, true, true);
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Unlock All", ImVec2(80, 0)))
+            {
+                physicsComponent->SetFreezePosition(false, false, false);
+                physicsComponent->SetFreezeRotation(false, false, false);
+
+                // Â”ÑŠÂ ÂÂˆÂŠÂ”ï§Â€ Â™Â•Â
+                auto scene = Scene::GetActiveScene();
+
+                if (scene == nullptr)
+                {
+                    // ï§Â…Â‹Âœï¿½ÂÂœì‡°Âœ æºâ‘¥Âšê³Œë¦°
+                    if (auto actor = physicsComponent->GetActor())
+                    {
+                        if (physicsComponent->IsKinematic() == false)
+                        {
+                            physx::PxRigidDynamic* dynamicActor = static_cast<physx::PxRigidDynamic*>(actor);
+                            dynamicActor->wakeUp();
+
+                            // ä»¥Â‘ï¿½Î¼Â Â—Â†ÂÂ„ Â•ÂŒ Â•ì„Â„ÂÂ˜ ÂÂ˜ åª›Â€Â•Â˜æ¹²
+                            if (!physicsComponent->IsGravityEnabled())
+                                dynamicActor->addForce(physx::PxVec3(0.0f, 0.1f, 0.0f), physx::PxForceMode::eIMPULSE);
+                        }
+                    }
+                }
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("2D (XZ)", ImVec2(80, 0)))
+            {
+                physicsComponent->SetFreezePosition(false, true, false);
+                physicsComponent->SetFreezeRotation(true, false, true);
+            }
+        }
+
+        // è‚„ÂœÂì‡±ÂëŒ€ÂÂ” Â„ã…¼Â•
+        if (ImGui::CollapsingHeader("Collider"))
+        {
+            ImGui::TextColored({ 0.7f, 0.7f, 1.0f, 1.0f }, "Collider Size:");
+            
+            // ç•°â‘¸ÂŒï§£ ÂÑˆë¦° Â—Â…Âê³—ÂëŒ„ÂŠ è¸°Â„ÂŠ
+            if (ImGui::Button("Update Collider Size"))
+                physicsComponent->UpdateColliderSize();
+            
+            ImGui::SameLine();
+            
+            if (ImGui::IsItemHovered())
+            {
+                ImGui::BeginTooltip();
+                ImGui::Text("Updates collider to match current object scale");
+                ImGui::EndTooltip();
+            }
+        }
+
+        // è€ŒëŒ„Ñ‰Â„ÂŒÂŠ Â‚ï¿½Âœ è¸°Â„ÂŠ
+        ImGui::Separator();
+
+        if (ImGui::Button("Remove Physics Component", ImVec2(-1, 0)))
+        {
+            selectObject->RemoveComponent(selectComponent->GetClassName());
+            selectComponent = nullptr;
+        }
+    }
+
+    void Inspector::Initialize()
+    {
+
+    }
+
+    void Inspector::BeforeFrame()
+    {
+
+    }
+
+    void Inspector::Start()
+    {
+
+    }
+
+    void Inspector::LateStart()
+    {
+
+    }
+
+    void Inspector::Update()
+    {
         ShowNodeInfomation();
-	}
+    }
 
-	void Inspector::LateUpdate()
-	{
+    void Inspector::LateUpdate()
+    {
 
-	}
+    }
 
-	void Inspector::Finalize()
-	{
+    void Inspector::Finalize()
+    {
 
-	}
+    }
 
-	void Inspector::Destroy()
-	{
+    void Inspector::Destroy()
+    {
 
-	}
+    }
 
-	void Inspector::OnEnable()
-	{
+    void Inspector::OnEnable()
+    {
 
-	}
+    }
 
-	void Inspector::OnDisable()
-	{
+    void Inspector::OnDisable()
+    {
 
-	}
+    }
 
-	void Inspector::Reset()
-	{
+    void Inspector::Reset()
+    {
 
-	}
+    }
 }

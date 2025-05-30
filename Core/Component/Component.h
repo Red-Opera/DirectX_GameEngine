@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Object/EngineLoop.h"
 
@@ -31,11 +31,11 @@ public:
 	void SetObject(std::shared_ptr<class Object> object);
 	std::shared_ptr<class Object> GetObject();
 
-	void SetEnable(bool isActive) { this->isActive = isActive; }
+	void SetEnable(bool isEnable);
 	bool GetEnable() const { return isActive; }
 
-	virtual std::string GetClassName() const { return "Component"; }	// °´Ã¼ÀÇ ÄÄÆ÷³ÍÆ® ÀÌ¸§À» ¹İÈ¯ÇÏ´Â ÇÔ¼ö
-	static std::string GetStaticClassName() { return "Component"; }		// ÇØ´ç Å¬·¡½ºÀÇ ÀÌ¸§À» ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	virtual std::string GetClassName() const { return "Component"; }	// ê°ì²´ì˜ ì»´í¬ë„ŒíŠ¸ ì´ë¦„ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
+	static std::string GetStaticClassName() { return "Component"; }		// í•´ë‹¹ í´ë˜ìŠ¤ì˜ ì´ë¦„ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 
 	std::shared_ptr<class TransformComponent> transform;
 

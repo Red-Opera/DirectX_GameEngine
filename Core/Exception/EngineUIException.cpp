@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "EngineUIException.h"
 
 EngineUIException::EngineUIException(std::string message, int line, const char* file) noexcept
@@ -21,7 +21,7 @@ const char* EngineUIException::what() const noexcept
 
 const char* EngineUIException::GetType() const noexcept
 {
-	return "¿£Áø UI ·±Å¸ÀÓ ¿¹¿Ü";
+	return "ì—”ì§„ UI ëŸ°íƒ€ìž„ ì˜ˆì™¸";
 }
 
 const std::string& EngineUIException::GetMessage() const noexcept

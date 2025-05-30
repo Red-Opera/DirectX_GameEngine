@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 #include <PxPhysicsAPI.h>
 
@@ -18,7 +18,7 @@ private:
     PhysicsSystem() = default;
     ~PhysicsSystem();
     
-    // PhysX ±‚∫ª ∞¥√ºµÈ
+    // PhysX Í∏∞Î≥∏ Í∞ùÏ≤¥Îì§
     physx::PxDefaultAllocator allocator;
     physx::PxDefaultErrorCallback errorCallback;
     physx::PxFoundation* foundation = nullptr;

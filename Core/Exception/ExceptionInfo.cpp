@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ExceptionInfo.h"
 
 #include "../Window.h"
@@ -15,29 +15,29 @@ using namespace std;
 
 ExceptionInfo::ExceptionInfo()
 {
-	// dxgidebug.dll ¶óÀÌºê·¯¸® ¾È¿¡ ÀÖ´Â DXGIGetDebugInterface ÇÔ¼ö¸¦ ÇÔ¼ö¸íÀ¸·Î Ç¥½ÃÇÏ±â À§ÇÑ Á¤ÀÇ
+	// dxgidebug.dll ë¼ì´ë¸ŒëŸ¬ë¦¬ ì•ˆì— ìˆëŠ” DXGIGetDebugInterface í•¨ìˆ˜ë¥¼ í•¨ìˆ˜ëª…ìœ¼ë¡œ í‘œì‹œí•˜ê¸° ìœ„í•œ ì •ì˜
 	typedef HRESULT(WINAPI* DXGIGetDebugInterface)(REFIID, void**);
 
-	// dxgidebug.dll ¶óÀÌºê·¯¸® ÆÄÀÏÀ» °¡Á®¿È
+	// dxgidebug.dll ë¼ì´ë¸ŒëŸ¬ë¦¬ íŒŒì¼ì„ ê°€ì ¸ì˜´
 	const auto modDxgiDebug = LoadLibraryEx("External/Microsoft DirectX SDK(201006)/Lib/x64/dxgidebug.dll", nullptr, 0);
 
-	// ¶óÀÌºê·¯¸®¸¦ ¼º°øÀûÀ¸·Î °¡Á®¿Ô´ÂÁö È®ÀÎ
+	// ë¼ì´ë¸ŒëŸ¬ë¦¬ë¥¼ ì„±ê³µì ìœ¼ë¡œ ê°€ì ¸ì™”ëŠ”ì§€ í™•ì¸
 	if (modDxgiDebug == nullptr)
 	{
 		throw LASTEXCEPT();
 	}
 
-	// dxgidebug.dll ¶óÀÌºê·¯¸® ÆÄÀÏ ¾È¿¡ ÀÖ´Â DXGIGetDebugInterfaceÀÇ ÁÖ¼Ò¸¦ °¡Á®¿Í DXGIGetDebugInterface·Î º¯È¯ÇÔ
+	// dxgidebug.dll ë¼ì´ë¸ŒëŸ¬ë¦¬ íŒŒì¼ ì•ˆì— ìˆëŠ” DXGIGetDebugInterfaceì˜ ì£¼ì†Œë¥¼ ê°€ì ¸ì™€ DXGIGetDebugInterfaceë¡œ ë³€í™˜í•¨
 	const auto dxgiGetDebugInterface = reinterpret_cast<DXGIGetDebugInterface>(
 		reinterpret_cast<void*>(GetProcAddress(modDxgiDebug, "DXGIGetDebugInterface")));
 
-	// DXGIGetDebugInterface ÇÁ·Î½ÃÀú¸¦ ¼º°øÀûÀ¸·Î °¡Á®¿Ô´ÂÁö È®ÀÎ
+	// DXGIGetDebugInterface í”„ë¡œì‹œì €ë¥¼ ì„±ê³µì ìœ¼ë¡œ ê°€ì ¸ì™”ëŠ”ì§€ í™•ì¸
 	if (dxgiGetDebugInterface == nullptr)
 	{
 		throw LASTEXCEPT();
 	}
 
-	// DXGIGetDebugInterface¶ó´Â ÇÁ·Î½ÃÀú¸¦ ½ÇÇàÇÏ¿© infoQueue¸¦ °¡Á®¿È
+	// DXGIGetDebugInterfaceë¼ëŠ” í”„ë¡œì‹œì €ë¥¼ ì‹¤í–‰í•˜ì—¬ infoQueueë¥¼ ê°€ì ¸ì˜´
 	INFOEXCEPTION(dxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &infoQueue));
 }
 
@@ -54,17 +54,17 @@ const char* ExceptionInfo::GetMessages()
 	{
 		SIZE_T messageLength = 0;
 
-		// i¹øÂ°¿¡ ÇØ´çÇÏ´Â µğ¹ö±× ¸Ş¼¼ÁöÀÇ ±æÀÌ¸¦ messageLength¿¡ ¹İÈ¯ÇÔ
+		// ië²ˆì§¸ì— í•´ë‹¹í•˜ëŠ” ë””ë²„ê·¸ ë©”ì„¸ì§€ì˜ ê¸¸ì´ë¥¼ messageLengthì— ë°˜í™˜í•¨
 		INFOEXCEPTION(infoQueue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &messageLength));
 
-		// µğ¹ö±× ¸Ş¼¼Áö¸¦ ¾ò±â À§ÇÑ ¹öÆÛ »ı¼º
+		// ë””ë²„ê·¸ ë©”ì„¸ì§€ë¥¼ ì–»ê¸° ìœ„í•œ ë²„í¼ ìƒì„±
 		auto bytes = make_unique<std::byte[]>(messageLength);
 		auto message = reinterpret_cast<DXGI_INFO_QUEUE_MESSAGE*>(bytes.get());
 
-		// i¹ø¤Š¿¡ ÇØ´çÇÏ´Â µğ¹ö±× ¸Ş¼¼Áö¸¦ °¡Á®¿È
+		// ië²ˆì¨°ì— í•´ë‹¹í•˜ëŠ” ë””ë²„ê·¸ ë©”ì„¸ì§€ë¥¼ ê°€ì ¸ì˜´
 		INFOEXCEPTION(infoQueue->GetMessage(DXGI_DEBUG_ALL, i, message, &messageLength));
 
-		// ¸Ş¼¼Áö¸¦ ÀúÀå
+		// ë©”ì„¸ì§€ë¥¼ ì €ì¥
 		strncpy_s(this->message[messageCount], message->pDescription, sizeof(this->message[0]) - 1);
 		messageCount++;
 	}

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "FolderView.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -35,7 +35,7 @@ namespace Engine
             LoadIconTexture("Images/Engine/FolderIcon.png", IconType::folder);
             LoadIconTexture("Images/Engine/GoParentFolder.png", IconType::ParentFolder);
 
-            // ÆÄÀÏ Æú´õ ÀÌ¹ÌÁö °æ·Î
+            // íŒŒì¼ í´ë” ì´ë¯¸ì§€ ê²½ë¡œ
             std::string folderPath = "Images/Engine/FileIcon";
 
             try
@@ -49,14 +49,14 @@ namespace Engine
                             std::string path = entry.path().string();
                             path = path.replace(path.find("\\"), 1, "/");
 
-                            // ÀÌ¹ÌÁö ·Îµå
+                            // ì´ë¯¸ì§€ ë¡œë“œ
                             LoadIconTexture(path, IconType::file);
                         }
                     }
                 }
 
                 else
-                    throw ENGINE_UI_EXCEPTION("ÇØ´ç °æ·Î´Â Æú´õ°¡ ¾Æ´Ô.");
+                    throw ENGINE_UI_EXCEPTION("í•´ë‹¹ ê²½ë¡œëŠ” í´ë”ê°€ ì•„ë‹˜.");
             }
 
             catch (const std::filesystem::filesystem_error& e)
@@ -68,32 +68,32 @@ namespace Engine
 
     std::shared_ptr<FolderView::FileItemTree> FolderView::CreateFileSystem()
     {
-        // ÇÁ·ÎÁ§Æ® Æú´õ(ÃÖ»óÀ§ Æú´õ)¸¦ °¡Á®¿È
+        // í”„ë¡œì íŠ¸ í´ë”(ìµœìƒìœ„ í´ë”)ë¥¼ ê°€ì ¸ì˜´
         fileSystem::path rootPath = fileSystem::current_path();
 
         if (!fileSystem::exists(rootPath))
         {
-            std::string errorMessage = "[" + rootPath.string() + "] À§Ä¡¿¡ ÇÁ·ÎÁ§Æ® Æú´õ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.";
+            std::string errorMessage = "[" + rootPath.string() + "] ìœ„ì¹˜ì— í”„ë¡œì íŠ¸ í´ë”ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.";
 
             throw ENGINE_UI_EXCEPTION(errorMessage.c_str());
         }
 
-        // ÃÖ»óÀ§ Æú´õºÎÅÍ Tree¸¦ ¸¸µë
+        // ìµœìƒìœ„ í´ë”ë¶€í„° Treeë¥¼ ë§Œë“¬
         std::filesystem::directory_entry entry(rootPath);
         return BuildFileItemTree(entry);
     }
 
     std::shared_ptr<FolderView::FileItemTree> FolderView::BuildFileItemTree(const std::filesystem::directory_entry& rootPath)
     {
-        // ÇØ´ç À§Ä¡¿¡¼­ ÇöÀç ÆÄÀÏ Á¤º¸¸¦ °¡Á®¿È
+        // í•´ë‹¹ ìœ„ì¹˜ì—ì„œ í˜„ì¬ íŒŒì¼ ì •ë³´ë¥¼ ê°€ì ¸ì˜´
         auto itemTree = std::make_shared<FileItemTree>();
         itemTree->name = rootPath.path().filename().string();
         itemTree->isFolder = rootPath.is_directory();
 
-        // ÇØ´ç ÆÄÀÏÀÌ Æú´õÀÎ °æ¿ì
+        // í•´ë‹¹ íŒŒì¼ì´ í´ë”ì¸ ê²½ìš°
         if (itemTree->isFolder)
         {
-            // ¸ğµç ÀÚ½Äµéµµ ÀÚ½ÄÀ» Ã£°í ÀÚ½ÅÀÇ ÀÚ½ÄµéÀ» Æ®¸®¿¡ ³ÖÀ½
+            // ëª¨ë“  ìì‹ë“¤ë„ ìì‹ì„ ì°¾ê³  ìì‹ ì˜ ìì‹ë“¤ì„ íŠ¸ë¦¬ì— ë„£ìŒ
             for (const auto& child : fileSystem::directory_iterator(rootPath.path()))
             {
                 std::shared_ptr<FileItemTree> newFileItem = BuildFileItemTree(child);
@@ -114,17 +114,17 @@ namespace Engine
             return;
         }
 
-        // [0] ÇöÀç °æ·Î Ãâ·Â
+        // [0] í˜„ì¬ ê²½ë¡œ ì¶œë ¥
         RenderCurrentPath(itemTree);
 
-        // [1] »óÀ§ Æú´õ ÀÌµ¿ ¹öÆ° Ãâ·Â
+        // [1] ìƒìœ„ í´ë” ì´ë™ ë²„íŠ¼ ì¶œë ¥
         RenderParentFolderButton();
 
-        // itemTree°¡ nullptrÀÌ¸é folderTree »ç¿ë
+        // itemTreeê°€ nullptrì´ë©´ folderTree ì‚¬ìš©
         if (!itemTree)
             itemTree = folderTree;
 
-        // [2] Æú´õ¿Í ÆÄÀÏ ¸ñ·Ï Ãâ·Â
+        // [2] í´ë”ì™€ íŒŒì¼ ëª©ë¡ ì¶œë ¥
         RenderFolderAndFileItems(itemTree);
 
         ImGui::End();
@@ -132,7 +132,7 @@ namespace Engine
 
     ID3D11ShaderResourceView* FolderView::GetFileTextureResourceView(std::string fileName)
     {
-        // ´ë¹®ÀÚ¸¦ ¸ğµÎ ¼Ò¹®ÀÚ·Î
+        // ëŒ€ë¬¸ìë¥¼ ëª¨ë‘ ì†Œë¬¸ìë¡œ
         std::transform(fileName.begin(), fileName.end(), fileName.begin(), ::tolower);
 
         if (fileName.compare("cso") == 0 || fileName.compare("fx") == 0 || fileName.compare("hlsli") == 0)
@@ -144,7 +144,7 @@ namespace Engine
         else if (fileName.compare("fbx") == 0 || fileName.compare("stl") == 0 || fileName.compare("gltf") == 0 || fileName.compare("mtl") == 0)
             fileName = "obj";
 
-        // ÇØ´ç È®Àå¸íÀ¸·Î ÀÌ¹ÌÁö ÆÄÀÏÀÌ ¾ø´Â °æ¿ì
+        // í•´ë‹¹ í™•ì¥ëª…ìœ¼ë¡œ ì´ë¯¸ì§€ íŒŒì¼ì´ ì—†ëŠ” ê²½ìš°
         if (fileIconTextures.find(fileName) == fileIconTextures.end())
             return fileIconTextures["other"].Get();
 
@@ -159,7 +159,7 @@ namespace Engine
         CREATEINFOMANAGER(Window::GetDxGraphic());
 
         ScratchImage image;
-        hr = LoadFromWICFile(std::wstring(fileName.begin(), fileName.end()).c_str(), WIC_FLAGS_NONE, nullptr, image); // PNG ÆÄÀÏ ·Îµå (WIC »ç¿ë)
+        hr = LoadFromWICFile(std::wstring(fileName.begin(), fileName.end()).c_str(), WIC_FLAGS_NONE, nullptr, image); // PNG íŒŒì¼ ë¡œë“œ (WIC ì‚¬ìš©)
 
         GRAPHIC_THROW_INFO(hr);
 
@@ -183,13 +183,13 @@ namespace Engine
             hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, newIconTexture.GetAddressOf());
             GRAPHIC_THROW_INFO(hr);
 
-            // ÆÄÀÏ¸í ÃßÃâ (È®ÀåÀÚ ¾øÀÌ)
+            // íŒŒì¼ëª… ì¶”ì¶œ (í™•ì¥ì ì—†ì´)
             std::string fileNameString = std::filesystem::path(fileName).stem().string();
 
             if (fileNameString.compare("FileIcon") == 0)
                 fileNameString = "other";
 
-            // fileIconTextures¿¡ ÀúÀå
+            // fileIconTexturesì— ì €ì¥
             fileIconTextures[fileNameString] = newIconTexture;
 
             break;
@@ -200,7 +200,7 @@ namespace Engine
             break;
 
         default:
-            ENGINE_UI_EXCEPTION("ÇØ´ç Icon ÆÄÀÏ Å¸ÀÔÀº Á¸ÀçÇÏÁö ¾ÊÀ½");
+            ENGINE_UI_EXCEPTION("í•´ë‹¹ Icon íŒŒì¼ íƒ€ì…ì€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ");
             hr = S_FALSE;
             break;
         }
@@ -239,7 +239,7 @@ namespace Engine
 
     void FolderView::RenderCurrentPath(std::shared_ptr<FileItemTree> itemTree)
     {
-        // itemTree°¡ nullptrÀÌ¸é ±âº» folderTree »ç¿ë
+        // itemTreeê°€ nullptrì´ë©´ ê¸°ë³¸ folderTree ì‚¬ìš©
         std::shared_ptr<FileItemTree> currentFolder = itemTree ? itemTree : folderTree;
         std::string currentPath = GetRelativePath(currentFolder);
 
@@ -278,12 +278,12 @@ namespace Engine
 
     void FolderView::RenderFolderAndFileItems(std::shared_ptr<FileItemTree> itemTree)
     {
-        ImGui::BeginChild("View", ImVec2(0, 0), true);  // if¹® Á¦°Å
+        ImGui::BeginChild("View", ImVec2(0, 0), true);  // ifë¬¸ ì œê±°
         {
             const int columns = 4;
             ImGui::Columns(columns, nullptr, false);
 
-            // Æú´õ ¾ÆÀÌÅÛ Ãâ·Â
+            // í´ë” ì•„ì´í…œ ì¶œë ¥
             for (const auto& child : itemTree->chlidren)
             {
                 if (child->isFolder)
@@ -293,7 +293,7 @@ namespace Engine
                 }
             }
 
-            // ÆÄÀÏ ¾ÆÀÌÅÛ Ãâ·Â
+            // íŒŒì¼ ì•„ì´í…œ ì¶œë ¥
             for (const auto& child : itemTree->chlidren)
             {
                 if (!child->isFolder)
@@ -313,7 +313,7 @@ namespace Engine
     {
         ImGui::PushID(child->name.c_str());
 
-        // Æú´õ ¾ÆÀÌÄÜ ¹× ´õºíÅ¬¸¯À¸·Î Æú´õ ÀÌµ¿ Ã³¸®
+        // í´ë” ì•„ì´ì½˜ ë° ë”ë¸”í´ë¦­ìœ¼ë¡œ í´ë” ì´ë™ ì²˜ë¦¬
         ImVec2 startPos = ImGui::GetCursorScreenPos();
 
         ImGui::Image(reinterpret_cast<ImTextureID>(folderIconTexture.Get()), ImVec2(64, 64));
@@ -325,7 +325,7 @@ namespace Engine
         if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
             folderTree = child;
 
-        // Æú´õ ÀÌ¸§ Ãâ·Â
+        // í´ë” ì´ë¦„ ì¶œë ¥
         ImGui::SetCursorScreenPos(ImVec2(startPos.x, startPos.y + 64));
         ImGui::TextWrapped("%s", child->name.c_str());
         ImGui::PopID();
@@ -333,7 +333,7 @@ namespace Engine
 
     void FolderView::RenderFileItem(const std::shared_ptr<FileItemTree>& child)
     {
-        // ÆÄÀÏ È®ÀåÀÚ ÃßÃâ
+        // íŒŒì¼ í™•ì¥ì ì¶”ì¶œ
         std::string fileName = child->name;
         size_t dotPos = fileName.rfind('.');
 
@@ -356,12 +356,12 @@ namespace Engine
 #ifdef _WIN32
         std::filesystem::path relativePath = GetRelativePath(child);
 
-        // Àı´ë °æ·Î·Î º¯È¯
+        // ì ˆëŒ€ ê²½ë¡œë¡œ ë³€í™˜
         std::string absolutePath = StringConverter::GetAbsolutePath(relativePath);
 
         ShellExecuteA(nullptr, "open", absolutePath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 #else
-        // ¸®´ª½º¿¡¼­ ÆÄÀÏ ¿­±â
+        // ë¦¬ëˆ…ìŠ¤ì—ì„œ íŒŒì¼ ì—´ê¸°
         std::string command = "xdg-open " + path;
         system(command.c_str());
 #endif

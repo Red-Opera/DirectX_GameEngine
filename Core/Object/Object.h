@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 #include "EngineLoop.h"
 
 #include "Core/Component/Component.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Component/PhysicsComponent.h"
 
 #include <unordered_map>
@@ -18,7 +18,7 @@ class Object : public EngineLoop, public std::enable_shared_from_this<Object>
 public:
 	Object(std::string name) : name(name)
     {  
-        // ±âº»ÀûÀ¸·Î ¹°¸® ÄÄÆ÷³ÍÆ®´Â ºñÈ°¼ºÈ­ »óÅÂ·Î ½ÃÀÛ
+        // ê¸°ë³¸ì ìœ¼ë¡œ ë¬¼ë¦¬ ì»´í¬ë„ŒíŠ¸ëŠ” ë¹„í™œì„±í™” ìƒíƒœë¡œ ì‹œì‘
         hasPhysics = false;
     }
 
@@ -32,7 +32,7 @@ public:
 
 		newObject->transform = transformComponent;
 
-		// TransformComponent ÀÚÃ¼ÀÇ transform Æ÷ÀÎÅÍµµ ¾÷µ¥ÀÌÆ®
+		// TransformComponent ìì²´ì˜ transform í¬ì¸í„°ë„ ì—…ë°ì´íŠ¸
 		transformComponent->transform = transformComponent;
 
 		return newObject;
@@ -41,17 +41,17 @@ public:
 	void SetName(std::string name) { this->name = name; }
 	std::string GetName() const { return name; }
 
-	// ÇØ´ç ÄÄÆ÷³ÍÆ®¸¦ Ãß°¡ÇÏ´Â ÇÔ¼ö
+	// í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ê°€í•˜ëŠ” í•¨ìˆ˜
 	template <ComponentChild ComponentClass>
 	void AddComponent(std::shared_ptr<ComponentClass> component)
 	{
 		if (components.find(component->GetClassName()) != components.end())
 			return;
 
-		// Component¿¡ Object¸¦ ¼³Á¤ÇÔ
+		// Componentì— Objectë¥¼ ì„¤ì •í•¨
 		component->SetObject(shared_from_this());
 
-		// transform Æ÷ÀÎÅÍ µ¿±âÈ­ Ãß°¡
+		// transform í¬ì¸í„° ë™ê¸°í™” ì¶”ê°€
 		component->transform = this->transform;
 
 		components[component->GetClassName()] = component;
@@ -60,23 +60,23 @@ public:
 	template <ComponentChild ComponentClass, typename... Args>
 	std::shared_ptr<ComponentClass> AddComponent(Args&&... args)
 	{
-		// TransformComponent¸¦ Ãß°¡ÇÏ·Á´Â °æ¿ì ±âÁ¸ transform ¹İÈ¯
+		// TransformComponentë¥¼ ì¶”ê°€í•˜ë ¤ëŠ” ê²½ìš° ê¸°ì¡´ transform ë°˜í™˜
 		if constexpr (std::is_same_v<ComponentClass, TransformComponent>)
 			return std::dynamic_pointer_cast<ComponentClass>(transform);
 
-		// ¸ÕÀú ÀÌ¹Ì ÇØ´ç ÄÄÆ÷³ÍÆ®°¡ ÀÖ´ÂÁö È®ÀÎ
+		// ë¨¼ì € ì´ë¯¸ í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ê°€ ìˆëŠ”ì§€ í™•ì¸
 		std::string componentName = ComponentClass::GetStaticClassName();
 
 		if (components.find(componentName) != components.end())
 			return std::dynamic_pointer_cast<ComponentClass>(components[componentName]);
 
-		// shared_from_this() + Ãß°¡ ¸Å°³º¯¼öµéÀ» »ç¿ëÇÏ¿© ÄÄÆ÷³ÍÆ® »ı¼º
+		// shared_from_this() + ì¶”ê°€ ë§¤ê°œë³€ìˆ˜ë“¤ì„ ì‚¬ìš©í•˜ì—¬ ì»´í¬ë„ŒíŠ¸ ìƒì„±
 		auto component = std::make_shared<ComponentClass>(shared_from_this(), std::forward<Args>(args)...);
 
-		// Component¿¡ Object¸¦ ¼³Á¤ÇÔ
+		// Componentì— Objectë¥¼ ì„¤ì •í•¨
 		component->SetObject(shared_from_this());
 
-		// transform Æ÷ÀÎÅÍ µ¿±âÈ­ Ãß°¡
+		// transform í¬ì¸í„° ë™ê¸°í™” ì¶”ê°€
 		component->transform = this->transform;
 
 		components[component->GetClassName()] = component;
@@ -84,7 +84,7 @@ public:
 		return component;
 	}
 
-	// ÅÛÇÃ¸´À» »ç¿ëÇÏ¿© ÇØ´ç ÄÄÆ÷³ÍÆ®¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	// í…œí”Œë¦¿ì„ ì‚¬ìš©í•˜ì—¬ í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 	template <ComponentChild ComponentClass>
 	std::shared_ptr<ComponentClass> GetComponent()
 	{
@@ -97,7 +97,7 @@ public:
 		return nullptr;
 	}
 
-	// ÅÛÇÃ¸´À» »ç¿ëÇÏ¿© ÇØ´ç ¸ğµç ÄÄÆ÷³ÍÆ®¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	// í…œí”Œë¦¿ì„ ì‚¬ìš©í•˜ì—¬ í•´ë‹¹ ëª¨ë“  ì»´í¬ë„ŒíŠ¸ë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 	template <ComponentChild ComponentClass>
 	const std::vector<std::shared_ptr<ComponentClass>> GetComponents()
 	{
@@ -122,19 +122,19 @@ public:
 
 	void SetTransformComponent(std::shared_ptr<TransformComponent> transform);
 
-	// ¸ğµç ÄÄÆ÷³ÍÆ®¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	// ëª¨ë“  ì»´í¬ë„ŒíŠ¸ë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 	const std::vector<std::shared_ptr<Component>> GetAllComponents();
 
 	void RemoveComponent(std::string componentName);
 
-	// ÇØ´ç ÄÄÆ÷³ÍÆ®°¡ Á¸ÀçÇÏ´ÂÁö È®ÀÎÇÏ´Â ÇÔ¼ö
+	// í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ê°€ ì¡´ì¬í•˜ëŠ”ì§€ í™•ì¸í•˜ëŠ” í•¨ìˆ˜
 	bool HasComponent(std::string componentName) const;
 
-	// ¿ÀºêÁ§Æ® È°¼ºÈ­, ºñÈ°¼ºÈ­ ÇÔ¼ö
+	// ì˜¤ë¸Œì íŠ¸ í™œì„±í™”, ë¹„í™œì„±í™” í•¨ìˆ˜
 	void SetActive(bool isActive) { this->isActive = isActive; }
 	bool GetActive() const { return isActive; }
 
-    // ¹°¸® ¼Ó¼º È°¼ºÈ­ ¸Ş¼­µå Ãß°¡
+    // ë¬¼ë¦¬ ì†ì„± í™œì„±í™” ë©”ì„œë“œ ì¶”ê°€
     void EnablePhysics(bool useGravity = true)
     {
         hasPhysics = true;
@@ -167,6 +167,6 @@ protected:
 
 	std::string name;
 	bool isActive = true;
-    bool hasPhysics = false;  // ¹°¸® ½Ã¹Ä·¹ÀÌ¼Ç Àû¿ë ¿©ºÎ
-    bool useGravity = true;   // Áß·Â Àû¿ë ¿©ºÎ
+    bool hasPhysics = false;  // ë¬¼ë¦¬ ì‹œë®¬ë ˆì´ì…˜ ì ìš© ì—¬ë¶€
+    bool useGravity = true;   // ì¤‘ë ¥ ì ìš© ì—¬ë¶€
 };

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Scene.h"
 
 #include "Core/App.h"
@@ -181,7 +181,7 @@ void Scene::Update()
 
 	const Camera& activeCamera = CameraContainer::GetActiveCamera();
 
-	// È°¼º Ä«¸Ş¶óÀÇ ºä Çà·Ä°ú Åõ¿µ Çà·Ä ±¸ÇÏ±â
+	// í™œì„± ì¹´ë©”ë¼ì˜ ë·° í–‰ë ¬ê³¼ íˆ¬ì˜ í–‰ë ¬ êµ¬í•˜ê¸°
 	DirectX::XMMATRIX viewMatrix = activeCamera.GetMatrix();
 	DirectX::XMMATRIX projMatrix = activeCamera.GetProjection();
 	RenderGraphNameSpace::RenderJob::GetViewFrustum().UpdateFromMatrices(viewMatrix, projMatrix);

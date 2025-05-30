@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Exception/GraphicsException.h"
 #include "Core/RenderingPipeline/Render.h"
@@ -26,7 +26,7 @@ namespace Graphic
 			viewport.TopLeftY = 0.0f;
 		}
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
 			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());

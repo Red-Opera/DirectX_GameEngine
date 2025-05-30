@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "DxGraphicResource.h"
 
 #include <stdexcept>
@@ -18,6 +18,6 @@ ExceptionInfo& DxGraphicResource::GetInfoManager(DxGraphic& graphic)
 #ifndef NDEBUG
     return graphic.infoManager;
 #else
-    throw std::logic_error("Release¿¡¼­´Â Info Manager¸¦ Á¢±ÙÇÒ ¼ö ¾øÀ½");
+    throw std::logic_error("Releaseì—ì„œëŠ” Info Managerë¥¼ ì ‘ê·¼í•  ìˆ˜ ì—†ìŒ");
 #endif
 }

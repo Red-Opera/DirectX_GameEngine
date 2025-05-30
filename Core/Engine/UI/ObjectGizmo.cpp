@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ObjectGizmo.h"
 
 #include "Core/Scene/Base/SceneGraph.h"
@@ -10,7 +10,7 @@ void Engine::ObjectGizmo::SetSelectedObject(std::shared_ptr<Object> object)
 {
 	selectedObject = object;
 
-	// ¼±ÅÃµÈ °´Ã¼°¡ ¾øÀ¸¸é Gizmo¸¦ ºñÈ°¼ºÈ­
+	// ì„ íƒëœ ê°ì²´ê°€ ì—†ìœ¼ë©´ Gizmoë¥¼ ë¹„í™œì„±í™”
     if (selectedObject == nullptr)
     {
         currentGizmoSetting = ImGuizmo::TRANSLATE;
@@ -24,7 +24,7 @@ void Engine::ObjectGizmo::RenderGizmoUI()
     {
         ImGui::Text("Gizmo Mode:");
 
-        // º¯È¯ Á¶ÀÛ À¯Çü ¼±ÅÃ (ÀÌµ¿/È¸Àü/Å©±â Á¶Àı)
+        // ë³€í™˜ ì¡°ì‘ ìœ í˜• ì„ íƒ (ì´ë™/íšŒì „/í¬ê¸° ì¡°ì ˆ)
         if (ImGui::RadioButton("Translate", currentGizmoSetting == ImGuizmo::TRANSLATE))
             currentGizmoSetting = ImGuizmo::TRANSLATE;
 
@@ -36,7 +36,7 @@ void Engine::ObjectGizmo::RenderGizmoUI()
         if (ImGui::RadioButton("Scale", currentGizmoSetting == ImGuizmo::SCALE))
             currentGizmoSetting = ImGuizmo::SCALE;
 
-        // ·ÎÄÃ/¿ùµå ÁÂÇ¥°è ¼±ÅÃ
+        // ë¡œì»¬/ì›”ë“œ ì¢Œí‘œê³„ ì„ íƒ
         ImGui::Text("Coordinate System:");
 
         if (ImGui::RadioButton("World", currentApplyMode == ImGuizmo::WORLD))
@@ -62,16 +62,16 @@ void Engine::ObjectGizmo::ApplyGizmo
     if (object == nullptr)
         return;
 
-    // ImGuizmo¸¦ ÀüÃ¼ È­¸é¿¡ ¼³Á¤
+    // ImGuizmoë¥¼ ì „ì²´ í™”ë©´ì— ì„¤ì •
     ImGuizmo::Enable(true);
     ImGuizmo::BeginFrame();
     ImGuizmo::SetOrthographic(false);
     ImGuizmo::SetDrawlist(ImGui::GetBackgroundDrawList());
 
-    // ÀüÃ¼ È­¸é Å©±â ¼³Á¤
+    // ì „ì²´ í™”ë©´ í¬ê¸° ì„¤ì •
     ImGuizmo::SetRect(0, 0, screenWidth, screenHeight);
 
-    // ½º³À °ª ¼³Á¤
+    // ìŠ¤ëƒ… ê°’ ì„¤ì •
     float snapValues[3] = { 1.0f, 1.0f, 1.0f };
 
     if (currentGizmoSetting == ImGuizmo::ROTATE)
@@ -88,14 +88,14 @@ void Engine::ObjectGizmo::ApplyGizmo
     DirectX::XMStoreFloat4x4(&viewMatrixFloat, viewMatrix);
     DirectX::XMStoreFloat4x4(&projectionMatrixFloat, projectionMatrix);
 
-    // ObjectÀÇ ÇöÀç º¯È¯ Çà·Ä °¡Á®¿À±â
+    // Objectì˜ í˜„ì¬ ë³€í™˜ í–‰ë ¬ ê°€ì ¸ì˜¤ê¸°
     auto transform = object->transform;
 
-    // Ç×»ó ¿ùµå º¯È¯ Çà·ÄÀ» »ç¿ëÇÏ¿© ±âÁî¸ğÀÇ À§Ä¡¸¦ °áÁ¤
+    // í•­ìƒ ì›”ë“œ ë³€í™˜ í–‰ë ¬ì„ ì‚¬ìš©í•˜ì—¬ ê¸°ì¦ˆëª¨ì˜ ìœ„ì¹˜ë¥¼ ê²°ì •
     DirectX::XMFLOAT4X4 objectMatrix;
     DirectX::XMStoreFloat4x4(&objectMatrix, transform->GetTransformMatrix());
 
-    // ±âÁî¸ğ Á¶ÀÛ ¸ğµå ¼³Á¤ - ÀÚ½Ä ¿ÀºêÁ§Æ®ÀÏ °æ¿ì ·ÎÄÃ ¸ğµå¿Í »ó°ü¾øÀÌ ¿ùµå À§Ä¡¿¡ Ç¥½Ã
+    // ê¸°ì¦ˆëª¨ ì¡°ì‘ ëª¨ë“œ ì„¤ì • - ìì‹ ì˜¤ë¸Œì íŠ¸ì¼ ê²½ìš° ë¡œì»¬ ëª¨ë“œì™€ ìƒê´€ì—†ì´ ì›”ë“œ ìœ„ì¹˜ì— í‘œì‹œ
     ImGuizmo::MODE effectiveGizmoMode = currentApplyMode;
 
     bool manipulated = ImGuizmo::Manipulate
@@ -115,7 +115,7 @@ void Engine::ObjectGizmo::ApplyGizmo
     DirectX::XMVECTOR translation, rotation, scale;
     ImGuizmo::DecomposeMatrixToComponents(&objectMatrix._11, &translation.m128_f32[0], &rotation.m128_f32[0], &scale.m128_f32[0]);
 
-    // È¸Àü °ªÀ» °¢µµ(µµ)·Î ¹İÈ¯ÇÏ¹Ç·Î ¶óµğ¾ÈÀ¸·Î º¯È¯
+    // íšŒì „ ê°’ì„ ê°ë„(ë„)ë¡œ ë°˜í™˜í•˜ë¯€ë¡œ ë¼ë””ì•ˆìœ¼ë¡œ ë³€í™˜
     Rotation rotationRadians;
     rotationRadians.x = Math::ConvertAngleToRadian(rotation.m128_f32[0]);
     rotationRadians.y = Math::ConvertAngleToRadian(rotation.m128_f32[1]);
@@ -143,19 +143,19 @@ void Engine::ObjectGizmo::Update
     const DirectX::XMMATRIX& projMatrix
 )
 {
-    // ÄÁÆ®·Ñ UI´Â º°µµ Ã¢¿¡ Ç¥½Ã
+    // ì»¨íŠ¸ë¡¤ UIëŠ” ë³„ë„ ì°½ì— í‘œì‹œ
     RenderGizmoUI();
 
     auto selectedObject = sceneGraph->GetSelectedObject();
 
-    // SceneGraph¿¡¼­ ¼±ÅÃµÈ °´Ã¼°¡ ÀÖÀ» ¶§ ¸ŞÀÎ È­¸é¿¡ Gizmo ·»´õ¸µ
+    // SceneGraphì—ì„œ ì„ íƒëœ ê°ì²´ê°€ ìˆì„ ë•Œ ë©”ì¸ í™”ë©´ì— Gizmo ë Œë”ë§
     if (selectedObject != nullptr)
     {
-        // È­¸é Å©±â °¡Á®¿À±â
+        // í™”ë©´ í¬ê¸° ê°€ì ¸ì˜¤ê¸°
         float screenWidth = static_cast<float>(Window::GetDxGraphic().GetWidth());
         float screenHeight = static_cast<float>(Window::GetDxGraphic().GetHeight());
 
-        // ¸ŞÀÎ È­¸é¿¡ Gizmo ·»´õ¸µ
+        // ë©”ì¸ í™”ë©´ì— Gizmo ë Œë”ë§
         ApplyGizmo(selectedObject, viewMatrix, projMatrix, screenWidth, screenHeight);
     }
 }

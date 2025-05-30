@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Core/RenderingPipeline/Render.h"
 
 #include <map>
@@ -12,7 +12,7 @@ namespace Graphic
 	public:
 		Texture(const std::string& path, UINT slot = 0);
 
-		// BindableÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Bindableì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 		static std::shared_ptr<Texture> GetRender(const std::string& path, UINT slot = 0);

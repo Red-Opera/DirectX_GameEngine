@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ShadowRasterizer.h"
 
 #include "Core/Exception/GraphicsException.h"

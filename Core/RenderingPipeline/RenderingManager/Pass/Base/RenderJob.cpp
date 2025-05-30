@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "RenderJob.h"
 
 #include "Core/Draw/Base/Drawable.h"
@@ -21,7 +21,7 @@ namespace RenderGraphNameSpace
 
     void RenderJob::Excute(bool isPassFrustumCulling) NOEXCEPTRELEASE
     {
-		// Frustum Culling Ã¼Å© (ÇØ´ç Pass°¡ Frustum CullingÀ» »ç¿ëÇÏ´ÂÁö ¿©ºÎ, Frustum CullingÀÌ È°¼ºÈ­µÇ¾î ÀÖ´ÂÁö ¿©ºÎ, Frustum ¾È¿¡ µé¾î¿ÂÁö ¿©ºÎ)
+		// Frustum Culling ì²´í¬ (í•´ë‹¹ Passê°€ Frustum Cullingì„ ì‚¬ìš©í•˜ëŠ”ì§€ ì—¬ë¶€, Frustum Cullingì´ í™œì„±í™”ë˜ì–´ ìˆëŠ”ì§€ ì—¬ë¶€, Frustum ì•ˆì— ë“¤ì–´ì˜¨ì§€ ì—¬ë¶€)
         if (isPassFrustumCulling && useViewFrustum && !IsInViewFrustum())
             return;
 
@@ -35,7 +35,7 @@ namespace RenderGraphNameSpace
     {
         m_useOcclusionCulling = enable;
 
-        // OcclusionCulling °´Ã¼ Áö¿¬ »ı¼º
+        // OcclusionCulling ê°ì²´ ì§€ì—° ìƒì„±
         if (enable && m_occlusionCulling == nullptr)
         {
             m_occlusionCulling = std::make_unique<OcclusionCulling>();
@@ -65,13 +65,13 @@ namespace RenderGraphNameSpace
 
     bool RenderJob::IsVisibleAfterOcclusionTest() const
     {
-        // Occlusion CullingÀÌ ºñÈ°¼ºÈ­µÇ¾î ÀÖÀ¸¸é Ç×»ó º¸ÀÌ´Â °ÍÀ¸·Î °£ÁÖ
+        // Occlusion Cullingì´ ë¹„í™œì„±í™”ë˜ì–´ ìˆìœ¼ë©´ í•­ìƒ ë³´ì´ëŠ” ê²ƒìœ¼ë¡œ ê°„ì£¼
         if (!IsOcclusionCullingEnabled())
         {
             return true;
         }
 
-        // Occlusion Query °á°ú È®ÀÎ
+        // Occlusion Query ê²°ê³¼ í™•ì¸
         return m_occlusionCulling->IsVisible();
     }
 

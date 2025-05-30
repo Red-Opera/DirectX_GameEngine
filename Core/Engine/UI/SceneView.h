@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "External/Imgui/imgui.h"
 #include "External/Imgui/imgui_impl_dx11.h"
@@ -22,7 +22,7 @@ namespace Graphic
 
 		static Microsoft::WRL::ComPtr<ID3D11Texture2D> GetScreen() { return renderTargetTexture; }
 
-        // RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+        // Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
         void SetRenderPipeline() override;
 
     private:

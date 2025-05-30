@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ColorConeObject.h"
 
 #include "../BaseModel/ConeFrame.h"

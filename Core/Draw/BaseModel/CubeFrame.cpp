@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CubeFrame.h"
 
 TriangleIndexList CubeFrame::CreateFrame(std::optional<VertexCore::VertexLayout> vertexLayout)

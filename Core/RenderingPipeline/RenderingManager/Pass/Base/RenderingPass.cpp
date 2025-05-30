@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "RenderingPass.h"
 
 #include "Core/Exception/RenderGraphCompileException.h"
@@ -33,7 +33,7 @@ namespace RenderGraphNameSpace
 		RenderPass::Finalize();
 
 		if (renderTarget == nullptr && depthStencil == nullptr)
-			throw RENDER_GRAPHIC_EXCEPTION("Rendering Pass [" + GetName() + "]°¡ Render Target ¶Ç´Â Depth Stencil Áß ÇÏ³ª°¡ ÇÊ¿äÇÔ");
+			throw RENDER_GRAPHIC_EXCEPTION("Rendering Pass [" + GetName() + "]ê°€ Render Target ë˜ëŠ” Depth Stencil ì¤‘ í•˜ë‚˜ê°€ í•„ìš”í•¨");
 	}
 
 	void RenderingPass::RenderBufferResources() const NOEXCEPTRELEASE

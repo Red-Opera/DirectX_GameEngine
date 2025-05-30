@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "TransformComponent.h"
 
 #include "Core/Object/Object.h"
@@ -13,12 +13,12 @@ void TransformComponent::SetPosition(Position position) noexcept
 {
 	worldTransform.position = position;
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ À§Ä¡ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ ìœ„ì¹˜ ê³„ì‚°
 	if (HasParent())
 	{
 		XMFLOAT3 worldPostiion = { position.x, position.y, position.z };
 
-		// ºÎ¸ğÀÇ ¿ªº¯È¯À» Àû¿ëÇÏ¿© ·ÎÄÃ À§Ä¡ °è»ê
+		// ë¶€ëª¨ì˜ ì—­ë³€í™˜ì„ ì ìš©í•˜ì—¬ ë¡œì»¬ ìœ„ì¹˜ ê³„ì‚°
 		DirectX::XMVECTOR worldPos = DirectX::XMLoadFloat3(&worldPostiion);
 		DirectX::XMMATRIX parentWorldToLocalMatrix = DirectX::XMMatrixInverse(nullptr, parent->GetTransformMatrix());
 		DirectX::XMVECTOR localPos = DirectX::XMVector3TransformCoord(worldPos, parentWorldToLocalMatrix);
@@ -29,7 +29,7 @@ void TransformComponent::SetPosition(Position position) noexcept
 		localTransform.position = { localPosFloat3.x, localPosFloat3.y, localPosFloat3.z };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå À§Ä¡¿Í ·ÎÄÃ À§Ä¡´Â °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìœ„ì¹˜ì™€ ë¡œì»¬ ìœ„ì¹˜ëŠ” ê°™ìŒ
 	else
 		localTransform.position = position;
 }
@@ -38,10 +38,10 @@ void TransformComponent::SetPosition(DirectX::XMFLOAT3 position) noexcept
 {
 	worldTransform.position = { position.x, position.y, position.z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ À§Ä¡ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ ìœ„ì¹˜ ê³„ì‚°
 	if (HasParent())
 	{
-		// ºÎ¸ğÀÇ ¿ªº¯È¯À» Àû¿ëÇÏ¿© ·ÎÄÃ À§Ä¡ °è»ê
+		// ë¶€ëª¨ì˜ ì—­ë³€í™˜ì„ ì ìš©í•˜ì—¬ ë¡œì»¬ ìœ„ì¹˜ ê³„ì‚°
 		DirectX::XMVECTOR worldPos = DirectX::XMLoadFloat3(&position);
 		DirectX::XMMATRIX parentWorldToLocalMatrix = DirectX::XMMatrixInverse(nullptr, parent->GetTransformMatrix());
 		DirectX::XMVECTOR localPos = DirectX::XMVector3TransformCoord(worldPos, parentWorldToLocalMatrix);
@@ -52,7 +52,7 @@ void TransformComponent::SetPosition(DirectX::XMFLOAT3 position) noexcept
 		localTransform.position = { localPosFloat3.x, localPosFloat3.y, localPosFloat3.z };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå À§Ä¡¿Í ·ÎÄÃ À§Ä¡´Â °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìœ„ì¹˜ì™€ ë¡œì»¬ ìœ„ì¹˜ëŠ” ê°™ìŒ
 	else
 		localTransform.position = { position.x, position.y, position.z };
 }
@@ -61,10 +61,10 @@ void TransformComponent::SetPosition(float x, float y, float z) noexcept
 {
 	worldTransform.position = { x, y, z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ À§Ä¡ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ ìœ„ì¹˜ ê³„ì‚°
 	if (HasParent())
 	{
-		// ºÎ¸ğÀÇ ¿ªº¯È¯À» Àû¿ëÇÏ¿© ·ÎÄÃ À§Ä¡ °è»ê
+		// ë¶€ëª¨ì˜ ì—­ë³€í™˜ì„ ì ìš©í•˜ì—¬ ë¡œì»¬ ìœ„ì¹˜ ê³„ì‚°
 		DirectX::XMFLOAT3 worldPos = { x, y, z };
 		DirectX::XMVECTOR worldPosVector = DirectX::XMLoadFloat3(&worldPos);
 		DirectX::XMMATRIX parentWorldToLocalMatrix = DirectX::XMMatrixInverse(nullptr, parent->GetTransformMatrix());
@@ -76,7 +76,7 @@ void TransformComponent::SetPosition(float x, float y, float z) noexcept
 		localTransform.position = { localPosFloat3.x, localPosFloat3.y, localPosFloat3.z };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå À§Ä¡¿Í ·ÎÄÃ À§Ä¡´Â °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìœ„ì¹˜ì™€ ë¡œì»¬ ìœ„ì¹˜ëŠ” ê°™ìŒ
 	else
 		localTransform.position = { x, y, z };
 }
@@ -90,20 +90,20 @@ void TransformComponent::SetRotation(float roll, float pitch, float yaw) noexcep
 {
 	worldTransform.rotation = { roll, pitch, yaw };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ È¸Àü °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ íšŒì „ ê³„ì‚°
 	if (HasParent())
 	{
-		// ¿ùµå È¸Àü¿¡¼­ ºÎ¸ğÀÇ È¸ÀüÀ» »©¼­ ·ÎÄÃ È¸Àü °è»ê
+		// ì›”ë“œ íšŒì „ì—ì„œ ë¶€ëª¨ì˜ íšŒì „ì„ ë¹¼ì„œ ë¡œì»¬ íšŒì „ ê³„ì‚°
 		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(roll, pitch, yaw);
 		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
 		DirectX::XMVECTOR parentRotQuatInv = DirectX::XMQuaternionInverse(parentRotQuat);
 		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionMultiply(parentRotQuatInv, worldRotQuat);
 
-		// ÄõÅÍ´Ï¾ğÀ» ¿ÀÀÏ·¯ °¢À¸·Î º¯È¯
+		// ì¿¼í„°ë‹ˆì–¸ì„ ì˜¤ì¼ëŸ¬ ê°ìœ¼ë¡œ ë³€í™˜
 		DirectX::XMFLOAT4 localRotFloat4;
 		DirectX::XMStoreFloat4(&localRotFloat4, localRotQuat);
 
-		// ÄõÅÍ´Ï¾ğ¿¡¼­ ¿ÀÀÏ·¯ °¢ ÃßÃâ
+		// ì¿¼í„°ë‹ˆì–¸ì—ì„œ ì˜¤ì¼ëŸ¬ ê° ì¶”ì¶œ
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(localRotQuat);
 		float localPitch = asinf(-rotMatrix.r[2].m128_f32[1]);
 		float localRoll, localYaw;
@@ -122,7 +122,7 @@ void TransformComponent::SetRotation(float roll, float pitch, float yaw) noexcep
 		localTransform.rotation = { localRoll, localPitch, localYaw };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå È¸Àü°ú ·ÎÄÃ È¸ÀüÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ íšŒì „ê³¼ ë¡œì»¬ íšŒì „ì€ ê°™ìŒ
 	else
 		localTransform.rotation = { roll, pitch, yaw };
 }
@@ -136,10 +136,10 @@ void TransformComponent::SetScale(Scale scale) noexcept
 {
 	worldTransform.scale = scale;
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ ½ºÄÉÀÏ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ ìŠ¤ì¼€ì¼ ê³„ì‚°
 	if (HasParent())
 	{
-		// ¿ùµå ½ºÄÉÀÏÀ» ºÎ¸ğÀÇ ½ºÄÉÀÏ·Î ³ª´©¾î ·ÎÄÃ ½ºÄÉÀÏ °è»ê
+		// ì›”ë“œ ìŠ¤ì¼€ì¼ì„ ë¶€ëª¨ì˜ ìŠ¤ì¼€ì¼ë¡œ ë‚˜ëˆ„ì–´ ë¡œì»¬ ìŠ¤ì¼€ì¼ ê³„ì‚°
 		localTransform.scale = {
 			scale.x / parent->GetScale().x,
 			scale.y / parent->GetScale().y,
@@ -147,7 +147,7 @@ void TransformComponent::SetScale(Scale scale) noexcept
 		};
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ°ú ·ÎÄÃ ½ºÄÉÀÏÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ê³¼ ë¡œì»¬ ìŠ¤ì¼€ì¼ì€ ê°™ìŒ
 	else
 		localTransform.scale = scale;
 }
@@ -156,10 +156,10 @@ void TransformComponent::SetScale(DirectX::XMFLOAT3 scale) noexcept
 {
 	worldTransform.scale = { scale.x, scale.y, scale.z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ ½ºÄÉÀÏ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ ìŠ¤ì¼€ì¼ ê³„ì‚°
 	if (HasParent())
 	{
-		// ¿ùµå ½ºÄÉÀÏÀ» ºÎ¸ğÀÇ ½ºÄÉÀÏ·Î ³ª´©¾î ·ÎÄÃ ½ºÄÉÀÏ °è»ê
+		// ì›”ë“œ ìŠ¤ì¼€ì¼ì„ ë¶€ëª¨ì˜ ìŠ¤ì¼€ì¼ë¡œ ë‚˜ëˆ„ì–´ ë¡œì»¬ ìŠ¤ì¼€ì¼ ê³„ì‚°
 		localTransform.scale = {
 			scale.x / parent->GetScale().x,
 			scale.y / parent->GetScale().y,
@@ -167,7 +167,7 @@ void TransformComponent::SetScale(DirectX::XMFLOAT3 scale) noexcept
 		};
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ°ú ·ÎÄÃ ½ºÄÉÀÏÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ê³¼ ë¡œì»¬ ìŠ¤ì¼€ì¼ì€ ê°™ìŒ
 	else
 		localTransform.scale = { scale.x, scale.y, scale.z };
 }
@@ -176,17 +176,17 @@ void TransformComponent::SetScale(float x, float y, float z) noexcept
 {
 	worldTransform.scale = { x, y, z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ ½ºÄÉÀÏ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ ìŠ¤ì¼€ì¼ ê³„ì‚°
 	if (HasParent())
 	{
-		// ¿ùµå ½ºÄÉÀÏÀ» ºÎ¸ğÀÇ ½ºÄÉÀÏ·Î ³ª´©¾î ·ÎÄÃ ½ºÄÉÀÏ °è»ê
+		// ì›”ë“œ ìŠ¤ì¼€ì¼ì„ ë¶€ëª¨ì˜ ìŠ¤ì¼€ì¼ë¡œ ë‚˜ëˆ„ì–´ ë¡œì»¬ ìŠ¤ì¼€ì¼ ê³„ì‚°
 		localTransform.scale = {
 			x / parent->GetScale().x,
 			y / parent->GetScale().y,
 			z / parent->GetScale().z
 		};
 	}
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ°ú ·ÎÄÃ ½ºÄÉÀÏÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ê³¼ ë¡œì»¬ ìŠ¤ì¼€ì¼ì€ ê°™ìŒ
 	else
 		localTransform.scale = { x, y, z };
 }
@@ -198,19 +198,19 @@ Scale& TransformComponent::GetScale() noexcept
 
 const Vector3 TransformComponent::GetRight() const noexcept
 {
-	// È¸Àü Çà·ÄÀ» »ı¼º
+	// íšŒì „ í–‰ë ¬ì„ ìƒì„±
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z);
 
-	// ¿ùµå ÁÂÇ¥°èÀÇ ±âº» ¿À¸¥ÂÊ º¤ÅÍ (1, 0, 0)¸¦ ·Îµå
+	// ì›”ë“œ ì¢Œí‘œê³„ì˜ ê¸°ë³¸ ì˜¤ë¥¸ìª½ ë²¡í„° (1, 0, 0)ë¥¼ ë¡œë“œ
 	DirectX::XMVECTOR rightVector = DirectX::XMLoadFloat3(&Vector::right);
 
-	// È¸Àü Çà·ÄÀ» »ç¿ëÇÏ¿© ±âº» ¿À¸¥ÂÊ º¤ÅÍ¸¦ º¯È¯
+	// íšŒì „ í–‰ë ¬ì„ ì‚¬ìš©í•˜ì—¬ ê¸°ë³¸ ì˜¤ë¥¸ìª½ ë²¡í„°ë¥¼ ë³€í™˜
 	rightVector = DirectX::XMVector3TransformNormal(rightVector, rotationMatrix);
 
-	// º¯È¯µÈ º¤ÅÍ¸¦ Á¤±ÔÈ­
+	// ë³€í™˜ëœ ë²¡í„°ë¥¼ ì •ê·œí™”
 	rightVector = DirectX::XMVector3Normalize(rightVector);
 
-	// XMVECTOR¸¦ Vector3·Î º¯È¯
+	// XMVECTORë¥¼ Vector3ë¡œ ë³€í™˜
 	DirectX::XMFLOAT3 right;
 	DirectX::XMStoreFloat3(&right, rightVector);
 
@@ -219,19 +219,19 @@ const Vector3 TransformComponent::GetRight() const noexcept
 
 const Vector3 TransformComponent::GetUp() const noexcept
 {
-	// È¸Àü Çà·ÄÀ» »ı¼º
+	// íšŒì „ í–‰ë ¬ì„ ìƒì„±
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z);
 
-	// ¿ùµå ÁÂÇ¥°èÀÇ ±âº» ¿À¸¥ÂÊ º¤ÅÍ (1, 0, 0)¸¦ ·Îµå
+	// ì›”ë“œ ì¢Œí‘œê³„ì˜ ê¸°ë³¸ ì˜¤ë¥¸ìª½ ë²¡í„° (1, 0, 0)ë¥¼ ë¡œë“œ
 	DirectX::XMVECTOR upVector = DirectX::XMLoadFloat3(&Vector::up);
 
-	// È¸Àü Çà·ÄÀ» »ç¿ëÇÏ¿© ±âº» ¿À¸¥ÂÊ º¤ÅÍ¸¦ º¯È¯
+	// íšŒì „ í–‰ë ¬ì„ ì‚¬ìš©í•˜ì—¬ ê¸°ë³¸ ì˜¤ë¥¸ìª½ ë²¡í„°ë¥¼ ë³€í™˜
 	upVector = DirectX::XMVector3TransformNormal(upVector, rotationMatrix);
 
-	// º¯È¯µÈ º¤ÅÍ¸¦ Á¤±ÔÈ­
+	// ë³€í™˜ëœ ë²¡í„°ë¥¼ ì •ê·œí™”
 	upVector = DirectX::XMVector3Normalize(upVector);
 
-	// XMVECTOR¸¦ Vector3·Î º¯È¯
+	// XMVECTORë¥¼ Vector3ë¡œ ë³€í™˜
 	DirectX::XMFLOAT3 up;
 	DirectX::XMStoreFloat3(&up, upVector);
 
@@ -240,19 +240,19 @@ const Vector3 TransformComponent::GetUp() const noexcept
 
 const Vector3 TransformComponent::GetForward() const noexcept
 {
-	// È¸Àü Çà·ÄÀ» »ı¼º
+	// íšŒì „ í–‰ë ¬ì„ ìƒì„±
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z);
 
-	// ¿ùµå ÁÂÇ¥°èÀÇ ±âº» ¿À¸¥ÂÊ º¤ÅÍ (1, 0, 0)¸¦ ·Îµå
+	// ì›”ë“œ ì¢Œí‘œê³„ì˜ ê¸°ë³¸ ì˜¤ë¥¸ìª½ ë²¡í„° (1, 0, 0)ë¥¼ ë¡œë“œ
 	DirectX::XMVECTOR forwardVector = DirectX::XMLoadFloat3(&Vector::forward);
 
-	// È¸Àü Çà·ÄÀ» »ç¿ëÇÏ¿© ±âº» ¿À¸¥ÂÊ º¤ÅÍ¸¦ º¯È¯
+	// íšŒì „ í–‰ë ¬ì„ ì‚¬ìš©í•˜ì—¬ ê¸°ë³¸ ì˜¤ë¥¸ìª½ ë²¡í„°ë¥¼ ë³€í™˜
 	forwardVector = DirectX::XMVector3TransformNormal(forwardVector, rotationMatrix);
 
-	// º¯È¯µÈ º¤ÅÍ¸¦ Á¤±ÔÈ­
+	// ë³€í™˜ëœ ë²¡í„°ë¥¼ ì •ê·œí™”
 	forwardVector = DirectX::XMVector3Normalize(forwardVector);
 
-	// XMVECTOR¸¦ Vector3·Î º¯È¯
+	// XMVECTORë¥¼ Vector3ë¡œ ë³€í™˜
 	DirectX::XMFLOAT3 forward;
 	DirectX::XMStoreFloat3(&forward, forwardVector);
 
@@ -268,21 +268,21 @@ void TransformComponent::SetRotation(Rotation rotation) noexcept
 {
 	worldTransform.rotation = rotation;
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ È¸Àü °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ íšŒì „ ê³„ì‚°
 	if (HasParent())
 	{
-		// ¿ùµå È¸Àü¿¡¼­ ºÎ¸ğÀÇ È¸ÀüÀ» »©¼­ ·ÎÄÃ È¸Àü °è»ê
-		// ÀÌ¶§ ÄõÅÍ´Ï¾ğ ¹æ½ÄÀ¸·Î º¯È¯ÇÏ¿© °è»ê
+		// ì›”ë“œ íšŒì „ì—ì„œ ë¶€ëª¨ì˜ íšŒì „ì„ ë¹¼ì„œ ë¡œì»¬ íšŒì „ ê³„ì‚°
+		// ì´ë•Œ ì¿¼í„°ë‹ˆì–¸ ë°©ì‹ìœ¼ë¡œ ë³€í™˜í•˜ì—¬ ê³„ì‚°
 		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
 		DirectX::XMVECTOR parentRotQuatInv = DirectX::XMQuaternionInverse(parentRotQuat);
 		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionMultiply(parentRotQuatInv, worldRotQuat);
 
-		// ÄõÅÍ´Ï¾ğÀ» ¿ÀÀÏ·¯ °¢À¸·Î º¯È¯
+		// ì¿¼í„°ë‹ˆì–¸ì„ ì˜¤ì¼ëŸ¬ ê°ìœ¼ë¡œ ë³€í™˜
 		DirectX::XMFLOAT4 localRotFloat4;
 		DirectX::XMStoreFloat4(&localRotFloat4, localRotQuat);
 
-		// ÄõÅÍ´Ï¾ğ¿¡¼­ ¿ÀÀÏ·¯ °¢ ÃßÃâ
+		// ì¿¼í„°ë‹ˆì–¸ì—ì„œ ì˜¤ì¼ëŸ¬ ê° ì¶”ì¶œ
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(localRotQuat);
 		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
 		float roll, yaw;
@@ -302,7 +302,7 @@ void TransformComponent::SetRotation(Rotation rotation) noexcept
 		localTransform.rotation = { roll, pitch, yaw };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå È¸Àü°ú ·ÎÄÃ È¸ÀüÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ íšŒì „ê³¼ ë¡œì»¬ íšŒì „ì€ ê°™ìŒ
 	else
 		localTransform.rotation = rotation;
 }
@@ -311,20 +311,20 @@ void TransformComponent::SetRotation(DirectX::XMFLOAT3 rotation) noexcept
 {
 	worldTransform.rotation = { rotation.x, rotation.y, rotation.z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ·ÎÄÃ È¸Àü °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ë¡œì»¬ íšŒì „ ê³„ì‚°
 	if (HasParent())
 	{
-		// ¿ùµå È¸Àü¿¡¼­ ºÎ¸ğÀÇ È¸ÀüÀ» »©¼­ ·ÎÄÃ È¸Àü °è»ê
+		// ì›”ë“œ íšŒì „ì—ì„œ ë¶€ëª¨ì˜ íšŒì „ì„ ë¹¼ì„œ ë¡œì»¬ íšŒì „ ê³„ì‚°
 		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
 		DirectX::XMVECTOR parentRotQuatInv = DirectX::XMQuaternionInverse(parentRotQuat);
 		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionMultiply(parentRotQuatInv, worldRotQuat);
 
-		// ÄõÅÍ´Ï¾ğÀ» ¿ÀÀÏ·¯ °¢À¸·Î º¯È¯
+		// ì¿¼í„°ë‹ˆì–¸ì„ ì˜¤ì¼ëŸ¬ ê°ìœ¼ë¡œ ë³€í™˜
 		DirectX::XMFLOAT4 localRotFloat4;
 		DirectX::XMStoreFloat4(&localRotFloat4, localRotQuat);
 
-		// ÄõÅÍ´Ï¾ğ¿¡¼­ ¿ÀÀÏ·¯ °¢ ÃßÃâ
+		// ì¿¼í„°ë‹ˆì–¸ì—ì„œ ì˜¤ì¼ëŸ¬ ê° ì¶”ì¶œ
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(localRotQuat);
 		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
 		float roll, yaw;
@@ -344,7 +344,7 @@ void TransformComponent::SetRotation(DirectX::XMFLOAT3 rotation) noexcept
 		localTransform.rotation = { roll, pitch, yaw };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå È¸Àü°ú ·ÎÄÃ È¸ÀüÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ íšŒì „ê³¼ ë¡œì»¬ íšŒì „ì€ ê°™ìŒ
 	else
 		localTransform.rotation = { rotation.x, rotation.y, rotation.z };
 }
@@ -353,10 +353,10 @@ void TransformComponent::SetLocalPosition(Position position) noexcept
 {
 	localTransform.position = position;
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå À§Ä¡ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ ìœ„ì¹˜ ê³„ì‚°
 	if (HasParent())
 	{
-		// ºÎ¸ğÀÇ º¯È¯ Çà·ÄÀ» »ç¿ëÇÏ¿© ¿ùµå À§Ä¡ °è»ê
+		// ë¶€ëª¨ì˜ ë³€í™˜ í–‰ë ¬ì„ ì‚¬ìš©í•˜ì—¬ ì›”ë“œ ìœ„ì¹˜ ê³„ì‚°
 		DirectX::XMFLOAT3 localPos = { position.x, position.y, position.z };
 		DirectX::XMVECTOR localPosVector = DirectX::XMLoadFloat3(&localPos);
 		DirectX::XMMATRIX parentWorldMatrix = parent->GetTransformMatrix();
@@ -368,7 +368,7 @@ void TransformComponent::SetLocalPosition(Position position) noexcept
 		worldTransform.position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå À§Ä¡¿Í ·ÎÄÃ À§Ä¡´Â °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìœ„ì¹˜ì™€ ë¡œì»¬ ìœ„ì¹˜ëŠ” ê°™ìŒ
 	else
 		worldTransform.position = position;
 }
@@ -377,10 +377,10 @@ void TransformComponent::SetLocalPosition(float x, float y, float z) noexcept
 {
 	localTransform.position = { x, y, z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå À§Ä¡ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ ìœ„ì¹˜ ê³„ì‚°
 	if (HasParent())
 	{
-		// ºÎ¸ğÀÇ º¯È¯ Çà·ÄÀ» »ç¿ëÇÏ¿© ¿ùµå À§Ä¡ °è»ê
+		// ë¶€ëª¨ì˜ ë³€í™˜ í–‰ë ¬ì„ ì‚¬ìš©í•˜ì—¬ ì›”ë“œ ìœ„ì¹˜ ê³„ì‚°
 		DirectX::XMFLOAT3 localPos = { x, y, z };
 		DirectX::XMVECTOR localPosVector = DirectX::XMLoadFloat3(&localPos);
 		DirectX::XMMATRIX parentWorldMatrix = parent->GetTransformMatrix();
@@ -392,7 +392,7 @@ void TransformComponent::SetLocalPosition(float x, float y, float z) noexcept
 		worldTransform.position = { worldPosFloat3.x, worldPosFloat3.y, worldPosFloat3.z };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå À§Ä¡¿Í ·ÎÄÃ À§Ä¡´Â °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìœ„ì¹˜ì™€ ë¡œì»¬ ìœ„ì¹˜ëŠ” ê°™ìŒ
 	else
 		worldTransform.position = { x, y, z };
 }
@@ -401,15 +401,15 @@ void TransformComponent::SetLocalRotation(float roll, float pitch, float yaw) no
 {
 	localTransform.rotation = { roll, pitch, yaw };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå È¸Àü °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ íšŒì „ ê³„ì‚°
 	if (HasParent())
 	{
-		// ·ÎÄÃ È¸ÀüÀ» ¿ùµå È¸ÀüÀ¸·Î º¯È¯
+		// ë¡œì»¬ íšŒì „ì„ ì›”ë“œ íšŒì „ìœ¼ë¡œ ë³€í™˜
 		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(roll, pitch, yaw);
 		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
 		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionMultiply(localRotQuat, parentRotQuat);
 
-		// ÄõÅÍ´Ï¾ğ¿¡¼­ ¿ÀÀÏ·¯ °¢ °è»ê
+		// ì¿¼í„°ë‹ˆì–¸ì—ì„œ ì˜¤ì¼ëŸ¬ ê° ê³„ì‚°
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(worldRotQuat);
 		float worldPitch = asinf(-rotMatrix.r[2].m128_f32[1]);
 		float worldRoll, worldYaw;
@@ -428,7 +428,7 @@ void TransformComponent::SetLocalRotation(float roll, float pitch, float yaw) no
 		worldTransform.rotation = { worldRoll, worldPitch, worldYaw };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå È¸Àü°ú ·ÎÄÃ È¸ÀüÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ íšŒì „ê³¼ ë¡œì»¬ íšŒì „ì€ ê°™ìŒ
 	else
 		worldTransform.rotation = { roll, pitch, yaw };
 }
@@ -437,10 +437,10 @@ void TransformComponent::SetLocalScale(Scale scale) noexcept
 {
 	localTransform.scale = scale;
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ ê³„ì‚°
 	if (HasParent())
 	{
-		// ·ÎÄÃ ½ºÄÉÀÏ¿¡ ºÎ¸ğÀÇ ½ºÄÉÀÏÀ» °öÇÏ¿© ¿ùµå ½ºÄÉÀÏ °è»ê
+		// ë¡œì»¬ ìŠ¤ì¼€ì¼ì— ë¶€ëª¨ì˜ ìŠ¤ì¼€ì¼ì„ ê³±í•˜ì—¬ ì›”ë“œ ìŠ¤ì¼€ì¼ ê³„ì‚°
 		worldTransform.scale = {
 			scale.x * parent->GetScale().x,
 			scale.y * parent->GetScale().y,
@@ -448,7 +448,7 @@ void TransformComponent::SetLocalScale(Scale scale) noexcept
 		};
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ°ú ·ÎÄÃ ½ºÄÉÀÏÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ê³¼ ë¡œì»¬ ìŠ¤ì¼€ì¼ì€ ê°™ìŒ
 	else
 		worldTransform.scale = scale;
 }
@@ -457,10 +457,10 @@ void TransformComponent::SetLocalScale(DirectX::XMFLOAT3 scale) noexcept
 {
 	localTransform.scale = { scale.x, scale.y, scale.z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ ê³„ì‚°
 	if (HasParent())
 	{
-		// ·ÎÄÃ ½ºÄÉÀÏ¿¡ ºÎ¸ğÀÇ ½ºÄÉÀÏÀ» °öÇÏ¿© ¿ùµå ½ºÄÉÀÏ °è»ê
+		// ë¡œì»¬ ìŠ¤ì¼€ì¼ì— ë¶€ëª¨ì˜ ìŠ¤ì¼€ì¼ì„ ê³±í•˜ì—¬ ì›”ë“œ ìŠ¤ì¼€ì¼ ê³„ì‚°
 		worldTransform.scale = {
 			scale.x * parent->GetScale().x,
 			scale.y * parent->GetScale().y,
@@ -468,7 +468,7 @@ void TransformComponent::SetLocalScale(DirectX::XMFLOAT3 scale) noexcept
 		};
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ°ú ·ÎÄÃ ½ºÄÉÀÏÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ê³¼ ë¡œì»¬ ìŠ¤ì¼€ì¼ì€ ê°™ìŒ
 	else
 		worldTransform.scale = { scale.x, scale.y, scale.z };
 }
@@ -477,10 +477,10 @@ void TransformComponent::SetLocalScale(float x, float y, float z) noexcept
 {
 	localTransform.scale = { x, y, z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ ê³„ì‚°
 	if (HasParent())
 	{
-		// ·ÎÄÃ ½ºÄÉÀÏ¿¡ ºÎ¸ğÀÇ ½ºÄÉÀÏÀ» °öÇÏ¿© ¿ùµå ½ºÄÉÀÏ °è»ê
+		// ë¡œì»¬ ìŠ¤ì¼€ì¼ì— ë¶€ëª¨ì˜ ìŠ¤ì¼€ì¼ì„ ê³±í•˜ì—¬ ì›”ë“œ ìŠ¤ì¼€ì¼ ê³„ì‚°
 		worldTransform.scale = {
 			x * parent->GetScale().x,
 			y * parent->GetScale().y,
@@ -488,7 +488,7 @@ void TransformComponent::SetLocalScale(float x, float y, float z) noexcept
 		};
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå ½ºÄÉÀÏ°ú ·ÎÄÃ ½ºÄÉÀÏÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ ìŠ¤ì¼€ì¼ê³¼ ë¡œì»¬ ìŠ¤ì¼€ì¼ì€ ê°™ìŒ
 	else
 		worldTransform.scale = { x, y, z };
 }
@@ -517,15 +517,15 @@ void TransformComponent::SetLocalRotation(Rotation rotation) noexcept
 {
 	localTransform.rotation = rotation;
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå È¸Àü °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ íšŒì „ ê³„ì‚°
 	if (HasParent())
 	{
-		// ·ÎÄÃ È¸ÀüÀ» ¿ùµå È¸ÀüÀ¸·Î º¯È¯
+		// ë¡œì»¬ íšŒì „ì„ ì›”ë“œ íšŒì „ìœ¼ë¡œ ë³€í™˜
 		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
 		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionMultiply(localRotQuat, parentRotQuat);
 
-		// ÄõÅÍ´Ï¾ğ¿¡¼­ ¿ÀÀÏ·¯ °¢ °è»ê
+		// ì¿¼í„°ë‹ˆì–¸ì—ì„œ ì˜¤ì¼ëŸ¬ ê° ê³„ì‚°
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(worldRotQuat);
 		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
 		float roll, yaw;
@@ -544,7 +544,7 @@ void TransformComponent::SetLocalRotation(Rotation rotation) noexcept
 		worldTransform.rotation = { roll, pitch, yaw };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå È¸Àü°ú ·ÎÄÃ È¸ÀüÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ íšŒì „ê³¼ ë¡œì»¬ íšŒì „ì€ ê°™ìŒ
 	else
 		worldTransform.rotation = rotation;
 }
@@ -553,15 +553,15 @@ void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
 {
 	localTransform.rotation = { rotation.x, rotation.y, rotation.z };
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì ¿ùµå È¸Àü °è»ê
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš° ì›”ë“œ íšŒì „ ê³„ì‚°
 	if (HasParent())
 	{
-		// ·ÎÄÃ È¸ÀüÀ» ¿ùµå È¸ÀüÀ¸·Î º¯È¯
+		// ë¡œì»¬ íšŒì „ì„ ì›”ë“œ íšŒì „ìœ¼ë¡œ ë³€í™˜
 		DirectX::XMVECTOR localRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 		DirectX::XMVECTOR parentRotQuat = DirectX::XMQuaternionRotationRollPitchYaw(parent->GetRotation().x, parent->GetRotation().y, parent->GetRotation().z);
 		DirectX::XMVECTOR worldRotQuat = DirectX::XMQuaternionMultiply(localRotQuat, parentRotQuat);
 
-		// ÄõÅÍ´Ï¾ğ¿¡¼­ ¿ÀÀÏ·¯ °¢ °è»ê
+		// ì¿¼í„°ë‹ˆì–¸ì—ì„œ ì˜¤ì¼ëŸ¬ ê° ê³„ì‚°
 		DirectX::XMMATRIX rotMatrix = DirectX::XMMatrixRotationQuaternion(worldRotQuat);
 		float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
 		float roll, yaw;
@@ -581,33 +581,33 @@ void TransformComponent::SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept
 		worldTransform.rotation = { roll, pitch, yaw };
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì ¿ùµå È¸Àü°ú ·ÎÄÃ È¸ÀüÀº °°À½
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° ì›”ë“œ íšŒì „ê³¼ ë¡œì»¬ íšŒì „ì€ ê°™ìŒ
 	else
 		worldTransform.rotation = { rotation.x, rotation.y, rotation.z };
 }
 
 DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const noexcept
 {
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš°
 	if (HasParent())
 	{
-		// ·ÎÄÃ º¯È¯ Çà·Ä »ı¼º
+		// ë¡œì»¬ ë³€í™˜ í–‰ë ¬ ìƒì„±
 		DirectX::XMMATRIX localMatrix =
 			DirectX::XMMatrixScaling(localTransform.scale.x, localTransform.scale.y, localTransform.scale.z) *
 			DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
 			DirectX::XMMatrixTranslation(localTransform.position.x, localTransform.position.y, localTransform.position.z);
 
-		// ºÎ¸ğÀÇ ¿ùµå º¯È¯ Çà·ÄÀ» °¡Á®¿È
+		// ë¶€ëª¨ì˜ ì›”ë“œ ë³€í™˜ í–‰ë ¬ì„ ê°€ì ¸ì˜´
 		DirectX::XMMATRIX parentMatrix = parent->GetTransformMatrix();
 
-		// ·ÎÄÃ º¯È¯ Çà·Ä¿¡ ºÎ¸ğÀÇ ¿ùµå º¯È¯ Çà·ÄÀ» Àû¿ëÇÏ¿© ÀÚ½ÅÀÇ ¿ùµå º¯È¯ Çà·Ä °è»ê
+		// ë¡œì»¬ ë³€í™˜ í–‰ë ¬ì— ë¶€ëª¨ì˜ ì›”ë“œ ë³€í™˜ í–‰ë ¬ì„ ì ìš©í•˜ì—¬ ìì‹ ì˜ ì›”ë“œ ë³€í™˜ í–‰ë ¬ ê³„ì‚°
 		return localMatrix * parentMatrix;
 	}
 
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì (·çÆ® ¿ÀºêÁ§Æ®)
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš° (ë£¨íŠ¸ ì˜¤ë¸Œì íŠ¸)
 	else
 	{
-		// ¿ùµå º¯È¯°ú ·ÎÄÃ º¯È¯ÀÌ µ¿ÀÏÇÔ
+		// ì›”ë“œ ë³€í™˜ê³¼ ë¡œì»¬ ë³€í™˜ì´ ë™ì¼í•¨
 		return DirectX::XMMatrixScaling(worldTransform.scale.x, worldTransform.scale.y, worldTransform.scale.z) *
 			DirectX::XMMatrixRotationRollPitchYaw(worldTransform.rotation.x, worldTransform.rotation.y, worldTransform.rotation.z) *
 			DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
@@ -618,22 +618,22 @@ DirectX::XMFLOAT4X4& TransformComponent::GetTransformMatrix4x4() noexcept
 {
 	DirectX::XMMATRIX finalMatrix;
 
-	// ºÎ¸ğ°¡ ÀÖ´Â °æ¿ì
+	// ë¶€ëª¨ê°€ ìˆëŠ” ê²½ìš°
 	if (HasParent())
 	{
-		// ·ÎÄÃ º¯È¯ Çà·Ä »ı¼º
+		// ë¡œì»¬ ë³€í™˜ í–‰ë ¬ ìƒì„±
 		DirectX::XMMATRIX localMatrix =
 			DirectX::XMMatrixScaling(localTransform.scale.x, localTransform.scale.y, localTransform.scale.z) *
 			DirectX::XMMatrixRotationRollPitchYaw(localTransform.rotation.x, localTransform.rotation.y, localTransform.rotation.z) *
 			DirectX::XMMatrixTranslation(localTransform.position.x, localTransform.position.y, localTransform.position.z);
 
-		// ºÎ¸ğÀÇ ¿ùµå º¯È¯ Çà·ÄÀ» °¡Á®¿È
+		// ë¶€ëª¨ì˜ ì›”ë“œ ë³€í™˜ í–‰ë ¬ì„ ê°€ì ¸ì˜´
 		DirectX::XMMATRIX parentMatrix = parent->GetTransformMatrix();
 
-		// ÃÖÁ¾ ¿ùµå º¯È¯ Çà·Ä °è»ê
+		// ìµœì¢… ì›”ë“œ ë³€í™˜ í–‰ë ¬ ê³„ì‚°
 		finalMatrix = localMatrix * parentMatrix;
 	}
-	// ºÎ¸ğ°¡ ¾ø´Â °æ¿ì
+	// ë¶€ëª¨ê°€ ì—†ëŠ” ê²½ìš°
 	else
 	{
 		finalMatrix =
@@ -642,7 +642,7 @@ DirectX::XMFLOAT4X4& TransformComponent::GetTransformMatrix4x4() noexcept
 			DirectX::XMMatrixTranslation(worldTransform.position.x, worldTransform.position.y, worldTransform.position.z);
 	}
 
-	// °è»êµÈ Çà·ÄÀ» XMFLOAT4X4¿¡ ÀúÀå
+	// ê³„ì‚°ëœ í–‰ë ¬ì„ XMFLOAT4X4ì— ì €ì¥
 	DirectX::XMStoreFloat4x4(&transformMatrix, finalMatrix);
 
 	return transformMatrix;

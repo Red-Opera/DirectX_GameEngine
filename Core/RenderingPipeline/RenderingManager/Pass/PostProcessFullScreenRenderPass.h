@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Base/RenderingPass.h"
 
@@ -17,7 +17,7 @@ namespace RenderGraphNameSpace
 	public:
 		PostProcessFullScreenRenderPass(const std::string name) NOEXCEPTRELEASE;
 
-		// RenderingPassÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// RenderingPassì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void Execute() NOEXCEPTRELEASE override;
 	};
 }

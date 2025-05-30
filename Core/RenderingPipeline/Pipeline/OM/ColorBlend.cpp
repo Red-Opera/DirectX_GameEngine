@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ColorBlend.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -18,19 +18,19 @@ namespace Graphic
 		}
 
 		D3D11_BLEND_DESC blendDesc = CD3D11_BLEND_DESC{ CD3D11_DEFAULT{} };
-		auto& blendRenderTarget = blendDesc.RenderTarget[0];	// ·»´õ Å¸°ÙÀÇ ºí·»µù ¼³Á¤
+		auto& blendRenderTarget = blendDesc.RenderTarget[0];	// ë Œë” íƒ€ê²Ÿì˜ ë¸”ë Œë”© ì„¤ì •
 
-		// ºí·»µùÀ» »ç¿ëÇÒ °æ¿ì
+		// ë¸”ë Œë”©ì„ ì‚¬ìš©í•  ê²½ìš°
 		if (blending)
 		{
 			blendRenderTarget.BlendEnable = TRUE;
-			//blendRenderTarget.BlendOp = D3D11_BLEND_OP_ADD;							// °ãÃÄÁø ºÎºÐ »ö»ó °è»ê ¹æ¹ý
-			//blendRenderTarget.SrcBlendAlpha = D3D11_BLEND_ZERO;						// ¼¯À» »ö»ó ¾ËÆÄ ¼¯À» °ª
-			//blendRenderTarget.DestBlendAlpha = D3D11_BLEND_ZERO;						// ÇÇ´ë»ó »ö»ó ¾ËÆÄ ¼¯À» °ª
-			//blendRenderTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;						// °ãÃÄÁø ºÎºÐ ¾ËÆÄ »ö»ó °è»ê ¹æ¹ý
-			//blendRenderTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;	// Åõ¸í»ö ¼³Á¤ÇÒ »ö±ò
+			//blendRenderTarget.BlendOp = D3D11_BLEND_OP_ADD;							// ê²¹ì³ì§„ ë¶€ë¶„ ìƒ‰ìƒ ê³„ì‚° ë°©ë²•
+			//blendRenderTarget.SrcBlendAlpha = D3D11_BLEND_ZERO;						// ì„žì„ ìƒ‰ìƒ ì•ŒíŒŒ ì„žì„ ê°’
+			//blendRenderTarget.DestBlendAlpha = D3D11_BLEND_ZERO;						// í”¼ëŒ€ìƒ ìƒ‰ìƒ ì•ŒíŒŒ ì„žì„ ê°’
+			//blendRenderTarget.BlendOpAlpha = D3D11_BLEND_OP_ADD;						// ê²¹ì³ì§„ ë¶€ë¶„ ì•ŒíŒŒ ìƒ‰ìƒ ê³„ì‚° ë°©ë²•
+			//blendRenderTarget.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;	// íˆ¬ëª…ìƒ‰ ì„¤ì •í•  ìƒ‰ê¹”
 
-			// Åõ¸íµµ¸¦ ¼³Á¤ÇÑ °æ¿ì
+			// íˆ¬ëª…ë„ë¥¼ ì„¤ì •í•œ ê²½ìš°
 			if (transparencyInput)
 			{
 				blendRenderTarget.SrcBlend = D3D11_BLEND_BLEND_FACTOR;
@@ -39,8 +39,8 @@ namespace Graphic
 
 			else
 			{
-				blendRenderTarget.SrcBlend = D3D11_BLEND_SRC_ALPHA;			// ¼¯À» »ö»óÀÇ ¿øº» ºñÀ²
-				blendRenderTarget.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;	// ÇÇ´ë»ó »ö»ó ºñÀ²
+				blendRenderTarget.SrcBlend = D3D11_BLEND_SRC_ALPHA;			// ì„žì„ ìƒ‰ìƒì˜ ì›ë³¸ ë¹„ìœ¨
+				blendRenderTarget.DestBlend = D3D11_BLEND_INV_SRC_ALPHA;	// í”¼ëŒ€ìƒ ìƒ‰ìƒ ë¹„ìœ¨
 			}
 		}
 
@@ -86,7 +86,7 @@ namespace Graphic
 
 		const float* transparencyDatas = transparency ? transparency->data() : nullptr;
 
-		// ºí·»µù »óÅÂ¸¦ ·»´õ¸µ ÆÄÀÌÇÁ ¶óÀÎ¿¡ ÀÔ·Â
+		// ë¸”ë Œë”© ìƒíƒœë¥¼ ë Œë”ë§ íŒŒì´í”„ ë¼ì¸ì— ìž…ë ¥
 		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetBlendState(blendState.Get(), transparencyDatas, 0xffffffffu));
 	}
 }

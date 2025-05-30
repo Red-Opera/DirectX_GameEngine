@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "RenderGraph.h"
 
 #include "../Pipeline/OM/DepthStencil.h"
@@ -37,12 +37,12 @@ namespace RenderGraphNameSpace
 		const auto i = std::find_if(globalDataConsumers.begin(), globalDataConsumers.end(), finder);
 
 		if (i == globalDataConsumers.end())
-			throw RENDER_GRAPHIC_EXCEPTION(sinkName + "ÀÌ¶ó´Â Global Sink¸¦ Ã£À» ¼ö ¾øÀ½");
+			throw RENDER_GRAPHIC_EXCEPTION(sinkName + "ì´ë¼ëŠ” Global Sinkë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŒ");
 
 		auto targetSplit = StringConverter::SplitString(target, ".");
 
 		if (targetSplit.size() != 2u)
-			throw RENDER_GRAPHIC_EXCEPTION("Input TargetÀÌ ¿Ã¹Ù¸£Áö ¾Ê´Â Çü½Ä");
+			throw RENDER_GRAPHIC_EXCEPTION("Input Targetì´ ì˜¬ë°”ë¥´ì§€ ì•ŠëŠ” í˜•ì‹");
 
 		(*i)->SetTarget(targetSplit[0], targetSplit[1]);
 	}
@@ -54,7 +54,7 @@ namespace RenderGraphNameSpace
 		for (const auto& pass : renderPasses)
 		{
 			if (renderPass->GetName() == pass->GetName())
-				throw RENDER_GRAPHIC_EXCEPTION(renderPass->GetName() + "ÀÌ¶ó´Â Pass ÀÌ¸§Àº ÀÌ¹Ì Á¸ÀçÇÔ");
+				throw RENDER_GRAPHIC_EXCEPTION(renderPass->GetName() + "ì´ë¼ëŠ” Pass ì´ë¦„ì€ ì´ë¯¸ ì¡´ì¬í•¨");
 		}
 
 		LinkSinks(*renderPass);
@@ -72,7 +72,7 @@ namespace RenderGraphNameSpace
 		const auto i = std::find_if(renderPasses.begin(), renderPasses.end(), [&name](auto& renderPass) { return renderPass->GetName() == name; });
 
 		if (i == renderPasses.end())
-			throw std::runtime_error(name + "¶ó´Â ÀÌ¸§ÀÇ Pass°¡ Á¸ÀçÇÏÁö ¾ÊÀ½");
+			throw std::runtime_error(name + "ë¼ëŠ” ì´ë¦„ì˜ Passê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ");
 
 		return **i;
 	}
@@ -122,10 +122,10 @@ namespace RenderGraphNameSpace
 
 		catch (std::bad_cast&)
 		{
-			throw RENDER_GRAPHIC_EXCEPTION(passName + "¶ó´Â ÀÌ¸§ÀÇ RenderQueuePass¿¡ ÆĞ½º°¡ Á¸ÀçÇÏÁö ¾ÊÀ½");
+			throw RENDER_GRAPHIC_EXCEPTION(passName + "ë¼ëŠ” ì´ë¦„ì˜ RenderQueuePassì— íŒ¨ìŠ¤ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ");
 		}
 
-		throw RENDER_GRAPHIC_EXCEPTION(passName + "¶ó´Â ÀÌ¸§ÀÇ RenderQueue¿¡ ÆĞ½º°¡ Á¸ÀçÇÏÁö ¾ÊÀ½");
+		throw RENDER_GRAPHIC_EXCEPTION(passName + "ë¼ëŠ” ì´ë¦„ì˜ RenderQueueì— íŒ¨ìŠ¤ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ");
 	}
 
 	void RenderGraph::LinkSinks(RenderPass& pass)
@@ -137,7 +137,7 @@ namespace RenderGraphNameSpace
 			if (inputSourcePassName.empty())
 			{
 				std::ostringstream output;
-				output << pass.GetName() << "¶ó´Â ÀÌ¸§ÀÇ Pass´Â " << passInput->GetRegisteredName() << "°¡ Á¸ÀçÇÏÁö ¾ÊÀ½";
+				output << pass.GetName() << "ë¼ëŠ” ì´ë¦„ì˜ PassëŠ” " << passInput->GetRegisteredName() << "ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ";
 
 				throw RENDER_GRAPHIC_EXCEPTION(output.str());
 			}
@@ -160,7 +160,7 @@ namespace RenderGraphNameSpace
 				if (!isRenderSet)
 				{
 					std::ostringstream output;
-					output << "[" + passInput->GetOutputName() << "] ¶ó´Â ÀÌ¸§ÀÇ Globals°¡ Á¸ÀçÇÏÁö ¾ÊÀ½";
+					output << "[" + passInput->GetOutputName() << "] ë¼ëŠ” ì´ë¦„ì˜ Globalsê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŒ";
 
 					throw RENDER_GRAPHIC_EXCEPTION(output.str());
 				}
@@ -184,7 +184,7 @@ namespace RenderGraphNameSpace
 				if (!bound)
 				{
 					std::ostringstream oss;
-					oss << "Pass Name [" << inputSourcePassName << "]À» ¹ß°ßÇÏÁö ¾ÊÀ½";
+					oss << "Pass Name [" << inputSourcePassName << "]ì„ ë°œê²¬í•˜ì§€ ì•ŠìŒ";
 
 					throw RENDER_GRAPHIC_EXCEPTION(oss.str());
 				}

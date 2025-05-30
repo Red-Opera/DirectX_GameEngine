@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "BufferPassClear.h"
 
 #include "Core/RenderingPipeline/RenderTarget.h"

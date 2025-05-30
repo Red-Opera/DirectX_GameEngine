@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/RenderingPipeline/Pipeline/OM/ColorBlend.h"
 #include "Core/RenderingPipeline/Pipeline/OM/Stencil.h"

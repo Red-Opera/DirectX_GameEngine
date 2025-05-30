@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "TransformConstantBufferScaling.h"
 
 #include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"

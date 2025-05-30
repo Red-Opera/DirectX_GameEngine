@@ -1,9 +1,9 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "TextureCubeObject.h"
 
 #include "../BaseModel/CubeFrame.h"
 
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/TransformConstantBufferScaling.h"
@@ -112,7 +112,7 @@ void TextureCubeObject::Initialize()
 		AddTechnique(std::move(tech));
 	}
 
-	// ±◊∏≤¿⁄ ∏  Technique
+	// Í∑∏Î¶ºÏûê Îßµ Technique
 	{
 		Technique shadowMap{ "ShadowMap", RenderingChannel::shadow, true };
 		{

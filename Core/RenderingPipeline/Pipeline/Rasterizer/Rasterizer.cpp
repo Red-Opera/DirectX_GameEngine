@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Rasterizer.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -11,9 +11,9 @@ namespace Graphic
 	{
 		CREATEINFOMANAGER(Window::GetDxGraphic());
 
-		// ·¹½ºÅÍÈ­±âÀÇ ±âº»°ªÀ» °¡Á®¿È
+		// ë ˆìŠ¤í„°í™”ê¸°ì˜ ê¸°ë³¸ê°’ì„ ê°€ì ¸ì˜´
 		D3D11_RASTERIZER_DESC rasterizerDesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT{});
-		rasterizerDesc.CullMode = isTwoSided ? D3D11_CULL_NONE : D3D11_CULL_BACK;			// ¾ç¸éÀ» »ç¿ëÇÒÁö ´Ü¸éÀ» »ç¿ëÇÒÁö ¼³Á¤
+		rasterizerDesc.CullMode = isTwoSided ? D3D11_CULL_NONE : D3D11_CULL_BACK;			// ì–‘ë©´ì„ ì‚¬ìš©í• ì§€ ë‹¨ë©´ì„ ì‚¬ìš©í• ì§€ ì„¤ì •
 
 		hr = GetDevice(Window::GetDxGraphic())->CreateRasterizerState(&rasterizerDesc, &rasterizerState);
 
@@ -41,7 +41,7 @@ namespace Graphic
 	{
 		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
 
-		// ·¹½ºÅÍÈ­±â »óÅÂ¸¦ ·»´õ¸µ ÆÄÀÌÇÁ ¶óÀÎ¿¡ ÀÔ·Â
+		// ë ˆìŠ¤í„°í™”ê¸° ìƒíƒœë¥¼ ë Œë”ë§ íŒŒì´í”„ ë¼ì¸ì— ìž…ë ¥
 		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()));
 	}
 }

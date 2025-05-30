@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "Vector.h"
 
 #include <xmmintrin.h>
@@ -120,21 +120,21 @@ Vector4 operator/(const Vector4& lhs, const Vector4 rhs)
 
 float Vector::GetLength(const XMVECTOR& vec)
 {
-	// ∫§≈Õ¿« ∞¢ º∫∫–¿ª ¡¶∞ˆ
+	// Î≤°ÌÑ∞Ïùò Í∞Å ÏÑ±Î∂ÑÏùÑ Ï†úÍ≥±
 	XMVECTOR vSquared = XMVectorMultiply(vec, vec);
 
-	// √π ºº º∫∫–¿« «’¿∏∑Œ ¡¶∞ˆ ±Ê¿Ã ∞ËªÍ
+	// Ï≤´ ÏÑ∏ ÏÑ±Î∂ÑÏùò Ìï©ÏúºÎ°ú Ï†úÍ≥± Í∏∏Ïù¥ Í≥ÑÏÇ∞
 	float lenSq = _mm_cvtss_f32(_mm_dp_ps(vSquared, _mm_setr_ps(1.f, 1.f, 1.f, 0.f), 0x71));
 
-	// ¡¶∞ˆ ±Ê¿Ã¿« ±ŸªÁ ø™¡¶∞ˆ±Ÿ ∞ËªÍ (_mm_rsqrt_ss ªÁøÎ)
+	// Ï†úÍ≥± Í∏∏Ïù¥Ïùò Í∑ºÏÇ¨ Ïó≠Ï†úÍ≥±Í∑º Í≥ÑÏÇ∞ (_mm_rsqrt_ss ÏÇ¨Ïö©)
 	__m128 lenSqVec = _mm_set_ss(lenSq);
 	__m128 approxInvSqrt = _mm_rsqrt_ss(lenSqVec);
 	float invSqrt = _mm_cvtss_f32(approxInvSqrt);
 
-	// ¥∫≈œ-∑¶Ωº ∫∏¡§: ¡§»Æµµ∏¶ ≥Ù¿Ã±‚ ¿ß«— 1»∏ π›∫π
+	// Îâ¥ÌÑ¥-Îû©Ïä® Î≥¥Ï†ï: Ï†ïÌôïÎèÑÎ•º ÎÜíÏù¥Í∏∞ ÏúÑÌïú 1Ìöå Î∞òÎ≥µ
 	invSqrt = invSqrt * (1.5f - 0.5f * lenSq * invSqrt * invSqrt);
 
-	// √÷¡æ ∫§≈Õ ±Ê¿Ã ∞ËªÍ: length = lenSq * (1/°ÓlenSq)
+	// ÏµúÏ¢Ö Î≤°ÌÑ∞ Í∏∏Ïù¥ Í≥ÑÏÇ∞: length = lenSq * (1/‚àölenSq)
 	return lenSq * invSqrt;
 }
 
@@ -151,6 +151,11 @@ GraphicResource::Image::Color Vector::ConvertColor(DirectX::XMVECTOR vector)
 	return { (UCHAR)round(toFloat.x), (UCHAR)round(toFloat.y), (UCHAR)round(toFloat.z) };
 }
 
+Vector3 Vector::ConvertVector3(const DirectX::XMFLOAT3& vector3)
+{
+	return { vector3.x, vector3.y, vector3.z };
+}
+
 XMVECTOR Vector::ConvertXMVECTOR(const Vector3& vector3)
 {
 	return XMVectorSet(vector3.x, vector3.y, vector3.z, 0.0f);
@@ -161,7 +166,7 @@ XMVECTOR Vector::ConvertXMVECTOR(const Vector4& vector4)
 	return XMVectorSet(vector4.x, vector4.y, vector4.z, vector4.w);
 }
 
-DirectX::XMFLOAT3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
+Vector3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
 {
 	DirectX::XMFLOAT3 euler;
 
@@ -179,7 +184,7 @@ DirectX::XMFLOAT3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
 		euler.z = atan2f(-matrix._21, matrix._11);	// Roll
 	}
 
-	return euler;
+	return { euler.x, euler.y, euler.z };
 }
 
 DirectX::XMFLOAT3 Vector::GetPosition(const DirectX::XMFLOAT4X4& matrix)
@@ -252,6 +257,17 @@ bool Vector3::operator==(const Vector4& vector) const
 	return (x == vector.x && y == vector.y && z == vector.z);
 }
 
+physx::PxVec3 Vector3::ConvertPxVec3(const Vector3& vector3)
+{
+	return physx::PxVec3(vector3.x, vector3.y, vector3.z);
+}
+
+float Vector3::GetLength() const
+{
+	return sqrtf(x * x + y * y + z * z);
+}
+
+
 Vector2::Vector2(const Vector3& vector) noexcept : x(vector.x), y(vector.y)
 {
 
@@ -313,6 +329,11 @@ bool Vector2::operator==(const Vector3& vector) const
 bool Vector2::operator==(const Vector4& vector) const
 {
 	return (x == vector.x && y == vector.y);
+}
+
+float Vector2::GetLength() const
+{
+	return sqrtf(x * x + y * y);
 }
 
 Vector4::Vector4(const Vector3& vector) noexcept : x(vector.x), y(vector.y), z(vector.z), w(0.0f) 
@@ -381,6 +402,11 @@ bool Vector4::operator==(const Vector3& vector) const
 bool Vector4::operator==(const Vector4& vector) const
 {
 	return (x == vector.x && y == vector.y && z == vector.z && w == vector.w);
+}
+
+float Vector4::GetLength() const
+{
+	return sqrtf(x * x + y * y + z * z + w * w);
 }
 
 Vector2 operator+(const Vector2& lhs, float value)

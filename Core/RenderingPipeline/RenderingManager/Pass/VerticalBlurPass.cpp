@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "VerticalBlurPass.h"
 
 #include "Core/RenderingPipeline/RenderGraph/PipelineDataConsumer.h"

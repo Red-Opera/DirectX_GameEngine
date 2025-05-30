@@ -1,10 +1,10 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ColorPlaneObject.h"
 
 #include "../BaseModel/ColorPlaneFrame.h"
 
 #include "Core/Object/Object.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/RenderingManager/Technique/TechniqueBase.h"
 

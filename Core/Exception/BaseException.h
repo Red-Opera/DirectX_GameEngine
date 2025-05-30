@@ -1,26 +1,26 @@
-#pragma once
+ï»¿#pragma once
 
 #include <exception>
 #include <string>
 
-// ¿¹¿ÜÃ³¸®¸¦ À§ÇÑ ±âº»ÀûÀÎ Å¬·¡½º
+// ì˜ˆì™¸ì²˜ë¦¬ë¥¼ ìœ„í•œ ê¸°ë³¸ì ì¸ í´ë˜ìŠ¤
 class BaseException : public std::exception
 {
 public:
 	BaseException(int line, const char* file) noexcept;
 	BaseException(int line, std::string file) noexcept;
 
-	const char* what() const noexcept override;				// ¾î¶² ¿¹¿Ü°¡ ÀÖ´ÂÁö ¾Ë·ÁÁÖ´Â ¸Ş¼Òµå
+	const char* what() const noexcept override;				// ì–´ë–¤ ì˜ˆì™¸ê°€ ìˆëŠ”ì§€ ì•Œë ¤ì£¼ëŠ” ë©”ì†Œë“œ
 
-	virtual const char* GetType() const noexcept;			// ¾î¶² ¿¹¿Ü Á¾·ùÀÎÁö ¾Ë·ÁÁÖ´Â ¸Ş¼Òµå
-	int GetLine() const noexcept;							// ¾î¶² ÁÙ¿¡ ¿¹¿Ü°¡ ¹ß»ıÇß´ÂÁö ¾Ë·ÁÁÖ´Â ÇÔ¼ö
-	const std::string& GetFile() const noexcept;			// ¾î¶² ÄÚµå ÆÄÀÏ¿¡¼­ ¹ß»ıÇß´ÂÁö ¾Ë·ÁÁÖ´Â ¸Ş¼Òµå
-	std::string GetFileNameAndLine() const noexcept;				// ¿¹¿Ü°¡ ¹ß»ıÇÑ ÆÄÀÏ ÀÌ¸§°ú ÁÙ ¹øÈ£¸¦ ¾Ë·ÁÁÖ´Â ¸Ş¼Òµå
+	virtual const char* GetType() const noexcept;			// ì–´ë–¤ ì˜ˆì™¸ ì¢…ë¥˜ì¸ì§€ ì•Œë ¤ì£¼ëŠ” ë©”ì†Œë“œ
+	int GetLine() const noexcept;							// ì–´ë–¤ ì¤„ì— ì˜ˆì™¸ê°€ ë°œìƒí–ˆëŠ”ì§€ ì•Œë ¤ì£¼ëŠ” í•¨ìˆ˜
+	const std::string& GetFile() const noexcept;			// ì–´ë–¤ ì½”ë“œ íŒŒì¼ì—ì„œ ë°œìƒí–ˆëŠ”ì§€ ì•Œë ¤ì£¼ëŠ” ë©”ì†Œë“œ
+	std::string GetFileNameAndLine() const noexcept;		// ì˜ˆì™¸ê°€ ë°œìƒí•œ íŒŒì¼ ì´ë¦„ê³¼ ì¤„ ë²ˆí˜¸ë¥¼ ì•Œë ¤ì£¼ëŠ” ë©”ì†Œë“œ
 
 protected:
-	mutable std::string exceptionText;	// ¿¹¿Ü°¡ ¹ß»ıÇßÀ» ¶§ ¿¹¿Ü ³»¿ëÀ» ¹ŞÀ» º¯¼ö
+	mutable std::string exceptionText;	// ì˜ˆì™¸ê°€ ë°œìƒí–ˆì„ ë•Œ ì˜ˆì™¸ ë‚´ìš©ì„ ë°›ì„ ë³€ìˆ˜
 
 private:
-	int line;			// ¿¹¿Ü°¡ »ı±ä ÁÙ ¹øÈ£
-	std::string file;	// ¿¹¿Ü°¡ ¹ß»ıÇÑ ÆÄÀÏ ÀÌ¸§
+	int line;			// ì˜ˆì™¸ê°€ ìƒê¸´ ì¤„ ë²ˆí˜¸
+	std::string file;	// ì˜ˆì™¸ê°€ ë°œìƒí•œ íŒŒì¼ ì´ë¦„
 };

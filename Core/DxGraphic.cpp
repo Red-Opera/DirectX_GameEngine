@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "DxGraphic.h"
 #include "dxerr.h"
 #include "dxgi.h"
@@ -51,12 +51,12 @@ const char* DxGraphic::HRException::what() const noexcept
 {
     ostringstream out;
 
-    out << "¿¹¿Ü°¡ ¹ß»ýÇß½À´Ï´Ù." << endl << endl << "¿¹¿Ü Á¾·ù : " <<
-        string(GetType()) << "[0x" << uppercase << hex << hr << "]" << endl << "¿¹¿Ü ÆÄÀÏ : " <<
-        GetFile() << endl << "ÁÙ ¹øÈ£ : " + to_string(GetLine()) + "ÁÙ" << endl;
+    out << "ì˜ˆì™¸ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤." << endl << endl << "ì˜ˆì™¸ ì¢…ë¥˜ : " <<
+        string(GetType()) << "[0x" << uppercase << hex << hr << "]" << endl << "ì˜ˆì™¸ íŒŒì¼ : " <<
+        GetFile() << endl << "ì¤„ ë²ˆí˜¸ : " + to_string(GetLine()) + "ì¤„" << endl;
 
     if (!info.empty())
-        out << "\n[¿¡·¯ Á¤º¸]\n" << GetErrorInfo() << endl;
+        out << "\n[ì—ëŸ¬ ì •ë³´]\n" << GetErrorInfo() << endl;
 
     out << GetFileNameAndLine();
     exceptionText = out.str();
@@ -65,7 +65,7 @@ const char* DxGraphic::HRException::what() const noexcept
 
 const char* DxGraphic::HRException::GetType() const noexcept
 {
-    return "±×·¡ÇÈ »ý¼º ¹®Á¦";
+    return "ê·¸ëž˜í”½ ìƒì„± ë¬¸ì œ";
 }
 
 HRESULT DxGraphic::HRException::GetErrorCode() const noexcept
@@ -92,7 +92,7 @@ string DxGraphic::HRException::GetErrorInfo() const noexcept
 
 const char* DxGraphic::RemoveException::GetType() const noexcept
 {
-    return "±×·¡ÇÈ ¿¹¿Ü (±×·¡ÇÈ µð¹ÙÀÌ½º Á¦°Å ¹®Á¦)";
+    return "ê·¸ëž˜í”½ ì˜ˆì™¸ (ê·¸ëž˜í”½ ë””ë°”ì´ìŠ¤ ì œê±° ë¬¸ì œ)";
 }
 
 DxGraphic::DxGraphic(HWND hWnd)
@@ -104,7 +104,7 @@ DxGraphic::DxGraphic(HWND hWnd)
     CheckMSAAQuality();
     SwapChainSettings(hWnd);
 
-    // ImGui¸¦ ÃÊ±â ¼³Á¤ÇÔ
+    // ImGuië¥¼ ì´ˆê¸° ì„¤ì •í•¨
     ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
 
     ImGuiIO& io = ImGui::GetIO();
@@ -132,7 +132,7 @@ void DxGraphic::BeginFrame(float red, float green, float blue) noexcept
 
 void DxGraphic::EndFrame()
 {
-    // ImGui´Â ¸¶Áö¸·¿¡ Ã³¸®¸¦ ÇØ¾ß È­¸é ¸Ç ¾ÕÀ¸·Î ³ª¿È
+    // ImGuiëŠ” ë§ˆì§€ë§‰ì— ì²˜ë¦¬ë¥¼ í•´ì•¼ í™”ë©´ ë§¨ ì•žìœ¼ë¡œ ë‚˜ì˜´
     if (imGuiEnable)
     {
         ImGui::Render();
@@ -195,27 +195,27 @@ HRESULT DxGraphic::CreateDevice()
 	D3D_FEATURE_LEVEL featureLevel;
 	UINT createDeviceFlags = 0;
 
-    // Device¸¦ »ý¼ºÇÔ
+    // Deviceë¥¼ ìƒì„±í•¨
     HRESULT hr = D3D11CreateDevice(
         0,
-        D3D_DRIVER_TYPE_HARDWARE,   // GPU ÇÏµå¿þ¾î °¡¼ÓÀ¸·Î ½ÇÇàÇÔ (D3D_DRIVER_TYPE_HARDWARE)
+        D3D_DRIVER_TYPE_HARDWARE,   // GPU í•˜ë“œì›¨ì–´ ê°€ì†ìœ¼ë¡œ ì‹¤í–‰í•¨ (D3D_DRIVER_TYPE_HARDWARE)
         0,
         createDeviceFlags,
-        0, 0,                       // ±âº» ±â´É ¼öÁØ ¹è¿­ (D3D_FEATURE_LEVEL_11_0·Î¸¸ »ç¿ë)
+        0, 0,                       // ê¸°ë³¸ ê¸°ëŠ¥ ìˆ˜ì¤€ ë°°ì—´ (D3D_FEATURE_LEVEL_11_0ë¡œë§Œ ì‚¬ìš©)
         D3D11_SDK_VERSION,
         &device,
         &featureLevel,
         &deviceContext
     );
 
-    // Device°¡ »ý¼ºµÇ¾ú´ÂÁö È®ÀÎÇÔ
+    // Deviceê°€ ìƒì„±ë˜ì—ˆëŠ”ì§€ í™•ì¸í•¨
     if (FAILED(hr))
     {
         MessageBox(0, "D3D11CreateDevice Failed.", 0, 0);
         return S_FALSE;
     }
 
-    // ±×·¡ÇÈ ÇÏµå¿þ¾î°¡ D3D_FEATRUE_LEVEL_11_0À» Áö¿øÇÏ´ÂÁö È®ÀÎ
+    // ê·¸ëž˜í”½ í•˜ë“œì›¨ì–´ê°€ D3D_FEATRUE_LEVEL_11_0ì„ ì§€ì›í•˜ëŠ”ì§€ í™•ì¸
     if (featureLevel != D3D_FEATURE_LEVEL_11_0)
     {
         MessageBox(0, "DirectX 3D Feature Level 11 UnSupported.", 0, 0);
@@ -227,50 +227,50 @@ HRESULT DxGraphic::CreateDevice()
 
 void DxGraphic::CheckMSAAQuality()
 {
-    GRAPHIC_FAILED(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaaQuality)); // MSAA°¡ Áö¿øµÇ´ÂÁö È®ÀÎ
-    assert(msaaQuality > 0);                                                                            // Áö¿øÇÒ °æ¿ì 0º¸´Ù Å« °ªÀÌ ¹ÝÈ¯µÇ¾î ¼º°øÇÔ
+    GRAPHIC_FAILED(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaaQuality)); // MSAAê°€ ì§€ì›ë˜ëŠ”ì§€ í™•ì¸
+    assert(msaaQuality > 0);                                                                            // ì§€ì›í•  ê²½ìš° 0ë³´ë‹¤ í° ê°’ì´ ë°˜í™˜ë˜ì–´ ì„±ê³µí•¨
 }
 
 void DxGraphic::SwapChainSettings(HWND hWnd)
 {
     DXGI_MODE_DESC backBufferDesc;
 
-    // ÈÄ¸é ¹öÆÛ ¼³Á¤
-    backBufferDesc.Width = 0;                                                   // ÈÄ¸é ¹öÆÛ ³Êºñ
-    backBufferDesc.Height = 0;                                                  // ÈÄ¸é ¹öÆÛ ³ôÀÌ
+    // í›„ë©´ ë²„í¼ ì„¤ì •
+    backBufferDesc.Width = 0;                                                   // í›„ë©´ ë²„í¼ ë„ˆë¹„
+    backBufferDesc.Height = 0;                                                  // í›„ë©´ ë²„í¼ ë†’ì´
 
-    backBufferDesc.RefreshRate.Denominator = 1;                                 // Ã¢ ÁÖ»çÀ² ºÐ¸ð
-    backBufferDesc.RefreshRate.Numerator = 0;                                  // Ã¢ ÁÖ»çÀ² ºÐÀÚ
+    backBufferDesc.RefreshRate.Denominator = 1;                                 // ì°½ ì£¼ì‚¬ìœ¨ ë¶„ëª¨
+    backBufferDesc.RefreshRate.Numerator = 0;                                  // ì°½ ì£¼ì‚¬ìœ¨ ë¶„ìž
 
-    backBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                         // ÈÄ¸é ¹öÆÛ ÇÈ¼¿ Çü½Ä (º¸Åë 8ºñÆ®¾¿ ÇÏ´Â°Ô Àû´çÇÏ°í ´õ ³ô¿©µµ ÀÇ¹Ì°¡ ¾øÀ½)
-    backBufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;     // È­¸é Ãâ·Â ¼ø¼­
-    backBufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;                     // È­¸é Ãâ·Â Å©±â Á¶Àý ¿©ºÎ
+    backBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                         // í›„ë©´ ë²„í¼ í”½ì…€ í˜•ì‹ (ë³´í†µ 8ë¹„íŠ¸ì”© í•˜ëŠ”ê²Œ ì ë‹¹í•˜ê³  ë” ë†’ì—¬ë„ ì˜ë¯¸ê°€ ì—†ìŒ)
+    backBufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;     // í™”ë©´ ì¶œë ¥ ìˆœì„œ
+    backBufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;                     // í™”ë©´ ì¶œë ¥ í¬ê¸° ì¡°ì ˆ ì—¬ë¶€
 
     DXGI_SAMPLE_DESC msaaDesc = { };
 
-    // MSAA¸¦ »ç¿ëÇÒ °æ¿ì
+    // MSAAë¥¼ ì‚¬ìš©í•  ê²½ìš°
     if (isMSAAUsage)
     {
-        msaaDesc.Count = 4;                 // 4¹è·Î È®Àå ÇÔ
-        msaaDesc.Quality = msaaQuality - 1; // CheckMultisampleQualityLevels·Î ÅëÇØ¼­ ¾ò¾î¿Â °á°ú °ª
+        msaaDesc.Count = 4;                 // 4ë°°ë¡œ í™•ìž¥ í•¨
+        msaaDesc.Quality = msaaQuality - 1; // CheckMultisampleQualityLevelsë¡œ í†µí•´ì„œ ì–»ì–´ì˜¨ ê²°ê³¼ ê°’
     }
 
-    // MSAA¸¦ »ç¿ëÇÏÁö ¾ÊÀ» °æ¿ì
+    // MSAAë¥¼ ì‚¬ìš©í•˜ì§€ ì•Šì„ ê²½ìš°
     else
     {
         msaaDesc.Count = 1;
         msaaDesc.Quality = 0;
     }
 
-    // ½º¿Ò Ã¼ÀÎ ¼³Á¤
+    // ìŠ¤ì™‘ ì²´ì¸ ì„¤ì •
     swapChainDesc.SampleDesc = msaaDesc;
     swapChainDesc.BufferDesc = backBufferDesc;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;    // ÈÄ¸é ¹öÆÛ¿¡ ·»´õÇÏ±â À§ÇØ °ªÀ» ¼³Á¤
-    swapChainDesc.BufferCount = 1;                                  // ´õºí ¹öÆÛ¸µÀ» ÇÏ±â À§ÇØ 1·Î
-    swapChainDesc.OutputWindow = hWnd;                              // Ãâ·ÂÇÒ Ã¢ ¼³Á¤
-    swapChainDesc.Windowed = true;                                 // Ã¢ ¸ðµå ¿©ºÎ O
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;         // »õ·Î¿î ÇÁ·¹ÀÓ¿¡ ±×¸²
-    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;   // È­¸éÀÌ ¹Ù²ð ¶§ ÀûÀýÇÑ ÇØ»óµµ·Î ¼³Á¤
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;    // í›„ë©´ ë²„í¼ì— ë Œë”í•˜ê¸° ìœ„í•´ ê°’ì„ ì„¤ì •
+    swapChainDesc.BufferCount = 1;                                  // ë”ë¸” ë²„í¼ë§ì„ í•˜ê¸° ìœ„í•´ 1ë¡œ
+    swapChainDesc.OutputWindow = hWnd;                              // ì¶œë ¥í•  ì°½ ì„¤ì •
+    swapChainDesc.Windowed = true;                                 // ì°½ ëª¨ë“œ ì—¬ë¶€ O
+    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;         // ìƒˆë¡œìš´ í”„ë ˆìž„ì— ê·¸ë¦¼
+    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;   // í™”ë©´ì´ ë°”ë€” ë•Œ ì ì ˆí•œ í•´ìƒë„ë¡œ ì„¤ì •
 }
 
 void DxGraphic::CreateSwapChain()
@@ -281,11 +281,11 @@ void DxGraphic::CreateSwapChain()
     IDXGIAdapter* dxgiAdapter = nullptr;
     GRAPHIC_FAILED(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter));
 
-    // CreateSwapChainÀ» »ç¿ëÇÏ±â À§ÇÑ º¯¼ö »ý¼º
+    // CreateSwapChainì„ ì‚¬ìš©í•˜ê¸° ìœ„í•œ ë³€ìˆ˜ ìƒì„±
     IDXGIFactory* dxgiFactory = nullptr;
     GRAPHIC_FAILED(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
 
-    // swapChain »ý¼º
+    // swapChain ìƒì„±
     GRAPHIC_FAILED(dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain));
 
     ReleaseCOM(dxgiDevice);
@@ -295,7 +295,7 @@ void DxGraphic::CreateSwapChain()
 
 void DxGraphic::CreateRenderTargetView()
 {
-    // ±³È¯ »ç½½ÀÇ ¹öÆÛ¸¦ °¡Á®¿È (0¹øÂ° ÈÄ¸é ¹öÆÛ¸¦ ID3D11Texture2D Çü½ÄÀ¸·Î 3¹øÂ° ÀÎ¼ö·Î ¹ÝÈ¯)
+    // êµí™˜ ì‚¬ìŠ¬ì˜ ë²„í¼ë¥¼ ê°€ì ¸ì˜´ (0ë²ˆì§¸ í›„ë©´ ë²„í¼ë¥¼ ID3D11Texture2D í˜•ì‹ìœ¼ë¡œ 3ë²ˆì§¸ ì¸ìˆ˜ë¡œ ë°˜í™˜)
     GRAPHIC_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
 
     renderTarget = std::shared_ptr<Graphic::RenderTarget>{ new Graphic::OutputOnlyRenderTarget(backBuffer.Get()) };
@@ -309,7 +309,7 @@ void DxGraphic::CreateRenderTargetView()
     viewport.TopLeftY = 0.0f;
     deviceContext->RSSetViewports(1u, &viewport);
 
-    // ¼ÎÀÌ´õ ¸®¼Ò½º ºä »ý¼º
+    // ì…°ì´ë” ë¦¬ì†ŒìŠ¤ ë·° ìƒì„±
     D3D11_TEXTURE2D_DESC temp = { };
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     backBuffer.Get()->GetDesc(&temp);
@@ -396,10 +396,10 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     viewPort.MinDepth = 0.0f;
     viewPort.MaxDepth = 1.0f;
 
-    // ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎÀÇ RS ´Ü°è¿¡ ViewPort ¼³Á¤ (1¹øÂ° ¸Å°³º¯¼ö : ºä Æ÷Æ®ÀÇ °³¼ö(ºä Æ÷Æ® 2°³ ÀÌ»óÇÒ °æ¿ì È­¸éÀ» ³ª´­ ¼ö ÀÖÀ½))
+    // ë Œë”ë§ íŒŒì´í”„ë¼ì¸ì˜ RS ë‹¨ê³„ì— ViewPort ì„¤ì • (1ë²ˆì§¸ ë§¤ê°œë³€ìˆ˜ : ë·° í¬íŠ¸ì˜ ê°œìˆ˜(ë·° í¬íŠ¸ 2ê°œ ì´ìƒí•  ê²½ìš° í™”ë©´ì„ ë‚˜ëˆŒ ìˆ˜ ìžˆìŒ))
     deviceContext->RSSetViewports(1, &viewPort);
 
-    // Primitive Topology ¼³Á¤
+    // Primitive Topology ì„¤ì •
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // =================================
@@ -433,7 +433,7 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
 
     GRAPHIC_THROW_INFO(device->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader));
 
-    // Vertex Shader ´Ü°è¸¦ ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ ´Ü°è¿¡ ¹­À½
+    // Vertex Shader ë‹¨ê³„ë¥¼ ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ë‹¨ê³„ì— ë¬¶ìŒ
     deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
 
     ComPtr<ID3D11InputLayout> inputLayout;
@@ -499,7 +499,7 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     }
     device->CreatePixelShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &pixelShader);
 
-    // Pixel Shader ´Ü°è¸¦ ·»´õ¸µ ÆÄÀÌÇÁ¶óÀÎ ´Ü°è¿¡ ¹­À½
+    // Pixel Shader ë‹¨ê³„ë¥¼ ë Œë”ë§ íŒŒì´í”„ë¼ì¸ ë‹¨ê³„ì— ë¬¶ìŒ
     deviceContext->PSSetShader(pixelShader.Get(), nullptr, 0);
 
     // =================================
@@ -591,12 +591,12 @@ const char* DxGraphic::InfoException::what() const noexcept
 {
     ostringstream out;
 
-    out << "¿¹¿Ü°¡ ¹ß»ýÇß½À´Ï´Ù." << endl << endl << "¿¹¿Ü Á¾·ù : " <<
-        GetType() << endl << "¿¹¿Ü ÆÄÀÏ : " <<
-        GetFile() << endl << "ÁÙ ¹øÈ£ : " + to_string(GetLine()) + "ÁÙ" << endl;
+    out << "ì˜ˆì™¸ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤." << endl << endl << "ì˜ˆì™¸ ì¢…ë¥˜ : " <<
+        GetType() << endl << "ì˜ˆì™¸ íŒŒì¼ : " <<
+        GetFile() << endl << "ì¤„ ë²ˆí˜¸ : " + to_string(GetLine()) + "ì¤„" << endl;
 
     if (!info.empty())
-        out << "\n[¿¡·¯ Á¤º¸]\n" << GetErrorInfo() << endl;
+        out << "\n[ì—ëŸ¬ ì •ë³´]\n" << GetErrorInfo() << endl;
 
     out << GetFileNameAndLine();
     exceptionText = out.str();
@@ -605,7 +605,7 @@ const char* DxGraphic::InfoException::what() const noexcept
 
 const char* DxGraphic::InfoException::GetType() const noexcept
 {
-    return "±×·¡ÇÈ »ý¼º ¹®Á¦";
+    return "ê·¸ëž˜í”½ ìƒì„± ë¬¸ì œ";
 }
 
 string DxGraphic::InfoException::GetErrorInfo() const noexcept

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/RenderingPipeline/Render.h"
 
@@ -17,7 +17,7 @@ namespace Graphic
 		float GetSlopeBias() const;
 		float GetClamp() const;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:

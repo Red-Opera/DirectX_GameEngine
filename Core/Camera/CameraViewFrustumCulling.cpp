@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CameraViewFrustumCulling.h"
 
 #include <format>
@@ -7,14 +7,14 @@ using namespace DirectX;
 
 CameraViewFrustumCulling::CameraViewFrustumCulling() : viewProjection()
 {
-    // ÃÊ±âÈ­
+    // ì´ˆê¸°í™”
     for (int i = 0; i < Plane::Count; i++)
         frustumPlanes[i] = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void CameraViewFrustumCulling::UpdateFromMatrices(const XMMATRIX& view, const XMMATRIX& projection)
 {
-    // view-projection Çà·Ä °è»ê
+    // view-projection í–‰ë ¬ ê³„ì‚°
     XMMATRIX viewProj = XMMatrixMultiply(view, projection);
 
     UpdateFromViewProjection(viewProj);
@@ -22,54 +22,54 @@ void CameraViewFrustumCulling::UpdateFromMatrices(const XMMATRIX& view, const XM
 
 void CameraViewFrustumCulling::UpdateFromViewProjection(const DirectX::XMMATRIX& viewProjection)
 {
-    // Çà·ÄÀ» ÀüÄ¡ÇÏ¿© °è»êÀ» ½±°Ô ¸¸µê
+    // í–‰ë ¬ì„ ì „ì¹˜í•˜ì—¬ ê³„ì‚°ì„ ì‰½ê²Œ ë§Œë“¦
     XMMATRIX viewProjT = XMMatrixTranspose(viewProjection);
 
-    // °¢ ÀýµÎÃ¼ Æò¸é °è»ê
+    // ê° ì ˆë‘ì²´ í‰ë©´ ê³„ì‚°
     XMVECTOR rowX, rowY, rowZ, rowW;
 
-    // XMMATRIX¸¦ Çàº°·Î ºÐÇØ
+    // XMMATRIXë¥¼ í–‰ë³„ë¡œ ë¶„í•´
     rowX = viewProjT.r[0];
     rowY = viewProjT.r[1];
     rowZ = viewProjT.r[2];
     rowW = viewProjT.r[3];
 
-    // LEFT Æò¸é (Çà·ÄÀÇ ³× ¹øÂ° Çà + Ã¹ ¹øÂ° Çà)
+    // LEFT í‰ë©´ (í–‰ë ¬ì˜ ë„¤ ë²ˆì§¸ í–‰ + ì²« ë²ˆì§¸ í–‰)
     XMStoreFloat4(&frustumPlanes[Plane::Left], XMPlaneNormalize(XMVectorAdd(rowW, rowX)));
 
-    // RIGHT Æò¸é (Çà·ÄÀÇ ³× ¹øÂ° Çà - Ã¹ ¹øÂ° Çà)
+    // RIGHT í‰ë©´ (í–‰ë ¬ì˜ ë„¤ ë²ˆì§¸ í–‰ - ì²« ë²ˆì§¸ í–‰)
     XMStoreFloat4(&frustumPlanes[Plane::Right], XMPlaneNormalize(XMVectorSubtract(rowW, rowX)));
 
-    // BOTTOM Æò¸é (Çà·ÄÀÇ ³× ¹øÂ° Çà + µÎ ¹øÂ° Çà)
+    // BOTTOM í‰ë©´ (í–‰ë ¬ì˜ ë„¤ ë²ˆì§¸ í–‰ + ë‘ ë²ˆì§¸ í–‰)
     XMStoreFloat4(&frustumPlanes[Plane::Bottom], XMPlaneNormalize(XMVectorAdd(rowW, rowY)));
 
-    // TOP Æò¸é (Çà·ÄÀÇ ³× ¹øÂ° Çà - µÎ ¹øÂ° Çà)
+    // TOP í‰ë©´ (í–‰ë ¬ì˜ ë„¤ ë²ˆì§¸ í–‰ - ë‘ ë²ˆì§¸ í–‰)
     XMStoreFloat4(&frustumPlanes[Plane::Top], XMPlaneNormalize(XMVectorSubtract(rowW, rowY)));
 
-    // NEAR Æò¸é (Çà·ÄÀÇ ³× ¹øÂ° Çà + ¼¼ ¹øÂ° Çà)
+    // NEAR í‰ë©´ (í–‰ë ¬ì˜ ë„¤ ë²ˆì§¸ í–‰ + ì„¸ ë²ˆì§¸ í–‰)
     XMStoreFloat4(&frustumPlanes[Plane::Near], XMPlaneNormalize(XMVectorAdd(rowW, rowZ)));
 
-    // FAR Æò¸é (Çà·ÄÀÇ ³× ¹øÂ° Çà - ¼¼ ¹øÂ° Çà)
+    // FAR í‰ë©´ (í–‰ë ¬ì˜ ë„¤ ë²ˆì§¸ í–‰ - ì„¸ ë²ˆì§¸ í–‰)
     XMStoreFloat4(&frustumPlanes[Plane::Far], XMPlaneNormalize(XMVectorSubtract(rowW, rowZ)));
 }
 
 bool CameraViewFrustumCulling::CheckSphere(const XMFLOAT3& center, float radius) const
 {
-    // ¸ðµç Æò¸é¿¡ ´ëÇØ ±¸°¡ Æò¸é ¹Ù±ùÂÊ¿¡ ÀÖ´ÂÁö È®ÀÎ
+    // ëª¨ë“  í‰ë©´ì— ëŒ€í•´ êµ¬ê°€ í‰ë©´ ë°”ê¹¥ìª½ì— ìžˆëŠ”ì§€ í™•ì¸
     for (int i = 0; i < Plane::Count; i++)
     {
-        // Æò¸é ¹æÁ¤½ÄÀÇ Á¡ ´ëÀÔ: Ax + By + Cz + D = °Å¸®
-        // SIMD ¿¬»ê ´ë½Å Á÷Á¢ ½ºÄ®¶ó °è»êÀ¸·Î ÃÖÀûÈ­
+        // í‰ë©´ ë°©ì •ì‹ì˜ ì  ëŒ€ìž…: Ax + By + Cz + D = ê±°ë¦¬
+        // SIMD ì—°ì‚° ëŒ€ì‹  ì§ì ‘ ìŠ¤ì¹¼ë¼ ê³„ì‚°ìœ¼ë¡œ ìµœì í™”
         float distance = frustumPlanes[i].x * center.x +
             frustumPlanes[i].y * center.y +
             frustumPlanes[i].z * center.z +
             frustumPlanes[i].w;
 
-        // ¸ðµç Æò¸é¿¡ ´ëÇÑ °Å¸® Ãâ·Â
+        // ëª¨ë“  í‰ë©´ì— ëŒ€í•œ ê±°ë¦¬ ì¶œë ¥
         //OutputDebugStringA(std::format("Center: ({:.3f}, {:.3f}, {:.3f}), Radius: {:.3f}, Distance to plane {}: {:.3f}\n",
             //center.x, center.y, center.z, radius, i, distance).c_str());
 
-        // ±¸ÀÇ Áß½ÉÀÌ Æò¸éÀ¸·ÎºÎÅÍ ¹ÝÁö¸§º¸´Ù ¸Ö¸® ÀÖÀ¸¸é ÀýµÎÃ¼ ¿ÜºÎ¿¡ ÀÖÀ½
+        // êµ¬ì˜ ì¤‘ì‹¬ì´ í‰ë©´ìœ¼ë¡œë¶€í„° ë°˜ì§€ë¦„ë³´ë‹¤ ë©€ë¦¬ ìžˆìœ¼ë©´ ì ˆë‘ì²´ ì™¸ë¶€ì— ìžˆìŒ
         if (distance < -radius)
             return false;
     }
@@ -79,23 +79,23 @@ bool CameraViewFrustumCulling::CheckSphere(const XMFLOAT3& center, float radius)
 
 bool CameraViewFrustumCulling::CheckBox(const XMFLOAT3& center, const XMFLOAT3& extents) const
 {
-    // ¸ðµç Æò¸é¿¡ ´ëÇØ ¹Ù¿îµù ¹Ú½º°¡ ¿ÏÀüÈ÷ ¹Û¿¡ ÀÖ´ÂÁö È®ÀÎ
+    // ëª¨ë“  í‰ë©´ì— ëŒ€í•´ ë°”ìš´ë”© ë°•ìŠ¤ê°€ ì™„ì „ížˆ ë°–ì— ìžˆëŠ”ì§€ í™•ì¸
     for (int i = 0; i < Plane::Count; i++)
     {
-        // Æò¸éÀÇ ¹ý¼± º¤ÅÍ
+        // í‰ë©´ì˜ ë²•ì„  ë²¡í„°
         XMVECTOR plane = XMLoadFloat4(&frustumPlanes[i]);
         float nx = frustumPlanes[i].x;
         float ny = frustumPlanes[i].y;
         float nz = frustumPlanes[i].z;
 
-        // ¹Ù¿îµù ¹Ú½º¿¡¼­ Æò¸é ¹ý¼± ¹æÇâÀ¸·Î °¡Àå ¸Õ ²ÀÁöÁ¡ ±¸ÇÏ±â
+        // ë°”ìš´ë”© ë°•ìŠ¤ì—ì„œ í‰ë©´ ë²•ì„  ë°©í–¥ìœ¼ë¡œ ê°€ìž¥ ë¨¼ ê¼­ì§€ì  êµ¬í•˜ê¸°
         float ex = extents.x * fabs(nx) + extents.y * fabs(ny) + extents.z * fabs(nz);
 
-        // Áß½É¿¡¼­ Æò¸é±îÁöÀÇ °Å¸® °è»ê
+        // ì¤‘ì‹¬ì—ì„œ í‰ë©´ê¹Œì§€ì˜ ê±°ë¦¬ ê³„ì‚°
         XMVECTOR centerVec = XMLoadFloat3(&center);
         float distance = XMVectorGetX(XMPlaneDotCoord(plane, centerVec));
 
-        // °¡Àå ¸Õ ²ÀÁöÁ¡ÀÌ Æò¸é ¹Ù±ùÂÊ¿¡ ÀÖÀ¸¸é ¹Ù¿îµù ¹Ú½º´Â ÀýµÎÃ¼ ¿ÜºÎ¿¡ ÀÖÀ½
+        // ê°€ìž¥ ë¨¼ ê¼­ì§€ì ì´ í‰ë©´ ë°”ê¹¥ìª½ì— ìžˆìœ¼ë©´ ë°”ìš´ë”© ë°•ìŠ¤ëŠ” ì ˆë‘ì²´ ì™¸ë¶€ì— ìžˆìŒ
         if (distance < -ex)
             return false;
     }

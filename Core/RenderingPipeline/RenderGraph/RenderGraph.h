@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Core/Camera/CameraFrustum.h"
 #include "Core/Exception/WindowException.h"

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "BaseException.h"
 
@@ -10,8 +10,8 @@ public:
 	EngineUIException(std::string message, int line, const char* file) noexcept;
 
 #undef GetMessage
-	const char* what() const noexcept override;			// ¾î¶² ¿¹¿Ü°¡ ÀÖ´ÂÁö ¾Ë·ÁÁÖ´Â ¸Ş¼Òµå
-	const char* GetType() const noexcept;				// ¾î¶² ¿¹¿Ü Á¾·ùÀÎÁö ¾Ë·ÁÁÖ´Â ¸Ş¼Òµå
+	const char* what() const noexcept override;			// ì–´ë–¤ ì˜ˆì™¸ê°€ ìˆëŠ”ì§€ ì•Œë ¤ì£¼ëŠ” ë©”ì†Œë“œ
+	const char* GetType() const noexcept;				// ì–´ë–¤ ì˜ˆì™¸ ì¢…ë¥˜ì¸ì§€ ì•Œë ¤ì£¼ëŠ” ë©”ì†Œë“œ
 	const std::string& GetMessage() const noexcept;
 
 private:

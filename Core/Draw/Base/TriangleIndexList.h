@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <vector>
 #include <DirectXMath.h>
@@ -12,8 +12,8 @@ public:
 	TriangleIndexList() = default;
 	TriangleIndexList(VertexCore::VertexBuffer vertices, std::vector<unsigned short> indices) : vertices(std::move(vertices)), indices(std::move(indices))
 	{
-		assert("»ï°¢ÇüÀÇ Á¤Á¡ °³¼ö°¡ ºÎÁ·ÇÕ´Ï´Ù." && this->vertices.count() > 2);
-		assert("»ï°¢ÇüÀÇ ÀÎµ¦½º°¡ ¸ÂÁö ¾Ê½À´Ï´Ù." && this->indices.size() % 3 == 0);
+		assert("ì‚¼ê°í˜•ì˜ ì •ì  ê°œìˆ˜ê°€ ë¶€ì¡±í•©ë‹ˆë‹¤." && this->vertices.count() > 2);
+		assert("ì‚¼ê°í˜•ì˜ ì¸ë±ìŠ¤ê°€ ë§ì§€ ì•ŠìŠµë‹ˆë‹¤." && this->indices.size() % 3 == 0);
 	}
 
 	void Transform(DirectX::XMMATRIX matrix)
@@ -28,29 +28,29 @@ public:
 		}
 	}
 
-	// Normal Vector¸¦ ±¸ÇÏ°í ÀúÀåÇÏ´Â ¸Ş¼Òµå
+	// Normal Vectorë¥¼ êµ¬í•˜ê³  ì €ì¥í•˜ëŠ” ë©”ì†Œë“œ
 	void SetNormalVector() NOEXCEPTRELEASE
 	{
 		using namespace DirectX;
 		using VertexType = VertexCore::VertexLayout::VertexType;
 
-		// ¿ÀºêÁ§Æ®ÀÇ ¸ğµç ¸é¿¡ ´ëÇØ¼­ Normal Vector¸¦ ±¸ÇÔ
+		// ì˜¤ë¸Œì íŠ¸ì˜ ëª¨ë“  ë©´ì— ëŒ€í•´ì„œ Normal Vectorë¥¼ êµ¬í•¨
 		for (size_t i = 0; i < indices.size(); i += 3)
 		{
-			// »ï°¢ÇüÀÇ °¢ Á¤Á¡À» °¡Á®¿È
+			// ì‚¼ê°í˜•ì˜ ê° ì •ì ì„ ê°€ì ¸ì˜´
 			auto v0 = vertices[indices[i]];
 			auto v1 = vertices[indices[i + 1]];
 			auto v2 = vertices[indices[i + 2]];
 	
-			// Á¤Á¡ÀÇ À§Ä¡¸¦ °¡Á®¿È
+			// ì •ì ì˜ ìœ„ì¹˜ë¥¼ ê°€ì ¸ì˜´
 			const auto pos0 = DirectX::XMLoadFloat3(&v0.GetValue<VertexType::Position3D>());
 			const auto pos1 = DirectX::XMLoadFloat3(&v1.GetValue<VertexType::Position3D>());
 			const auto pos2 = DirectX::XMLoadFloat3(&v2.GetValue<VertexType::Position3D>());
 	
-			// Normal Vector¸¦ ±¸ÇÔ (»ï°¢ÇüÀÇ ¿ÜÀûÀ» ÅëÇØ ±¸ÇÔ)
+			// Normal Vectorë¥¼ êµ¬í•¨ (ì‚¼ê°í˜•ì˜ ì™¸ì ì„ í†µí•´ êµ¬í•¨)
 			const auto normal = DirectX::XMVector3Normalize(DirectX::XMVector3Cross(DirectX::XMVectorSubtract(pos1, pos0), DirectX::XMVectorSubtract(pos2, pos0)));
 	
-			// Á¤Á¡ÀÇ Normal Vector¸¦ µ¹·ÁÁÜ
+			// ì •ì ì˜ Normal Vectorë¥¼ ëŒë ¤ì¤Œ
 			XMStoreFloat3(&v0.GetValue<VertexType::Normal>(), normal);
 			XMStoreFloat3(&v1.GetValue<VertexType::Normal>(), normal);
 			XMStoreFloat3(&v2.GetValue<VertexType::Normal>(), normal);

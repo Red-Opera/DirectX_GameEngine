@@ -1,8 +1,8 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "ColorObject.h"
 
 #include "Core/App.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Draw/Base/TriangleIndexList.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
@@ -136,7 +136,7 @@ void ColorObject::SetRenderingPipeline(GraphicResource::Image::Color color, bool
 		AddTechnique(std::move(tech));
 	}
 
-	// ±◊∏≤¿⁄ ∏  Technique
+	// Í∑∏Î¶ºÏûê Îßµ Technique
 	if (isLit)
 	{
 		Technique shadowMap{ "ShadowMap", RenderingChannel::shadow, true };

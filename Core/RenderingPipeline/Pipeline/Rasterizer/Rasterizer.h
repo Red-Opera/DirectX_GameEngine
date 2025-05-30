@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/RenderingPipeline/Render.h"
 #include <array>
@@ -14,11 +14,11 @@ namespace Graphic
 		static std::string CreateID(bool isTwoSided);
 		std::string GetID() const noexcept override;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
-		bool isTwoSided;												// ·¹½ºÅÍÈ­±â¸¦ ¾ç¸éÀ¸·Î »ç¿ëÇÒÁö ¿©ºÎ
+		bool isTwoSided;												// ë ˆìŠ¤í„°í™”ê¸°ë¥¼ ì–‘ë©´ìœ¼ë¡œ ì‚¬ìš©í• ì§€ ì—¬ë¶€
 	};
 }

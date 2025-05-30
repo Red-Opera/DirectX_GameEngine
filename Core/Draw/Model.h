@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Component/Component.h"
 #include "Core/DxGraphic.h"
@@ -18,7 +18,7 @@ struct aiMesh;
 struct aiMaterial;
 struct aiNode;
 
-// ÀüÃ¼ÀûÀÎ ¿ÀºêÁ§Æ®¸¦ ³ªÅ¸³»´Â Å¬·¡½º
+// ì „ì²´ì ì¸ ì˜¤ë¸Œì íŠ¸ë¥¼ ë‚˜íƒ€ë‚´ëŠ” í´ë˜ìŠ¤
 class Model : public Component
 {
 public:
@@ -46,7 +46,7 @@ private:
 		const aiNode& modelNode, 
 		float scale, 
 		std::shared_ptr<class Object> root = nullptr
-	) noexcept;			// ¸ğµ¨¿¡¼­ °¡Á®¿Â aiNode¸¦ SceneGraphNode·Î º¯È¯ÇÏ´Â ¸Ş¼Òµå
+	) noexcept;			// ëª¨ë¸ì—ì„œ ê°€ì ¸ì˜¨ aiNodeë¥¼ SceneGraphNodeë¡œ ë³€í™˜í•˜ëŠ” ë©”ì†Œë“œ
 
 	std::unique_ptr<SceneGraphNode> root;
 	std::vector<std::unique_ptr<Mesh>> meshPtrs;

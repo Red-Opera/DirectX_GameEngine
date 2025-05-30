@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Mesh.h"
 
 #include "Base/Image/Image.h"

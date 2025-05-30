@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Keyboard.h"
 
 bool Keyboard::IsPressed(unsigned char keycode) const noexcept

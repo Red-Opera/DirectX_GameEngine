@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <queue>
 #include <bitset>
 #include <optional>
@@ -11,61 +11,61 @@ public:
 	class Event
 	{
 	public:
-		// Å°º¸µå ÀÔ·Â »óÅÂ
+		// í‚¤ë³´ë“œ ì…ë ¥ ìƒíƒœ
 		enum class Type { Press, Release, };
 	
 	public:
 		Event(Type type, unsigned char code) noexcept : type(type), code(code) {}
 
-		bool IsPress() const noexcept { return type == Type::Press; }		// Å°º¸µåÀÇ ÇØ´ç Å°°¡ ´­·È´ÂÁö ¿©ºÎ
-		bool IsRelease() const noexcept { return type == Type::Release; }	// Å°º¸µåÀÇ ÇØ´ç Å°¸¦ ¶¼°í ÀÖ´ÂÁö ¿©ºÎ
+		bool IsPress() const noexcept { return type == Type::Press; }		// í‚¤ë³´ë“œì˜ í•´ë‹¹ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ ì—¬ë¶€
+		bool IsRelease() const noexcept { return type == Type::Release; }	// í‚¤ë³´ë“œì˜ í•´ë‹¹ í‚¤ë¥¼ ë–¼ê³  ìˆëŠ”ì§€ ì—¬ë¶€
 		unsigned char GetCode() const noexcept { return code; }
 
 	private:
-		Type type;			// Å°º¸µå ÀÌº¥Æ® Áß Å¸ÀÔ
-		unsigned char code;	// ÇØ´ç ÀÌº¥Æ®ÀÇ Å°º¸µå °ª
+		Type type;			// í‚¤ë³´ë“œ ì´ë²¤íŠ¸ ì¤‘ íƒ€ì…
+		unsigned char code;	// í•´ë‹¹ ì´ë²¤íŠ¸ì˜ í‚¤ë³´ë“œ ê°’
 	};
 
 public:
 	Keyboard() = default;
 
-	// º¹»ç ´ëÀÔ ±İÁö
+	// ë³µì‚¬ ëŒ€ì… ê¸ˆì§€
 	Keyboard(const Keyboard&) = delete;
 	Keyboard& operator=(const Keyboard&) = delete;
 
-	// Å° ÀÌº¥Æ® °ü·Ã ¸Ş¼Òµå
-	bool IsPressed(unsigned char keycode) const noexcept;	// ÇöÀç ÇØ´ç Å°°¡ ´­·È´ÂÁö ¿©ºÎ
-	std::optional<Event> ReadKey() noexcept;				// Å°º¸µå ÀÌº¥Æ® Áß ÇÏ³ª¸¦ °¡Á®¿À´Â ¸Ş¼Òµå
-	bool KeyIsEmpty() const noexcept;						// Å° ÀÌº¥Æ®°¡ Á¸ÀçÇÏ´ÂÁö ¿©ºÎ
-	void FlushKey() noexcept;								// Å° ÀÌº¥Æ®¸¦ ¸ğµÎ Á¦°ÅÇÔ
+	// í‚¤ ì´ë²¤íŠ¸ ê´€ë ¨ ë©”ì†Œë“œ
+	bool IsPressed(unsigned char keycode) const noexcept;	// í˜„ì¬ í•´ë‹¹ í‚¤ê°€ ëˆŒë ¸ëŠ”ì§€ ì—¬ë¶€
+	std::optional<Event> ReadKey() noexcept;				// í‚¤ë³´ë“œ ì´ë²¤íŠ¸ ì¤‘ í•˜ë‚˜ë¥¼ ê°€ì ¸ì˜¤ëŠ” ë©”ì†Œë“œ
+	bool KeyIsEmpty() const noexcept;						// í‚¤ ì´ë²¤íŠ¸ê°€ ì¡´ì¬í•˜ëŠ”ì§€ ì—¬ë¶€
+	void FlushKey() noexcept;								// í‚¤ ì´ë²¤íŠ¸ë¥¼ ëª¨ë‘ ì œê±°í•¨
 
-	// Å°º¸µå·Î ÀÔ·ÂÇÑ ¹®ÀÚ°ü·Ã ÀÌº¥Æ®
-	std::optional<char> ReadChar() noexcept;	// ÇØ´ç ¹®ÀÚ
-	bool CharIsEmpty() const noexcept;			// Å°º¸µå·Î ÀÔ·ÂµÈ ¹®ÀÚ°¡ ¾ø´ÂÁö ¿©ºÎ
-	void FlushChar() noexcept;					// Å°º¸µå·Î ÀÔ·ÂµÈ ¹®ÀÚ¸¦ ¸ğµÎ Á¦°Å
-	void Flush() noexcept;						// ÀÌº¥Æ® ¹× ¹®ÀÚ ¸ğµÎ Á¦°Å
+	// í‚¤ë³´ë“œë¡œ ì…ë ¥í•œ ë¬¸ìê´€ë ¨ ì´ë²¤íŠ¸
+	std::optional<char> ReadChar() noexcept;	// í•´ë‹¹ ë¬¸ì
+	bool CharIsEmpty() const noexcept;			// í‚¤ë³´ë“œë¡œ ì…ë ¥ëœ ë¬¸ìê°€ ì—†ëŠ”ì§€ ì—¬ë¶€
+	void FlushChar() noexcept;					// í‚¤ë³´ë“œë¡œ ì…ë ¥ëœ ë¬¸ìë¥¼ ëª¨ë‘ ì œê±°
+	void Flush() noexcept;						// ì´ë²¤íŠ¸ ë° ë¬¸ì ëª¨ë‘ ì œê±°
 
 	// autorepeat control
 	void EnableAutorepeat() noexcept;
 	void DisableAutorepeat() noexcept;
-	bool AutorepeatIsEnabled() const noexcept;	// Áö¼ÓÀûÀ¸·Î ´©¸¦ ¶§ KeyDownÀÌ¶ó°í ÀÎÁ¤ÇÏ´ÂÁö ¿©ºÎ
+	bool AutorepeatIsEnabled() const noexcept;	// ì§€ì†ì ìœ¼ë¡œ ëˆ„ë¥¼ ë•Œ KeyDownì´ë¼ê³  ì¸ì •í•˜ëŠ”ì§€ ì—¬ë¶€
 
 private:
-	void OnKeyPressed(unsigned char keycode) noexcept;		// Å°º¸µå°¡ ´­·ÈÀ» ¶§ Ã³¸®ÇÏ´Â ¸Ş¼Òµå
-	void OnKeyReleased(unsigned char keycode) noexcept;		// Å°º¸µå¿¡¼­ ¶ÃÀ» ¶§ Ã³¸®ÇÏ´Â ¸Ş¼Òµå
-	void OnChar(char character) noexcept;					// Å°º¸µå¿¡¼­ ¹®ÀÚ¸¦ ÀÔ·ÂÇßÀ» ¶§ Ã³¸®ÇÏ´Â ¸Ş¼Òµå
+	void OnKeyPressed(unsigned char keycode) noexcept;		// í‚¤ë³´ë“œê°€ ëˆŒë ¸ì„ ë•Œ ì²˜ë¦¬í•˜ëŠ” ë©”ì†Œë“œ
+	void OnKeyReleased(unsigned char keycode) noexcept;		// í‚¤ë³´ë“œì—ì„œ ë—ì„ ë•Œ ì²˜ë¦¬í•˜ëŠ” ë©”ì†Œë“œ
+	void OnChar(char character) noexcept;					// í‚¤ë³´ë“œì—ì„œ ë¬¸ìë¥¼ ì…ë ¥í–ˆì„ ë•Œ ì²˜ë¦¬í•˜ëŠ” ë©”ì†Œë“œ
 	void ClearState() noexcept;
 
 	template<typename T>
-	static void TrimBuffer(std::queue<T>& buffer) noexcept;	// ¹öÆÛº¸´Ù ÀÌº¥Æ® ¾çÀÌ ¸¹À» °æ¿ì ¸Ç ¾Õ¿¡ ÀÖ´Â ¹öÆÛ Á¦°Å
+	static void TrimBuffer(std::queue<T>& buffer) noexcept;	// ë²„í¼ë³´ë‹¤ ì´ë²¤íŠ¸ ì–‘ì´ ë§ì„ ê²½ìš° ë§¨ ì•ì— ìˆëŠ” ë²„í¼ ì œê±°
 
 
-	static constexpr unsigned int nKeys = 256u;			// Å°º¸µå Å°ÀÇ °³¼ö
-	static constexpr unsigned int bufferSize = 16u;		// ÀÌº¥Æ® ¹öÆÛ °³¼ö
+	static constexpr unsigned int nKeys = 256u;			// í‚¤ë³´ë“œ í‚¤ì˜ ê°œìˆ˜
+	static constexpr unsigned int bufferSize = 16u;		// ì´ë²¤íŠ¸ ë²„í¼ ê°œìˆ˜
 
-	bool autorepeatEnabled = false;	// Áö¼ÓÀûÀ¸·Î ´©¸¦ ¶§ KeyDownÀÌ¶ó°í ÀÎÁ¤ÇÏ´ÂÁö ¿©ºÎ
+	bool autorepeatEnabled = false;	// ì§€ì†ì ìœ¼ë¡œ ëˆ„ë¥¼ ë•Œ KeyDownì´ë¼ê³  ì¸ì •í•˜ëŠ”ì§€ ì—¬ë¶€
 
-	std::bitset<nKeys> keystates;	// °¢ Å°º°·Î »óÅÂ¸¦ ÀúÀåÇÏ´Â °ª
-	std::queue<Event> keybuffer;	// Å° ÀÌº¥Æ®¸¦ ÀúÀåÇÏ´Â °ª
-	std::queue<char> charbuffer;	// ÇØ´ç ¹®ÀÚ¸¦ ÀÔ·ÂÇß´ÂÁö È®ÀÎÇÏ´Â °ª
+	std::bitset<nKeys> keystates;	// ê° í‚¤ë³„ë¡œ ìƒíƒœë¥¼ ì €ì¥í•˜ëŠ” ê°’
+	std::queue<Event> keybuffer;	// í‚¤ ì´ë²¤íŠ¸ë¥¼ ì €ì¥í•˜ëŠ” ê°’
+	std::queue<char> charbuffer;	// í•´ë‹¹ ë¬¸ìë¥¼ ì…ë ¥í–ˆëŠ”ì§€ í™•ì¸í•˜ëŠ” ê°’
 };

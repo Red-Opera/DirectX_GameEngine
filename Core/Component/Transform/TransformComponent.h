@@ -1,22 +1,15 @@
-#pragma once
+ï»¿#pragma once
+#include "Transform.h"
 
 #include "Core/Object/EngineLoop.h"
 
-#include "Component.h"
-#include "Utility/Vector.h"
+#include "../Component.h"
 
 #include <DirectXMath.h>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-struct Transform final
-{
-	Position position;
-	Rotation rotation;
-	Scale scale;
-};
 
 class TransformComponent : public Component, public std::enable_shared_from_this<TransformComponent>
 {
@@ -79,8 +72,8 @@ public:
 	DirectX::XMMATRIX GetLocalTransformMatrix() const noexcept;
 	DirectX::XMFLOAT4X4& GetLocalTransformMatrix4x4() noexcept;
 
-	virtual std::string GetClassName() const override { return "TransformComponent"; };	// °´Ã¼ÀÇ ÄÄÆ÷³ÍÆ® ÀÌ¸§À» ¹İÈ¯ÇÏ´Â ÇÔ¼ö
-	static std::string GetStaticClassName() { return "TransformComponent"; }			// ÇØ´ç Å¬·¡½ºÀÇ ÀÌ¸§À» ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+	virtual std::string GetClassName() const override { return "TransformComponent"; };	// ê°ì²´ì˜ ì»´í¬ë„ŒíŠ¸ ì´ë¦„ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
+	static std::string GetStaticClassName() { return "TransformComponent"; }			// í•´ë‹¹ í´ë˜ìŠ¤ì˜ ì´ë¦„ì„ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
 
 	// =============================================
 	// [Parent, Child]
@@ -117,10 +110,10 @@ public:
 
 private:
 	std::unordered_map<std::string, UINT> childIndex;
-	std::vector<std::shared_ptr<TransformComponent>> children;	// ÀÚ½Ä ¿ÀºêÁ§Æ®¸¦ ÀúÀåÇÏ´Â º¤ÅÍ
-	std::shared_ptr<TransformComponent> parent;					// ºÎ¸ğ ¿ÀºêÁ§Æ®¸¦ ÀúÀåÇÏ´Â º¯¼ö
+	std::vector<std::shared_ptr<TransformComponent>> children;	// ìì‹ ì˜¤ë¸Œì íŠ¸ë¥¼ ì €ì¥í•˜ëŠ” ë²¡í„°
+	std::shared_ptr<TransformComponent> parent;					// ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
 
-	DirectX::XMFLOAT4X4 transformMatrix;						// ¿ÀºêÁ§Æ®ÀÇ º¯È¯ Çà·Ä
+	DirectX::XMFLOAT4X4 transformMatrix;						// ì˜¤ë¸Œì íŠ¸ì˜ ë³€í™˜ í–‰ë ¬
 
 	Transform worldTransform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
 	Transform localTransform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };

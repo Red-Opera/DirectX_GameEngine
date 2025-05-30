@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/RenderingManager/Buffer/BufferResource.h"
 #include "Core/Draw/Base/Image/Image.h"
@@ -47,7 +47,7 @@ namespace Graphic
 		ShaderInputDepthStencil(UINT slot, Usage usage = Usage::DepthStencil);
 		ShaderInputDepthStencil(UINT width, UINT height, UINT slot, Usage usage = Usage::DepthStencil);
 
-		// DepthStencilÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// DepthStencilì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 	private:
@@ -63,7 +63,7 @@ namespace Graphic
 		OutputOnlyDepthStencil(UINT width, UINT height);
 		OutputOnlyDepthStencil(Microsoft::WRL::ComPtr<ID3D11Texture2D> texture, UINT face);
 
-		// DepthStencilÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// DepthStencilì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 	};
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Component/Component.h"
 #include "Core/Object/EngineLoop.h"
@@ -34,10 +34,11 @@ namespace Engine
 		void ModelEditor() noexcept;
 		void MeshComponentEditor() noexcept;
 		void CameraEditor() noexcept;
+		void PhysicsComponentEditor() noexcept;
 
 		~Inspector() = default;
 
-		// EngineLoopÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// EngineLoopì˜í•´ ìƒì†ëœ ê°€ìƒ í•¨ìˆ˜ë“¤
 		void Initialize() override;
 		void BeforeFrame() override;
 		void Start() override;
@@ -51,7 +52,7 @@ namespace Engine
 		void Reset() override;
 
 	private:
-		static std::shared_ptr<Object> selectObject;		// ÇöÀç ¼±ÅÃµÈ ¿ÀºêÁ§Æ®
-		static std::shared_ptr<Component> selectComponent;	// ÇöÀç ¼±ÅÃµÈ ÄÄÆ÷³ÍÆ®
+		static std::shared_ptr<Object> selectObject;		// ì„ íƒëœ ì˜¤ë¸Œì íŠ¸
+		static std::shared_ptr<Component> selectComponent;	// ì„ íƒëœ ì»´í¬ë„ŒíŠ¸
 	};
 }

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Core/RenderingPipeline/Render.h"
 
 namespace Graphic
@@ -6,12 +6,12 @@ namespace Graphic
 	class SamplerState : public Render
 	{
 	public:
-		// ÀÌ¹æ¼º ÇÊÅÍ¸µ, ¹ÙÀÌ¸®´Ï¾î ÇÊÅÍ¸µ, Æ÷ÀÎÆ® ÇÊÅÍ¸µ
+		// ì´ë°©ì„± í•„í„°ë§, ë°”ì´ë¦¬ë‹ˆì–´ í•„í„°ë§, í¬ì¸íŠ¸ í•„í„°ë§
 		enum class TextureFilter { Anisotropic, Bilinear, Point, };
 
 		SamplerState(TextureFilter textureFilter, bool useReflect, UINT slot);
 
-		// BindableÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Bindableì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 		static std::shared_ptr<SamplerState> GetRender(
@@ -26,8 +26,8 @@ namespace Graphic
 	protected:
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 
-		TextureFilter textureFilter;	// ÅØ½ºÅÍ ÇÊÅÍ¸µ Å¸ÀÔ
-		bool useReflect;				// ¹İ»ç »ç¿ë ¿©ºÎ
+		TextureFilter textureFilter;	// í…ìŠ¤í„° í•„í„°ë§ íƒ€ì…
+		bool useReflect;				// ë°˜ì‚¬ ì‚¬ìš© ì—¬ë¶€
 		UINT slot;
 	};
 }

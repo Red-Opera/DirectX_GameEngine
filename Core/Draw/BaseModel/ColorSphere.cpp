@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ColorSphere.h"
 #include "SphereFrame.h"
 

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <math.h>
 
@@ -24,7 +24,7 @@ public:
 		constexpr T oneCycle = (T)2 * (T)PIDOUBLE;
 		const T currrentRadianFromOneCycle = (T)fmod(radian, oneCycle);
 
-		// °¢µµ°¡ PI¸¦ ³Ñ´Â °æ¿ì
+		// ê°ë„ê°€ PIë¥¼ ë„˜ëŠ” ê²½ìš°
 		if (currrentRadianFromOneCycle > (T)PIDOUBLE)
 			return currrentRadianFromOneCycle - oneCycle;
 
@@ -48,16 +48,16 @@ public:
 		return currentAngleFromOneCycle;
 	}
 
-	// °¡¿ì½Ã¾È ÇÔ¼ö (Á¤±Ô ºĞÆ÷ È®·ü ¹Ğµµ ÇÔ¼ö °Ô»ê)
+	// ê°€ìš°ì‹œì•ˆ í•¨ìˆ˜ (ì •ê·œ ë¶„í¬ í™•ë¥  ë°€ë„ í•¨ìˆ˜ ê²Œì‚°)
 	template<typename T>
 	static constexpr T Gaussian(T x, T sigma) noexcept
 	{
 		const auto sigmaSquare = Pow2(sigma);
 
-		// Á¤±ÔÈ­ »ó¼ö
+		// ì •ê·œí™” ìƒìˆ˜
         const auto normalization = (T)1.0 / sqrt((T)2.0 * (T)PIDOUBLE * sigmaSquare);
 
-		// Á¤±ÔÈ­ Áö¼ö
+		// ì •ê·œí™” ì§€ìˆ˜
 		const auto exponential = exp(-Pow2(x) / ((T)2.0 * sigmaSquare));
 
 		return normalization * exponential;

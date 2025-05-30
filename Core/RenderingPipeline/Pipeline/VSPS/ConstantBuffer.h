@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/Exception/GraphicsException.h"
 
@@ -16,7 +16,7 @@ namespace Graphic
 		{
 			CREATEINFOMANAGER(Window::GetDxGraphic());
 
-			// »ó¼ö ¹öÆÛ »ı¼º 
+			// ìƒìˆ˜ ë²„í¼ ìƒì„± 
 			D3D11_BUFFER_DESC constantBufferDesc;
 			constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			constantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -66,11 +66,11 @@ namespace Graphic
 		UINT slot;
 	};
 
-	// Vertex Constant Buffer »ı¼º Å¬·¡½º
+	// Vertex Constant Buffer ìƒì„± í´ë˜ìŠ¤
 	template<typename BufferType>
 	class VertexConstantBuffer : public ConstantBuffer<BufferType>
 	{
-		// ±âÁ¸¿¡ ÀÖ´Â »ó¼ö ¹öÆÛ º¯¼ö¿Í Device Context¸¦ °¡Á®¿À´Â ÄÚµå¸¦ ±×´ë·Î »ç¿ë
+		// ê¸°ì¡´ì— ìˆëŠ” ìƒìˆ˜ ë²„í¼ ë³€ìˆ˜ì™€ Device Contextë¥¼ ê°€ì ¸ì˜¤ëŠ” ì½”ë“œë¥¼ ê·¸ëŒ€ë¡œ ì‚¬ìš©
 		using ConstantBuffer<BufferType>::constantBuffer;
 		using ConstantBuffer<BufferType>::slot;
 		using ConstantBuffer<BufferType>::GetInfoManager;
@@ -108,7 +108,7 @@ namespace Graphic
 		std::string GetID() const noexcept override { return CreateID(slot); }
 	};
 
-	// Pixel Constant Buffer »ı¼º Å¬·¡½º
+	// Pixel Constant Buffer ìƒì„± í´ë˜ìŠ¤
 	template<typename BufferType>
 	class PixelConstantBuffer : public ConstantBuffer<BufferType>
 	{

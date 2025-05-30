@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <wrl/client.h>
 #include <d3d11.h>
 
@@ -8,16 +8,16 @@ public:
     OcclusionCulling();
     ~OcclusionCulling() = default;
 
-    // Occlusion Query¸¦ ½ÃÀÛÇÕ´Ï´Ù.
+    // Occlusion Queryë¥¼ ì‹œì‘í•©ë‹ˆë‹¤.
     void BeginQuery();
 
-    // Occlusion Query¸¦ Á¾·áÇÕ´Ï´Ù.
+    // Occlusion Queryë¥¼ ì¢…ë£Œí•©ë‹ˆë‹¤.
     void EndQuery();
 
-    // query °á°ú¸¦ Á¶È¸ÇÏ¿© ¿ÀºêÁ§Æ®°¡ º¸ÀÌ´ÂÁö ÆÇÁ¤ÇÕ´Ï´Ù.
+    // query ê²°ê³¼ë¥¼ ì¡°íšŒí•˜ì—¬ ì˜¤ë¸Œì íŠ¸ê°€ ë³´ì´ëŠ”ì§€ íŒì •í•©ë‹ˆë‹¤.
     bool IsVisible() const;
 
-    // Äõ¸® °á°ú¸¦ ¾÷µ¥ÀÌÆ®ÇÏ°í ÀÌÀü ÇÁ·¹ÀÓÀÇ °á°ú ¹İÈ¯
+    // ì¿¼ë¦¬ ê²°ê³¼ë¥¼ ì—…ë°ì´íŠ¸í•˜ê³  ì´ì „ í”„ë ˆì„ì˜ ê²°ê³¼ ë°˜í™˜
     bool UpdateVisibility();
 
 private:
@@ -27,6 +27,6 @@ private:
 
     Microsoft::WRL::ComPtr<ID3D11Query> occlusionQuery;
 
-    bool m_lastFrameVisible = true; // ÃÊ±â°ªÀº º¸ÀÌ´Â °ÍÀ¸·Î ¼³Á¤
+    bool m_lastFrameVisible = true; // ì´ˆê¸°ê°’ì€ ë³´ì´ëŠ” ê²ƒìœ¼ë¡œ ì„¤ì •
     bool m_resultReady = false;
 };

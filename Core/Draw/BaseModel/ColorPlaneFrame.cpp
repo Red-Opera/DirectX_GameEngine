@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ColorPlaneFrame.h"
 
 #include "Utility/MathInfo.h"
@@ -11,10 +11,10 @@ TriangleIndexList ColorPlaneFrame::MakeTesselated(VertexCore::VertexLayout verte
     using VertexType = VertexCore::VertexLayout::VertexType;
 
     constexpr size_t initialCount = 4;
-    constexpr size_t capacity = 8;  // ³ªÁß¿¡ µŞ¸é Á¤Á¡À» À§ÇØ 8°³±îÁö ÀúÀåÇÒ ¼ö ÀÖµµ·Ï ÇÔ
+    constexpr size_t capacity = 8;  // ë‚˜ì¤‘ì— ë’·ë©´ ì •ì ì„ ìœ„í•´ 8ê°œê¹Œì§€ ì €ì¥í•  ìˆ˜ ìˆë„ë¡ í•¨
     VertexBuffer vertexBuffer(std::move(vertexLayout), capacity);
 
-    // Æò¸é ²ÀÁşÁ¡ À§Ä¡ (Áß½ÉÀÌ ¿øÁ¡, Å©±â 1x1)
+    // í‰ë©´ ê¼­ì§“ì  ìœ„ì¹˜ (ì¤‘ì‹¬ì´ ì›ì , í¬ê¸° 1x1)
     const XMFLOAT3 positions[initialCount] = {
         { -0.5f, -0.5f, 0.0f },
         {  0.5f, -0.5f, 0.0f },
@@ -22,23 +22,23 @@ TriangleIndexList ColorPlaneFrame::MakeTesselated(VertexCore::VertexLayout verte
         { -0.5f,  0.5f, 0.0f }
     };
 
-    // ÃÊ±â 4°³ Á¤Á¡¸¸ ÃÊ±âÈ­
+    // ì´ˆê¸° 4ê°œ ì •ì ë§Œ ì´ˆê¸°í™”
     for (size_t i = 0; i < initialCount; ++i)
         vertexBuffer[i].GetValue<VertexType::Position3D>() = positions[i];
 
-    // ÀÎµ¦½º: µÎ °³ÀÇ »ï°¢Çü (0,1,2)¿Í (0,2,3)
+    // ì¸ë±ìŠ¤: ë‘ ê°œì˜ ì‚¼ê°í˜• (0,1,2)ì™€ (0,2,3)
     std::vector<unsigned short> indices = { 0, 1, 2, 0, 2, 3 };
 
-    // µŞ¸é Á¤Á¡ Ãß°¡¸¦ À§ÇØ ¹öÆÛ Å©±â Á¶Á¤
+    // ë’·ë©´ ì •ì  ì¶”ê°€ë¥¼ ìœ„í•´ ë²„í¼ í¬ê¸° ì¡°ì •
     vertexBuffer.Resize(capacity);
 
-    // µŞ¸é Á¤Á¡ Ãß°¡
+    // ë’·ë©´ ì •ì  ì¶”ê°€
     for (size_t i = 0; i < initialCount; ++i) {
         vertexBuffer[initialCount + i].GetValue<VertexType::Position3D>() = vertexBuffer[i].GetValue<VertexType::Position3D>();
-        // ÇÊ¿äÇÑ °æ¿ì ´Ù¸¥ ¼Ó¼ºµµ º¹»ç
+        // í•„ìš”í•œ ê²½ìš° ë‹¤ë¥¸ ì†ì„±ë„ ë³µì‚¬
     }
 
-    // µŞ¸é ÀÎµ¦½º Ãß°¡: µÎ °³ÀÇ »ï°¢Çü (4,5,6)¿Í (4,6,7)
+    // ë’·ë©´ ì¸ë±ìŠ¤ ì¶”ê°€: ë‘ ê°œì˜ ì‚¼ê°í˜• (4,5,6)ì™€ (4,6,7)
     std::vector<unsigned short> backIndices = { 4, 6, 5, 4, 7, 6 };
     indices.insert(indices.end(), backIndices.begin(), backIndices.end());
 
@@ -59,24 +59,24 @@ TriangleIndexList ColorPlaneFrame::CreateTextureFrame()
 {
     using VertexType = VertexCore::VertexLayout::VertexType;
 
-    // VertexLayout ±¸¼º: Position3D, Normal, Texture2D
+    // VertexLayout êµ¬ì„±: Position3D, Normal, Texture2D
     VertexCore::VertexLayout layout;
     layout.AddType(VertexType::Position3D);
     layout.AddType(VertexType::Normal);
     layout.AddType(VertexType::Texture2D);
 
-    // Æò¸é »ı¼º
+    // í‰ë©´ ìƒì„±
     auto plane = MakeTesselated(std::move(layout));
 
-    // ¹İÀüµÈ ³ë¸Ö º¤ÅÍ ¼³Á¤
+    // ë°˜ì „ëœ ë…¸ë©€ ë²¡í„° ì„¤ì •
     const XMFLOAT3 frontNormal = { 0.0f, 0.0f, 1.0f }; 
     const XMFLOAT3 backNormal = { 0.0f, 0.0f, -1.0f };
 
-    // ¾Õ¸é ³ë¸Ö ¼³Á¤
+    // ì•ë©´ ë…¸ë©€ ì„¤ì •
     for (size_t i = 0; i < 4; ++i)
         plane.vertices[i].GetValue<VertexType::Normal>() = frontNormal;
 
-    // µŞ¸é ³ë¸Ö ¼³Á¤
+    // ë’·ë©´ ë…¸ë©€ ì„¤ì •
     for (size_t i = 4; i < 8; ++i)
         plane.vertices[i].GetValue<VertexType::Normal>() = backNormal;
 

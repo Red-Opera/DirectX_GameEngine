@@ -1,8 +1,8 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ObjectPicker.h"
 
 #include "Core/Component/MeshComponent.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 #include "Core/Draw/Base/Drawable.h"
 #include "Core/Draw/Mesh.h"
 #include "Core/Object/Object.h"
@@ -22,27 +22,27 @@ void Engine::ObjectPicker::CreateRayFromScreenPoint
     int screenWidth, int screenHeight
 )
 {
-    // È­¸é ÁÂÇ¥¸¦ NDC ÁÂÇ¥·Î º¯È¯ (-1 ~ 1 ¹üÀ§)
+    // í™”ë©´ ì¢Œí‘œë¥¼ NDC ì¢Œí‘œë¡œ ë³€í™˜ (-1 ~ 1 ë²”ìœ„)
     float ndcX = (2.0f * screenX / screenWidth) - 1.0f;
     float ndcY = 1.0f - (2.0f * screenY / screenHeight);
 
-    // ±ÙÆò¸é°ú ¿øÆò¸éÀÇ Á¡ »ı¼º
+    // ê·¼í‰ë©´ê³¼ ì›í‰ë©´ì˜ ì  ìƒì„±
     DirectX::XMVECTOR nearPoint = DirectX::XMVectorSet(ndcX, ndcY, 0.0f, 1.0f);
     DirectX::XMVECTOR farPoint = DirectX::XMVectorSet(ndcX, ndcY, 1.0f, 1.0f);
 
-    // Åõ¿µ Çà·Ä°ú ºä Çà·ÄÀÇ °öÀÇ ¿ªÇà·Ä °è»ê
+    // íˆ¬ì˜ í–‰ë ¬ê³¼ ë·° í–‰ë ¬ì˜ ê³±ì˜ ì—­í–‰ë ¬ ê³„ì‚°
     DirectX::XMMATRIX viewProj = DirectX::XMMatrixMultiply(viewMatrix, projMatrix);
     DirectX::XMMATRIX invViewProj = DirectX::XMMatrixInverse(nullptr, viewProj);
 
-    // ¿ùµå °ø°£À¸·Î º¯È¯
+    // ì›”ë“œ ê³µê°„ìœ¼ë¡œ ë³€í™˜
     DirectX::XMVECTOR nearWorldPoint = DirectX::XMVector4Transform(nearPoint, invViewProj);
     DirectX::XMVECTOR farWorldPoint = DirectX::XMVector4Transform(farPoint, invViewProj);
 
-    // w ¼ººĞÀ¸·Î ³ª´©¾î Á¤±ÔÈ­
+    // w ì„±ë¶„ìœ¼ë¡œ ë‚˜ëˆ„ì–´ ì •ê·œí™”
     nearWorldPoint = DirectX::XMVectorDivide(nearWorldPoint, DirectX::XMVectorSplatW(nearWorldPoint));
     farWorldPoint = DirectX::XMVectorDivide(farWorldPoint, DirectX::XMVectorSplatW(farWorldPoint));
 
-    // ·¹ÀÌ ¿øÁ¡°ú ¹æÇâ ¼³Á¤
+    // ë ˆì´ ì›ì ê³¼ ë°©í–¥ ì„¤ì •
     rayOrigin = nearWorldPoint;
     rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(farWorldPoint, nearWorldPoint));
 }
@@ -64,19 +64,19 @@ std::shared_ptr<Object> Engine::ObjectPicker::PickObjectAtScreenPoint
     float closestDistance = FLT_MAX;
     std::shared_ptr<Object> closestObject = nullptr;
 
-    // ¸ğµç ¿ÀºêÁ§Æ®¿¡ ´ëÇØ ·¹ÀÌ ±³Â÷ °Ë»ç
+    // ëª¨ë“  ì˜¤ë¸Œì íŠ¸ì— ëŒ€í•´ ë ˆì´ êµì°¨ ê²€ì‚¬
     for (const auto& object : objects)
     {
-        // ºñÈ°¼ºÈ­µÈ ¿ÀºêÁ§Æ®´Â °Ç³Ê¶Ü
+        // ë¹„í™œì„±í™”ëœ ì˜¤ë¸Œì íŠ¸ëŠ” ê±´ë„ˆëœ€
         if (!object->GetActive())
             continue;
 
-        // MeshComponent°¡ ÀÖ´ÂÁö È®ÀÎ
+        // MeshComponentê°€ ìˆëŠ”ì§€ í™•ì¸
         //auto meshComp = object->GetComponent<MeshComponent>();
         //if (!meshComp || !meshComp->GetEnable())
         //    continue;
 
-        // Ãæµ¹ °Ë»ç
+        // ì¶©ëŒ ê²€ì‚¬
         float distance = 0.0f;
 
         if (IntersectRayWithObject(rayOrigin, rayDirection, object, distance) && distance < closestDistance)
@@ -101,15 +101,15 @@ bool Engine::ObjectPicker::IntersectRayWithObject
     if (!transform)
         return false;
 
-    // ¿ÀºêÁ§Æ®ÀÇ À§Ä¡ (Áß½ÉÁ¡)
+    // ì˜¤ë¸Œì íŠ¸ì˜ ìœ„ì¹˜ (ì¤‘ì‹¬ì )
     DirectX::XMVECTOR objectPos = Vector::ConvertXMVECTOR(transform->GetPosition());
 
-    // ¿ÀºêÁ§Æ®ÀÇ Å©±â (Ãæµ¹ ¹İ°æ °è»ê¿ë)
+    // ì˜¤ë¸Œì íŠ¸ì˜ í¬ê¸° (ì¶©ëŒ ë°˜ê²½ ê³„ì‚°ìš©)
     Scale scale = transform->GetScale();
     float maxScale = std::max(std::max(scale.x, scale.y), scale.z);
-    float radius = maxScale * 0.5f; // °£´ÜÇÑ ±¸Ã¼ Ãæµ¹ °Ë»ç »ç¿ë
+    float radius = maxScale * 0.5f; // ê°„ë‹¨í•œ êµ¬ì²´ ì¶©ëŒ ê²€ì‚¬ ì‚¬ìš©
 
-    // ·¹ÀÌ-±¸Ã¼ ±³Â÷ °Ë»ç
+    // ë ˆì´-êµ¬ì²´ êµì°¨ ê²€ì‚¬
     DirectX::XMVECTOR oc = DirectX::XMVectorSubtract(rayOrigin, objectPos);
     float a = DirectX::XMVectorGetX(DirectX::XMVector3Dot(rayDirection, rayDirection));
     float b = 2.0f * DirectX::XMVectorGetX(DirectX::XMVector3Dot(oc, rayDirection));
@@ -117,11 +117,11 @@ bool Engine::ObjectPicker::IntersectRayWithObject
     float discriminant = b * b - 4 * a * c;
 
     if (discriminant < 0)
-        return false; // ±³Â÷ ¾øÀ½
+        return false; // êµì°¨ ì—†ìŒ
 
-    // ±³Â÷ °Å¸® °è»ê
+    // êµì°¨ ê±°ë¦¬ ê³„ì‚°
     outDistance = (-b - sqrtf(discriminant)) / (2.0f * a);
 
-    // ¾ç¼ö °Å¸®¸¸ À¯È¿
+    // ì–‘ìˆ˜ ê±°ë¦¬ë§Œ ìœ íš¨
     return outDistance > 0;
 }

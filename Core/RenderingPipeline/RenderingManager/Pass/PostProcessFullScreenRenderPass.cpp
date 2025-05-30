@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "PostProcessFullScreenRenderPass.h"
 
 #include "Core/RenderingPipeline/RenderingPipeline.h"

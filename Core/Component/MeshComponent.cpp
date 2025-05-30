@@ -1,8 +1,8 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "MeshComponent.h"
 #include "Core/Object/Object.h"
-#include "Core/Component/TransformComponent.h"
+#include "Core/Component/Transform/TransformComponent.h"
 
 MeshComponent::MeshComponent(std::shared_ptr<class Object> object, std::vector<Mesh*> meshs)
     : Component(object)

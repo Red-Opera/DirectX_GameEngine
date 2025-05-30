@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core/RenderingPipeline/Render.h"
 #include "Core/RenderingPipeline/Vertex.h"
@@ -12,7 +12,7 @@ namespace Graphic
 	public:
 		InputLayout(VertexCore::VertexLayout vertexLayout, const VertexShader& vertexShader);
 
-		// BindableÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Bindableì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override;
 
 		static std::shared_ptr<InputLayout> GetRender(const VertexCore::VertexLayout& vertexLayout, const VertexShader& vertexShader);

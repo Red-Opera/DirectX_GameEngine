@@ -140,6 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,7 +158,8 @@
     <ClInclude Include="Core\Camera\CameraViewFrustumCulling.h" />
     <ClInclude Include="Core\Component\Component.h" />
     <ClInclude Include="Core\Component\MeshComponent.h" />
-    <ClInclude Include="Core\Component\TransformComponent.h" />
+    <ClInclude Include="Core\Component\Transform\Transform.h" />
+    <ClInclude Include="Core\Component\Transform\TransformComponent.h" />
     <ClInclude Include="Core\Draw\BaseModel\CylinderFrame.h" />
     <ClInclude Include="Core\Draw\ModelEditor.h" />
     <ClInclude Include="Core\Draw\Object\ColorConeObject.h" />
@@ -1123,7 +1125,8 @@
     <ClCompile Include="Core\Camera\CameraViewFrustumCulling.cpp" />
     <ClCompile Include="Core\Component\Component.cpp" />
     <ClCompile Include="Core\Component\MeshComponent.cpp" />
-    <ClCompile Include="Core\Component\TransformComponent.cpp" />
+    <ClCompile Include="Core\Component\Transform\Transform.cpp" />
+    <ClCompile Include="Core\Component\Transform\TransformComponent.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ConeFrame.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\CylinderFrame.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\SphereFrame.cpp" />

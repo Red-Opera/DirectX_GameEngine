@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "DynamicConstantBuffer.h"
 
 #include "Core/Exception/GraphicsException.h"
@@ -69,7 +69,7 @@ namespace Graphic
 	public:
 		using ConstantBufferEx::ConstantBufferEx;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override 
 		{ 
 			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
@@ -83,7 +83,7 @@ namespace Graphic
 	public:
 		using ConstantBufferEx::ConstantBufferEx;
 
-		// RenderÀ»(¸¦) ÅëÇØ »ó¼ÓµÊ
+		// Renderì„(ë¥¼) í†µí•´ ìƒì†ë¨
 		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
 			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());

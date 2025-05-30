@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Material.h"
 
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
@@ -107,7 +107,7 @@ Material::Material(const aiMaterial& material, const std::filesystem::path& path
 		}
 
 		{
-			// Shader ÄÚµå ÀÌ¸§ÀÌ LitTextureÀÎ °æ¿ì LitColor·Î º¯°æ
+			// Shader ì½”ë“œ ì´ë¦„ì´ LitTextureì¸ ê²½ìš° LitColorë¡œ ë³€ê²½
 			if (shaderCodeName == "Shader/LitTexture")
 				shaderCodeName = "Shader/LitColor";
 
@@ -206,7 +206,7 @@ Material::Material(const aiMaterial& material, const std::filesystem::path& path
 		techniques.push_back(std::move(outline));
 	}
 
-	// ±×¸²ÀÚ ¸Ê Technique
+	// ê·¸ë¦¼ì ë§µ Technique
 	{
 		Technique shadowMap{ "ShadowMap", RenderingChannel::shadow, true };
 		{
