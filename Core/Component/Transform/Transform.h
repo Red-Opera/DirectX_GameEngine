@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Utility/Vector.h"
+#include "Utility/Vector.h" // Quaternion 정의 포함
 #include <DirectXMath.h>
 
 using namespace DirectX;
@@ -8,11 +8,12 @@ using namespace DirectX;
 struct Transform final
 {
     Position position;
-    Rotation rotation;
+    Quaternion rotation; // Vector3에서 Quaternion으로 변경
     Scale scale;
 
     Transform();
-    Transform(const Position& position, const Rotation& rotation, const Scale& scale);
+    // 생성자에서 rotation 인자 타입을 Quaternion으로 변경
+    Transform(const Position& position, const Quaternion& rotation, const Scale& scale);
     Transform(const Transform& other);
     Transform(Transform&& other) noexcept;
 
@@ -32,11 +33,12 @@ struct Transform final
     const Position& GetPosition() const;
 
     // 회전 설정/가져오기
-    void SetRotation(const Rotation& newRotation);
-    void SetRotation(const XMFLOAT3& newRotation);
-    void SetRotation(float x, float y, float z);
-    Rotation& GetRotation();
-    const Rotation& GetRotation() const;
+    void SetRotation(const Quaternion& newRotation);                // 인수 타입을 Quaternion으로 변경
+    void SetRotationFromEuler(const Euler& eulerAngles);            // 오일러 각도로 회전 설정하는 함수 추가
+    void SetRotationFromEuler(float roll, float pitch, float yaw);  // 오일러 각도로 회전 설정하는 함수 추가
+    Quaternion& GetRotation();                                      // 반환 타입을 Quaternion으로 변경
+    const Quaternion& GetRotation() const;                          // 반환 타입을 Quaternion으로 변경
+    Euler GetRotationEuler() const;                                 // 오일러 각도로 회전 가져오는 함수 추가
 
     // 스케일 설정/가져오기
     void SetScale(const Scale& newScale);
@@ -67,7 +69,8 @@ struct Transform final
     void Translate(const Vector3& translation);
 
     // 회전 관련 메서드
-    void Rotate(const Vector3& eulerAngles);
+    void Rotate(const Quaternion& additionalRotation);                      // 쿼터니언으로 회전 추가
+    void RotateEuler(const Euler& eulerAngles);                             // 오일러 각도로 회전 추가
     void LookAt(const Vector3& target, const Vector3& up = Vector3::up);
 
     // 점/벡터 변환
@@ -78,18 +81,14 @@ struct Transform final
 
     // 보간 메서드
     static Transform Lerp(const Transform& from, const Transform& to, float t);
-    static Transform Slerp(const Transform& from, const Transform& to, float t);
+    static Transform Slerp(const Transform& from, const Transform& to, float t); // 내부 구현이 쿼터니언 직접 사용으로 변경됨
 
     // 역변환
     Transform GetInverse() const;
 
     // 행렬에서 Transform 추출
-    static Transform FromMatrix(const XMFLOAT4X4& matrix);
-    static Transform FromMatrix(const XMMATRIX& matrix);
-
-    // 쿼터니언 관련
-    static Vector3 QuaternionToEuler(const XMVECTOR& quaternion);
-    static XMVECTOR EulerToQuaternion(const Vector3& euler);
+    static Transform FromMatrix(const XMFLOAT4X4& matrix); // 내부에서 쿼터니언 추출로 변경됨
+    static Transform FromMatrix(const XMMATRIX& matrix); // 내부에서 쿼터니언 추출로 변경됨
 
     // 리셋
     void Reset();

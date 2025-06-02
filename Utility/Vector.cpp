@@ -10,6 +10,7 @@ const XMVECTOR Vector::rightV = XMLoadFloat3(&Vector::right);
 const XMVECTOR Vector::upV = XMLoadFloat3(&Vector::up);
 const XMVECTOR Vector::downV = XMLoadFloat3(&Vector::down);
 const XMVECTOR Vector::allDirV = XMVectorReplicate(1.0f);
+const XMVECTOR Vector::identityQuaternionV = XMQuaternionIdentity();
 
 const Vector2 Vector2::zero		= Vector2( 0.0f,  0.0f);
 const Vector2 Vector2::up		= Vector2( 0.0f,  1.0f);
@@ -36,6 +37,7 @@ const Vector4 Vector4::up				= Vector4( 0.0f,  1.0f,  0.0f,  0.0f);
 const Vector4 Vector4::down				= Vector4( 0.0f, -1.0f,  0.0f,  0.0f);
 const Vector4 Vector4::reverseOpaque	= Vector4( 0.0f,  0.0f,  0.0f, -1.0f);
 const Vector4 Vector4::opaque			= Vector4( 0.0f,  0.0f,  0.0f,  1.0f);
+const Vector4 Vector4::identity			= Vector4( 0.0f,  0.0f,  0.0f,  1.0f);
 const Vector4 Vector4::one				= Vector4( 1.0f,  1.0f,  1.0f,  1.0f);
 
 XMFLOAT3 operator+(const XMFLOAT3& lhs, float value)
@@ -166,25 +168,68 @@ XMVECTOR Vector::ConvertXMVECTOR(const Vector4& vector4)
 	return XMVectorSet(vector4.x, vector4.y, vector4.z, vector4.w);
 }
 
-Vector3 Vector::GetEulerAngle(const DirectX::XMFLOAT4X4& matrix)
+Quaternion Vector::ConvertQuaternion(const Vector3& eulerAngles)
 {
-	DirectX::XMFLOAT3 euler;
+    // eulerAngles를 라디안 단위의 (pitch, yaw, roll)로 해석
+    XMFLOAT4 result;
+    XMStoreFloat4(&result, XMQuaternionRotationRollPitchYaw(
+        eulerAngles.x,  // pitch (X축 회전)
+        eulerAngles.y,  // yaw   (Y축 회전)
+        eulerAngles.z   // roll  (Z축 회전)
+    ));
+    
+    return Quaternion(result.x, result.y, result.z, result.w);
+}
 
-	euler.x = asinf(-matrix._32);
-
-	if (cosf(euler.x) > 0.0001)
+Euler Vector::ConvertEuler(const Quaternion& quaternion)
+{
+    // 쿼터니언 정규화 (추가)
+    XMVECTOR q = XMVectorSet(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+    q = XMQuaternionNormalize(q);
+    
+    // 회전 행렬로 변환
+    XMMATRIX rotMatrix = XMMatrixRotationQuaternion(q);
+    
+    float pitch, yaw, roll;
+    
+    // 회전 행렬의 요소들
+    float m11 = XMVectorGetX(rotMatrix.r[0]);
+    float m12 = XMVectorGetY(rotMatrix.r[0]);
+    float m13 = XMVectorGetZ(rotMatrix.r[0]);
+    float m21 = XMVectorGetX(rotMatrix.r[1]);
+    float m22 = XMVectorGetY(rotMatrix.r[1]);
+    float m23 = XMVectorGetZ(rotMatrix.r[1]);
+    float m31 = XMVectorGetX(rotMatrix.r[2]);
+    float m32 = XMVectorGetY(rotMatrix.r[2]);
+    float m33 = XMVectorGetZ(rotMatrix.r[2]);
+    
+    // 짐벌락 감지 및 개선된 각도 추출
+    if (abs(m32) > 0.99999f) 
 	{
-		euler.y = atan2f(matrix._31, matrix._33);	// Yaw
-		euler.z = atan2f(matrix._12, matrix._22);	// Roll
-	}
-
-	else
+        // 짐벌락 발생 - 특수 처리
+        pitch = XM_PIDIV2 * (m32 > 0 ? 1 : -1);
+        yaw = atan2f(-m13, m11);  // roll + yaw의 조합
+        roll = 0;  // roll을 0으로 고정하고 모든 회전을 yaw에 할당
+    } 
+	
+	else 
 	{
-		euler.y = 0.0f;								// Yaw
-		euler.z = atan2f(-matrix._21, matrix._11);	// Roll
-	}
+        // 일반적인 경우
+        pitch = asinf(-m32);
+        yaw = atan2f(m31, m33);
+        roll = atan2f(m12, m22);
+    }
+    
+    // 원래 함수와 일관된 순서로 반환
+    return Vector3(pitch, yaw, roll);
+}
 
-	return { euler.x, euler.y, euler.z };
+Quaternion Vector::GetQuaternion(const DirectX::XMFLOAT4X4& matrix)
+{
+	XMFLOAT4 result;
+	XMStoreFloat4(&result, XMQuaternionRotationMatrix(XMLoadFloat4x4(&matrix)));
+	
+	return Vector4(result.x, result.y, result.z, result.w);
 }
 
 DirectX::XMFLOAT3 Vector::GetPosition(const DirectX::XMFLOAT4X4& matrix)
@@ -267,7 +312,6 @@ float Vector3::GetLength() const
 	return sqrtf(x * x + y * y + z * z);
 }
 
-
 Vector2::Vector2(const Vector3& vector) noexcept : x(vector.x), y(vector.y)
 {
 
@@ -289,7 +333,6 @@ Vector2::Vector2(Vector4&& vector) : x(vector.x), y(vector.y)
 }
 
 Vector2& Vector2::operator=(const Vector2& vector) noexcept
-
 {
 	if (this == &vector)
 		return *this;

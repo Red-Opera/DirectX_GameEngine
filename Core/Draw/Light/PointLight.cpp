@@ -30,7 +30,7 @@ PointLight::PointLight(std::shared_ptr<Object> object, Position position, float 
 	viewCamera = Object::Create("LightCamera");
 	viewCamera->AddComponent<Camera>(true);
 	viewCamera->GetComponent<TransformComponent>()->SetPosition(lightInfo.position);
-	viewCamera->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
+	viewCamera->GetComponent<TransformComponent>()->SetRotationFromEuler(0.0f, Math::PI / 2.0f, 0.0f);
 }
 
 void PointLight::SpawnControlWidgets() noexcept

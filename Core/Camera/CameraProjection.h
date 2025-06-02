@@ -11,25 +11,25 @@ class DxGraphic;
 class CameraProjection
 {
 public:
-	CameraProjection(float width, float height, float nearZ, float farZ);
+    CameraProjection(float width, float height, float nearZ, float farZ);
 
-	void SetPosition(Position position) noexcept;
-	void SetRotation(Position rotation) noexcept;
-	DirectX::XMMATRIX GetMatrix() const;
+    void SetPosition(Position position) noexcept;
+    void SetRotation(Quaternion rotation) noexcept;
+    DirectX::XMMATRIX GetMatrix() const;
 
-	void Submit(size_t channel) const;
-	void LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph);
+    void Submit(size_t channel) const;
+    void LinkTechniques(RenderGraphNameSpace::RenderGraph& renderGraph);
 
-	void RenderWidgets();
+    void RenderWidgets();
 
-	void Reset();
+    void Reset();
 
 private:
-	float width, height;
-	float nearZ, farZ;
+    float width, height;
+    float nearZ, farZ;
 
-	float initWidth, initHeight;
-	float initNearZ, initFarZ;
+    float initWidth, initHeight;
+    float initNearZ, initFarZ;
 
-	CameraFrustum frust;
+    CameraFrustum frust;
 };

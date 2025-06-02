@@ -16,15 +16,15 @@ namespace Engine
     class ObjectGizmo
     {
     public:
-		static std::shared_ptr<ObjectGizmo> instance;
+        static std::shared_ptr<ObjectGizmo> instance;
 
-		static std::shared_ptr<ObjectGizmo> GetInstance()
-		{
+        static std::shared_ptr<ObjectGizmo> GetInstance()
+        {
             if (!instance)
-                instance = std::make_unique<ObjectGizmo>();
+                instance = std::make_shared<ObjectGizmo>();
 
-			return instance;
-		}
+            return instance;
+        }
 
         void SetSelectedObject(std::shared_ptr<Object> object); // 객체 선택 설정
         void RenderGizmoUI();                                   // ImGui에서 조작 유형 선택을 위한 UI 렌더링

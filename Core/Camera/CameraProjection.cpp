@@ -15,7 +15,7 @@ void CameraProjection::SetPosition(Position position) noexcept
 	frust.SetPosition(position);
 }
 
-void CameraProjection::SetRotation(Rotation rotation) noexcept
+void CameraProjection::SetRotation(Quaternion rotation) noexcept
 {
 	frust.SetRotation(rotation);
 }

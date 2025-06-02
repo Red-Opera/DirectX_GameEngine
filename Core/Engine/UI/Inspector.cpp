@@ -70,25 +70,34 @@ namespace Engine
                     isNotMatch = true;
                 }
 
-                // 회전 설정
-                Rotation rotation = selectObject->transform->GetRotation();
-                rotation.x = rotation.x * 180.0f / Math::PI;
-                rotation.y = rotation.y * 180.0f / Math::PI;
-                rotation.z = rotation.z * 180.0f / Math::PI;
+                // 회전 설정 (쿼터니언 → 오일러 → 도 변환)
+                Quaternion rotation = selectObject->transform->GetRotation();
+                Euler eulerRadians = Vector::ConvertEuler(rotation);
+                
+                // 라디안을 도로 변환
+                float angle[3] = {
+                    eulerRadians.x * 180.0f / Math::PI,
+                    eulerRadians.y * 180.0f / Math::PI,
+                    eulerRadians.z * 180.0f / Math::PI
+                };
 
-                float rot[3] = { rotation.x, rotation.y, rotation.z };
-
-                if (ImGui::DragFloat3("Rotation", rot, 0.1f))
+                if (ImGui::DragFloat3("Rotation", angle, 0.1f))
                 {
-                    rot[0] = Math::NormalizeAngle(rot[0]);
-                    rot[1] = Math::NormalizeAngle(rot[1]);
-                    rot[2] = Math::NormalizeAngle(rot[2]);
+                    // 각도 정규화
+                    angle[0] = Math::NormalizeAngle(angle[0]);
+                    angle[1] = Math::NormalizeAngle(angle[1]);
+                    angle[2] = Math::NormalizeAngle(angle[2]);
 
-                    rot[0] = Math::ConvertAngleToRadian(rot[0]);
-                    rot[1] = Math::ConvertAngleToRadian(rot[1]);
-                    rot[2] = Math::ConvertAngleToRadian(rot[2]);
+                    // 도를 라디안으로 변환
+                    Vector3 newEulerRadians;
+                    newEulerRadians.x = Math::ConvertAngleToRadian(angle[0]);
+                    newEulerRadians.y = Math::ConvertAngleToRadian(angle[1]);
+                    newEulerRadians.z = Math::ConvertAngleToRadian(angle[2]);
 
-                    selectObject->transform->SetRotation(rot[0], rot[1], rot[2]);
+                    // 오일러 각도를 쿼터니언으로 변환하여 설정
+                    Quaternion newRotation = Vector::ConvertQuaternion(newEulerRadians);
+                    selectObject->transform->SetRotation(newRotation);
+
                     isNotMatch = true;
                 }
 
@@ -141,9 +150,9 @@ namespace Engine
                 if (auto modelComponent = selectObject->GetComponent("Model"))
                 {
                     // Model 컴포넌트가 선택되어 있지 않다면 Mesh 정보 표시
-                    if (selectComponent != modelComponent) // Model 컴포넌트가 이미 선택되어 있다면 중복 표시 방지
+                    if (selectComponent != modelComponent)
                     {
-                        // 모 델의 노드를 표시하고 메쉬를 컴포넌트처럼 관리하는 컨트롤러 클래스
+                        // 모델의 노드를 표시하고 메쉬를 컴포넌트처럼 관리하는 컨트롤러 클래스
                         class MeshComponentsController : public ModelBase
                         {
                         public:
@@ -242,7 +251,7 @@ namespace Engine
                 else if (auto meshComponent = selectObject->GetComponent("MeshComponent"))
                 {
                     // MeshComponent가 선택되어 있지 않다면 Mesh 정보 표시
-                    if (selectComponent != meshComponent) // 이미 선택되어 있다면 중복 표시 방지
+                    if (selectComponent != meshComponent)
                     {
                         // MeshComponent에서 메쉬들을 표시하는 클래스
                         class MeshInfoController

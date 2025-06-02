@@ -7,12 +7,12 @@
 const Transform Transform::identity = Transform();
 
 Transform::Transform() 
-    : position(Vector3::zero), rotation(Vector3::zero), scale(Vector3::one) 
+    : position(Vector3::zero), rotation(Quaternion::identity), scale(Vector3::one) 
 {
 
 }
 
-Transform::Transform(const Position& position, const Rotation& rotation, const Scale& scale)
+Transform::Transform(const Position& position, const Quaternion& rotation, const Scale& scale)
     : position(position), rotation(rotation), scale(scale) 
 {
 
@@ -57,7 +57,7 @@ Transform& Transform::operator=(Transform&& other) noexcept
 bool Transform::operator==(const Transform& other) const
 {
     return position == other.position && 
-           rotation == other.rotation && 
+           rotation.x == other.rotation.x && rotation.y == other.rotation.y && rotation.z == other.rotation.z && rotation.w == other.rotation.w &&
            scale == other.scale;
 }
 
@@ -91,29 +91,34 @@ const Position& Transform::GetPosition() const
     return position;
 }
 
-void Transform::SetRotation(const Rotation& newRotation)
+void Transform::SetRotation(const Quaternion& newRotation)
 {
     rotation = newRotation;
 }
 
-void Transform::SetRotation(const XMFLOAT3& newRotation)
+void Transform::SetRotationFromEuler(const Euler& eulerAngles)
 {
-    rotation = { newRotation.x, newRotation.y, newRotation.z };
+    rotation = Vector::ConvertQuaternion(eulerAngles);
 }
 
-void Transform::SetRotation(float x, float y, float z)
+void Transform::SetRotationFromEuler(float roll, float pitch, float yaw)
 {
-    rotation = { x, y, z };
+    rotation = Vector::ConvertQuaternion({ roll, pitch, yaw });
 }
 
-Rotation& Transform::GetRotation()
+Quaternion& Transform::GetRotation()
 {
     return rotation;
 }
 
-const Rotation& Transform::GetRotation() const
+const Quaternion& Transform::GetRotation() const
 {
     return rotation;
+}
+
+Vector3 Transform::GetRotationEuler() const
+{
+    return Vector::ConvertEuler(rotation);
 }
 
 void Transform::SetScale(const Scale& newScale)
@@ -166,7 +171,9 @@ XMMATRIX Transform::GetTranslationMatrix() const
 
 XMMATRIX Transform::GetRotationMatrix() const
 {
-    return XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+    // Quaternion을 XMVECTOR로 변환 후 회전 행렬 생성
+    XMVECTOR quatVec = XMVectorSet(rotation.x, rotation.y, rotation.z, rotation.w);
+    return XMMatrixRotationQuaternion(quatVec);
 }
 
 XMMATRIX Transform::GetScaleMatrix() const
@@ -183,7 +190,6 @@ Vector3 Transform::GetRight() const
 
     XMFLOAT3 result;
     XMStoreFloat3(&result, rightVector);
-
     return Vector3(result.x, result.y, result.z);
 }
 
@@ -196,7 +202,6 @@ Vector3 Transform::GetUp() const
 
     XMFLOAT3 result;
     XMStoreFloat3(&result, upVector);
-
     return Vector3(result.x, result.y, result.z);
 }
 
@@ -209,7 +214,6 @@ Vector3 Transform::GetForward() const
 
     XMFLOAT3 result;
     XMStoreFloat3(&result, forwardVector);
-
     return Vector3(result.x, result.y, result.z);
 }
 
@@ -233,32 +237,60 @@ void Transform::Translate(const Vector3& translation)
     position = position + translation;
 }
 
-void Transform::Rotate(const Vector3& eulerAngles)
+void Transform::Rotate(const Quaternion& additionalRotation)
 {
-    rotation = rotation + eulerAngles;
+    XMVECTOR currentQ = XMVectorSet(rotation.x, rotation.y, rotation.z, rotation.w);
+    XMVECTOR additionalQ = XMVectorSet(additionalRotation.x, additionalRotation.y, additionalRotation.z, additionalRotation.w);
+    XMVECTOR resultQ = XMQuaternionMultiply(currentQ, additionalQ);
+    resultQ = XMQuaternionNormalize(resultQ);
+    
+    rotation.x = XMVectorGetX(resultQ);
+    rotation.y = XMVectorGetY(resultQ);
+    rotation.z = XMVectorGetZ(resultQ);
+    rotation.w = XMVectorGetW(resultQ);
 }
 
-void Transform::LookAt(const Vector3& target, const Vector3& up)
+void Transform::RotateEuler(const Euler& eulerAngles)
+{
+    Quaternion additionalQ = Vector::ConvertQuaternion(eulerAngles);
+    Rotate(additionalQ);
+}
+
+void Transform::LookAt(const Vector3& target, const Vector3& upDir)
 {
     Vector3 forward = target - position;
-
     if (forward.GetLength() < 0.001f) 
         return;
     
+    // forward 벡터 정규화
     XMVECTOR forwardVec = Vector::ConvertXMVECTOR(forward);
-    XMVECTOR upVec = Vector::ConvertXMVECTOR(up);
-    XMVECTOR rightVec = XMVector3Cross(upVec, forwardVec);
-    upVec = XMVector3Cross(forwardVec, rightVec);
-    
     forwardVec = XMVector3Normalize(forwardVec);
-    rightVec = XMVector3Normalize(rightVec);
+    
+    XMVECTOR upVec = Vector::ConvertXMVECTOR(upDir);
     upVec = XMVector3Normalize(upVec);
     
-    XMMATRIX lookMatrix = XMMatrixLookToLH(XMVectorZero(), forwardVec, upVec);
-    XMFLOAT4X4 lookFloat;
-    XMStoreFloat4x4(&lookFloat, lookMatrix);
+    // right 벡터 계산 (forward x up)
+    XMVECTOR rightVec = XMVector3Cross(forwardVec, upVec);
+    rightVec = XMVector3Normalize(rightVec);
     
-    rotation = Vector::GetEulerAngle(lookFloat);
+    // up 벡터 재계산 (right x forward)
+    upVec = XMVector3Cross(rightVec, forwardVec);
+    
+    // 회전 행렬 구성
+    XMMATRIX rotationMatrix;
+    rotationMatrix.r[0] = rightVec;
+    rotationMatrix.r[1] = upVec;
+    rotationMatrix.r[2] = forwardVec;
+    rotationMatrix.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+    
+    // 행렬에서 쿼터니언 추출
+    XMVECTOR quatVec = XMQuaternionRotationMatrix(rotationMatrix);
+    quatVec = XMQuaternionNormalize(quatVec);
+    
+    rotation.x = XMVectorGetX(quatVec);
+    rotation.y = XMVectorGetY(quatVec);
+    rotation.z = XMVectorGetZ(quatVec);
+    rotation.w = XMVectorGetW(quatVec);
 }
 
 Vector3 Transform::TransformPoint(const Vector3& point) const
@@ -269,7 +301,6 @@ Vector3 Transform::TransformPoint(const Vector3& point) const
     
     XMFLOAT3 result;
     XMStoreFloat3(&result, transformed);
-
     return Vector3(result.x, result.y, result.z);
 }
 
@@ -281,7 +312,6 @@ Vector3 Transform::TransformVector(const Vector3& vector) const
     
     XMFLOAT3 result;
     XMStoreFloat3(&result, transformed);
-
     return Vector3(result.x, result.y, result.z);
 }
 
@@ -294,7 +324,6 @@ Vector3 Transform::InverseTransformPoint(const Vector3& point) const
     
     XMFLOAT3 result;
     XMStoreFloat3(&result, transformed);
-
     return Vector3(result.x, result.y, result.z);
 }
 
@@ -307,17 +336,27 @@ Vector3 Transform::InverseTransformVector(const Vector3& vector) const
     
     XMFLOAT3 result;
     XMStoreFloat3(&result, transformed);
-
     return Vector3(result.x, result.y, result.z);
 }
 
 Transform Transform::Lerp(const Transform& from, const Transform& to, float t)
 {
-    t = std::max(0.0f, std::min(1.0f, t)); // Clamp t to [0, 1]
+    t = std::max(0.0f, std::min(1.0f, t)); 
     
     Transform result;
     result.position = from.position + (to.position - from.position) * t;
-    result.rotation = from.rotation + (to.rotation - from.rotation) * t;
+    
+    // 쿼터니언 선형 보간
+    XMVECTOR fromQ = XMVectorSet(from.rotation.x, from.rotation.y, from.rotation.z, from.rotation.w);
+    XMVECTOR toQ = XMVectorSet(to.rotation.x, to.rotation.y, to.rotation.z, to.rotation.w);
+    XMVECTOR lerpedQ = XMVectorLerp(fromQ, toQ, t);
+    lerpedQ = XMQuaternionNormalize(lerpedQ);
+    
+    result.rotation.x = XMVectorGetX(lerpedQ);
+    result.rotation.y = XMVectorGetY(lerpedQ);
+    result.rotation.z = XMVectorGetZ(lerpedQ);
+    result.rotation.w = XMVectorGetW(lerpedQ);
+
     result.scale = from.scale + (to.scale - from.scale) * t;
     
     return result;
@@ -325,39 +364,55 @@ Transform Transform::Lerp(const Transform& from, const Transform& to, float t)
 
 Transform Transform::Slerp(const Transform& from, const Transform& to, float t)
 {
-    t = std::max(0.0f, std::min(1.0f, t)); // Clamp t to [0, 1]
+    t = std::max(0.0f, std::min(1.0f, t)); 
     
     Transform result;
     result.position = from.position + (to.position - from.position) * t;
     result.scale = from.scale + (to.scale - from.scale) * t;
     
     // 쿼터니언 구면 선형 보간
-    XMVECTOR fromQuat = EulerToQuaternion(from.rotation);
-    XMVECTOR toQuat = EulerToQuaternion(to.rotation);
+    XMVECTOR fromQuat = XMVectorSet(from.rotation.x, from.rotation.y, from.rotation.z, from.rotation.w);
+    XMVECTOR toQuat = XMVectorSet(to.rotation.x, to.rotation.y, to.rotation.z, to.rotation.w);
     XMVECTOR slerpedQuat = XMQuaternionSlerp(fromQuat, toQuat, t);
-    result.rotation = QuaternionToEuler(slerpedQuat);
+    
+    result.rotation.x = XMVectorGetX(slerpedQuat);
+    result.rotation.y = XMVectorGetY(slerpedQuat);
+    result.rotation.z = XMVectorGetZ(slerpedQuat);
+    result.rotation.w = XMVectorGetW(slerpedQuat);
     
     return result;
 }
 
 Transform Transform::GetInverse() const
 {
-    XMMATRIX transform = GetTransformMatrix();
-    XMMATRIX inverseMatrix = XMMatrixInverse(nullptr, transform);
-
+    XMMATRIX transformMat = GetTransformMatrix();
+    XMMATRIX inverseMatrix = XMMatrixInverse(nullptr, transformMat);
     return FromMatrix(inverseMatrix);
 }
 
 Transform Transform::FromMatrix(const XMFLOAT4X4& matrix)
 {
     Transform result;
-    result.position = Vector::ConvertVector3(Vector::GetPosition(matrix));
-    result.rotation = Vector::GetEulerAngle(matrix);
+    XMMATRIX mat = XMLoadFloat4x4(&matrix);
+
+    // 위치, 회전, 스케일 분해
+    XMVECTOR scaleVec, rotationQuat, translationVec;
+    XMMatrixDecompose(&scaleVec, &rotationQuat, &translationVec, mat);
+
+    // 각 컴포넌트 저장
+    result.position.x = XMVectorGetX(translationVec);
+    result.position.y = XMVectorGetY(translationVec);
+    result.position.z = XMVectorGetZ(translationVec);
     
-    // 스케일 추출
-    result.scale.x = sqrtf(matrix._11 * matrix._11 + matrix._12 * matrix._12 + matrix._13 * matrix._13);
-    result.scale.y = sqrtf(matrix._21 * matrix._21 + matrix._22 * matrix._22 + matrix._23 * matrix._23);
-    result.scale.z = sqrtf(matrix._31 * matrix._31 + matrix._32 * matrix._32 + matrix._33 * matrix._33);
+    rotationQuat = XMQuaternionNormalize(rotationQuat);
+    result.rotation.x = XMVectorGetX(rotationQuat);
+    result.rotation.y = XMVectorGetY(rotationQuat);
+    result.rotation.z = XMVectorGetZ(rotationQuat);
+    result.rotation.w = XMVectorGetW(rotationQuat);
+    
+    result.scale.x = XMVectorGetX(scaleVec);
+    result.scale.y = XMVectorGetY(scaleVec);
+    result.scale.z = XMVectorGetZ(scaleVec);
     
     return result;
 }
@@ -366,40 +421,12 @@ Transform Transform::FromMatrix(const XMMATRIX& matrix)
 {
     XMFLOAT4X4 matrixFloat;
     XMStoreFloat4x4(&matrixFloat, matrix);
-
     return FromMatrix(matrixFloat);
-}
-
-Vector3 Transform::QuaternionToEuler(const XMVECTOR& quaternion)
-{
-    // 쿼터니언에서 오일러 각 추출 (TransformComponent와 동일한 방식)
-    XMMATRIX rotMatrix = XMMatrixRotationQuaternion(quaternion);
-    float pitch = asinf(-rotMatrix.r[2].m128_f32[1]);
-    float roll, yaw;
-
-    if (cosf(pitch) > 0.0001f)
-    {
-        roll = atan2f(rotMatrix.r[2].m128_f32[0], rotMatrix.r[2].m128_f32[2]);
-        yaw = atan2f(rotMatrix.r[0].m128_f32[1], rotMatrix.r[1].m128_f32[1]);
-    }
-
-    else
-    {
-        roll = atan2f(-rotMatrix.r[0].m128_f32[2], rotMatrix.r[0].m128_f32[0]);
-        yaw = 0.0f;
-    }
-
-    return Vector3(roll, pitch, yaw);
-}
-
-XMVECTOR Transform::EulerToQuaternion(const Vector3& euler)
-{
-    return XMQuaternionRotationRollPitchYaw(euler.x, euler.y, euler.z);
 }
 
 void Transform::Reset()
 {
     position = Vector3::zero;
-    rotation = Vector3::zero;
+    rotation = Quaternion::identity;
     scale = Vector3::one;
 }

@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "Transform.h"
+#include "Transform.h" // Quaternion, Position, Scale, Transform 정의 포함
 
 #include "Core/Object/EngineLoop.h"
 
@@ -27,11 +27,13 @@ public:
 
 	Position& GetPosition() noexcept;
 
-	void SetRotation(Rotation rotation) noexcept;
-	void SetRotation(DirectX::XMFLOAT3 rotation) noexcept;
-	void SetRotation(float roll, float pitch, float yaw) noexcept;
+	// World Rotation
+	void SetRotation(const Quaternion& rotation) noexcept;						// Quaternion 사용
+	void SetRotationFromEuler(const Euler& eulerAngles) noexcept;				// 오일러 각도 사용
+	void SetRotationFromEuler(float roll, float pitch, float yaw) noexcept;		// 오일러 각도 사용
 
-	Rotation& GetRotation() noexcept;
+	Quaternion& GetRotation() noexcept; // Quaternion 반환
+	Vector3 GetRotationEuler() const noexcept; // 오일러 각도 반환
 
 	void SetScale(Scale scale) noexcept;
 	void SetScale(DirectX::XMFLOAT3 scale) noexcept;
@@ -55,9 +57,13 @@ public:
 	void SetLocalPosition(Position position) noexcept;
 	void SetLocalPosition(float x, float y, float z) noexcept;
 
-	void SetLocalRotation(Rotation rotation) noexcept;
-	void SetLocalRotation(DirectX::XMFLOAT3 rotation) noexcept;
-	void SetLocalRotation(float roll, float pitch, float yaw) noexcept;
+	// Local Rotation
+	void SetLocalRotation(const Quaternion& rotation) noexcept; // Quaternion 사용
+	void SetLocalRotationFromEuler(const Euler& eulerAngles) noexcept; // 오일러 각도 사용
+	void SetLocalRotationFromEuler(float roll, float pitch, float yaw) noexcept; // 오일러 각도 사용
+	
+	Quaternion& GetLocalRotation() noexcept; // Quaternion 반환
+	Vector3 GetLocalRotationEuler() const noexcept; // 오일러 각도 반환
 
 	void SetLocalScale(Scale scale) noexcept;
 	void SetLocalScale(DirectX::XMFLOAT3 scale) noexcept;
@@ -66,7 +72,6 @@ public:
 	Transform& GetLocalTransform() noexcept;
 
 	Position& GetLocalPosition() noexcept;
-	Rotation& GetLocalRotation() noexcept;
 	Scale& GetLocalScale() noexcept;
 
 	DirectX::XMMATRIX GetLocalTransformMatrix() const noexcept;
@@ -106,15 +111,19 @@ public:
 
 	size_t GetChildCount() const noexcept;
 
-	void UpdateTransform() noexcept;
+	void UpdateTransform() noexcept; // 월드 변환 업데이트 (필요시)
 
 private:
+	void UpdateWorldRotation() noexcept; // 로컬 회전 -> 월드 회전 업데이트
+	void UpdateLocalRotation() noexcept; // 월드 회전 -> 로컬 회전 업데이트
+
 	std::unordered_map<std::string, UINT> childIndex;
 	std::vector<std::shared_ptr<TransformComponent>> children;	// 자식 오브젝트를 저장하는 벡터
 	std::shared_ptr<TransformComponent> parent;					// 부모 오브젝트를 저장하는 변수
 
-	DirectX::XMFLOAT4X4 transformMatrix;						// 오브젝트의 변환 행렬
+	DirectX::XMFLOAT4X4 transformMatrix;						// 오브젝트의 변환 행렬 (캐시용)
 
-	Transform worldTransform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
-	Transform localTransform = { Position(), Rotation(), { 1.0f, 1.0f, 1.0f } };
+    // worldTransform과 localTransform의 rotation 멤버는 이제 Quaternion 타입입니다.
+	Transform worldTransform; 
+	Transform localTransform;
 };

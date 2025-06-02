@@ -10,49 +10,49 @@ class Object;
 
 namespace Engine
 {
-	class Inspector : public EngineLoop
-	{
-	public:
-		static std::shared_ptr<Inspector> instance;
+    class Inspector : public EngineLoop
+    {
+    public:
+        static std::shared_ptr<Inspector> instance;
 
-		static std::shared_ptr<Inspector> GetInstance()
-		{
-			if (!instance)
-				instance = std::make_shared<Inspector>();
+        static std::shared_ptr<Inspector> GetInstance()
+        {
+            if (!instance)
+                instance = std::make_shared<Inspector>();
 
-			return instance;
-		}
+            return instance;
+        }
 
-		static void SetSelectObject(std::shared_ptr<Object> object) noexcept;
-		static std::shared_ptr<Object> GetSelectObject() noexcept;
+        static void SetSelectObject(std::shared_ptr<Object> object) noexcept;
+        static std::shared_ptr<Object> GetSelectObject() noexcept;
 
-		Inspector() = default;
+        Inspector() = default;
 
-		void ShowNodeInfomation() noexcept;
+        void ShowNodeInfomation() noexcept;
 
-		void ColorObjectEditor() noexcept;
-		void ModelEditor() noexcept;
-		void MeshComponentEditor() noexcept;
-		void CameraEditor() noexcept;
-		void PhysicsComponentEditor() noexcept;
+        void ColorObjectEditor() noexcept;
+        void ModelEditor() noexcept;
+        void MeshComponentEditor() noexcept;
+        void CameraEditor() noexcept;
+        void PhysicsComponentEditor() noexcept;
 
-		~Inspector() = default;
+        ~Inspector() = default;
 
-		// EngineLoop의해 상속된 가상 함수들
-		void Initialize() override;
-		void BeforeFrame() override;
-		void Start() override;
-		void LateStart() override;
-		void Update() override;
-		void LateUpdate() override;
-		void Finalize() override;
-		void Destroy() override;
-		void OnEnable() override;
-		void OnDisable() override;
-		void Reset() override;
+        // EngineLoop의해 상속된 가상 함수들
+        void Initialize() override;
+        void BeforeFrame() override;
+        void Start() override;
+        void LateStart() override;
+        void Update() override;
+        void LateUpdate() override;
+        void Finalize() override;
+        void Destroy() override;
+        void OnEnable() override;
+        void OnDisable() override;
+        void Reset() override;
 
-	private:
-		static std::shared_ptr<Object> selectObject;		// 선택된 오브젝트
-		static std::shared_ptr<Component> selectComponent;	// 선택된 컴포넌트
-	};
+    private:
+        static std::shared_ptr<Object> selectObject;		// 선택된 오브젝트
+        static std::shared_ptr<Component> selectComponent;	// 선택된 컴포넌트
+    };
 }
