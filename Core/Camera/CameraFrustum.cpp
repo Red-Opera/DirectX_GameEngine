@@ -10,133 +10,139 @@
 
 CameraFrustum::CameraFrustum(float width, float height, float nearZ, float farZ)
 {
-	using namespace Graphic;
+    using namespace Graphic;
 
-	std::vector<USHORT> indices;
-	{
-		indices.push_back(0);
-		indices.push_back(1);
-		indices.push_back(1);
-		indices.push_back(2);
-		indices.push_back(2);
-		indices.push_back(3);
-		indices.push_back(3);
-		indices.push_back(0);
-		indices.push_back(4);
-		indices.push_back(5);
-		indices.push_back(5);
-		indices.push_back(6);
-		indices.push_back(6);
-		indices.push_back(7);
-		indices.push_back(7);
-		indices.push_back(4);
-		indices.push_back(0);
-		indices.push_back(4);
-		indices.push_back(1);
-		indices.push_back(5);
-		indices.push_back(2);
-		indices.push_back(6);
-		indices.push_back(3);
-		indices.push_back(7);
-	};
+    std::vector<USHORT> indices;
+    {
+        indices.push_back(0);
+        indices.push_back(1);
+        indices.push_back(1);
+        indices.push_back(2);
+        indices.push_back(2);
+        indices.push_back(3);
+        indices.push_back(3);
+        indices.push_back(0);
+        indices.push_back(4);
+        indices.push_back(5);
+        indices.push_back(5);
+        indices.push_back(6);
+        indices.push_back(6);
+        indices.push_back(7);
+        indices.push_back(7);
+        indices.push_back(4);
+        indices.push_back(0);
+        indices.push_back(4);
+        indices.push_back(1);
+        indices.push_back(5);
+        indices.push_back(2);
+        indices.push_back(6);
+        indices.push_back(3);
+        indices.push_back(7);
+    };
 
-	SetVertices(width, height, nearZ, farZ);
-	indexBuffer = IndexBuffer::GetRender("$Frustum", indices);
-	primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+    SetVertices(width, height, nearZ, farZ);
+    indexBuffer = IndexBuffer::GetRender("$Frustum", indices);
+    primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-	{
-		Technique line{ RenderingChannel::main };
-		{
-			RenderStep notOccluded("lambertian");
+    {
+        Technique line{ RenderingChannel::main };
+        {
+            RenderStep notOccluded("lambertian");
 
-			auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
-			notOccluded.AddRender(InputLayout::GetRender(vertexBuffer->GetVertexLayout(), *vertexShader));
-			notOccluded.AddRender(std::move(vertexShader));
+            auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
+            notOccluded.AddRender(InputLayout::GetRender(vertexBuffer->GetVertexLayout(), *vertexShader));
+            notOccluded.AddRender(std::move(vertexShader));
 
-			notOccluded.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
+            notOccluded.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
 
-			struct PSColorConstant
-			{
-				DirectX::XMFLOAT3 color = { 0.6f, 0.2f, 0.2f };
-				float padding;
-			} colorConst;
+            struct PSColorConstant
+            {
+                DirectX::XMFLOAT3 color = { 0.6f, 0.2f, 0.2f };
+                float padding;
+            } colorConst;
 
-			notOccluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(colorConst, 1u));
-			notOccluded.AddRender(std::make_shared<TransformConstantBuffer>());
-			notOccluded.AddRender(Rasterizer::GetRender(false));
+            notOccluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(colorConst, 1u));
+            notOccluded.AddRender(std::make_shared<TransformConstantBuffer>());
+            notOccluded.AddRender(Rasterizer::GetRender(false));
 
-			line.push_back(std::move(notOccluded));
-		}
+            line.push_back(std::move(notOccluded));
+        }
 
-		{
-			RenderStep occluded("wireframe");
+        {
+            RenderStep occluded("wireframe");
 
-			auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
-			occluded.AddRender(InputLayout::GetRender(vertexBuffer->GetVertexLayout(), *vertexShader));
-			occluded.AddRender(std::move(vertexShader));
+            auto vertexShader = VertexShader::GetRender("Shader/ColorShader.hlsl");
+            occluded.AddRender(InputLayout::GetRender(vertexBuffer->GetVertexLayout(), *vertexShader));
+            occluded.AddRender(std::move(vertexShader));
 
-			occluded.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
+            occluded.AddRender(PixelShader::GetRender("Shader/ColorShader.hlsl"));
 
-			struct PSColorConstant
-			{
-				DirectX::XMFLOAT3 color = { 0.25f, 0.08f, 0.08f };
-				float padding;
-			} colorConst;
+            struct PSColorConstant
+            {
+                DirectX::XMFLOAT3 color = { 0.25f, 0.08f, 0.08f };
+                float padding;
+            } colorConst;
 
-			occluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(colorConst, 1u));
-			occluded.AddRender(std::make_shared<TransformConstantBuffer>());
-			occluded.AddRender(Rasterizer::GetRender(false));
+            occluded.AddRender(PixelConstantBuffer<PSColorConstant>::GetRender(colorConst, 1u));
+            occluded.AddRender(std::make_shared<TransformConstantBuffer>());
+            occluded.AddRender(Rasterizer::GetRender(false));
 
-			line.push_back(std::move(occluded));
-		}
+            line.push_back(std::move(occluded));
+        }
 
-		AddTechnique(std::move(line));
-	}
+        AddTechnique(std::move(line));
+    }
 }
 
 void CameraFrustum::SetVertices(float width, float height, float nearZ, float farZ)
 {
-	VertexCore::VertexLayout layout;
-	layout.AddType(VertexCore::VertexLayout::Position3D);
+    VertexCore::VertexLayout layout;
+    layout.AddType(VertexCore::VertexLayout::Position3D);
 
-	VertexCore::VertexBuffer vertices{ std::move(layout) };
+    VertexCore::VertexBuffer vertices{ std::move(layout) };
 
-	{
-		const float zRatio = farZ / nearZ;
-		const float nearX = width / 2.0f;
-		const float nearY = height / 2.0f;
-		const float farX = nearX * zRatio;
-		const float farY = nearY * zRatio;
+    {
+        const float zRatio = farZ / nearZ;
+        const float nearX = width / 2.0f;
+        const float nearY = height / 2.0f;
+        const float farX = nearX * zRatio;
+        const float farY = nearY * zRatio;
 
 
-		vertices.emplace_back(DirectX::XMFLOAT3{ -nearX, nearY, nearZ });
-		vertices.emplace_back(DirectX::XMFLOAT3{  nearX, nearY, nearZ });
-		vertices.emplace_back(DirectX::XMFLOAT3{  nearX,-nearY, nearZ });
-		vertices.emplace_back(DirectX::XMFLOAT3{ -nearX,-nearY, nearZ });
-		vertices.emplace_back(DirectX::XMFLOAT3{ -farX, farY, farZ });
-		vertices.emplace_back(DirectX::XMFLOAT3{  farX, farY, farZ });
-		vertices.emplace_back(DirectX::XMFLOAT3{  farX,-farY, farZ });
-		vertices.emplace_back(DirectX::XMFLOAT3{ -farX,-farY, farZ });
-	}
+        vertices.emplace_back(DirectX::XMFLOAT3{ -nearX, nearY, nearZ });
+        vertices.emplace_back(DirectX::XMFLOAT3{  nearX, nearY, nearZ });
+        vertices.emplace_back(DirectX::XMFLOAT3{  nearX,-nearY, nearZ });
+        vertices.emplace_back(DirectX::XMFLOAT3{ -nearX,-nearY, nearZ });
+        vertices.emplace_back(DirectX::XMFLOAT3{ -farX, farY, farZ });
+        vertices.emplace_back(DirectX::XMFLOAT3{  farX, farY, farZ });
+        vertices.emplace_back(DirectX::XMFLOAT3{  farX,-farY, farZ });
+        vertices.emplace_back(DirectX::XMFLOAT3{ -farX,-farY, farZ });
+    }
 
-	vertexBuffer = std::make_shared<Graphic::VertexBuffer>(vertices);
+    vertexBuffer = std::make_shared<Graphic::VertexBuffer>(vertices);
 }
 
 void CameraFrustum::SetPosition(Position position) noexcept
 {
-	this->position = position;
+    this->position = position;
 }
 
-void CameraFrustum::SetRotation(Rotation rotation) noexcept
+void CameraFrustum::SetRotation(Quaternion rotation) noexcept
 {
-	this->rotation = rotation;
+    this->rotation = rotation;
 }
 
 DirectX::XMMATRIX CameraFrustum::GetTransformMatrix() const noexcept
 {
-	DirectX::XMFLOAT3 rotationFloat3 = { rotation.x, rotation.y, rotation.z };
-	DirectX::XMFLOAT3 positionFloat3 = { position.x, position.y, position.z };
-
-	return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&rotationFloat3)) *
-		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&positionFloat3));
+    // 쿼터니언을 XMVECTOR로 변환
+    XMVECTOR quatVec = XMVectorSet(rotation.x, rotation.y, rotation.z, rotation.w);
+    
+    // 쿼터니언을 회전 행렬로 변환
+    XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(quatVec);
+    
+    // 이동 행렬 생성
+    XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+    
+    // 회전 * 이동 순서로 결합
+    return rotationMatrix * translationMatrix;
 }

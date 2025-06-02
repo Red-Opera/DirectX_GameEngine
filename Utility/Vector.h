@@ -11,6 +11,13 @@ class Vector2;
 class Vector3;
 class Vector4;
 
+using Position2D = Vector2;
+using Position = Vector3;
+using Euler = Vector3;
+using Angle = Vector3;
+using Scale = Vector3;
+using Quaternion = Vector4;
+
 class Vector
 {
 public:
@@ -37,6 +44,7 @@ public:
 	static const XMVECTOR upV;
 	static const XMVECTOR downV;
 	static const XMVECTOR allDirV;
+	static const XMVECTOR identityQuaternionV; // 항등 쿼터니언
 
 	static float GetLength(const XMVECTOR& vec);
 
@@ -48,12 +56,15 @@ public:
 	static Vector3 ConvertVector3(const DirectX::XMFLOAT3& vector3);
 	static XMVECTOR ConvertXMVECTOR(const class Vector3& vector3);
 	static XMVECTOR ConvertXMVECTOR(const class Vector4& vector4);
+	static Quaternion ConvertQuaternion(const class Vector3& eulerAngles); // 오일러 각도를 쿼터니언으로 변환
+	static Euler ConvertEuler(const Quaternion& quaternion); // 쿼터니언을 오일러 각도로 변환
 
 	// ==============================================
 	//			XMFLOAT4X4 to Position, Rotate
 	// ==============================================
 
-	static Vector3 GetEulerAngle(const DirectX::XMFLOAT4X4& matrix);
+	static Vector3 GetEulerAngle(const DirectX::XMFLOAT4X4& matrix); // 기존 함수 유지 (필요시 사용)
+	static Quaternion GetQuaternion(const DirectX::XMFLOAT4X4& matrix); // 행렬에서 쿼터니언 추출
 	static DirectX::XMFLOAT3 GetPosition(const DirectX::XMFLOAT4X4& matrix);
 };
 
@@ -92,7 +103,6 @@ public:
 
 	float x, y;
 };
-using Position2D = Vector2;
 
 class Vector3
 {
@@ -130,9 +140,6 @@ public:
 
 	float x, y, z;	
 };
-using Position = Vector3;
-using Rotation = Vector3;
-using Scale = Vector3;
 
 class Vector4
 {
@@ -167,6 +174,7 @@ public:
 	static const Vector4 down;
 	static const Vector4 reverseOpaque;
 	static const Vector4 opaque;
+	static const Vector4 identity;
 	static const Vector4 one;
 
 	float x, y, z, w;

@@ -8,11 +8,11 @@ public:
 	CameraIndicator();
 
 	void SetPosition(Position position) noexcept;
-	void SetRotation(Rotation rotation) noexcept;
+	void SetRotation(Quaternion rotation) noexcept;
 
 	DirectX::XMMATRIX GetTransformMatrix() const noexcept override;
 
 private:
-	Position position = { 0.0f, 0.0f, 0.0f };
-	Rotation rotation = { 0.0f, 0.0f, 0.0f };
+	Position position = Position::zero;
+	Quaternion rotation = Quaternion::identity;
 };

@@ -22,7 +22,7 @@ void EmptyScene::Initialize()
 	std::shared_ptr<Object> camera = AddObject(Object::Create("Empty Scene Camera"));
 	cameras.AddCamera(camera->AddComponent<Camera>());
 	camera->GetComponent<TransformComponent>()->SetPosition(-22.0f, 4.0f, 0.0f);
-	camera->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
+	camera->GetComponent<TransformComponent>()->SetRotationFromEuler(0.0f, Math::PI / 2.0f, 0.0f);
 
 	Scene::Initialize();
 }

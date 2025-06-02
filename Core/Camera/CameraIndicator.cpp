@@ -96,16 +96,22 @@ void CameraIndicator::SetPosition(Position position) noexcept
 	this->position = position;
 }
 
-void CameraIndicator::SetRotation(Rotation rotation) noexcept
+void CameraIndicator::SetRotation(Quaternion rotation) noexcept
 {
-	this->rotation = rotation;
+    this->rotation = rotation;
 }
 
 DirectX::XMMATRIX CameraIndicator::GetTransformMatrix() const noexcept  
 {  
-   DirectX::XMFLOAT3 rotationFloat3 = { rotation.x, rotation.y, rotation.z };  
-   DirectX::XMFLOAT3 positionFloat3 = { position.x, position.y, position.z };
-
-   return DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&rotationFloat3)) *  
-          DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&positionFloat3));
+    // 쿼터니언을 XMVECTOR로 변환
+    XMVECTOR quatVec = XMVectorSet(rotation.x, rotation.y, rotation.z, rotation.w);
+    
+    // 쿼터니언을 회전 행렬로 변환
+    XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(quatVec);
+    
+    // 이동 행렬 생성
+    XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+    
+    // 회전 * 이동 순서로 결합
+    return rotationMatrix * translationMatrix;
 }

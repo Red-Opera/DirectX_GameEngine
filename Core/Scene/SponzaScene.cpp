@@ -18,29 +18,29 @@ void SponzaScene::Initialize()
 	std::shared_ptr<Object> camera = AddObject(Object::Create("Camera"));
 	cameras.AddCamera(camera->AddComponent<Camera>());
 	camera->GetComponent<TransformComponent>()->SetPosition(-22.0f, 4.0f, 0.0f);
-	camera->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
+	camera->GetComponent<TransformComponent>()->SetRotationFromEuler(0.0f, Math::PI / 2.0f, 0.0f);
 
 	std::shared_ptr<Object> camera2 = AddObject(Object::Create("Camera2"));
 	cameras.AddCamera(camera2->AddComponent<Camera>());
 	camera2->GetComponent<TransformComponent>()->SetPosition(-13.5f, 28.8f, -6.4f);
-	camera2->GetComponent<TransformComponent>()->SetRotation(Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f, 0.0f);
+	camera2->GetComponent<TransformComponent>()->SetRotationFromEuler(Math::PI / 180.0f * 13.0f, Math::PI / 180.0f * 61.0f, 0.0f);
 
 	std::shared_ptr<Object> gobber = AddObject(Object::Create("Gobber"));
 	gobber->AddComponent<Model>("Model/Sample/gobber/GoblinX.obj", 4.0f);
 	gobber->GetComponent<TransformComponent>()->SetPosition(-30.0f, 10.0f, 0.0f);
-	gobber->GetComponent<TransformComponent>()->SetRotation(0.0f, -Math::PI / 2.0f, 0.0f);
+	gobber->GetComponent<TransformComponent>()->SetRotationFromEuler(0.0f, -Math::PI / 2.0f, 0.0f);
 
 	std::shared_ptr<Object> nano = AddObject(Object::Create("Nano"));
 	nano->AddComponent<Model>("Model/Sample/nano_textured/nanosuit.obj", 1.0f);
 	nano->GetComponent<TransformComponent>()->SetPosition(27.0f, -0.56f, 1.7f);
-	nano->GetComponent<TransformComponent>()->SetRotation(0.0f, Math::PI / 2.0f, 0.0f);
+	nano->GetComponent<TransformComponent>()->SetRotationFromEuler(0.0f, Math::PI / 2.0f, 0.0f);
 
 	std::shared_ptr<Object> sponza = AddObject(Object::Create("Sponza"));
 	sponza->AddComponent<Model>("Model/Sample/sponza/sponza.obj", 1.0f / 20.0f);
 
 	std::shared_ptr<Object> chair = AddObject(Object::Create("RoyalChair"));
 	chair->AddComponent<Model>("Model/Sample/Chair/Chair.gltf", 7.0f);
-	chair->GetComponent<TransformComponent>()->SetRotation(Math::PI / 2.0f, -Math::PI / 2.0f, 0.0f);
+	chair->GetComponent<TransformComponent>()->SetRotationFromEuler(Math::PI / 2.0f, -Math::PI / 2.0f, 0.0f);
 	chair->GetComponent<TransformComponent>()->SetPosition(-60.0f, 6.5f, 1.5f);
 
 
