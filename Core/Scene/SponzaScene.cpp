@@ -1,12 +1,13 @@
 ﻿#include "stdafx.h"
 #include "SponzaScene.h"
 
+#include "Core/App.h"
 #include "Core/Camera/Camera.h"
 #include "Core/Component/PhysicsComponent.h"
 #include "Core/Draw/Light/PointLight.h"
 #include "Core/Draw/Model.h"
 #include "Core/Draw/Object/ColorCubeObject.h"
-#include "Core/App.h"
+#include "Core/Draw/Object/ColorSphereObject.h"
 
 SponzaScene::SponzaScene(std::string sceneName) : Scene(sceneName)
 {
@@ -43,14 +44,10 @@ void SponzaScene::Initialize()
 	chair->GetComponent<TransformComponent>()->SetRotationFromEuler(Math::PI / 2.0f, -Math::PI / 2.0f, 0.0f);
 	chair->GetComponent<TransformComponent>()->SetPosition(-60.0f, 6.5f, 1.5f);
 
-
-	std::shared_ptr<Object> cube = AddObject(Object::Create("White Cube"));
-	cube->AddComponent<ColorCubeObject>();
-
 	// 중력이 작용하는 물리 큐브 생성 
 	std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
 	physicsCube->AddComponent<ColorCubeObject>();
-	physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 20.0f, 0.0f);
+	physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 10.0f, 0.0f);
 	physicsCube->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
 
 	// 물리 컴포넌트 추가 (질량 10, 동적 객체)
