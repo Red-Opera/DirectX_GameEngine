@@ -73,9 +73,9 @@ void Model::Initialize()
 	LinkTechniques(App::GetRenderGraph());
 }
 
-void Model::Update()
+void Model::Update(float deltaTime)
 {
-	Component::Update();
+	Component::Update(deltaTime);
 
 	Submit(RenderingChannel::main);
 	Submit(RenderingChannel::shadow);

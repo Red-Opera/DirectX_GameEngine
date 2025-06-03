@@ -174,7 +174,7 @@ void Scene::LateStart()
 		object->LateStart();
 }
 
-void Scene::Update()
+void Scene::Update(float deltaTime)
 {
 	if (!CameraContainer::IsActiveCameraVaild())
 		return;
@@ -189,11 +189,11 @@ void Scene::Update()
 	App::GetRenderGraph().RenderMainCamera(cameras.GetActiveCamera());
 
 	for (auto& object : objects)
-		object->Update();
+		object->Update(deltaTime);
 
 	Engine::ObjectGizmo::GetInstance()->Update(sceneGraph, viewMatrix, projMatrix);
 
-	sceneGraph->Update();
+	sceneGraph->Update(deltaTime);
 
 	cameras.Submit(RenderingChannel::main);
 }

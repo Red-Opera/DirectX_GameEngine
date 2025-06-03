@@ -32,6 +32,7 @@ void PhysicsComponent::Initialize()
     // 현재 Transform의 위치와 회전 가져오기
     Position position = transform->GetPosition();
     Quaternion rotation = transform->GetRotation();
+    Scale scale = transform->GetScale();
 
     // PhysX Transform 생성 (쿼터니언 사용)
     physx::PxTransform pxTransform(
@@ -77,10 +78,15 @@ void PhysicsComponent::Initialize()
         actor = staticActor;
     }
 
-    // 기본 박스 형태의 충돌 형상 생성
+    // Transform 스케일에 맞는 박스 형태의 충돌 형상 생성
+    // PhysX는 half-extent를 사용하므로 스케일 값을 2로 나눔
     physx::PxShape* shape = physics->createShape
     (
-        physx::PxBoxGeometry(0.5f, 0.5f, 0.5f),
+        physx::PxBoxGeometry(
+            scale.x * 0.5f,  // 박스 폭의 절반
+            scale.y * 0.5f,  // 박스 높이의 절반
+            scale.z * 0.5f   // 박스 깊이의 절반
+        ),
         *physics->createMaterial(staticFriction, dynamicFriction, restitution)
     );
 
@@ -181,7 +187,7 @@ void PhysicsComponent::OnDisable()
     actor->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, true);
 }
 
-void PhysicsComponent::Update()
+void PhysicsComponent::Update(float deltaTime)
 {
     if (actor == nullptr)
         return;

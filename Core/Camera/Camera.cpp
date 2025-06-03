@@ -191,9 +191,9 @@ void Camera::Initialize()
 
 }
 
-void Camera::Update()
+void Camera::Update(float deltaTime)
 {
-    Component::Update();
+    Component::Update(deltaTime);
 }
 
 void Camera::LateUpdate()

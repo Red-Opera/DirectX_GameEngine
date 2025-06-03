@@ -193,9 +193,9 @@ void ColorObject::Initialize()
     LinkTechniques(App::GetRenderGraph());
 }
 
-void ColorObject::Update()
+void ColorObject::Update(float deltaTime)
 {
-    Component::Update();
+    Component::Update(deltaTime);
 
     Submit(RenderingChannel::main);
 

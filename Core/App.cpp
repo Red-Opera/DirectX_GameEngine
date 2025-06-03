@@ -84,7 +84,7 @@ void App::DoFrame(float deltaTime)
 	// 물리 시스템 업데이트
 	PhysicsSystem::GetInstance().Update(deltaTime);
 
-	currentScene->Update();
+	currentScene->Update(deltaTime);
 
 	if (saveDepth)
 	{
@@ -110,7 +110,7 @@ void App::DoFrame(float deltaTime)
 
 	Engine::FolderView::instance->RenderFolderView();
 	Engine::MenuBar::menuBar->RenderMenuBar();
-	Engine::Inspector::instance->Update();
+	Engine::Inspector::instance->Update(deltaTime);
 
 	wnd.GetDxGraphic().EndFrame();	// 그래픽 마지막에 실행할 내용
 

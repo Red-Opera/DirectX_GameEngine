@@ -1102,7 +1102,7 @@ namespace Engine
 
     }
 
-    void Inspector::Update()
+    void Inspector::Update(float deltaTime)
     {
         ShowNodeInfomation();
     }

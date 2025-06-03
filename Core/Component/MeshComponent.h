@@ -19,7 +19,7 @@ public:
     ~MeshComponent() override = default;
 
     void Initialize() override;
-    void Update() override;
+    void Update(float deltaTime) override;
 
     void CreateMesh(const Material& material, const aiMesh& mesh, float scale = 1.0f);
     void AddMesh(Mesh* meshPtr);

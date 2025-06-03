@@ -39,7 +39,7 @@ public:
     virtual ~PhysicsComponent() override;
 
     virtual void Initialize() override;
-    virtual void Update() override;
+    virtual void Update(float deltaTime) override;
     virtual void Finalize() override;
 
     // 중력 관련 설정
