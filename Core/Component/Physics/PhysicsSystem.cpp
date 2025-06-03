@@ -72,11 +72,29 @@ void PhysicsSystem::Shutdown()
 
 void PhysicsSystem::Update(float deltaTime)
 {
-    // 물리 시뮬레이션 진행 (고정 타임스텝 사용)
-    const float stepSize = 1.0f / 60.0f;
+    if (scene == nullptr)
+        return;
 
-    scene->simulate(stepSize);
-    scene->fetchResults(true);
+    // 물리 시뮬레이션 진행 (안정적인 서브스테핑 방식)
+    const float fixedStepSize = 1.0f / 60.0f;   // 60Hz 고정 스텝
+    const int maxSubSteps = 5;                  // 최대 서브스텝 수 (성능 보호)
+    
+    timeAccumulator += deltaTime;
+    
+    int subSteps = 0;
+
+    while (timeAccumulator >= fixedStepSize && subSteps < maxSubSteps)
+    {
+        scene->simulate(fixedStepSize);
+        scene->fetchResults(true);
+        
+        timeAccumulator -= fixedStepSize;
+        subSteps++;
+    }
+    
+    // 누적 시간이 너무 크면 리셋 (스파이럴 오브 데스 방지)
+    if (timeAccumulator > fixedStepSize * maxSubSteps)
+        timeAccumulator = 0.0f;
 }
 
 PhysicsSystem::~PhysicsSystem()

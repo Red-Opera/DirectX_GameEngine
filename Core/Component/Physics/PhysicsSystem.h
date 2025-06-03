@@ -26,4 +26,6 @@ private:
     physx::PxDefaultCpuDispatcher* dispatcher = nullptr;
     physx::PxScene* scene = nullptr;
     physx::PxPvd* pvd = nullptr;
+
+    float timeAccumulator = 0.0f;  // 시간 누적기 추가
 };
