@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Utility/Vector.h" // Quaternion 정의 포함
+#include "Utility/Vector.h"
 #include <DirectXMath.h>
 
 using namespace DirectX;

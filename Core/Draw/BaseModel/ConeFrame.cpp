@@ -274,3 +274,11 @@ TriangleIndexList ConeFrame::CreateTextureFrameSeparateBottom()
 
 	return cone;
 }
+
+bool ConeFrame::GetPhysXVertices(std::vector<physx::PxVec3>& vertices,
+	std::vector<uint32_t>& indices,
+	const Scale& scale)
+{
+	auto model = CreateFrame();
+	return ExtractPhysXVertices(model, vertices, indices, scale);
+}

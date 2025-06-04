@@ -8,6 +8,10 @@
 #include "Core/Draw/Model.h"
 #include "Core/Draw/Object/ColorCubeObject.h"
 #include "Core/Draw/Object/ColorSphereObject.h"
+#include "Core/Draw/Object/ColorConeObject.h"
+#include "Core/Draw/Object/ColorCylinderObject.h"
+#include "Core/Draw/Object/ColorPlaneObject.h"
+#include "Core/Draw/Object/TextureCubeObject.h"
 
 SponzaScene::SponzaScene(std::string sceneName) : Scene(sceneName)
 {
@@ -47,11 +51,30 @@ void SponzaScene::Initialize()
 	// 중력이 작용하는 물리 큐브 생성 
 	std::shared_ptr<Object> physicsCube = AddObject(Object::Create("Physics Cube"));
 	physicsCube->AddComponent<ColorCubeObject>();
-	physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 10.0f, 0.0f);
+	physicsCube->GetComponent<TransformComponent>()->SetPosition(0.0f, 15.0f, 0.0f);
 	physicsCube->GetComponent<TransformComponent>()->SetScale(1.0f, 1.0f, 1.0f);
 
 	// 물리 컴포넌트 추가 (질량 10, 동적 객체)
 	physicsCube->AddComponent<PhysicsComponent>(10.0f, true);
+
+	std::shared_ptr<Object> physicsSphere = AddObject(Object::Create("Physics Sphere"));
+	physicsSphere->AddComponent<ColorSphereObject>();
+	physicsSphere->AddComponent<PhysicsComponent>(10.0f, true);
+	physicsSphere->GetComponent<TransformComponent>()->SetPosition(0.0f, 7.0f, 3.0f);
+
+	std::shared_ptr<Object> physicsCone = AddObject(Object::Create("Physics Cone"));
+	physicsCone->AddComponent<ColorConeObject>();
+	physicsCone->AddComponent<PhysicsComponent>(10.0f, true);
+	physicsCone->GetComponent<TransformComponent>()->SetPosition(0.0f, 7.0f, -3.0f);
+
+	std::shared_ptr<Object> cylinder = AddObject(Object::Create("Physics Cylinder"));
+	cylinder->AddComponent<ColorCylinderObject>();
+	cylinder->AddComponent<PhysicsComponent>(10.0f, true);
+	cylinder->GetComponent<TransformComponent>()->SetPosition(3.0f, 7.0f, 0.0f);
+
+	std::shared_ptr<Object> plane = AddObject(Object::Create("Physics Plane"));
+	plane->AddComponent<ColorPlaneObject>();
+	plane->AddComponent<PhysicsComponent>(10.0f, true);
 
 	// 바닥 평면 생성 (정적 물리 객체)
 	std::shared_ptr<Object> ground = AddObject(Object::Create("Ground Plane"));

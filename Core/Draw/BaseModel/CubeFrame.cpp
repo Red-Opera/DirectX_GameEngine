@@ -204,3 +204,12 @@ TriangleIndexList CubeFrame::CreateTextureFrame()
 
     return textureVertices;
 }
+
+// PhysX 콜라이더용 정점 데이터 생성
+bool CubeFrame::GetPhysXVertices(std::vector<physx::PxVec3>& vertices,
+                               std::vector<uint32_t>& indices,
+                               const Scale& scale)
+{
+    auto model = CreateFrame();
+    return ExtractPhysXVertices(model, vertices, indices, scale);
+}

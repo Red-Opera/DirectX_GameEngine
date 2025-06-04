@@ -11,7 +11,7 @@
 ColorPlaneObject::ColorPlaneObject(std::shared_ptr<Object> object)
 	: ColorObject(object)
 {
-
+	object->SetBaseModelType(BaseModelType::Plane);
 }
 
 void ColorPlaneObject::Initialize()
