@@ -1,7 +1,7 @@
 # DirectX Game Engine
 
-<h2 id="Play">실행 이미지 (2025.05.02)</h2>
-<img src="https://github.com/user-attachments/assets/24c7a91b-eb4d-46cc-88f4-9ef7afb6bce8" width="100%" height="100%"/>
+<h2 id="Play">실행 이미지 (2025.06.05)</h2>
+<img src="https://github.com/user-attachments/assets/47fa009d-f373-4f83-809d-66b9b10ba4ba" width="100%" height="100%"/>
 
 <h2 id="Play">Graphic 참고 레포지토리</h2>
 
@@ -81,6 +81,9 @@ DirectX-3D-Theory 프로젝트를 시작 프로젝트로 설정 → 빌드 및 �
 | **x86** |  ❌   |   ❌    |
 
 ## 과거 실행 사진
+2025.05.02
+<img src="https://github.com/user-attachments/assets/24c7a91b-eb4d-46cc-88f4-9ef7afb6bce8" width="100%" height="100%"/>
+
 2025.04.06
 <img src="https://github.com/user-attachments/assets/994328ba-8e9e-4ca2-ba8b-2c8769615352" width="100%" height="100%"/>
 
