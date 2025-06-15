@@ -161,6 +161,7 @@
     <ClInclude Include="Core\Component\Transform\Transform.h" />
     <ClInclude Include="Core\Component\Transform\TransformComponent.h" />
     <ClInclude Include="Core\Draw\BaseModel\CylinderFrame.h" />
+    <ClInclude Include="Core\Draw\BaseModel\IVertexProvider.h" />
     <ClInclude Include="Core\Draw\ModelEditor.h" />
     <ClInclude Include="Core\Draw\Object\ColorConeObject.h" />
     <ClInclude Include="Core\Draw\Object\ColorCubeObject.h" />
@@ -1129,6 +1130,7 @@
     <ClCompile Include="Core\Component\Transform\TransformComponent.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\ConeFrame.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\CylinderFrame.cpp" />
+    <ClCompile Include="Core\Draw\BaseModel\IVertexProvider.cpp" />
     <ClCompile Include="Core\Draw\BaseModel\SphereFrame.cpp" />
     <ClCompile Include="Core\Draw\Model.cpp" />
     <ClCompile Include="Core\Draw\ModelEditor.cpp" />

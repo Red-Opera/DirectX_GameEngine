@@ -24,7 +24,7 @@ public:
     bool GetLit() const;
 
     void Initialize() override;
-    void Update() override;
+    void Update(float deltaTime) override;
     void LateUpdate() override;
 
     virtual std::string GetClassName() const override { return "ColorObject"; }

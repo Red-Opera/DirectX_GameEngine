@@ -16,30 +16,102 @@
 #include <External/Assimp/postprocess.h>
 
 Model::Model(std::shared_ptr<class Object> object, const std::string& pathString, const float scale)
-	: Component(object)
+    : Component(object), modelScale(scale)
 {
-	Assimp::Importer importer;
+    Assimp::Importer importer;
 
-	const auto model = importer.ReadFile(pathString.c_str(),
-		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
+    const auto model = importer.ReadFile(pathString.c_str(),
+        aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_ConvertToLeftHanded | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 
-	if (model == nullptr)
-		throw ModelException(__LINE__, __FILE__, importer.GetErrorString());
+    if (model == nullptr)
+        throw ModelException(__LINE__, __FILE__, importer.GetErrorString());
 
-	std::vector<Material> materials;
-	materials.reserve(model->mNumMaterials);
+    std::vector<Material> materials;
+    materials.reserve(model->mNumMaterials);
 
-	for (size_t i = 0; i < model->mNumMaterials; i++)
-		materials.emplace_back(*model->mMaterials[i], pathString);
+    for (size_t i = 0; i < model->mNumMaterials; i++)
+        materials.emplace_back(*model->mMaterials[i], pathString);
 
-	for (size_t i = 0; i < model->mNumMeshes; i++)
-	{
-		const auto& mesh = *model->mMeshes[i];
-		meshPtrs.push_back(std::make_unique<Mesh>(materials[mesh.mMaterialIndex], mesh, scale));
-	}
+    for (size_t i = 0; i < model->mNumMeshes; i++)
+    {
+        const auto& mesh = *model->mMeshes[i];
+        meshPtrs.push_back(std::make_unique<Mesh>(materials[mesh.mMaterialIndex], mesh, scale));
+    }
 
-	int nextID = 0;
-	root = ConvertSceneGraphNode(nextID, *model->mRootNode, scale, object);
+    // PhysX 콜라이더용 정점 데이터 미리 캐싱
+    meshVertices.resize(model->mNumMeshes);
+    meshIndices.resize(model->mNumMeshes);
+    
+    for (size_t i = 0; i < model->mNumMeshes; i++)
+    {
+        const auto& mesh = *model->mMeshes[i];
+        const auto& material = materials[mesh.mMaterialIndex];
+        
+        // 정점 데이터 추출
+        auto vertexBuffer = material.GetVertex(mesh);
+        auto indexData = material.GetIndex(mesh);
+        
+        // PhysX 형식으로 변환
+        for (size_t v = 0; v < vertexBuffer.count(); v++)
+        {
+            auto pos = vertexBuffer[v].GetValue<VertexCore::VertexLayout::VertexType::Position3D>();
+            meshVertices[i].emplace_back(pos.x * scale, pos.y * scale, pos.z * scale);
+        }
+        
+        // 인덱스 데이터 변환
+        for (auto index : indexData)
+            meshIndices[i].push_back(static_cast<uint32_t>(index));
+    }
+    
+    physxDataCached = true;
+
+    int nextID = 0;
+    root = ConvertSceneGraphNode(nextID, *model->mRootNode, scale, object);
+}
+
+bool Model::GetPhysXVertices(std::vector<physx::PxVec3>& vertices,
+    std::vector<uint32_t>& indices,
+    const Scale& scale) const
+{
+    vertices.clear();
+    indices.clear();
+    
+    if (!physxDataCached || meshVertices.empty())
+        return false;
+        
+    try
+    {
+        uint32_t vertexOffset = 0;
+        
+        // 모든 메시의 정점과 인덱스를 결합
+        for (size_t meshIdx = 0; meshIdx < meshVertices.size(); meshIdx++)
+        {
+            // 정점 데이터 추가 (추가 스케일 적용)
+            for (const auto& vertex : meshVertices[meshIdx])
+            {
+                vertices.emplace_back(
+                    vertex.x * scale.x,
+                    vertex.y * scale.y,
+                    vertex.z * scale.z
+                );
+            }
+            
+            // 인덱스 데이터 추가 (오프셋 적용)
+            for (const auto& index : meshIndices[meshIdx])
+                indices.push_back(index + vertexOffset);
+            
+            vertexOffset += static_cast<uint32_t>(meshVertices[meshIdx].size());
+        }
+        
+        return !vertices.empty() && !indices.empty();
+    }
+
+    catch (...)
+    {
+        vertices.clear();
+        indices.clear();
+        return false;
+    }
 }
 
 void Model::Submit(size_t channel) const NOEXCEPTRELEASE
@@ -73,9 +145,9 @@ void Model::Initialize()
 	LinkTechniques(App::GetRenderGraph());
 }
 
-void Model::Update()
+void Model::Update(float deltaTime)
 {
-	Component::Update();
+	Component::Update(deltaTime);
 
 	Submit(RenderingChannel::main);
 	Submit(RenderingChannel::shadow);

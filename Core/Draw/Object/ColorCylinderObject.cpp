@@ -1,12 +1,13 @@
 ﻿#include "stdafx.h"
 #include "ColorCylinderObject.h"
 
+#include "Core/Object/Object.h"
 #include "../BaseModel/CylinderFrame.h"
 
 ColorCylinderObject::ColorCylinderObject(std::shared_ptr<class Object> object)
 	: ColorObject(object)
 {
-
+	object->SetBaseModelType(BaseModelType::Cylinder);
 }
 
 void ColorCylinderObject::Initialize()

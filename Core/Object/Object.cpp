@@ -49,7 +49,7 @@ void Object::LateStart()
 	}
 }
 
-void Object::Update()
+void Object::Update(float deltaTime)
 {
 	if (!isActive)
 		return;
@@ -57,7 +57,7 @@ void Object::Update()
 	for (auto& compoent : components)
 	{
 		if (compoent.second->GetEnable())
-			compoent.second->Update();
+			compoent.second->Update(deltaTime);
 	}
 }
 

@@ -15,9 +15,9 @@ void MeshComponent::Initialize()
     Component::Initialize();
 }
 
-void MeshComponent::Update()
+void MeshComponent::Update(float deltaTime)
 {
-    Component::Update();
+    Component::Update(deltaTime);
 }
 
 void MeshComponent::CreateMesh(const Material& material, const aiMesh& mesh, float scale)

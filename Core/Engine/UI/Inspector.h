@@ -43,7 +43,7 @@ namespace Engine
         void BeforeFrame() override;
         void Start() override;
         void LateStart() override;
-        void Update() override;
+        void Update(float deltaTime) override;
         void LateUpdate() override;
         void Finalize() override;
         void Destroy() override;

@@ -73,9 +73,9 @@ void PointLight::Initialize()
 	mesh->LinkTechniques(App::GetRenderGraph());
 }
 
-void PointLight::Update()
+void PointLight::Update(float deltaTime)
 {
-	Component::Update();
+	Component::Update(deltaTime);
 
 	const auto& transformPosition = transform->GetPosition();
 

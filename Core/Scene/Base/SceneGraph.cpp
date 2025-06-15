@@ -562,7 +562,7 @@ std::shared_ptr<Object> SceneGraph::FindParentInChildrenDirect(const std::shared
 }
 
 
-void SceneGraph::Update()
+void SceneGraph::Update(float deltaTime)
 {
     UpdateSceneGraph();
 }

@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "TransformComponent.h"
-#include "Core/Object/Object.h" // Object 클래스 포함 확인
+
+#include "Core/Object/Object.h"
 
 TransformComponent::TransformComponent(std::shared_ptr<Object> object)
     : Component(object)

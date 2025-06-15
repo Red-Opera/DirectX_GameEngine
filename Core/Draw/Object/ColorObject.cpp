@@ -30,7 +30,13 @@ void ColorObject::SetRenderingPipeline(GraphicResource::Image::Color color, bool
 
     model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f));
 
-    const auto geometryTag = "$ColorCone.X" + std::to_string(scale.x) + "Y" + std::to_string(scale.y) + "Z" + std::to_string(scale.z);
+    // 객체 타입을 포함시켜 고유한 태그 생성
+    const auto geometryTag = "$" + std::string(typeid(*this).name()) + 
+                             ".X" + std::to_string(scale.x) + 
+                             ".Y" + std::to_string(scale.y) + 
+                             ".Z" + std::to_string(scale.z) + 
+                             "." + object->GetName();
+    
     vertexBuffer = VertexBuffer::GetRender(geometryTag, model.vertices);
     indexBuffer = IndexBuffer::GetRender(geometryTag, model.indices);
     primitiveTopology = PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -38,7 +44,7 @@ void ColorObject::SetRenderingPipeline(GraphicResource::Image::Color color, bool
     auto transformConstantBuffer = std::make_shared<TransformConstantBuffer>();
 
     {
-        Technique tech("Color Cone", RenderingChannel::main);
+        Technique tech("Color Object", RenderingChannel::main);
 
         {
             RenderStep coneRender("lambertian");
@@ -193,9 +199,9 @@ void ColorObject::Initialize()
     LinkTechniques(App::GetRenderGraph());
 }
 
-void ColorObject::Update()
+void ColorObject::Update(float deltaTime)
 {
-    Component::Update();
+    Component::Update(deltaTime);
 
     Submit(RenderingChannel::main);
 

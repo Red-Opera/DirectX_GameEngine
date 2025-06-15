@@ -4,6 +4,7 @@
 #include "../BaseModel/CubeFrame.h"
 
 #include "Core/Component/Transform/TransformComponent.h"
+#include "Core/Object/Object.h" 
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/DynamicConstantBuffer.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/TransformConstantBufferScaling.h"
@@ -15,7 +16,7 @@
 TextureCubeObject::TextureCubeObject(std::shared_ptr<class Object> object, std::string path)
 	: ColorObject(object), path(path)
 {
-
+	object->SetBaseModelType(BaseModelType::Cube);
 }
 
 void TextureCubeObject::Initialize()
