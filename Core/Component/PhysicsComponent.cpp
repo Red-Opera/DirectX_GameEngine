@@ -692,11 +692,10 @@ bool PhysicsComponent::ExtractVerticesFromModel(std::vector<physx::PxVec3>& vert
 
         // Model 컴포넌트가 있는 경우 처리
         auto modelComponent = object->GetComponent<Model>();
-
-        // TODO: Model 클래스에서 실제 정점 데이터를 가져오는 기능 구현
-        // 현재는 기본 큐브로 대체
         if (modelComponent != nullptr)
-            return CubeFrame::GetPhysXVertices(vertices, indices, scale);
+        {
+            return modelComponent->GetPhysXVertices(vertices, indices, scale);
+        }
 
         break;
     }
