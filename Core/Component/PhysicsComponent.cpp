@@ -540,6 +540,19 @@ physx::PxShape* PhysicsComponent::CreateShapeFromType()
             *physics->createMaterial(staticFriction, dynamicFriction, restitution)
         );
     }
+
+    // 모든 형상 생성 후 CCD 설정 추가
+    if (shape != nullptr && (collisionMode == CollisionDetectionMode::Continuous || 
+                            collisionMode == CollisionDetectionMode::ContinuousDynamic))
+    {
+        // 향상된 CCD 정확도를 위한 충돌 마진 설정
+        const float contactOffset = shape->getContactOffset();
+        const float restOffset = contactOffset * 0.5f;
+
+        shape->setRestOffset(restOffset);
+    }
+    
+    return shape;
 }
 
 void PhysicsComponent::CreateBoxCollider()
@@ -856,13 +869,31 @@ void PhysicsComponent::SetCollisionDetectionMode(CollisionDetectionMode mode)
         break;
 
     case CollisionDetectionMode::Continuous:
-        dynamicActor->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
-        dynamicActor->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD_FRICTION, false);
-        break;
-
     case CollisionDetectionMode::ContinuousDynamic:
+        // CCD 기본 설정
         dynamicActor->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD, true);
-        dynamicActor->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD_FRICTION, true);
+        
+        // CCD 마찰력 설정 (ContinuousDynamic 모드에서만)
+        dynamicActor->setRigidBodyFlag(physx::PxRigidBodyFlag::eENABLE_CCD_FRICTION, 
+                                     mode == CollisionDetectionMode::ContinuousDynamic);
+        
+        // CCD에 최적화된 충돌 설정
+        dynamicActor->setMaxDepenetrationVelocity(1000.0f); // 고속 객체를 위한 설정
+        
+        // 형상 충돌 마진 설정
+        uint32_t numShapes = actor->getNbShapes();
+        physx::PxShape* shapes[8];  // 최대 8개의 Shape 지원
+        actor->getShapes(shapes, numShapes);
+        
+        for (uint32_t i = 0; i < numShapes; i++)
+        {
+            // 향상된 CCD 정확도를 위한 충돌 마진 설정
+            const float contactOffset = shapes[i]->getContactOffset();
+            const float restOffset = contactOffset * 0.5f;
+
+            shapes[i]->setRestOffset(restOffset);
+        }
+
         break;
     }
 }

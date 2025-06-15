@@ -44,6 +44,10 @@ bool PhysicsSystem::Initialize()
     dispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.cpuDispatcher = dispatcher;
     sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+    
+    sceneDesc.flags |= PxSceneFlag::eENABLE_CCD; // CCD 씬 플래그 활성화
+    sceneDesc.ccdMaxPasses = 4; // CCD 최대 패스 수 (충돌 정확도 향상)
+    
     scene = physics->createScene(sceneDesc);
     
     return true;
