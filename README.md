@@ -3,7 +3,7 @@
 <h2 id="Play">실행 이미지 (2025.06.05)</h2>
 <img src="https://github.com/user-attachments/assets/47fa009d-f373-4f83-809d-66b9b10ba4ba" width="100%" height="100%"/>
 
-<h2 id="Play">Graphic 참고 레포지토리</h2>
+<h2 id="Play">Graphic 참고 레포지토리 (~ 25 Commits) </h2>
 
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=planetchili&repo=hw3d&theme=ambient_gradient)](https://github.com/planetchili/hw3d)
 <p>이 프로젝트의 그래픽 부분은 위 레포지토리를 참고하여 제작했습니다.</p>
