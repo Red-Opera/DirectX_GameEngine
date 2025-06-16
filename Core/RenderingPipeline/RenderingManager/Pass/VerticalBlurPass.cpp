@@ -22,8 +22,8 @@ namespace RenderGraphNameSpace
 		AddRender(Stencil::GetRender(Stencil::DrawMode::Mask));
 		AddRender(SamplerState::GetRender(SamplerState::TextureFilter::Bilinear, true));
 
-		AddRenderSink<RenderTarget>("scratchIn");
-		AddRenderSink<CachingPixelConstantBufferEx>("kernel");
+		AddRenderDataConsumer<RenderTarget>("scratchIn");
+		AddRenderDataConsumer<CachingPixelConstantBufferEx>("kernel");
 
 		AddDataConsumer(DirectRenderPipelineDataConsumer<CachingPixelConstantBufferEx>::Create("direction", direction));
 		AddDataConsumer(DirectBufferDataConsumer<RenderTarget>::Create("renderTarget", renderTarget));

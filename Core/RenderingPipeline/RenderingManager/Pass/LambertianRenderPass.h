@@ -33,7 +33,7 @@ namespace RenderGraphNameSpace
 
 			AddDataConsumer(DirectBufferDataConsumer<Graphic::RenderTarget>::Create("renderTarget", renderTarget));
 			AddDataConsumer(DirectBufferDataConsumer<Graphic::DepthStencil>::Create("depthStencil", depthStencil));
-			AddRenderSink<Graphic::Render>("ShadowMap");
+			AddRenderDataConsumer<Graphic::Render>("ShadowMap");
 			AddRender(std::make_shared<Graphic::ShadowSamplerState>());
 			AddRender(std::make_shared<Graphic::SamplerState>(Graphic::SamplerState::TextureFilter::Anisotropic, false, 2));
 
