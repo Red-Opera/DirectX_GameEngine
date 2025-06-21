@@ -12,6 +12,8 @@
 #include "Core/RenderingPipeline/RenderingManager/Pass/ShadowMapPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/SkyboxPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/VerticalBlurPass.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/ScreenHorizontalBlurPass.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/ScreenVerticalBlurPass.h"
 #include "Core/RenderingPipeline/RenderGraph/BlurOutlineRenderingPass.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
 
@@ -151,8 +153,29 @@ namespace RenderGraphNameSpace
             AddRenderPass(std::move(pass));
         }
 
+        // 12단계: 전체 화면 수평 블러 패스
+        {
+            auto pass = std::make_unique<ScreenHorizontalBlurPass>("postHorizontal", Window::GetDxGraphic().GetWidth(), Window::GetDxGraphic().GetHeight());
+            pass->SetConsumerLinkage("scratchIn", "wireframe.renderTarget");
+            pass->SetConsumerLinkage("kernel", "$.blurKernel");
+            pass->SetConsumerLinkage("direction", "$.blurDirection");
+
+            AddRenderPass(std::move(pass));
+        }
+
+        // 13단계: 전체 화면 수직 블러 패스
+        {
+            auto pass = std::make_unique<ScreenVerticalBlurPass>("postVertical");
+            pass->SetConsumerLinkage("scratchIn", "postHorizontal.scratchOut");
+            pass->SetConsumerLinkage("kernel", "$.blurKernel");
+            pass->SetConsumerLinkage("direction", "$.blurDirection");
+            pass->SetConsumerLinkage("renderTarget", "$.backbuffer");
+
+            AddRenderPass(std::move(pass));
+        }
+
         // 최종 출력을 백버퍼로 설정
-        SetGlobalConsumerTarget("backbuffer", "wireframe.renderTarget");
+        SetGlobalConsumerTarget("backbuffer", "postVertical.renderTarget");
 
         // 렌더 그래프 완료 및 의존성 검증
         Finalize();
