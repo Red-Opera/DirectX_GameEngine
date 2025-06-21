@@ -11,6 +11,7 @@
 #include "Core/RenderingPipeline/RenderingManager/Pass/ShadowMapPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/SkyboxPass.h"
 #include "Core/RenderingPipeline/RenderingManager/Pass/VerticalBlurPass.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/FinalPostProcessPass.h"
 #include "Core/RenderingPipeline/RenderGraph/BlurOutlineRenderingPass.h"
 #include "Core/RenderingPipeline/RenderTarget.h"
 
@@ -114,15 +115,24 @@ namespace RenderGraphNameSpace
 			AddRenderPass(std::move(pass));
 		}
 
-		{
-			auto pass = std::make_unique<CameraWireFramePass>("wireframe");
-			pass->SetSinkLinkage("renderTarget", "vertical.renderTarget");
-			pass->SetSinkLinkage("depthStencil", "vertical.depthStencil");
+               {
+                        auto pass = std::make_unique<CameraWireFramePass>("wireframe");
+                        pass->SetSinkLinkage("renderTarget", "vertical.renderTarget");
+                        pass->SetSinkLinkage("depthStencil", "vertical.depthStencil");
 
-			AddRenderPass(std::move(pass));
-		}
+                        AddRenderPass(std::move(pass));
+                }
 
-		SetSinkTarget("backbuffer", "wireframe.renderTarget");
+               {
+                        auto pass = std::make_unique<FinalPostProcessPass>("postprocess", Window::GetDxGraphic().GetWidth(), Window::GetDxGraphic().GetHeight());
+                        pass->SetSinkLinkage("renderTargetIn", "wireframe.renderTargetRender");
+                        pass->SetSinkLinkage("kernel", "$.blurKernel");
+                        pass->SetSinkLinkage("direction", "$.blurDirection");
+
+                        AddRenderPass(std::move(pass));
+                }
+
+                SetSinkTarget("backbuffer", "postprocess.renderTargetOut");
 
 		Finalize();
 	}
