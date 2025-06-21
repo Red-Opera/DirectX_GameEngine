@@ -24,7 +24,8 @@ namespace RenderGraphNameSpace
             AddDataConsumer(DirectBufferDataConsumer<RenderTarget>::Create("renderTarget", renderTarget));  // 렌더 타겟을 입력으로 받는 데이터 소비자 등록
             AddDataConsumer(DirectBufferDataConsumer<DepthStencil>::Create("depthStencil", depthStencil));  // 깊이 스텐실을 입력으로 받는 데이터 소비자 등록
 
-            AddDataProvider(DirectBufferPipelineDataProvider<RenderTarget>::Create("renderTarget", renderTarget));  // 렌더 타겟을 출력으로 제공하는 데이터 제공자 등록
+            // 렌더 타겟을 출력으로 제공 (후처리 패스 등에서 렌더 객체로 활용될 수 있도록 Render 타입 제공자 사용)
+            AddDataProvider(DirectRenderPipelineDataProvider<RenderTarget>::Create("renderTarget", renderTarget));
             AddDataProvider(DirectBufferPipelineDataProvider<DepthStencil>::Create("depthStencil", depthStencil));  // 깊이 스텐실을 출력으로 제공하는 데이터 제공자 등록
 
             // 역순 깊이 테스트를 사용하는 스텐실 설정 (와이어프레임이 기존 객체 뒤에 렌더링되도록)
