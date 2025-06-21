@@ -66,7 +66,7 @@ namespace RenderGraphNameSpace
 	};
 
 	template<class T>
-	class DirectRenderPipelineDataProvider : public PipelineDataProvider
+class DirectRenderPipelineDataProvider : public PipelineDataProvider
 	{
 	public:
 		static std::unique_ptr<DirectRenderPipelineDataProvider> Create(std::string name, std::shared_ptr<T>& buffer)
@@ -85,12 +85,46 @@ namespace RenderGraphNameSpace
 
 		}
 
-		std::shared_ptr<Graphic::Render> GetRender() override
-		{
-			return render;
-		}
+        std::shared_ptr<Graphic::Render> GetRender() override
+        {
+                return render;
+        }
 
-	private:
-		std::shared_ptr<T>& render;
-	};
+private:
+        std::shared_ptr<T>& render;
+        };
+
+        template<class T>
+        class DirectResourcePipelineDataProvider : public PipelineDataProvider
+        {
+        public:
+                static std::unique_ptr<DirectResourcePipelineDataProvider> Create(std::string name, std::shared_ptr<T>& resource)
+                {
+                        return std::make_unique<DirectResourcePipelineDataProvider>(std::move(name), resource);
+                }
+
+                DirectResourcePipelineDataProvider(std::string name, std::shared_ptr<T>& resource)
+                        : PipelineDataProvider(std::move(name)), resource(resource)
+                {
+
+                }
+
+                void CheckLinkage() const
+                {
+
+                }
+
+                std::shared_ptr<Graphic::Render> GetRender() override
+                {
+                        return resource;
+                }
+
+                std::shared_ptr<Graphic::BufferResource> GetData() override
+                {
+                        return resource;
+                }
+
+        private:
+                std::shared_ptr<T>& resource;
+        };
 }
