@@ -66,13 +66,13 @@ namespace RenderGraphNameSpace
 	};
 
 	template<class T>
-	class DirectRenderPipelineDataProvider : public PipelineDataProvider
-	{
-	public:
-		static std::unique_ptr<DirectRenderPipelineDataProvider> Create(std::string name, std::shared_ptr<T>& buffer)
-		{
-			return std::make_unique<DirectRenderPipelineDataProvider>(std::move(name), buffer);
-		}
+        class DirectRenderPipelineDataProvider : public PipelineDataProvider
+        {
+        public:
+                static std::unique_ptr<DirectRenderPipelineDataProvider> Create(std::string name, std::shared_ptr<T>& buffer)
+                {
+                        return std::make_unique<DirectRenderPipelineDataProvider>(std::move(name), buffer);
+                }
 
 		DirectRenderPipelineDataProvider(std::string name, std::shared_ptr<T>& render)
 			: PipelineDataProvider(std::move(name)), render(render)
@@ -85,12 +85,17 @@ namespace RenderGraphNameSpace
 
 		}
 
-		std::shared_ptr<Graphic::Render> GetRender() override
-		{
-			return render;
-		}
+                std::shared_ptr<Graphic::Render> GetRender() override
+                {
+                        return render;
+                }
 
-	private:
-		std::shared_ptr<T>& render;
-	};
+                std::shared_ptr<Graphic::BufferResource> GetData() override
+                {
+                        return std::dynamic_pointer_cast<Graphic::BufferResource>(render);
+                }
+
+        private:
+                std::shared_ptr<T>& render;
+        };
 }
