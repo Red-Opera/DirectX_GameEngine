@@ -20,7 +20,7 @@ namespace RenderGraphNameSpace
 
 			AddDataConsumer(DirectBufferDataConsumer<RenderTarget>::Create("renderTarget", renderTarget));
 			AddDataConsumer(DirectBufferDataConsumer<DepthStencil>::Create("depthStencil", depthStencil));
-			AddDataProvider(DirectBufferPipelineDataProvider<RenderTarget>::Create("renderTarget", renderTarget));
+                       AddDataProvider(DirectRenderPipelineDataProvider<RenderTarget>::Create("renderTarget", renderTarget));
 			AddDataProvider(DirectBufferPipelineDataProvider<DepthStencil>::Create("depthStencil", depthStencil));
 
 			AddRender(Stencil::GetRender(Stencil::DrawMode::DepthReversed));
