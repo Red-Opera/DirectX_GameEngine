@@ -2,6 +2,8 @@
 
 #include "RenderGraph.h"
 #include "Core/RenderingPipeline/Pipeline/VSPS/ConstantBufferEx.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/ScreenHorizontalBlurPass.h"
+#include "Core/RenderingPipeline/RenderingManager/Pass/ScreenVerticalBlurPass.h"
 
 #include <memory>
 
