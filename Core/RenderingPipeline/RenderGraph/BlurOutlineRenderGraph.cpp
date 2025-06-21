@@ -125,7 +125,7 @@ namespace RenderGraphNameSpace
 
                {
                         auto pass = std::make_unique<FinalPostProcessPass>("postprocess", Window::GetDxGraphic().GetWidth(), Window::GetDxGraphic().GetHeight());
-                        pass->SetSinkLinkage("renderTargetIn", "wireframe.renderTarget");
+                        pass->SetSinkLinkage("renderTargetIn", "wireframe.renderTargetRender");
                         pass->SetSinkLinkage("kernel", "$.blurKernel");
                         pass->SetSinkLinkage("direction", "$.blurDirection");
 
