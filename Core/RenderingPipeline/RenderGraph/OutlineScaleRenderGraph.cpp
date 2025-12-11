@@ -13,37 +13,37 @@ namespace RenderGraphNameSpace
 	{
 		{
 			auto pass = std::make_unique<BufferPassClear>("clearRenderTarget");
-			pass->SetSinkLinkage("buffer", "$.backbuffer");
+			pass->SetConsumerLinkage("buffer", "$.backbuffer");
 			AddRenderPass(std::move(pass));
 		}
 
 		{
 			auto pass = std::make_unique<BufferPassClear>("clearDepthStencil");
-			pass->SetSinkLinkage("buffer", "$.masterDepth");
+			pass->SetConsumerLinkage("buffer", "$.masterDepth");
 			AddRenderPass(std::move(pass));
 		}
 
 		{
 			auto pass = std::make_unique<LambertianRenderPass>("lambertian");
-			pass->SetSinkLinkage("renderTarget", "clearRenderTarget.renderTarget");
-			pass->SetSinkLinkage("depthStencil", "clearDepthStencil.depthStencil");
+			pass->SetConsumerLinkage("renderTarget", "clearRenderTarget.renderTarget");
+			pass->SetConsumerLinkage("depthStencil", "clearDepthStencil.depthStencil");
 			AddRenderPass(std::move(pass));
 		}
 
 		{
 			auto pass = std::make_unique<OutlineMaskPass>("outlineMask");
-			pass->SetSinkLinkage("depthStencil", "lambertian.depthStencil");
+			pass->SetConsumerLinkage("depthStencil", "lambertian.depthStencil");
 			AddRenderPass(std::move(pass));
 		}
 
 		{
 			auto pass = std::make_unique<OutlineDrawPass>("outlineDraw");
-			pass->SetSinkLinkage("renderTarget", "lambertian.renderTarget");
-			pass->SetSinkLinkage("depthStencil", "outlineMask.depthStencil");
+			pass->SetConsumerLinkage("renderTarget", "lambertian.renderTarget");
+			pass->SetConsumerLinkage("depthStencil", "outlineMask.depthStencil");
 			AddRenderPass(std::move(pass));
 		}
 
-		SetSinkTarget("backbuffer", "outlineDarw.renderTarget");
+		SetGlobalConsumerTarget("backbuffer", "outlineDarw.renderTarget");
 		Finalize();
 	}
 }
