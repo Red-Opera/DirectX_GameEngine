@@ -5,7 +5,7 @@
 
 <h2 id="Play">Graphic 참고 레포지토리 (~ 25 Commits) </h2>
 
-[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=planetchili&repo=hw3d&theme=ambient_gradient)](https://github.com/planetchili/hw3d)
+[![Readme Card](https://github-readme-stats-red-opera2136-hq049weu.apn.leapcell.dev/api/pin/?username=planetchili&repo=hw3d&theme=ambient_gradient)](https://github.com/planetchili/hw3d)
 <p>이 프로젝트의 그래픽 부분은 위 레포지토리를 참고하여 제작했습니다.</p>
 <p>해당 레포지토리 튜토리얼 영상 링크 : <a href=https://youtu.be/_4FArgOX1I4>https://youtu.be/_4FArgOX1I4</a></p>
 
