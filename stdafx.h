@@ -30,6 +30,9 @@
 #include <sstream>
 #include <algorithm>
 
+#include "Core/Exception/Base/ErrorCode.h"
+#include "Core/Exception/Base/Exception.h"
+
 #include "Utility/GameTimer.h"
 #include "Utility/MathInfo.h"
 #include "Utility/Vector.h"
