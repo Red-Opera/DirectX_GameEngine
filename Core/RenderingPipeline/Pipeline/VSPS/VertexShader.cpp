@@ -28,13 +28,15 @@ namespace Graphic
 
         hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "VS", "vs_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
 
-        if (errorMessage != 0)
-        {
-            MessageBoxA(0, (char*)errorMessage->GetBufferPointer(), 0, 0);
-            ReleaseCOM(errorMessage);
-        }
+		string errorMsg;
 
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader));
+		if (errorMessage != nullptr)
+			errorMsg = string((char*)errorMessage->GetBufferPointer());
+
+		Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "Graphic Vertex Shader HLSL 파일 컴파일 실패 : " + errorMsg);
+
+        hr = GetDevice(Window::GetDxGraphic())->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader);
+		Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "버텍스 셰이더 생성 실패");
     }
 
     ID3DBlob* VertexShader::GetShaderCode() const noexcept

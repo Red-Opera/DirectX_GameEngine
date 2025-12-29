@@ -16,8 +16,6 @@ namespace Graphic
 
 	IndexBuffer::IndexBuffer(std::string path, const std::vector<USHORT>& indices) : indexCount((UINT)indices.size()), path(path)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		D3D11_BUFFER_DESC indexBufferDesc;
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -29,8 +27,8 @@ namespace Graphic
 		D3D11_SUBRESOURCE_DATA initData = {};
 		initData.pSysMem = indices.data();
 
-		hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer);
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 경로와 설정으로 인덱스 버퍼 생성 실패");
 	}
 
 	void IndexBuffer::SetRenderPipeline() NOEXCEPTRELEASE

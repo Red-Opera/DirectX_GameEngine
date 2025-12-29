@@ -1818,6 +1818,12 @@
     <ClInclude Include="Core\Draw\BaseModel\IVertexProvider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Exception\Base\ErrorCode.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Exception\Base\Require.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -2286,6 +2292,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Draw\BaseModel\IVertexProvider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Exception\Base\Require.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -14,8 +14,6 @@ namespace Graphic
     VertexBuffer::VertexBuffer(const std::string& path, const VertexCore::VertexBuffer& vertexBuffer) 
         : stride((UINT)vertexBuffer.GetVertexLayout().size()), path(path), vertexLayout(vertexBuffer.GetVertexLayout())
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         D3D11_BUFFER_DESC vertexBufferDesc;
         vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -27,8 +25,8 @@ namespace Graphic
         D3D11_SUBRESOURCE_DATA initData = { };
         initData.pSysMem = vertexBuffer.data();
 
-        hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&vertexBufferDesc, &initData, &(this->vertexBuffer));
-        GRAPHIC_THROW_INFO(hr);
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&vertexBufferDesc, &initData, &(this->vertexBuffer));
+        Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "Vertex Buffer와 DESC 정보로 버텍스 버퍼 생성 실패");
     }
 
 	void VertexBuffer::SetRenderPipeline() NOEXCEPTRELEASE

@@ -9,8 +9,6 @@ namespace Graphic
 {
 	ColorBlend::ColorBlend(bool blending, std::optional<float> transparencyInput) : blending(blending)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		if (transparencyInput)
 		{
 			transparency.emplace();
@@ -44,9 +42,8 @@ namespace Graphic
 			}
 		}
 
-		hr = GetDevice(Window::GetDxGraphic())->CreateBlendState(&blendDesc, &blendState);
-
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateBlendState(&blendDesc, &blendState);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "블렌드 상태 생성 실패");
 	}
 
 	void ColorBlend::SetTransparency(float transparencyInput) NOEXCEPTRELEASE

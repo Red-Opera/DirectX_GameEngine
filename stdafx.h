@@ -31,7 +31,7 @@
 #include <algorithm>
 
 #include "Core/Exception/Base/ErrorCode.h"
-#include "Core/Exception/Base/Exception.h"
+#include "Core/Exception/Base/Require.h"
 
 #include "Utility/GameTimer.h"
 #include "Utility/MathInfo.h"

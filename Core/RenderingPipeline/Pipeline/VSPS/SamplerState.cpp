@@ -11,8 +11,6 @@ namespace Graphic
 	SamplerState::SamplerState(TextureFilter textureFilter, bool useReflect, UINT slot)
 		: textureFilter(textureFilter), useReflect(useReflect), slot(slot)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
 		samplerDesc.Filter = [textureFilter]()			// 확대(MAG) 축소(MIN)할 때 사용할 필터링 방법
 		{
@@ -35,13 +33,13 @@ namespace Graphic
 		//samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 
 		samplerDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;	// 필터링에 사용할 최대 샘플링 비율 (1 ~ 16)
-		//samplerDesc.MipLODBias = 0.0f;							// 밉맵 레벨을 결정할 때 사용할 바이어스 값
-		//samplerDesc.MinLOD = 0.0f;								// 텍스처의 최소 LOD 레벨
-		//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;					// 텍스처의 최대 LOD 레벨
+		//samplerDesc.MipLODBias = 0.0f;						// 밉맵 레벨을 결정할 때 사용할 바이어스 값
+		//samplerDesc.MinLOD = 0.0f;							// 텍스처의 최소 LOD 레벨
+		//samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;				// 텍스처의 최대 LOD 레벨
 
 		// Sampler State를 생성함
-		hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "샘플러 상태 생성 실패");
 	}
 
 	void SamplerState::SetRenderPipeline() NOEXCEPTRELEASE

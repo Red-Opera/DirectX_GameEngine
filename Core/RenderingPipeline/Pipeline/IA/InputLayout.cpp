@@ -13,18 +13,17 @@ namespace Graphic
 {
 	InputLayout::InputLayout(VertexCore::VertexLayout vertexLayout, const VertexShader& vertexShader) : vertexLayout(std::move(vertexLayout))
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
 		const auto inputElement = this->vertexLayout.GetInputElement();
 		const auto shaderCode = vertexShader.GetShaderCode();
 
-		hr = GetDevice(Window::GetDxGraphic())->CreateInputLayout(
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateInputLayout(
 			inputElement.data(),
 			(UINT)inputElement.size(),
 			shaderCode->GetBufferPointer(),
 			shaderCode->GetBufferSize(),
 			&inputLayout);
 
-		GRAPHIC_THROW_INFO(hr);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 버텍스 레이아웃과 셰이더로 입력 레이아웃 생성 실패");
 	}
 
 	void InputLayout::SetRenderPipeline() NOEXCEPTRELEASE

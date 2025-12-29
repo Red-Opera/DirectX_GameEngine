@@ -19,8 +19,10 @@ enum class ErrorCode : unsigned int
 	// 그래픽스 관련 오류
 	GRAPHICS_DeviceInvalid,
 	GRAPHICS_BufferCreateFailed,
+	GRAPHICS_GetBufferFailed,
 	GRAPHICS_BindFailed,
 	GRAPHICS_ShaderCompileFailed,
+	GRAPHICS_ShaderLoadSaveFailed,
 	GRAPHICS_TextureLoadFailed,
 	GRAPHICS_MapUnmapFailed,
 	GRAPHICS_ETC,
@@ -53,8 +55,10 @@ constexpr std::array<const char*, static_cast<size_t>(ErrorCode::Count)> errorCo
 	// 그래픽스 관련 오류
 	"그래픽스 Device가 유효하지 않음",
 	"그래픽스 버퍼 생성 실패",
+	"그래픽스 버퍼 가져오기 실패",
 	"그래픽스 데이터 파이프라인 결합 실패",
-	"그래픽스 쉐이터 컴파일 실패",
+	"그래픽스 셰이더 컴파일 실패",
+	"그래픽스 셰이더 불러오기 실패",
 	"그래픽스 텍스처 로딩 실패",
 	"그래픽스 맵/언맵 실패",
 	"그래픽스 기타 오류",

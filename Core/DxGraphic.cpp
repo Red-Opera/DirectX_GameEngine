@@ -296,7 +296,8 @@ void DxGraphic::CreateSwapChain()
 void DxGraphic::CreateRenderTargetView()
 {
     // 교환 사슬의 버퍼를 가져옴 (0번째 후면 버퍼를 ID3D11Texture2D 형식으로 3번째 인수로 반환)
-    GRAPHIC_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer));
+	HRESULT hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBuffer);
+	Require::Check(hr, ErrorCode::GRAPHICS_GetBufferFailed, "후면 버퍼 가져오기 실패");
 
     renderTarget = std::shared_ptr<Graphic::RenderTarget>{ new Graphic::OutputOnlyRenderTarget(backBuffer.Get()) };
 
@@ -309,7 +310,7 @@ void DxGraphic::CreateRenderTargetView()
     viewport.TopLeftY = 0.0f;
     deviceContext->RSSetViewports(1u, &viewport);
 
-    // 셰이더 리소스 뷰 생성
+	// 셰이더 리소스 뷰 생성 (출력된 결과를 GPU에서 텍스처로 사용하기 위해 필요)
     D3D11_TEXTURE2D_DESC temp = { };
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     backBuffer.Get()->GetDesc(&temp);
@@ -318,7 +319,8 @@ void DxGraphic::CreateRenderTargetView()
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.MipLevels = 1;
 
-    GRAPHIC_THROW_INFO(device->CreateShaderResourceView(backBuffer.Get(), &srvDesc, &shaderResourceView));
+    hr = device->CreateShaderResourceView(backBuffer.Get(), &srvDesc, &shaderResourceView);
+	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "백 버퍼와 DESC 정보로 셰이더 리소스 뷰 생성 실패");
 }
 
 void DxGraphic::DrawTestTriangle(float angle, float x, float z)
@@ -358,7 +360,8 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     D3D11_SUBRESOURCE_DATA initData = { };
     initData.pSysMem = vertices;
 
-    GRAPHIC_THROW_INFO(device->CreateBuffer(&vertexBufferDesc, &initData, &vertexBuffer));
+    HRESULT hr = device->CreateBuffer(&vertexBufferDesc, &initData, &vertexBuffer);
+	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "Triangle 정점 버퍼 생성 실패");
 
     const UINT stride = sizeof(Vertex);
     const UINT offset = 0;
@@ -385,7 +388,7 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     ZeroMemory(&initData, sizeof(D3D11_SUBRESOURCE_DATA));
     initData.pSysMem = indices;
 
-    HR(device->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer));
+    Require::Check(device->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer), ErrorCode::GRAPHICS_BufferCreateFailed, "인덱스 버퍼 생성 실패");
     deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
     D3D11_VIEWPORT viewPort;
@@ -420,7 +423,7 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     ID3D10Blob* compiledShader = 0;
     ID3D10Blob* errorMessage = 0;
 
-    HRESULT hr = D3DX11CompileFromFileA("Shader/ColorShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+    hr = D3DX11CompileFromFileA("Shader/ColorShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
 
     if (FAILED(hr))
         DXTrace(__FILE__, (DWORD)__LINE__, hr, "D3DX11CompileFromFile", true);
@@ -431,7 +434,8 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
         ReleaseCOM(errorMessage);
     }
 
-    GRAPHIC_THROW_INFO(device->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader));
+    hr = device->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader);
+	Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "버텍스 셰이더 생성 실패");
 
     // Vertex Shader 단계를 렌더링 파이프라인 단계에 묶음
     deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
@@ -474,7 +478,8 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     constantBufferDesc.StructureByteStride = 0;
 
     initData.pSysMem = &cb;
-    GRAPHIC_THROW_INFO(device->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer));
+    hr = device->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer);
+	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "Triangle 상수 버퍼 생성 실패");
 
     deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
 
@@ -488,9 +493,7 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     errorMessage = 0;
 
     hr = D3DX11CompileFromFileA("Shader/ColorShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
-
-    if (FAILED(hr))
-        DXTrace(__FILE__, (DWORD)__LINE__, hr, "D3DX11CompileFromFile", true);
+	Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "픽셀 셰이더 컴파일 실패");
 
     if (errorMessage != 0)
     {
@@ -541,7 +544,9 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     D3D11_SUBRESOURCE_DATA pixelInitData = {};
     pixelInitData.pSysMem = &cb2;
 
-    GRAPHIC_THROW_INFO(device->CreateBuffer(&pixelConstantBufferDesc, &pixelInitData, &pixelConstantBuffer));
+    hr = device->CreateBuffer(&pixelConstantBufferDesc, &pixelInitData, &pixelConstantBuffer);
+	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 설정으로 픽셀 상수 버퍼 생성 실패");
+
     deviceContext->PSSetConstantBuffers(0, 1, pixelConstantBuffer.GetAddressOf());
 
     GRAPHIC_THROW_INFO_ONLY(deviceContext->DrawIndexed((UINT)size(indices), 0, 0));

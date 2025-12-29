@@ -15,8 +15,6 @@ namespace Graphic
 	TextureCube::TextureCube(const std::string& path, UINT slot)
 		: path(path), slot(slot)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		std::vector<GraphicResource::Image> images;
 
 		for (int i = 0; i < 6; i++)
@@ -45,10 +43,10 @@ namespace Graphic
 		}
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-		hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, initData, &texture);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, initData, &texture);
+		Require::Check(hr, ErrorCode::GRAPHICS_TextureLoadFailed, "큐브 텍스처 생성 실패 : " + path);
 
-		GRAPHIC_THROW_INFO(hr);
-
+		// 큐브 텍스처를 셰이더 코드에서 사용하기 위한 뷰 생성
 		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
 		shaderResourceViewDesc.Format = textureDesc.Format;
 		shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
@@ -56,7 +54,7 @@ namespace Graphic
 		shaderResourceViewDesc.TextureCube.MipLevels = 1;
 
 		hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &shaderResourceViewDesc, &textureView);
-		GRAPHIC_THROW_INFO(hr);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "텍스쳐로 부터 셰이더 리소스 뷰 생성 실패 : " + path);
 	}
 
 	void TextureCube::SetRenderPipeline() NOEXCEPTRELEASE
@@ -69,8 +67,6 @@ namespace Graphic
 	DepthTextureCube::DepthTextureCube(UINT size, UINT slot)
 		: slot(slot)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		D3D11_TEXTURE2D_DESC textureDesc;
 		textureDesc.Width = size;
 		textureDesc.Height = size;
@@ -88,8 +84,8 @@ namespace Graphic
 		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-		hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture);
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture);
+		Require::Check(hr, ErrorCode::GRAPHICS_GetBufferFailed, "해당 설정으로 Depth 큐브 텍스처 버퍼 생성 실패");
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc = { };
 		shaderResourceViewDesc.Format = DXGI_FORMAT_R32_FLOAT;
@@ -98,7 +94,7 @@ namespace Graphic
 		shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
 		hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &shaderResourceViewDesc, &textureView);
-		GRAPHIC_THROW_INFO(hr);
+		Require::Check(hr, ErrorCode::GRAPHICS_GetBufferFailed, "Depth 큐브 버퍼로부터 셰이더 리소스 뷰 생성 실패");
 
 		for (UINT face = 0; face < 6; face++)
 			depthStencil.push_back(std::make_shared<OutputOnlyDepthStencil>(texture, face));
@@ -119,8 +115,6 @@ namespace Graphic
 	RenderTargetTextureCube::RenderTargetTextureCube(UINT width, UINT height, UINT slot, DXGI_FORMAT format)
 		:slot(slot)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		D3D11_TEXTURE2D_DESC textureDESC = { };
 		textureDESC.Width = width;
 		textureDESC.Height = height;
@@ -139,8 +133,8 @@ namespace Graphic
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
 		
-		hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDESC, nullptr, &texture);
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDESC, nullptr, &texture);
+		Require::Check(hr, ErrorCode::GRAPHICS_GetBufferFailed, "해당 설정으로 RenderTarget 큐브 텍스처 버퍼 생성 실패");
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDESC = { };
 		shaderResourceViewDESC.Format = textureDESC.Format;
@@ -149,7 +143,7 @@ namespace Graphic
 		shaderResourceViewDESC.Texture2D.MipLevels = 1;
 
 		hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &shaderResourceViewDESC, &textureView);
-		GRAPHIC_THROW_INFO(hr);
+		Require::Check(hr, ErrorCode::GRAPHICS_GetBufferFailed, "RenderTarget 큐브 버퍼로부터 셰이더 리소스 뷰 생성 실패");
 
 		for (UINT face = 0; face < 6; face++)
 			renderTarget.push_back(std::make_shared<OutputOnlyRenderTarget>(texture.Get(), face));

@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -141,6 +141,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -173,6 +174,8 @@
     <ClInclude Include="Core\Engine\ObjectPicker.h" />
     <ClInclude Include="Core\Engine\UI\Inspector.h" />
     <ClInclude Include="Core\Engine\UI\ObjectGizmo.h" />
+    <ClInclude Include="Core\Exception\Base\ErrorCode.h" />
+    <ClInclude Include="Core\Exception\Base\Require.h" />
     <ClInclude Include="Core\Object\EngineLoop.h" />
     <ClInclude Include="Core\Draw\Object\TextureCubeObject.h" />
     <ClInclude Include="Core\Draw\Base\Image\TexturePreprocessor.h" />
@@ -1156,6 +1159,7 @@
     <ClCompile Include="Core\Engine\UI\MenuBar.cpp" />
     <ClCompile Include="Core\Engine\UI\ObjectGizmo.cpp" />
     <ClCompile Include="Core\Engine\UI\SceneView.cpp" />
+    <ClCompile Include="Core\Exception\Base\Require.cpp" />
     <ClCompile Include="Core\Exception\EngineUIException.cpp" />
     <ClCompile Include="Core\Exception\ModelException.cpp" />
     <ClCompile Include="Core\Exception\RenderGraphCompileException.cpp" />
@@ -1306,6 +1310,7 @@
     <ClCompile Include="Core\Draw\Mesh.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Theory\Chapter7_Lighting\T7-10_PointLight.cpp" />
     <ClCompile Include="Theory\Chapter7_Lighting\T7-11_SpotLight.cpp" />
