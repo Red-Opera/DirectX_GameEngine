@@ -26,7 +26,7 @@ namespace Graphic
         ID3D10Blob* compiledShader = 0;
         ID3D10Blob* errorMessage = 0;
 
-        hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "VS", "vs_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+        hr = D3DCompileFromFile(StringConverter::ToWString(path).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
 
 		string errorMsg;
 

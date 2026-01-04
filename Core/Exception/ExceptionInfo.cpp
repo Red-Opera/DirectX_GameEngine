@@ -19,7 +19,7 @@ ExceptionInfo::ExceptionInfo()
 	typedef HRESULT(WINAPI* DXGIGetDebugInterface)(REFIID, void**);
 
 	// dxgidebug.dll 라이브러리 파일을 가져옴
-	const auto modDxgiDebug = LoadLibraryEx("External/Microsoft DirectX SDK(201006)/Lib/x64/dxgidebug.dll", nullptr, 0);
+	const auto modDxgiDebug = LoadLibraryEx("dxgidebug.dll", nullptr, 0);
 
 	// 라이브러리를 성공적으로 가져왔는지 확인
 	if (modDxgiDebug == nullptr)

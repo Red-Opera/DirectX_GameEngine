@@ -1829,19 +1829,7 @@
     <ClCompile Include="Core\DX3DApp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-1_BasicKnowledge.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Utility\GameTimer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter5_RenderingPipeline\T5-1_3DLllusion.cpp">
@@ -2295,6 +2283,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Core\Exception\Base\Require.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-1_BasicKnowledge.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-2_DirectXInitialization.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-3_TimingAndAnimation.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

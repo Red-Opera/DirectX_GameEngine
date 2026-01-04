@@ -1,6 +1,5 @@
 ﻿#include "stdafx.h"
 #include "DxGraphic.h"
-#include "dxerr.h"
 #include "dxgi.h"
 
 #include "Core/Window.h"
@@ -75,14 +74,23 @@ HRESULT DxGraphic::HRException::GetErrorCode() const noexcept
 
 string DxGraphic::HRException::GetExptionContent() const noexcept
 {
-    return DXGetErrorString(hr);
+    _com_error err(hr);
+    return "HRESULT Error : " + string(err.ErrorMessage());
 }
 
 string DxGraphic::HRException::GetErrorDescription() const noexcept
 {
-    string errorMessage = DXGetErrorDescription(hr);
+	_com_error err(hr);
 
-    return errorMessage;
+#ifdef UNICODE
+    // 유니코드 환경일 경우를 대비한 변환 (일반적인 프로젝트 설정)
+	_bst_r bstr(err.ErrorMessage());
+
+	return string((const char*)bstr);
+
+#else
+	return string(err.ErrorMessage());
+#endif // UNICODE
 }
 
 string DxGraphic::HRException::GetErrorInfo() const noexcept
@@ -286,7 +294,8 @@ void DxGraphic::CreateSwapChain()
     GRAPHIC_FAILED(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
 
     // swapChain 생성
-    GRAPHIC_FAILED(dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain));
+    //HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
+    GRAPHIC_THROW_INFO(dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain));
 
     ReleaseCOM(dxgiDevice);
     ReleaseCOM(dxgiAdapter);
@@ -423,10 +432,9 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     ID3D10Blob* compiledShader = 0;
     ID3D10Blob* errorMessage = 0;
 
-    hr = D3DX11CompileFromFileA("Shader/ColorShader.hlsl", nullptr, nullptr, "VS", "vs_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+    hr = D3DCompileFromFile(L"Shader/ColorShader.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
 
-    if (FAILED(hr))
-        DXTrace(__FILE__, (DWORD)__LINE__, hr, "D3DX11CompileFromFile", true);
+	Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "버텍스 셰이더 컴파일 실패");
 
     if (errorMessage != 0)
     {
@@ -492,7 +500,7 @@ void DxGraphic::DrawTestTriangle(float angle, float x, float z)
     compiledShader = 0;
     errorMessage = 0;
 
-    hr = D3DX11CompileFromFileA("Shader/ColorShader.hlsl", nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+    hr = D3DCompileFromFile(L"Shader/ColorShader.hlsl", nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
 	Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "픽셀 셰이더 컴파일 실패");
 
     if (errorMessage != 0)

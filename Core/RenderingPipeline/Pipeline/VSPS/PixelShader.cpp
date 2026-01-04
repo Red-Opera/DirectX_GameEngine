@@ -110,7 +110,7 @@ namespace Graphic
             ID3D10Blob* compiledShader = 0;
             ID3D10Blob* errorMessage = 0;
 
-            hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+            hr = D3DCompileFromFile(StringConverter::ToWString(path).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
 
 			string errorMsg;
 
@@ -140,8 +140,8 @@ namespace Graphic
         // 원본 셰이더 파일 경로 확인
         std::wstring originalShaderPath = shaderPath;
 
-        if (!fileSystem::exists(originalShaderPath))
-            DXTraceW(__FILE__, (DWORD)__LINE__, S_FALSE, L"Shader 파일이 존재하지 않음", true);
+        bool isShaderCode = fileSystem::exists(originalShaderPath);
+        Require::Check(isShaderCode, ErrorCode::GRAPHICS_ShaderLoadSaveFailed, "Shader 파일이 존재하지 않음");
 
         // 마지막 수정 시간을 초 단위로 가져옴
         auto lastWriteTime = fileSystem::last_write_time(originalShaderPath);
