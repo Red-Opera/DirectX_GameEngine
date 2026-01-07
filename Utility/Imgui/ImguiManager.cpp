@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "ImguiManager.h"
+#include "Core/Window.h"
 
 #include "External/Imgui/imgui.h"
 #include "External/Imgui/imgui_impl_dx11.h"
@@ -21,6 +22,13 @@ ImguiManager::ImguiManager()
 
 ImguiManager::~ImguiManager()
 {
-	ImGui_ImplDX11_Shutdown();
+	// Win32 백엔드가 초기화된 경우에만 Shutdown 호출
+	if (Window::WindowClass::HasWindow())
+		ImGui_ImplWin32_Shutdown();
+
+	// DX11 백엔드가 초기화된 경우에만 Shutdown 호출
+	if (Window::HasDxGraphic())
+		ImGui_ImplDX11_Shutdown();
+	
 	ImGui::DestroyContext();
 }

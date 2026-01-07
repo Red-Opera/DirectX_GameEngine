@@ -9,6 +9,7 @@
 
 #include "External/Imgui/imgui_impl_dx11.h"
 #include "External/Imgui/imgui_impl_win32.h"
+#include "Utility/Imgui/ImguiManager.h"
 
 #include <array>
 using namespace std;
@@ -31,6 +32,13 @@ DxGraphic::HRException::HRException(int line, const char* file, HRESULT hr, cons
 {
     if (infoMessage)
         info = infoMessage;
+}
+
+DxGraphic::HRException::HRException(int line, std::string file, HRESULT hr, const std::string infoMessage) noexcept 
+	: Exception(line, file), hr(hr)
+{
+    if (!infoMessage.empty())
+		info = infoMessage;
 }
 
 DxGraphic::HRException::HRException(int line, string file, HRESULT hr, vector<string> infoMessage) noexcept :
@@ -203,13 +211,18 @@ HRESULT DxGraphic::CreateDevice()
 	D3D_FEATURE_LEVEL featureLevel;
 	UINT createDeviceFlags = 0;
 
+#ifndef NDEBUG
+	// Debug 모드에서 디버그 레이어 활성화
+	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
     // Device를 생성함
     HRESULT hr = D3D11CreateDevice(
         0,
         D3D_DRIVER_TYPE_HARDWARE,   // GPU 하드웨어 가속으로 실행함 (D3D_DRIVER_TYPE_HARDWARE)
         0,
         createDeviceFlags,
-        0, 0,                       // 기본 기능 수준 배열 (D3D_FEATURE_LEVEL_11_0로만 사용)
+        0, 0,                       // 기본 기능 수준 배열 (D3D_FEATURE_LEVEL_11_0으로만 사용)
         D3D11_SDK_VERSION,
         &device,
         &featureLevel,
@@ -293,9 +306,30 @@ void DxGraphic::CreateSwapChain()
     IDXGIFactory* dxgiFactory = nullptr;
     GRAPHIC_FAILED(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
 
+    // 디버그 정보 수집 시작
+#ifdef _DEBUG
+    infoManager.Set();
+#endif
+
     // swapChain 생성
-    //HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
-    GRAPHIC_THROW_INFO(dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain));
+    HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
+
+#ifndef NDEBUG
+    // 실패 시 디버그 메시지와 함께 예외 발생
+    if (FAILED(hr))
+    {
+        const std::string messages = infoManager.GetMessages();
+        
+        ReleaseCOM(dxgiDevice);
+        ReleaseCOM(dxgiAdapter);
+        ReleaseCOM(dxgiFactory);
+        
+        throw DxGraphic::HRException(__LINE__, __FILE__, hr, messages);
+    }
+#else
+    // Release 모드에서는 일반 예외만 발생
+    GRAPHIC_FAILED(hr);
+#endif
 
     ReleaseCOM(dxgiDevice);
     ReleaseCOM(dxgiAdapter);
@@ -584,6 +618,13 @@ DxGraphic::InfoException::InfoException(int line, const char* file, const char* 
 {
     if (infoMessage)
         info = infoMessage;
+}
+
+DxGraphic::InfoException::InfoException(int line, std::string file, const std::string infoMessage) 
+    : Exception(line, file)
+{
+    if (!infoMessage.empty())
+		info = infoMessage;
 }
 
 DxGraphic::InfoException::InfoException(int line, string file, vector<string> infoMessage)

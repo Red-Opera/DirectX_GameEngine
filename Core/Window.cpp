@@ -3,6 +3,7 @@
 
 #include "Core/WindowResources/icon/resource.h"
 #include "External/Imgui/imgui_impl_win32.h"
+#include "Utility/Imgui/ImguiManager.h"
 
 #include <iomanip>
 
@@ -122,6 +123,11 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 	return windowClass.hInstance;
 }
 
+bool Window::WindowClass::HasWindow() noexcept
+{
+	return GetInstance() != nullptr;
+}
+
 Window::Window(int width, int height, const char* name) : width(width), height(height)
 {
 	RECT rect { };
@@ -168,7 +174,11 @@ Window::Window(int width, int height, const char* name) : width(width), height(h
 
 Window::~Window()
 {
-	ImGui_ImplWin32_Shutdown();
+	// Win32 백엔드가 초기화된 경우에만 Shutdown 호출
+	// ImguiManager 소멸자에서도 호출되므로 플래그를 초기화
+	if (WindowClass::HasWindow())
+		ImGui_ImplWin32_Shutdown();
+	
 	DestroyWindow(hWnd);
 }
 
@@ -234,6 +244,11 @@ DxGraphic& Window::GetDxGraphic()
 	return *graphic;
 }
 
+bool Window::HasDxGraphic() noexcept
+{
+	return graphic != nullptr;
+}
+
 void Window::ConfineCursor() noexcept
 {
 	RECT rect;
@@ -263,32 +278,40 @@ void Window::HideCursor() noexcept
 
 void Window::EnableImGuiMouse() noexcept
 {
-	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+	// ImGui Context가 유효한지 확인
+	if (ImGui::GetCurrentContext() != nullptr)
+		ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
 }
 
 void Window::DisableImGuiMouse() noexcept
 {
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+	// ImGui Context가 유효한지 확인
+	if (ImGui::GetCurrentContext() != nullptr)
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 }
 
 void Window::ShowGameFrame(HWND hWnd) noexcept  
-{  
-   float frameTime = 1000.0f / ImGui::GetIO().Framerate;  
-   float fps = ImGui::GetIO().Framerate;  
+{
+	// ImGui Context가 유효한지 확인
+	if (ImGui::GetCurrentContext() == nullptr)
+		return;
 
-   std::stringstream ss;  
-   ss << std::fixed << std::setprecision(1) << frameTime << " ms / frame (" << fps << " FPS)";  
+	float frameTime = 1000.0f / ImGui::GetIO().Framerate;  
+	float fps = ImGui::GetIO().Framerate;  
 
-   // 오른쪽 정렬을 위해 공백 추가  
-   std::string title = ss.str();  
-   int padding = 50 - (int)title.length(); // 원하는 길이에서 제목 길이를 뺀 값  
+	std::stringstream ss;  
+	ss << std::fixed << std::setprecision(1) << frameTime << " ms / frame (" << fps << " FPS)";  
 
-   if (padding > 0)  
-       title.insert(0, padding, ' ');  
+	// 오른쪽 정렬을 위해 공백 추가  
+	std::string title = ss.str();  
+	int padding = 50 - (int)title.length(); // 원하는 길이에서 제목 길이를 뺀 값  
 
-   title.insert(0, std::string(WindowClass::GetName()) + " (Scene Name : " + currentSceneName + ")");
+	if (padding > 0)  
+		title.insert(0, padding, ' ');  
 
-   SetTitle(hWnd, title);
+	title.insert(0, std::string(WindowClass::GetName()) + " (Scene Name : " + currentSceneName + ")");
+
+	SetTitle(hWnd, title);
 }
 
 LRESULT Window::WndMessageSetting(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
@@ -322,10 +345,13 @@ LRESULT Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 #include "Scene/Base/Scene.h"
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
-	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+	// ImGui Context가 유효한지 먼저 확인
+	if (ImGui::GetCurrentContext() != nullptr && ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 		return true;
 
-	const auto imGuiIO = ImGui::GetIO();
+	// ImGui Context가 없으면 기본 IO 대신 안전하게 처리
+	const bool imGuiValid = (ImGui::GetCurrentContext() != nullptr);
+	const auto imGuiIO = imGuiValid ? ImGui::GetIO() : ImGuiIO{};
 
 	switch (msg)
 	{
@@ -362,7 +388,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 	case WM_SYSKEYDOWN:
 	case WM_KEYDOWN:
 		// ImGui에서 캡션에 키보드로 입력하고 있을 때는 키보드 처리를 안함
-		if (imGuiIO.WantCaptureKeyboard)
+		if (imGuiValid && imGuiIO.WantCaptureKeyboard)
 			break;
 
 		// 이전에 키보드를 누른적이 없거나 지속적으로 눌렸을 때 키누르는 것을 인정할 경우
@@ -372,14 +398,14 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_SYSKEYUP:
 	case WM_KEYUP:
-		if (imGuiIO.WantCaptureKeyboard)
+		if (imGuiValid && imGuiIO.WantCaptureKeyboard)
 			break;
 
 		keyBoard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 
 	case WM_CHAR:
-		if (imGuiIO.WantCaptureKeyboard)
+		if (imGuiValid && imGuiIO.WantCaptureKeyboard)
 			break;
 
 		keyBoard.OnChar(static_cast<unsigned char>(wParam));
@@ -405,7 +431,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 		}
 
 		// ImGui에 마우스를 이동시킬 때 처리 안함
-		if (imGuiIO.WantCaptureMouse)
+		if (imGuiValid && imGuiIO.WantCaptureMouse)
 			break;
 
 		// 마우스가 클라이언트 창 안에 있을 경우
@@ -449,7 +475,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 			HideCursor();
 		}
 
-		if (imGuiIO.WantCaptureMouse)
+		if (imGuiValid && imGuiIO.WantCaptureMouse)
 			break;
 
 		const POINTS point = MAKEPOINTS(lParam);
@@ -464,7 +490,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_RBUTTONDOWN:
 	{
-		if (imGuiIO.WantCaptureMouse)
+		if (imGuiValid && imGuiIO.WantCaptureMouse)
 			break;
 
 		const POINTS point = MAKEPOINTS(lParam);
@@ -475,7 +501,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_LBUTTONUP:
 	{
-		if (imGuiIO.WantCaptureMouse)
+		if (imGuiValid && imGuiIO.WantCaptureMouse)
 			break;
 
 		const POINTS point = MAKEPOINTS(lParam);
@@ -492,7 +518,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_RBUTTONUP:
 	{
-		if (imGuiIO.WantCaptureMouse)
+		if (imGuiValid && imGuiIO.WantCaptureMouse)
 			break;
 
 		const POINTS point = MAKEPOINTS(lParam);
@@ -509,7 +535,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
 	case WM_MOUSEWHEEL:
 	{
-		if (imGuiIO.WantCaptureMouse)
+		if (imGuiValid && imGuiIO.WantCaptureMouse)
 			break;
 
 		const POINTS point = MAKEPOINTS(lParam);

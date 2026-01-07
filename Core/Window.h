@@ -52,6 +52,28 @@ public:
 		const char* GetType() const noexcept override;
 	};
 
+	// Window 창은 한개이기 때문에 싱글톤으로 작성
+	class WindowClass
+	{
+	public:
+		static const char* GetName() noexcept;
+		static HINSTANCE GetInstance() noexcept;
+		static bool HasWindow() noexcept;
+
+	private:
+		WindowClass() noexcept;
+		~WindowClass();
+
+		// 복사 대입 금지
+		WindowClass(const WindowClass&) = delete;
+		WindowClass& operator=(const WindowClass&) = delete;
+
+		static constexpr const char* windowClassName = "DirectX 3D Game";
+		static WindowClass windowClass;
+
+		HINSTANCE hInstance;
+	};
+
 	// =================================
 	//	Class Method
 	// =================================
@@ -81,6 +103,7 @@ public:
 
 	static void SetDxGraphic(std::unique_ptr<DxGraphic> graphic);	// 그래픽 관련 클래스를 설정하는 메소드
 	static DxGraphic& GetDxGraphic();								// 그래픽 관련 클래스를 얻는 메소드
+	static bool HasDxGraphic() noexcept;							// 그래픽 관련 클래스가 존재하는지 여부를 반환하는 메소드
 	HWND GetHWnd() const { return hWnd; }
 
 	// =================================
@@ -91,30 +114,6 @@ public:
 	Mouse mouse;		// 마우스 클래스
 
 private:
-	// =================================
-	//	Inner Class
-	// =================================
-
-	// Window 창은 한개이기 때문에 싱글톤으로 작성
-	class WindowClass
-	{
-	public:
-		static const char* GetName() noexcept;
-		static HINSTANCE GetInstance() noexcept;
-
-	private:
-		WindowClass() noexcept;
-		~WindowClass();
-
-		// 복사 대입 금지
-		WindowClass(const WindowClass&) = delete;
-		WindowClass& operator=(const WindowClass&) = delete;
-
-		static constexpr const char* windowClassName = "DirectX 3D Game";
-		static WindowClass windowClass;
-		
-		HINSTANCE hInstance;
-	};
 
 	// =================================
 	//	Class Method
