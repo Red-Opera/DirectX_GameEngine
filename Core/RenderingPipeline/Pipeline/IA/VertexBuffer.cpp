@@ -33,9 +33,7 @@ namespace Graphic
 	{
 		const UINT offset = 0;
 
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset); }, ErrorCode::GRAPHICS_BindFailed, "버텍스 버퍼를 입력 어셈블러에 바인딩 실패");
 	}
 
     const VertexCore::VertexLayout& VertexBuffer::GetVertexLayout() const noexcept

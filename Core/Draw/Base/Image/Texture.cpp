@@ -87,9 +87,7 @@ namespace Graphic
 
     void Texture::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "Texture 셰이더 리소스 뷰를 픽셀 셰이더에 바인딩 실패");
     }
 
     std::shared_ptr<Texture> Texture::GetRender(const std::string& path, UINT slot)

@@ -27,9 +27,7 @@ namespace Graphic
 
     void PixelShader::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShader(pixelShader.Get(), nullptr, 0));
+        Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShader(pixelShader.Get(), nullptr, 0); }, ErrorCode::GRAPHICS_BindFailed, "픽셀 셰이더를 픽셀 셰이더 단계에 바인딩 실패 : " + path);
     }
 
     std::shared_ptr<PixelShader> PixelShader::GetRender(const std::string& path)

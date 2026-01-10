@@ -28,9 +28,7 @@ namespace Graphic
 
 	void InputLayout::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetInputLayout(inputLayout.Get()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->IASetInputLayout(inputLayout.Get()); }, ErrorCode::GRAPHICS_BindFailed, "입력 레이아웃을 입력 어셈블러에 바인딩 실패");
 	}
 
 	std::shared_ptr<InputLayout> InputLayout::GetRender(const VertexCore::VertexLayout& vertexLayout, const VertexShader& vertexShader)

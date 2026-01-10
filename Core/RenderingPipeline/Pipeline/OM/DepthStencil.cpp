@@ -113,8 +113,6 @@ namespace Graphic
 
     std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> DepthStencil::CreateStaging() const
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDESC{ };
         depthStencilView->GetDesc(&depthStencilViewDESC);           // 현재 깊이 스텐실 뷰의 설명서를 가져옴
 
@@ -136,27 +134,21 @@ namespace Graphic
 
         // CPU가 읽을 수 있는 임시 텍스처 생성
         Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
-        hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
 		Require::Check(hr, ErrorCode::GRAPHICS_GetBufferFailed, "해당 설정으로 임시 텍스처 생성 실패");
 
         if (depthStencilViewDESC.ViewDimension == D3D11_DSV_DIMENSION::D3D11_DSV_DIMENSION_TEXTURE2DARRAY)
-        {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), depthStencilViewDESC.Texture2DArray.FirstArraySlice, nullptr));
-        }
+            Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), depthStencilViewDESC.Texture2DArray.FirstArraySlice, nullptr); }, ErrorCode::GRAPHICS_CopyResourceFailed, "깊이 스텐실 버퍼를 임시 텍스처로 복사하는데 실패");
 
         else
-        {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()));
-        }
+            Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()); }, ErrorCode::GRAPHICS_CopyResourceFailed, "깊이 스텐실 버퍼를 임시 텍스처로 복사하는데 실패");
         
         return { std::move(textureTemp), textureDESC };
     }
 
     void DepthStencil::RenderAsBuffer() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetRenderTargets(0, nullptr, depthStencilView.Get()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->OMSetRenderTargets(0, nullptr, depthStencilView.Get()); }, ErrorCode::GRAPHICS_BindFailed, "깊이 스텐실 버퍼를 단독으로 렌더 타겟으로 설정하는데 실패");
     }
 
     void DepthStencil::RenderAsBuffer(BufferResource* bufferResource) NOEXCEPTRELEASE
@@ -238,9 +230,7 @@ namespace Graphic
             }
         }
 
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0); }, ErrorCode::GRAPHICS_MapUnmapFailed, "깊이 스텐실 버퍼의 맵핑을 해제하는데 실패");
 
         return image;
     }
@@ -273,9 +263,7 @@ namespace Graphic
                 arr.push_back(row[x]);
         }
 
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0); }, ErrorCode::GRAPHICS_MapUnmapFailed, "깊이 스텐실 버퍼의 맵핑을 해제하는데 실패");
 
         std::vector<size_t> shape = { static_cast<size_t>(height), static_cast<size_t>(width) };
 
@@ -321,9 +309,8 @@ namespace Graphic
 
     void ShaderInputDepthStencil::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, shaderResourceView.GetAddressOf()));
+        Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, shaderResourceView.GetAddressOf());
+			}, ErrorCode::GRAPHICS_BindFailed, "셰이더 입력용 깊이 스텐실을 렌더 파이프라인에 설정하는데 실패");
     }
 
     OutputOnlyDepthStencil::OutputOnlyDepthStencil()

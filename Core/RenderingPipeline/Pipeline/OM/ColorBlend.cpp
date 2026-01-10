@@ -79,11 +79,10 @@ namespace Graphic
 
 	void ColorBlend::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
 		const float* transparencyDatas = transparency ? transparency->data() : nullptr;
 
 		// 블렌딩 상태를 렌더링 파이프 라인에 입력
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetBlendState(blendState.Get(), transparencyDatas, 0xffffffffu));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->OMSetBlendState(blendState.Get(), transparencyDatas, 0xffffffffu); }, ErrorCode::GRAPHICS_BindFailed,
+			"블렌드 상태를 렌더링 파이프라인에 설정하는데 실패했습니다.");
 	}
 }

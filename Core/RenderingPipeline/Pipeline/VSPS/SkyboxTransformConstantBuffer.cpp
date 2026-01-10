@@ -12,9 +12,7 @@ namespace Graphic
 
 	void SkyboxTransformConstantBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(UpdateRender(GetTransform()));
+		Require::Check([&]() { UpdateRender(GetTransform()); }, ErrorCode::GRAPHICS_BindFailed, "스카이박스 변환 행렬 상수 버퍼를 버텍스 셰이더 파이프라인에 바인딩 실패");
 	}
 
 	void SkyboxTransformConstantBuffer::UpdateRender(const Transform& transform) NOEXCEPTRELEASE

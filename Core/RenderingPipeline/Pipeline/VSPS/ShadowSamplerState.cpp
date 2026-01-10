@@ -40,9 +40,7 @@ namespace Graphic
 
 	void ShadowSamplerState::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(GetCurrentSlot(), 1, samplers[currentSampler].GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(GetCurrentSlot(), 1, samplers[currentSampler].GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "그림자 샘플러 상태를 픽셀 셰이더에 바인딩 실패");
 	}
 
 	UINT ShadowSamplerState::GetCurrentSlot() const

@@ -59,9 +59,7 @@ namespace Graphic
 
 	void TextureCube::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-		
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "TextureCube 셰이더 리소스 뷰를 픽셀 셰이더에 바인딩 실패 : " + path);
 	}
 
 	DepthTextureCube::DepthTextureCube(UINT size, UINT slot)
@@ -107,9 +105,7 @@ namespace Graphic
 
 	void DepthTextureCube::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "DepthTextureCube 셰이더 리소스 뷰를 픽셀 셰이더에 바인딩 실패");
 	}
 
 	RenderTargetTextureCube::RenderTargetTextureCube(UINT width, UINT height, UINT slot, DXGI_FORMAT format)
@@ -156,8 +152,6 @@ namespace Graphic
 
 	void RenderTargetTextureCube::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "RenderTargetTextureCube 셰이더 리소스 뷰를 픽셀 셰이더에 바인딩 실패");
 	}
 }

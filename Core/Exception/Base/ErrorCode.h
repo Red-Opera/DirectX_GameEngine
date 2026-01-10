@@ -17,7 +17,10 @@ enum class ErrorCode : unsigned int
 	WINAPI_HandleInvalid,
 
 	// 그래픽스 관련 오류
+	GRAPHICS_ClearResourceFailed,
+	GRAPHICS_CopyResourceFailed,
 	GRAPHICS_DeviceInvalid,
+	GRAPHICS_DrawCallFailed,
 	GRAPHICS_BufferCreateFailed,
 	GRAPHICS_GetBufferFailed,
 	GRAPHICS_BindFailed,
@@ -53,7 +56,10 @@ constexpr std::array<const char*, static_cast<size_t>(ErrorCode::Count)> errorCo
 	"창 접근 변수 오류",
 
 	// 그래픽스 관련 오류
+	"그래픽스 리소스 초기화 실패",
+	"그래픽스 리소스 복사 실패",
 	"그래픽스 Device가 유효하지 않음",
+	"그래픽스 드로우 호출 실패",
 	"그래픽스 버퍼 생성 실패",
 	"그래픽스 버퍼 가져오기 실패",
 	"그래픽스 데이터 파이프라인 결합 실패",

@@ -46,10 +46,8 @@ namespace Graphic
 
     void VertexShader::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
         // Vertex Shader 단계를 렌더링 파이프라인 단계에 묶음
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetShader(vertexShader.Get(), nullptr, 0));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->VSSetShader(vertexShader.Get(), nullptr, 0); }, ErrorCode::GRAPHICS_BindFailed, "버텍스 셰이더를 버텍스 셰이더 단계에 바인딩 실패 : " + path);
     }
 
     std::shared_ptr<VertexShader> VertexShader::GetRender(const std::string& path)

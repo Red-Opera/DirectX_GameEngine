@@ -95,7 +95,6 @@ public:
 	DxGraphic(const DxGraphic&) = delete;
 	DxGraphic& operator=(const DxGraphic&) = delete;
 
-	void DrawTestTriangle(float angle, float x, float z);
 	void DrawIndexed(UINT count) NOEXCEPTRELEASE;
 
 	// Get Method

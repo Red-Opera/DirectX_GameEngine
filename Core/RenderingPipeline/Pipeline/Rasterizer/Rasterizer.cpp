@@ -36,9 +36,7 @@ namespace Graphic
 
 	void Rasterizer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
 		// 레스터화기 상태를 렌더링 파이프 라인에 입력
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()); }, ErrorCode::GRAPHICS_BindFailed, "레스터화기 상태를 렌더링 파이프라인에 설정하는데 실패했습니다.");
 	}
 }

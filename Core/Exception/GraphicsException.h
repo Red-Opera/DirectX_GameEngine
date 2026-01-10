@@ -7,7 +7,6 @@
 
 #ifndef NDEBUG
 #define GRAPHIC_EXCEPT(hr) DxGraphic::HRException{ __LINE__, __FILE__, (hr), infoManager.GetMessages() }
-#define GRAPHIC_THROW_INFO(hr) infoManager.Set(); if (FAILED(hr)) throw GRAPHIC_EXCEPT_INFO(hr)
 #define GRAPHIC_REMOVE_EXCEPT(hr) DxGraphic::RemoveException{ __LINE__, __FILE__, (hr), infoManager.GetMessages() }
 #define GRAPHIC_THROW_INFO_ONLY(hr) infoManager.Set(); (hr); { auto v = infoManager.GetMessages(); if(v[0] != '\0') { throw DxGraphic::InfoException{ __LINE__, __FILE__, v }; } }
 

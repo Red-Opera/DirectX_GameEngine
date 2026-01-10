@@ -12,9 +12,7 @@ namespace Graphic
 
 	void PrimitiveTopology::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetPrimitiveTopology(topology));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->IASetPrimitiveTopology(topology); }, ErrorCode::GRAPHICS_BindFailed, "프리미티브 토폴로지를 입력 어셈블러에 바인딩 실패");
 	}
 
 	std::shared_ptr<PrimitiveTopology> PrimitiveTopology::GetRender(D3D11_PRIMITIVE_TOPOLOGY topology)

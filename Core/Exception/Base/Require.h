@@ -43,7 +43,7 @@ public:
 
 	// DXGI 및 D3D11 디버그 메시지 검사 및 에러 처리
 	template<typename Func>
-	static void Check(Func&& func, ErrorCode errorCode, const std::string& message, const std::source_location location = std::source_location::current());
+	__forceinline static void Check(Func&& func, ErrorCode errorCode, const std::string& message, const std::source_location& location = std::source_location::current());
 
 private:
 	Require();
@@ -51,8 +51,9 @@ private:
 };
 
 template<typename Func>
-inline void Require::Check(Func&& func, ErrorCode errorCode, const std::string& message, const std::source_location location)
+__forceinline void Require::Check(Func&& func, ErrorCode errorCode, const std::string& message, const std::source_location& location)
 {
+#ifndef NDEBUG
 	ExceptionInfo& infoManager = ExceptionInfo::GetCurrent();
 
 	infoManager.Set();
@@ -61,8 +62,9 @@ inline void Require::Check(Func&& func, ErrorCode errorCode, const std::string& 
 
 	const char* errorMessage = infoManager.GetMessages();
 
-	if (errorMessage == nullptr || strlen(errorMessage) == 0)
-		return;
-
-	Check(false, errorCode, errorMessage, location);
+	if (errorMessage != nullptr && errorMessage[0] != '\0')
+		Check(false, errorCode, errorMessage, location);
+#else
+	std::forward<Func>(func)(); // Release 모드에서는 함수만 실행
+#endif
 }

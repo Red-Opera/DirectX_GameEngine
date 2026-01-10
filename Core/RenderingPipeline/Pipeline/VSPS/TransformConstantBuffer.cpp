@@ -18,9 +18,7 @@ namespace Graphic
 
 	void TransformConstantBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(UpdateSetRenderPipeline(GetTransform()));
+		Require::Check([&]() { UpdateSetRenderPipeline(GetTransform()); }, ErrorCode::GRAPHICS_BindFailed, "변환 행렬 상수 버퍼를 버텍스 셰이더 파이프라인에 바인딩 실패");
 	}
 
 	void TransformConstantBuffer::UpdateSetRenderPipeline(const Transform& transform) NOEXCEPTRELEASE

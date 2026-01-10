@@ -44,8 +44,6 @@ namespace Graphic
 
 	void ShadowRasterizer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()); }, ErrorCode::GRAPHICS_BindFailed, "그림자 레스터화기 상태를 렌더링 파이프라인에 설정하는데 실패했습니다.");
 	}
 }

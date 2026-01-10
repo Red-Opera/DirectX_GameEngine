@@ -33,9 +33,7 @@ namespace Graphic
 
 	void IndexBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0); }, ErrorCode::GRAPHICS_BindFailed, "인덱스 버퍼를 입력 어셈블러에 바인딩 실패");
 	}
 
 	UINT IndexBuffer::GetIndexCount() const noexcept

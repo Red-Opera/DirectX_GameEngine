@@ -87,9 +87,7 @@ namespace Graphic
         // 버텍스 셰이더 파이프라인에 상수 버퍼를 바인딩
         void SetRenderPipeline() NOEXCEPTRELEASE override
         {
-            CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "버텍스 셰이더에 상수 버퍼 바인딩 실패");
         }
 
         // 초기 데이터와 함께 버텍스 상수 버퍼를 생성하거나 기존 객체 반환
@@ -134,9 +132,7 @@ namespace Graphic
         // 픽셀 셰이더 파이프라인에 상수 버퍼를 바인딩
         void SetRenderPipeline() NOEXCEPTRELEASE override
         {
-            CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "픽셀 셰이더에 상수 버퍼 바인딩 실패");
         }
 
         // 초기 데이터와 함께 픽셀 상수 버퍼를 생성하거나 기존 객체 반환

@@ -44,10 +44,8 @@ namespace Graphic
 
 	void SamplerState::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
 		// SamplerState를 렌더링 파이프 라인에 입력
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(slot, 1, samplerState.GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(slot, 1, samplerState.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "샘플러 상태를 픽셀 셰이더에 바인딩 실패");
 	}
 
 	std::shared_ptr<SamplerState> SamplerState::GetRender(TextureFilter textureFilter, bool useReflect, UINT slot)
