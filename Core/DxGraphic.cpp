@@ -269,28 +269,18 @@ void DxGraphic::SwapChainSettings(HWND hWnd)
 
     DXGI_SAMPLE_DESC msaaDesc = { };
 
-    // MSAA를 사용할 경우
-    if (isMSAAUsage)
-    {
-        msaaDesc.Count = 4;                 // 4배로 확장 함
-        msaaDesc.Quality = msaaQuality - 1; // CheckMultisampleQualityLevels로 통해서 얻어온 결과 값
-    }
-
-    // MSAA를 사용하지 않을 경우
-    else
-    {
-        msaaDesc.Count = 1;
-        msaaDesc.Quality = 0;
-    }
+    // Flip-model은 MSAA를 지원하지 않음 (항상 1로 설정해야 함)
+    msaaDesc.Count = 1;
+    msaaDesc.Quality = 0;
 
     // 스왑 체인 설정
     swapChainDesc.SampleDesc = msaaDesc;
     swapChainDesc.BufferDesc = backBufferDesc;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;    // 후면 버퍼에 렌더하기 위해 값을 설정
-    swapChainDesc.BufferCount = 1;                                  // 더블 버퍼링을 하기 위해 1로
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;    // 후면 버퍼에 렌더하기 위해 값을 설정
+    swapChainDesc.BufferCount = 2;                                  // Flip-model은 최소 2개의 버퍼 필요
     swapChainDesc.OutputWindow = hWnd;                              // 출력할 창 설정
-    swapChainDesc.Windowed = true;                                 // 창 모드 여부 O
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;         // 새로운 프레임에 그림
+    swapChainDesc.Windowed = true;                                  // 창 모드 여부 O
+    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;       // 최신 Flip-model 사용 (성능 향상)
     swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;   // 화면이 바뀔 때 적절한 해상도로 설정
 }
 
@@ -306,30 +296,7 @@ void DxGraphic::CreateSwapChain()
     IDXGIFactory* dxgiFactory = nullptr;
     GRAPHIC_FAILED(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
 
-    // 디버그 정보 수집 시작
-#ifdef _DEBUG
-    infoManager.Set();
-#endif
-
-    // swapChain 생성
-    HRESULT hr = dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain);
-
-#ifndef NDEBUG
-    // 실패 시 디버그 메시지와 함께 예외 발생
-    if (FAILED(hr))
-    {
-        const std::string messages = infoManager.GetMessages();
-        
-        ReleaseCOM(dxgiDevice);
-        ReleaseCOM(dxgiAdapter);
-        ReleaseCOM(dxgiFactory);
-        
-        throw DxGraphic::HRException(__LINE__, __FILE__, hr, messages);
-    }
-#else
-    // Release 모드에서는 일반 예외만 발생
-    GRAPHIC_FAILED(hr);
-#endif
+	Require::Check([&] { dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain); }, ErrorCode::GRAPHICS_BufferCreateFailed, "스왑 체인 생성 실패");
 
     ReleaseCOM(dxgiDevice);
     ReleaseCOM(dxgiAdapter);
@@ -352,18 +319,6 @@ void DxGraphic::CreateRenderTargetView()
     viewport.TopLeftX = 0.0f;
     viewport.TopLeftY = 0.0f;
     deviceContext->RSSetViewports(1u, &viewport);
-
-	// 셰이더 리소스 뷰 생성 (출력된 결과를 GPU에서 텍스처로 사용하기 위해 필요)
-    D3D11_TEXTURE2D_DESC temp = { };
-    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    backBuffer.Get()->GetDesc(&temp);
-	srvDesc.Format = temp.Format;
-    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MostDetailedMip = 0;
-    srvDesc.Texture2D.MipLevels = 1;
-
-    hr = device->CreateShaderResourceView(backBuffer.Get(), &srvDesc, &shaderResourceView);
-	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "백 버퍼와 DESC 정보로 셰이더 리소스 뷰 생성 실패");
 }
 
 void DxGraphic::DrawTestTriangle(float angle, float x, float z)

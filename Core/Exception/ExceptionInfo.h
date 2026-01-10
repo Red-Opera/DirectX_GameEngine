@@ -16,6 +16,8 @@ public:
 	ExceptionInfo(const ExceptionInfo&) = delete;
 	ExceptionInfo& operator=(const ExceptionInfo&) = delete;
 
+	static ExceptionInfo& GetCurrent();
+
 	void Set() noexcept;
 	const char* GetMessages();
 
@@ -23,21 +25,21 @@ private:
 	// 메시지 정보를 저장하는 구조체
 	struct MessageInfo
 	{
-		DXGI_INFO_QUEUE_MESSAGE_SEVERITY severity;
-		const char* description;
-		size_t length;
+		DXGI_INFO_QUEUE_MESSAGE_SEVERITY severity;	// 메세지의 심각도
+		const char* description;					// 메세지 내용
+		size_t length;								// 메세지 길이
 	};
 
 	unsigned long long next = 0u;
 	Microsoft::WRL::ComPtr<IDXGIInfoQueue> infoQueue;
 	
-	// 메시지를 저장할 정적 버퍼 (최대 64KB)
-	static constexpr size_t MESSAGE_BUFFER_SIZE = 65536;
-	char messageBuffer[MESSAGE_BUFFER_SIZE];
+	// 메시지를 저장할 정적 버퍼 (최대 4KB)
+	static constexpr size_t maxLogLength = 4048;
+	char messageBuffer[maxLogLength];
 	
-	// 임시 메시지 저장 벡터 (정렬용)
-	static constexpr size_t MAX_MESSAGES = 100;
-	MessageInfo messageInfos[MAX_MESSAGES];
+	// DXGI가 반환할 수 있는 최대 메시지 수
+	static constexpr size_t maxMessageCount = 20;
+	MessageInfo messageInfos[maxMessageCount];
 	
 	// 캐싱된 메시지 (변경이 없으면 재사용)
 	unsigned long long lastEnd = 0u;

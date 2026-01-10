@@ -149,7 +149,6 @@ private:
 	ComPtr<ID3D11DeviceContext>		deviceContext;			// D3D11 Context
 	ComPtr<IDXGISwapChain>			swapChain;				// 페이지 전환을 위한 교환 사슬
 	ComPtr<ID3D11Texture2D>			depthStencilBuffer;		// 깊이 º 스텐실 버퍼를 위한 2차원 텍스처
-	ID3D11ShaderResourceView*	shaderResourceView;		// 렌더 대상용 2차원 텍스처
 	D3D11_VIEWPORT					viewport;				// 뷰포트
 
 	ComPtr<ID3D11Texture2D> backBuffer;

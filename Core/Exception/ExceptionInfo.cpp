@@ -28,6 +28,13 @@ ExceptionInfo::ExceptionInfo()
 	messageBuffer[0] = '\0';
 }
 
+ExceptionInfo& ExceptionInfo::GetCurrent()
+{
+	static ExceptionInfo instance;
+
+	return instance;
+}
+
 void ExceptionInfo::Set() noexcept
 {
 	// infoQueue가 초기화되지 않았으면 종료
@@ -112,14 +119,17 @@ const char* ExceptionInfo::GetMessages()
 	size_t messageCount = 0;
 	std::vector<std::unique_ptr<std::byte[]>> messageStorage; // 메시지 데이터 보관
 
-	for (auto i = next; i < end && messageCount < MAX_MESSAGES; i++)
+	for (auto i = next; i < end; i++)
 	{
+		// DXGI가 전달할 수 있는 최대 메시지 수 도달 시 종료
+		if (messageCount >= maxMessageCount)
+			break;
+
 		SIZE_T messageLength = 0;
 
 		// i번째 메시지의 길이 가져오기
 		HRESULT hr = infoQueue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &messageLength);
-		if (FAILED(hr))
-			continue;
+		Require::Check(hr, ErrorCode::CPP_NULLReference, "DXGI의 메시지 길이 조회에 실패했습니다.");
 
 		// 메시지를 저장할 버퍼 생성
 		auto bytes = make_unique<std::byte[]>(messageLength);
@@ -127,9 +137,7 @@ const char* ExceptionInfo::GetMessages()
 
 		// i번째 메시지 가져오기
 		hr = infoQueue->GetMessage(DXGI_DEBUG_ALL, i, pMessage, &messageLength);
-
-		if (FAILED(hr))
-			continue;
+		Require::Check(hr, ErrorCode::CPP_OutOfRange, "DXGI의 메시지 조회에 실패했습니다.");
 
 		// 메시지 정보 저장
 		messageInfos[messageCount].severity = pMessage->Severity;
@@ -159,13 +167,13 @@ const char* ExceptionInfo::GetMessages()
 		const size_t requiredSpace = severityLen + 1 + msgInfo.length + 2; // "[LEVEL]\nmessage\n"
 
 		// 버퍼 공간 확인 (마지막 null terminator 공간 확보)
-		if (bufferPos + requiredSpace + 1 >= MESSAGE_BUFFER_SIZE)
+		if (bufferPos + requiredSpace + 1 >= maxLogLength)
 		{
 			// 버퍼가 가득 찼으면 "..." 추가하고 종료
 			const char* truncated = "... (truncated)\n";
 			const size_t truncatedLen = strlen(truncated);
 			
-			if (bufferPos + truncatedLen + 1 < MESSAGE_BUFFER_SIZE)
+			if (bufferPos + truncatedLen + 1 < maxLogLength)
 			{
 				memcpy(messageBuffer + bufferPos, truncated, truncatedLen);
 				bufferPos += truncatedLen;
@@ -186,6 +194,7 @@ const char* ExceptionInfo::GetMessages()
 		messageBuffer[bufferPos] = '\n';
 		bufferPos++;
 
+		// 메시지 구분을 위한 빈 줄 추가
 		messageBuffer[bufferPos] = '\n';
 		bufferPos++;
 	}
