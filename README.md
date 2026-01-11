@@ -41,7 +41,7 @@
 ### 필수 요구 사항
 #### 1. **Windows 운영체제**
 
-* Windows 7 SP1 이상 권장
+* Windows 8.1 이상 권장
 
 #### 2. **Visual Studio 2022 (또는 이상 버전)**
 
