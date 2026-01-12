@@ -264,8 +264,6 @@ namespace Graphic
 
     void RenderTarget::CreateDumpy(const std::string& path) const
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         auto [textureTemp, textureDESC] = CreateStaging();
 
         const auto width = GetWidth();
@@ -275,7 +273,7 @@ namespace Graphic
         arr.reserve(width * height);
 
         D3D11_MAPPED_SUBRESOURCE mapped = { };
-        hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
+        HRESULT hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
         Require::Check(hr, ErrorCode::GRAPHICS_MapUnmapFailed, "더미 값으로 저장하기 위해 RenderTarget을 맵핑하는데 실패");
 
         auto bytes = static_cast<const char*>(mapped.pData);

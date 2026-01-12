@@ -22,13 +22,5 @@ ImguiManager::ImguiManager()
 
 ImguiManager::~ImguiManager()
 {
-	// Win32 백엔드가 초기화된 경우에만 Shutdown 호출
-	if (Window::WindowClass::HasWindow())
-		ImGui_ImplWin32_Shutdown();
 
-	// DX11 백엔드가 초기화된 경우에만 Shutdown 호출
-	if (Window::HasDxGraphic())
-		ImGui_ImplDX11_Shutdown();
-	
-	ImGui::DestroyContext();
 }

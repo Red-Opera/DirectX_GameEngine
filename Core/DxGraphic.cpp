@@ -165,14 +165,10 @@ void DxGraphic::EndFrame()
     if (FAILED(hr))
     {
         if (hr == DXGI_ERROR_DEVICE_REMOVED)
-        {
-            throw GRAPHIC_REMOVE_EXCEPT(device->GetDeviceRemovedReason());
-        }
+            Require::Check(hr, ErrorCode::RENDERGRAPH_DeviceInvalid, "Device가 제거됨 : " + device->GetDeviceRemovedReason());
 
         else
-        {
-            throw GRAPHIC_EXCEPT(hr);
-        }
+            Require::Check(hr, ErrorCode::GRAPHICS_ETC, "스왑 체인 프레젠트 실패함");
     }
 }
 
@@ -248,8 +244,11 @@ HRESULT DxGraphic::CreateDevice()
 
 void DxGraphic::CheckMSAAQuality()
 {
-    GRAPHIC_FAILED(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaaQuality)); // MSAA가 지원되는지 확인
-    assert(msaaQuality > 0);                                                                            // 지원할 경우 0보다 큰 값이 반환되어 성공함
+	HRESULT hr = device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &msaaQuality);    // MSAA가 지원되는지 확인
+	Require::Check(hr, ErrorCode::GRAPHICS_MSAAQualityCheckFailed, "MSAA 품질 레벨 확인 실패");
+
+    // 지원할 경우 0보다 큰 값이 반환되어 성공함
+	Require::Check(msaaQuality > 0, ErrorCode::GRAPHICS_MSAAQualityCheckFailed, "MSAA 품질 레벨이 0 이하로 설정되어 있음");
 }
 
 void DxGraphic::SwapChainSettings(HWND hWnd)
@@ -287,14 +286,20 @@ void DxGraphic::SwapChainSettings(HWND hWnd)
 void DxGraphic::CreateSwapChain()
 {
     IDXGIDevice* dxgiDevice = nullptr;
-    GRAPHIC_FAILED(device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice));
+    HRESULT hr = device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+
+	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "DXGI 디바이스 쿼리 실패");
 
     IDXGIAdapter* dxgiAdapter = nullptr;
-    GRAPHIC_FAILED(dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter));
+    hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter);
+
+	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "DXGI 어댑터 가져오기 실패");
 
     // CreateSwapChain을 사용하기 위한 변수 생성
     IDXGIFactory* dxgiFactory = nullptr;
-    GRAPHIC_FAILED(dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory));
+    hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+
+	Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "DXGI 팩토리 가져오기 실패");
 
 	Require::Check([&] { dxgiFactory->CreateSwapChain(device.Get(), &swapChainDesc, &swapChain); }, ErrorCode::GRAPHICS_BufferCreateFailed, "스왑 체인 생성 실패");
 

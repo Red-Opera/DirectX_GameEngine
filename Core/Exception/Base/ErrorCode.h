@@ -13,17 +13,18 @@ enum class ErrorCode : unsigned int
 
 	// WinAPI 관련 오류
 	WINAPI_WindowCreateFailed,
+	WINAPI_DriveInvalid,
 	WINAPI_DxGraphicInvalid,
 	WINAPI_HandleInvalid,
 
 	// 그래픽스 관련 오류
 	GRAPHICS_ClearResourceFailed,
 	GRAPHICS_CopyResourceFailed,
-	GRAPHICS_DeviceInvalid,
 	GRAPHICS_DrawCallFailed,
 	GRAPHICS_BufferCreateFailed,
 	GRAPHICS_GetBufferFailed,
 	GRAPHICS_BindFailed,
+	GRAPHICS_MSAAQualityCheckFailed,
 	GRAPHICS_ShaderCompileFailed,
 	GRAPHICS_ShaderLoadSaveFailed,
 	GRAPHICS_TextureLoadFailed,
@@ -31,6 +32,7 @@ enum class ErrorCode : unsigned int
 	GRAPHICS_ETC,
 
 	// 렌더 그래프 관련 오류
+	RENDERGRAPH_DeviceInvalid,
 	RENDERGRAPH_RenderTargetInvalid,
 	RENDERGRAPH_PipelineStateInvalid,
 	RENDERGRAPH_DataConsumerInvalid,
@@ -52,6 +54,7 @@ constexpr std::array<const char*, static_cast<size_t>(ErrorCode::Count)> errorCo
 
 	// WinAPI 관련 오류
 	"Window API 창 생성 실패",
+	"Device"
 	"그래픽스 API 접근 변수 유효하지 않음",
 	"창 접근 변수 오류",
 
@@ -63,6 +66,7 @@ constexpr std::array<const char*, static_cast<size_t>(ErrorCode::Count)> errorCo
 	"그래픽스 버퍼 생성 실패",
 	"그래픽스 버퍼 가져오기 실패",
 	"그래픽스 데이터 파이프라인 결합 실패",
+	"그래픽스 MSAA 품질 검사 실패",
 	"그래픽스 셰이더 컴파일 실패",
 	"그래픽스 셰이더 불러오기 실패",
 	"그래픽스 텍스처 로딩 실패",

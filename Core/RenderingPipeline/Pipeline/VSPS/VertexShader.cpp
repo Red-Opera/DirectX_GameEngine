@@ -14,8 +14,6 @@ namespace Graphic
 {
     VertexShader::VertexShader(const string& path) : path(path)
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         DWORD shaderFlags = 0;
 
 #if defined( DEBUG ) || defined( _DEBUG )
@@ -26,7 +24,7 @@ namespace Graphic
         ID3D10Blob* compiledShader = 0;
         ID3D10Blob* errorMessage = 0;
 
-        hr = D3DCompileFromFile(StringConverter::ToWString(path).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
+        HRESULT hr = D3DCompileFromFile(StringConverter::ToWString(path).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
 
 		string errorMsg;
 

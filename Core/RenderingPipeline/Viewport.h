@@ -29,8 +29,6 @@ namespace Graphic
 		// Render을(를) 통해 상속됨
 		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
-			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
 			GetDeviceContext(Window::GetDxGraphic())->RSSetViewports(1u, &viewport);
 		}
 
