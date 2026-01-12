@@ -27,9 +27,7 @@ namespace Graphic
 
     void PixelShader::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShader(pixelShader.Get(), nullptr, 0));
+        Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShader(pixelShader.Get(), nullptr, 0); }, ErrorCode::GRAPHICS_BindFailed, "픽셀 셰이더를 픽셀 셰이더 단계에 바인딩 실패 : " + path);
     }
 
     std::shared_ptr<PixelShader> PixelShader::GetRender(const std::string& path)
@@ -69,8 +67,6 @@ namespace Graphic
 
     void PixelShader::GetCompileShader(const std::string& path)
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         std::wstring widePath = StringConverter::ToWString(path);
         std::wstring tempPath = L"Temp/ShaderCompile/";
         std::wstring shaderFileName = StringConverter::ToWString(StringConverter::GetFileName(path));
@@ -91,13 +87,13 @@ namespace Graphic
         // 이전 버전의 같은 셰이더 캐시 파일 삭제
         CleanupOldShaderCaches(tempPath, shaderFileName);
 
-        hr = E_FAIL;
-
+		HRESULT hr = S_FALSE;
+        
         // 캐시 파일이 존재하면 로드
         if (fileSystem::exists(compiledShaderPath))
         {
             hr = LoadCacheShader(compiledShaderPath);
-            GRAPHIC_EXCEPT_INFO(hr);
+			Require::Check(hr, ErrorCode::GRAPHICS_ShaderLoadSaveFailed, "캐시된 Pixel Shader 파일 로드 실패");
         }
 
         if (hr != S_OK)
@@ -112,26 +108,26 @@ namespace Graphic
             ID3D10Blob* compiledShader = 0;
             ID3D10Blob* errorMessage = 0;
 
-            hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "PS", "ps_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+            hr = D3DCompileFromFile(StringConverter::ToWString(path).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
 
-            if (FAILED(hr))
-                DXTraceW(__FILE__, (DWORD)__LINE__, hr, L"Graphic HLSL 파일 컴파일 에러", true);
+			string errorMsg;
 
-            if (errorMessage != 0)
-            {
-                MessageBoxA(0, (char*)errorMessage->GetBufferPointer(), 0, 0);
-                ReleaseCOM(errorMessage);
-            }
+            if (errorMessage != nullptr)
+				errorMsg = string((char*)errorMessage->GetBufferPointer());
+
+			Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "Graphic Pixel Shader HLSL 파일 컴파일 실패 : " + errorMsg);
 
             hr = SaveCacheShader(compiledShaderPath);
-            GRAPHIC_THROW_INFO(hr);
+			Require::Check(hr, ErrorCode::GRAPHICS_ShaderLoadSaveFailed, "컴파일된 Pixel Shader 캐시 저장 실패");
         }
 
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreatePixelShader(
+        hr = GetDevice(Window::GetDxGraphic())->CreatePixelShader(
             shaderCode->GetBufferPointer(),
             shaderCode->GetBufferSize(),
             nullptr,
-            &pixelShader));
+            &pixelShader);
+
+		Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "Pixel Shader 생성 실패");
     }
 
     std::wstring Graphic::PixelShader::GetCacheFilePathWithTimestamp(const std::wstring& shaderPath, const std::wstring& basePath)
@@ -142,8 +138,8 @@ namespace Graphic
         // 원본 셰이더 파일 경로 확인
         std::wstring originalShaderPath = shaderPath;
 
-        if (!fileSystem::exists(originalShaderPath))
-            DXTraceW(__FILE__, (DWORD)__LINE__, S_FALSE, L"Shader 파일이 존재하지 않음", true);
+        bool isShaderCode = fileSystem::exists(originalShaderPath);
+        Require::Check(isShaderCode, ErrorCode::GRAPHICS_ShaderLoadSaveFailed, "Shader 파일이 존재하지 않음");
 
         // 마지막 수정 시간을 초 단위로 가져옴
         auto lastWriteTime = fileSystem::last_write_time(originalShaderPath);

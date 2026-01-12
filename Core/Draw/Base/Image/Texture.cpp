@@ -14,8 +14,6 @@ namespace Graphic
 {
     Texture::Texture(const std::string& path, UINT slot) : slot(slot), path(path)
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         GraphicResource::Image* image = nullptr;
 
         auto imageIter = imageCache.find(path);
@@ -67,7 +65,8 @@ namespace Graphic
 
         // D3D11_TEXTURE2D_DESC를 통해서 Texture2D를 생성함
         Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture));
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture);
+		Require::Check(hr, ErrorCode::GRAPHICS_TextureLoadFailed, "Texture 2D DESC로 Texture 2D 생성 실패");
 
 		// 머터리얼의 정보를 텍스처에 업데이트
 		GetDeviceContext(Window::GetDxGraphic())->UpdateSubresource(texture.Get(), 0u, nullptr, image->GetConst(), image->GetWidth() * sizeof(GraphicResource::Image::Color), 0u);
@@ -80,7 +79,7 @@ namespace Graphic
         viewDesc.Texture2D.MipLevels = -1;
 
         hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), &viewDesc, &textureView);
-        GRAPHIC_THROW_INFO(hr);
+		Require::Check(hr, ErrorCode::GRAPHICS_TextureLoadFailed, "Texture 2D를 DESC에 맞게 셰이더 리소스 뷰로 생성 실패");
 
 		// 밉맵 생성
 		GetDeviceContext(Window::GetDxGraphic())->GenerateMips(textureView.Get());
@@ -88,9 +87,7 @@ namespace Graphic
 
     void Texture::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1u, textureView.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "Texture 셰이더 리소스 뷰를 픽셀 셰이더에 바인딩 실패");
     }
 
     std::shared_ptr<Texture> Texture::GetRender(const std::string& path, UINT slot)

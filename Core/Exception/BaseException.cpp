@@ -11,6 +11,7 @@ BaseException::BaseException(int line, const char* file) noexcept
 BaseException::BaseException(int line, string file) noexcept
 	: line(line), file(file)
 {
+
 }
 
 const char* BaseException::what() const noexcept

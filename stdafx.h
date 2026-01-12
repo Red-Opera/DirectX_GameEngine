@@ -15,12 +15,11 @@
 #include <windowsx.h>
 
 // C 런타임 헤더 파일입니다.
+#include <assert.h>
+#include <comdef.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <d3d11.h>
-#include <d3dx11.h>
-#include <dxerr.h>
-#include <assert.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
@@ -29,6 +28,9 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+
+#include "Core/Exception/Base/ErrorCode.h"
+#include "Core/Exception/Base/Require.h"
 
 #include "Utility/GameTimer.h"
 #include "Utility/MathInfo.h"

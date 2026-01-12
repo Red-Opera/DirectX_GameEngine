@@ -14,8 +14,6 @@ namespace Graphic
 {
     VertexShader::VertexShader(const string& path) : path(path)
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         DWORD shaderFlags = 0;
 
 #if defined( DEBUG ) || defined( _DEBUG )
@@ -26,15 +24,17 @@ namespace Graphic
         ID3D10Blob* compiledShader = 0;
         ID3D10Blob* errorMessage = 0;
 
-        hr = D3DX11CompileFromFileW(StringConverter::ToWString(path).c_str(), nullptr, nullptr, "VS", "vs_5_0", shaderFlags, 0, 0, &shaderCode, &errorMessage, nullptr);
+        HRESULT hr = D3DCompileFromFile(StringConverter::ToWString(path).c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_0", shaderFlags, 0, &shaderCode, &errorMessage);
 
-        if (errorMessage != 0)
-        {
-            MessageBoxA(0, (char*)errorMessage->GetBufferPointer(), 0, 0);
-            ReleaseCOM(errorMessage);
-        }
+		string errorMsg;
 
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader));
+		if (errorMessage != nullptr)
+			errorMsg = string((char*)errorMessage->GetBufferPointer());
+
+		Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "Graphic Vertex Shader HLSL 파일 컴파일 실패 : " + errorMsg);
+
+        hr = GetDevice(Window::GetDxGraphic())->CreateVertexShader(shaderCode->GetBufferPointer(), shaderCode->GetBufferSize(), nullptr, &vertexShader);
+		Require::Check(hr, ErrorCode::GRAPHICS_ShaderCompileFailed, "버텍스 셰이더 생성 실패");
     }
 
     ID3DBlob* VertexShader::GetShaderCode() const noexcept
@@ -44,10 +44,8 @@ namespace Graphic
 
     void VertexShader::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
         // Vertex Shader 단계를 렌더링 파이프라인 단계에 묶음
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetShader(vertexShader.Get(), nullptr, 0));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->VSSetShader(vertexShader.Get(), nullptr, 0); }, ErrorCode::GRAPHICS_BindFailed, "버텍스 셰이더를 버텍스 셰이더 단계에 바인딩 실패 : " + path);
     }
 
     std::shared_ptr<VertexShader> VertexShader::GetRender(const std::string& path)

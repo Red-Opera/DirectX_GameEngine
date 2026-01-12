@@ -29,9 +29,7 @@ namespace Graphic
 
 	void NullPixelShader::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShader(nullptr, nullptr, 0u));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShader(nullptr, nullptr, 0u); }, ErrorCode::GRAPHICS_BindFailed, "널 픽셀 셰이더를 픽셀 셰이더 단계에 바인딩 실패");
 	}
 
 }

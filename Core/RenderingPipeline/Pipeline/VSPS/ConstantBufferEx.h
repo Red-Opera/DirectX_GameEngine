@@ -16,12 +16,11 @@ namespace Graphic
         void Update(const DynamicConstantBuffer::Buffer& buffer)
         {
             assert(&buffer.GetLayout() == &GetLayout()); // 레이아웃 일치성 검증
-            CREATEINFOMANAGER(Window::GetDxGraphic());
 
             // GPU 메모리를 CPU에서 접근 가능하게 매핑
             D3D11_MAPPED_SUBRESOURCE map;
-            hr = GetDeviceContext(Window::GetDxGraphic())->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-            GRAPHIC_THROW_INFO(hr);
+            HRESULT hr = GetDeviceContext(Window::GetDxGraphic())->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+			Require::Check(hr, ErrorCode::GRAPHICS_MapUnmapFailed, "동적 상수 버퍼 데이터 업데이트를 위한 매핑 실패");
 
             // 동적 버퍼의 데이터를 GPU 메모리에 복사
             memcpy(map.pData, buffer.data(), buffer.size());
@@ -38,8 +37,6 @@ namespace Graphic
             UINT slot,
             const DynamicConstantBuffer::Buffer* buffer) : slot(slot)
         {
-            CREATEINFOMANAGER(Window::GetDxGraphic());
-
             // 동적 레이아웃 크기 기반 상수 버퍼 설정
             D3D11_BUFFER_DESC constantBufferDesc;
             constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -55,15 +52,15 @@ namespace Graphic
                 D3D11_SUBRESOURCE_DATA initData = {};
                 initData.pSysMem = buffer->data();
 
-                hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer);
-                GRAPHIC_THROW_INFO(hr);
+                HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, &initData, &constantBuffer);
+                Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "초기 데이터로 동적 상수 버퍼 생성 실패");
             }
 
             // 빈 버퍼 생성
             else
             {
-                hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer);
-                GRAPHIC_THROW_INFO(hr);
+                HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&constantBufferDesc, nullptr, &constantBuffer);
+                Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "빈 데이터로 동적 상수 버퍼 생성 실패");
             }
         }
 
@@ -81,9 +78,7 @@ namespace Graphic
         // 픽셀 셰이더 파이프라인에 상수 버퍼를 바인딩
         void SetRenderPipeline() NOEXCEPTRELEASE override 
         { 
-            CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "픽셀 셰이더에 상수 버퍼 바인딩 실패");
         }
     };
 
@@ -96,9 +91,7 @@ namespace Graphic
         // 버텍스 셰이더 파이프라인에 상수 버퍼를 바인딩
         void SetRenderPipeline() NOEXCEPTRELEASE override
         {
-            CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()));
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->VSSetConstantBuffers(slot, 1u, constantBuffer.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "버텍스 셰이더에 상수 버퍼 바인딩 실패");
         }
     };
 

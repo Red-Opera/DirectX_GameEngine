@@ -156,24 +156,25 @@ namespace Engine
         using namespace Graphic;
         using namespace DirectX;
 
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         ScratchImage image;
-        hr = LoadFromWICFile(std::wstring(fileName.begin(), fileName.end()).c_str(), WIC_FLAGS_NONE, nullptr, image); // PNG 파일 로드 (WIC 사용)
+        HRESULT hr = LoadFromWICFile(std::wstring(fileName.begin(), fileName.end()).c_str(), WIC_FLAGS_NONE, nullptr, image); // PNG 파일 로드 (WIC 사용)
 
-        GRAPHIC_THROW_INFO(hr);
+		Require::Check(hr, ErrorCode::GRAPHICS_TextureLoadFailed, "아이콘 이미지 파일 로드 실패 : " + fileName);
 
         const TexMetadata& metadata = image.GetMetadata();
 
+		// 가져온 이미지를 GPU에서 사용할 수 있는 텍스처로 생성
         Microsoft::WRL::ComPtr<ID3D11Resource> texture;
         hr = CreateTexture(GetDevice(Window::GetDxGraphic()), image.GetImages(), image.GetImageCount(), metadata, texture.GetAddressOf());
 
-        GRAPHIC_THROW_INFO(hr);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "아이콘 이미지로부터 텍스처 생성 실패 : " + fileName);
 
+        // GPU에 올라온 텍스처를 실제 화면에 보여지도록 설정
         switch (iconType)
         {
         case Engine::FolderView::IconType::folder:
             hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, folderIconTexture.GetAddressOf());
+            Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "폴더 아이콘 텍스처 셰이더 리소스 뷰 생성 실패");
             break;
 
         case Engine::FolderView::IconType::file:
@@ -181,7 +182,7 @@ namespace Engine
             Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> newIconTexture;
 
             hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, newIconTexture.GetAddressOf());
-            GRAPHIC_THROW_INFO(hr);
+			Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "파일 아이콘 텍스처 셰이더 리소스 뷰 생성 실패");
 
             // 파일명 추출 (확장자 없이)
             std::string fileNameString = std::filesystem::path(fileName).stem().string();
@@ -197,6 +198,7 @@ namespace Engine
 
         case Engine::FolderView::IconType::ParentFolder:
             hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(texture.Get(), nullptr, goParentFolderTexture.GetAddressOf());
+			Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "상위 폴더 아이콘 텍스처 셰이더 리소스 뷰 생성 실패");
             break;
 
         default:
@@ -204,8 +206,6 @@ namespace Engine
             hr = S_FALSE;
             break;
         }
-
-        GRAPHIC_THROW_INFO(hr);
     }
 
     std::string FolderView::GetRelativePath(const std::shared_ptr<FileItemTree>& tree)

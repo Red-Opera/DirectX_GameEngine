@@ -40,9 +40,7 @@ namespace Graphic
 
 	void ShadowSamplerState::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(GetCurrentSlot(), 1, samplers[currentSampler].GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetSamplers(GetCurrentSlot(), 1, samplers[currentSampler].GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "그림자 샘플러 상태를 픽셀 셰이더에 바인딩 실패");
 	}
 
 	UINT ShadowSamplerState::GetCurrentSlot() const
@@ -57,8 +55,6 @@ namespace Graphic
 
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> ShadowSamplerState::CreateSampler(bool bilin, bool isUseHardwarePCF)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		D3D11_SAMPLER_DESC samplerDesc = CD3D11_SAMPLER_DESC{ CD3D11_DEFAULT{} };
 
 		samplerDesc.BorderColor[0] = 1.0f;
@@ -77,8 +73,8 @@ namespace Graphic
 		Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 
 		// Sampler State를 생성함
-		hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateSamplerState(&samplerDesc, &samplerState);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "그림자 샘플러 상태 생성이 설정에 맞게 생성하지 못했음");
 
 		return std::move(samplerState);
 	}

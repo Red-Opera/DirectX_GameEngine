@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "ImguiManager.h"
+#include "Core/Window.h"
 
 #include "External/Imgui/imgui.h"
 #include "External/Imgui/imgui_impl_dx11.h"
@@ -21,6 +22,5 @@ ImguiManager::ImguiManager()
 
 ImguiManager::~ImguiManager()
 {
-	ImGui_ImplDX11_Shutdown();
-	ImGui::DestroyContext();
+
 }

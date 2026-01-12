@@ -42,8 +42,9 @@ public:
 	{
 	public:
 		HRException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMessage = {}) noexcept;
-		HRException(int line, const char* file, HRESULT hr, const char* infoMessage) noexcept;
 		HRException(int line, std::string file, HRESULT hr, std::vector<std::string> infoMessage = {}) noexcept;
+		HRException(int line, const char* file, HRESULT hr, const char* infoMessage) noexcept;
+		HRException(int line, std::string file, HRESULT hr, const std::string infoMessage) noexcept;
 
 		const char* what() const noexcept override;
 
@@ -75,8 +76,9 @@ public:
 	{
 	public:
 		InfoException(int line, const char* file, std::vector<std::string> infoMessage = {});
-		InfoException(int line, const char* file, const char* infoMessage = { });
 		InfoException(int line, std::string file, std::vector<std::string> infoMessage = {});
+		InfoException(int line, const char* file, const char* infoMessage = { });
+		InfoException(int line, std::string file, const std::string infoMessage = {});
 
 		const char* what() const noexcept override;
 		const char* GetType() const noexcept override;
@@ -93,7 +95,6 @@ public:
 	DxGraphic(const DxGraphic&) = delete;
 	DxGraphic& operator=(const DxGraphic&) = delete;
 
-	void DrawTestTriangle(float angle, float x, float z);
 	void DrawIndexed(UINT count) NOEXCEPTRELEASE;
 
 	// Get Method
@@ -147,7 +148,6 @@ private:
 	ComPtr<ID3D11DeviceContext>		deviceContext;			// D3D11 Context
 	ComPtr<IDXGISwapChain>			swapChain;				// 페이지 전환을 위한 교환 사슬
 	ComPtr<ID3D11Texture2D>			depthStencilBuffer;		// 깊이 º 스텐실 버퍼를 위한 2차원 텍스처
-	ID3D11ShaderResourceView*	shaderResourceView;		// 렌더 대상용 2차원 텍스처
 	D3D11_VIEWPORT					viewport;				// 뷰포트
 
 	ComPtr<ID3D11Texture2D> backBuffer;

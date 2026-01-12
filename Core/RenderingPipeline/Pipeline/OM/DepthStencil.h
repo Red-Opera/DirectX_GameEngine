@@ -38,6 +38,7 @@ namespace Graphic
 		UINT height;
 
 	private:
+		// GPU 리소스를 CPU가 읽을 수 있는 임시 리소스로 복사하여 반환 (반환 값 : CPU에서 읽을 수 있는 깊이 데이터, 원본 깊이 버퍼 정보)
 		std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> CreateStaging() const;
 	};
 

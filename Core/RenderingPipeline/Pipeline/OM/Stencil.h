@@ -58,9 +58,7 @@ namespace Graphic
 		// Render을(를) 통해 상속됨
 		void SetRenderPipeline() NOEXCEPTRELEASE override
 		{
-			CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-			GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetDepthStencilState(stencil.Get(), 0xFF));
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->OMSetDepthStencilState(stencil.Get(), 0xFF); }, ErrorCode::GRAPHICS_BindFailed, "스텐실 상태를 출력 머지 파이프라인에 바인딩 실패");
 		}
 
 		static std::shared_ptr<Stencil> GetRender(DrawMode drawMode)

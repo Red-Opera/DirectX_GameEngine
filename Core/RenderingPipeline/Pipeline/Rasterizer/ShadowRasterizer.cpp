@@ -18,15 +18,13 @@ namespace Graphic
 		this->slopeBias = slopeBias;
 		this->clamp = clamp;
 
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		D3D11_RASTERIZER_DESC rasterizerDESC = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT{});
 		rasterizerDESC.DepthBias = depthBias;
 		rasterizerDESC.SlopeScaledDepthBias = slopeBias;
 		rasterizerDESC.DepthBiasClamp = clamp;
 
-		hr = GetDevice(Window::GetDxGraphic())->CreateRasterizerState(&rasterizerDESC, &rasterizerState);
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateRasterizerState(&rasterizerDESC, &rasterizerState);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 설정으로 그림자 레스터화기 상태 생성 실패");
 	}
 
 	int ShadowRasterizer::GetDepthBias() const
@@ -46,8 +44,6 @@ namespace Graphic
 
 	void ShadowRasterizer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()); }, ErrorCode::GRAPHICS_BindFailed, "그림자 레스터화기 상태를 렌더링 파이프라인에 설정하는데 실패했습니다.");
 	}
 }

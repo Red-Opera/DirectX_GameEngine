@@ -9,15 +9,12 @@ namespace Graphic
 {
 	Rasterizer::Rasterizer(bool isTwoSided) : isTwoSided(isTwoSided)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		// 레스터화기의 기본값을 가져옴
 		D3D11_RASTERIZER_DESC rasterizerDesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT{});
 		rasterizerDesc.CullMode = isTwoSided ? D3D11_CULL_NONE : D3D11_CULL_BACK;			// 양면을 사용할지 단면을 사용할지 설정
 
-		hr = GetDevice(Window::GetDxGraphic())->CreateRasterizerState(&rasterizerDesc, &rasterizerState);
-
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateRasterizerState(&rasterizerDesc, &rasterizerState);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 설정으로 레스터화기 상태 생성 실패");
 	}
 
 	std::shared_ptr<Rasterizer> Rasterizer::GetRender(bool isTwoSided)
@@ -39,9 +36,7 @@ namespace Graphic
 
 	void Rasterizer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
 		// 레스터화기 상태를 렌더링 파이프 라인에 입력
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->RSSetState(rasterizerState.Get()); }, ErrorCode::GRAPHICS_BindFailed, "레스터화기 상태를 렌더링 파이프라인에 설정하는데 실패했습니다.");
 	}
 }

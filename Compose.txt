@@ -1,0 +1,2583 @@
+================================================================================
+                DirectX 3D Game Engine - 렌더링 시스템 가이드
+================================================================================
+
+이 문서는 DirectX 3D Game Engine의 렌더링 파이프라인 처리 방식을 설명합니다.
+
+================================================================================
+1. 렌더링 시스템 개요
+================================================================================
+
+본 엔진은 Render Graph 패턴을 활용하여 복잡한 렌더링 파이프라인을 효율적으로 
+관리합니다. 렌더링 프로세스는 다음과 같은 단계로 구성됩니다:
+
+    1) BeginFrame - 프레임 시작 및 초기화
+    2) Update - 게임 로직 및 물리 시스템 업데이트
+    3) RenderGraph Execute - 렌더링 패스 실행
+    4) EndFrame - 프레임 종료 및 화면 출력
+    5) Reset - 다음 프레임을 위한 리셋
+
+================================================================================
+2. 메인 렌더링 루프 (App::DoFrame)
+================================================================================
+
+렌더링은 App 클래스의 DoFrame 메소드에서 다음 순서로 진행됩니다:
+
+    코드 예시 (Core/App.cpp):
+    
+    void App::DoFrame(float deltaTime)
+    {
+        const float t = timer.TotalTime();
+        Window::ShowGameFrame(wnd.GetHWnd());
+        
+        // [1] BeginFrame 호출
+        wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f);
+        
+        // [2] 물리 시스템 업데이트
+        PhysicsSystem::GetInstance().Update(deltaTime);
+        
+        // [3] 씬 업데이트
+        currentScene->Update(deltaTime);
+        
+        // [4] RenderGraph 실행
+        App::GetRenderGraph().Execute();
+        
+        // [5] UI 렌더링
+        CreateSimulationWindow();
+        CreateDemoWindows();
+        currentScene->LateUpdate();
+        App::GetRenderGraph().RenderWindows();
+        
+        Engine::FolderView::instance->RenderFolderView();
+        Engine::MenuBar::menuBar->RenderMenuBar();
+        Engine::Inspector::instance->Update(deltaTime);
+        
+        // [6] EndFrame 및 Present
+        wnd.GetDxGraphic().EndFrame();
+        
+        // [7] Reset
+        App::GetRenderGraph().Reset();
+    }
+
+    [1단계] BeginFrame 호출
+    ┌─────────────────────────────────────────────────┐
+    │ wnd.GetDxGraphic().BeginFrame(0.07f, 0.0f, 0.12f) │
+    │ - ImGui 프레임 초기화                              │
+    │ - 셰이더 리소스 뷰 초기화                           │
+    └─────────────────────────────────────────────────┘
+    
+    코드 예시 (Core/DxGraphic.cpp):
+    
+    void DxGraphic::BeginFrame(float red, float green, float blue) noexcept
+    {
+        // ImGui 새 프레임 시작
+        if (imGuiEnable)
+        {
+            ImGui_ImplDX11_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+            ImGui::NewFrame();
+        }
+        
+        // 이전 프레임의 셰이더 리소스 뷰 초기화 (텍스처 언바인딩)
+        ID3D11ShaderResourceView* const nullTexture = nullptr;
+        deviceContext->PSSetShaderResources(0, 1, &nullTexture);
+        deviceContext->PSSetShaderResources(3, 1, &nullTexture);
+    }
+    
+    [2단계] 시스템 업데이트
+    ┌─────────────────────────────────────────────────┐
+    │ PhysicsSystem::GetInstance().Update(deltaTime)    │
+    │ currentScene->Update(deltaTime)                   │
+    │ - 물리 시뮬레이션 업데이트                          │
+    │ - 게임 로직 업데이트                               │
+    └─────────────────────────────────────────────────┘
+    
+    [3단계] RenderGraph 실행
+    ┌─────────────────────────────────────────────────┐
+    │ App::GetRenderGraph().Execute()                   │
+    │ - 모든 RenderPass 순차 실행                        │
+    │ - ShadowMap 생성                                  │
+    │ - 메인 렌더링                                      │
+    │ - 포스트 프로세싱 (Blur, Outline 등)               │
+    └─────────────────────────────────────────────────┘
+    
+    [4단계] UI 렌더링
+    ┌─────────────────────────────────────────────────┐
+    │ App::GetRenderGraph().RenderWindows()             │
+    │ Engine::FolderView, MenuBar, Inspector 렌더링     │
+    └─────────────────────────────────────────────────┘
+    
+    [5단계] EndFrame 및 Present
+    ┌─────────────────────────────────────────────────┐
+    │ wnd.GetDxGraphic().EndFrame()                     │
+    │ - ImGui 렌더링 데이터 생성                         │
+    │ - swapChain->Present() 호출                       │
+    │ - 백 버퍼와 프론트 버퍼 교환                        │
+    └─────────────────────────────────────────────────┘
+    
+    코드 예시 (Core/DxGraphic.cpp):
+    
+    void DxGraphic::EndFrame()
+    {
+        // ImGui는 마지막에 처리를 해야 화면 맨 앞으로 나옴
+        if (imGuiEnable)
+        {
+            ImGui::Render();
+            ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+        }
+        
+        // 백 버퍼와 프론트 버퍼 교환 (화면에 출력)
+        // 첫 번째 인자: VSync (0 = 비활성화, 1 = 활성화)
+        // 두 번째 인자: 플래그 (0 = 일반 Present)
+        HRESULT hr = swapChain->Present(0, 0);
+        
+        // 에러 체크
+        if (FAILED(hr))
+        {
+            if (hr == DXGI_ERROR_DEVICE_REMOVED)
+                throw GRAPHIC_REMOVE_EXCEPT(device->GetDeviceRemovedReason());
+            else
+                throw GRAPHIC_EXCEPT(hr);
+        }
+    }
+    
+    [6단계] Reset
+    ┌─────────────────────────────────────────────────┐
+    │ App::GetRenderGraph().Reset()                     │
+    │ - 모든 RenderPass의 RenderJob 큐 초기화            │
+    └─────────────────────────────────────────────────┘
+
+================================================================================
+3. RenderGraph 아키텍처
+================================================================================
+
+RenderGraph는 렌더링 파이프라인을 그래프 형태로 관리하는 핵심 시스템입니다.
+
+[3.1] 주요 구성 요소
+---------------------------------------------
+    RenderGraph (Core/RenderingPipeline/RenderGraph/RenderGraph.h)
+    ├─ RenderPass (렌더 패스 기본 클래스)
+    │  ├─ RenderingPass (렌더링 작업을 수행하는 패스)
+    │  │  ├─ RenderQueuePass (렌더 작업 큐를 관리하는 패스)
+    │  │  │  ├─ LambertianRenderPass (램버시안 라이팅)
+    │  │  │  ├─ ShadowMapPass (그림자 맵 생성)
+    │  │  │  ├─ OutlineMaskPass (아웃라인 마스크)
+    │  │  │  └─ OutlineDrawPass (아웃라인 그리기)
+    │  │  └─ PostProcessFullScreenRenderPass (전체 화면 포스트 프로세싱)
+    │  │     ├─ HorizontalBlurPass (수평 블러)
+    │  │     └─ VerticalBlurPass (수직 블러)
+    │  └─ BufferPassClear (버퍼 초기화)
+    ├─ PipelineDataProvider (데이터 제공자)
+    └─ PipelineDataConsumer (데이터 소비자)
+
+    코드 예시 (Core/RenderingPipeline/RenderGraph/RenderGraph.cpp):
+    
+    // RenderGraph 생성자 - 백 버퍼와 마스터 깊이 버퍼 초기화
+    RenderGraph::RenderGraph()
+        : backBufferTarget(Window::GetDxGraphic().GetRenderTarget()),
+          masterDepth(std::make_shared<Graphic::OutputOnlyDepthStencil>())
+    {
+        // 글로벌 제공자들 등록 (모든 패스에서 접근 가능한 기본 리소스들)
+        AddGlobalProvider(
+            DirectBufferPipelineDataProvider<Graphic::RenderTarget>::Create(
+                "backbuffer", backBufferTarget
+            )
+        );
+        AddGlobalProvider(
+            DirectBufferPipelineDataProvider<Graphic::DepthStencil>::Create(
+                "masterDepth", masterDepth
+            )
+        );
+        
+        // 글로벌 소비자 등록 (최종 출력을 받을 소비자)
+        AddGlobalConsumer(
+            DirectBufferDataConsumer<Graphic::RenderTarget>::Create(
+                "backbuffer", backBufferTarget
+            )
+        );
+    }
+    
+    // 모든 렌더 패스를 순서대로 실행
+    void RenderGraph::Execute() NOEXCEPTRELEASE
+    {
+        // 최종화되지 않은 그래프는 실행 불가
+        if (!isFinalized)
+            throw RENDER_GRAPHIC_EXCEPTION("최종화되지 않은 렌더 그래프는 실행할 수 없습니다.");
+        
+        // 등록된 순서대로 모든 패스 실행
+        for (auto& pass : renderPasses)
+            pass->Execute();
+    }
+    
+    // 모든 렌더 패스를 리셋 (다음 프레임 준비)
+    void RenderGraph::Reset() noexcept
+    {
+        assert(isFinalized);
+        
+        // 모든 패스를 리셋하여 다음 프레임 준비
+        for (auto& pass : renderPasses)
+            pass->Reset();
+    }
+
+[3.2] BlurOutlineRenderGraph 예시
+---------------------------------------------
+본 엔진의 기본 RenderGraph는 BlurOutlineRenderGraph로, 다음과 같은 패스들로 구성:
+
+    Pass 1: clearRenderTarget (BufferPassClear)
+    ├─ 역할: 백버퍼 초기화
+    ├─ 입력: $.backbuffer
+    └─ 출력: buffer (클리어된 렌더 타겟)
+
+    Pass 2: clearDepthStencil (BufferPassClear)
+    ├─ 역할: 깊이-스텐실 버퍼 초기화
+    ├─ 입력: $.masterDepth
+    └─ 출력: buffer (클리어된 깊이 버퍼)
+
+    Pass 3: ShadowMap (ShadowMapPass)
+    ├─ 역할: 그림자 맵 생성
+    ├─ 출력: Map (그림자 깊이 맵)
+    └─ 설명: 라이트 시점에서 깊이 정보를 렌더링
+
+    Pass 4: lambertian (LambertianRenderPass)
+    ├─ 역할: 기본 조명 및 텍스처 렌더링
+    ├─ 입력: ShadowMap.Map, clearRenderTarget.buffer, clearDepthStencil.buffer
+    ├─ 출력: renderTarget, depthStencil
+    └─ 설명: 램버시안 반사 모델로 오브젝트 렌더링
+
+    Pass 5: Skybox (SkyboxPass)
+    ├─ 역할: 배경 스카이박스 렌더링
+    ├─ 입력: lambertian.renderTarget, lambertian.depthStencil
+    ├─ 출력: renderTarget, depthStencil
+    └─ 설명: 씬의 배경 환경 렌더링
+
+    Pass 6: outlineMask (OutlineMaskPass)
+    ├─ 역할: 아웃라인 마스크 생성
+    ├─ 입력: Skybox.depthStencil
+    ├─ 출력: depthStencil (아웃라인 마스크 정보)
+    └─ 설명: 선택된 오브젝트의 마스크를 스텐실 버퍼에 렌더링
+
+    Pass 7: outlineDraw (BlurOutlineRenderingPass)
+    ├─ 역할: 아웃라인 초기 렌더링
+    ├─ 출력: scratchOut
+    └─ 설명: 블러를 적용할 아웃라인 데이터 생성
+
+    Pass 8: horizontal (HorizontalBlurPass)
+    ├─ 역할: 수평 방향 블러 적용
+    ├─ 입력: outlineDraw.scratchOut, $.blurKernel, $.blurDirection
+    ├─ 출력: scratchOut
+    └─ 설명: 가우시안 또는 박스 블러 커널로 수평 블러
+
+    Pass 9: vertical (VerticalBlurPass)
+    ├─ 역할: 수직 방향 블러 적용 및 최종 합성
+    ├─ 입력: Skybox.renderTarget, outlineMask.depthStencil, 
+    │        horizontal.scratchOut, $.blurKernel, $.blurDirection
+    ├─ 출력: renderTarget, depthStencil
+    └─ 설명: 수직 블러로 최종 아웃라인 효과를 메인 렌더 타겟에 합성
+
+    Pass 10: wireframe (CameraWireFramePass)
+    ├─ 역할: 와이어프레임 오버레이
+    ├─ 입력: vertical.renderTarget, vertical.depthStencil
+    ├─ 출력: renderTarget (최종 출력 → $.backbuffer)
+    └─ 설명: 카메라 frustum 와이어프레임을 최종 결과에 오버레이
+    
+    전역 리소스:
+    - $.backbuffer: 최종 출력 백버퍼
+    - $.masterDepth: 메인 깊이 버퍼
+    - $.blurKernel: 블러 커널 계수 (CachingPixelConstantBufferEx)
+    - $.blurDirection: 블러 방향 제어 (수평/수직)
+
+================================================================================
+4. Technique 및 RenderJob 시스템
+================================================================================
+
+[4.1] Technique (렌더링 기법)
+---------------------------------------------
+Technique는 여러 RenderStep의 조합으로 특정 렌더링 기법을 정의합니다.
+
+    구조:
+    Technique
+    ├─ name: 기법 이름
+    ├─ channel: 렌더링 채널 (비트마스크)
+    ├─ isActive: 활성화 상태
+    └─ renderSteps[]: RenderStep 배열
+
+    주요 메소드:
+    - Submit(drawable, channelFilter): 지정된 채널에 렌더링 제출
+    - Link(RenderGraph&): RenderGraph와 연결
+    - InitializeParentReferences(): 부모 Drawable 참조 초기화
+
+    코드 예시 (Core/RenderingPipeline/RenderingManager/Technique/Technique.cpp):
+    
+    // 렌더링 제출 - 채널 필터에 맞는 경우만 제출
+    void Technique::Submit(const Drawable& drawable, size_t channelFilter) const noexcept
+    {
+        // 기법이 비활성화되어 있으면 제출하지 않음
+        if (!isActive)
+            return;
+        
+        // 채널 필터와 일치하는지 확인 (비트마스크 AND 연산)
+        if (channelFilter & channel)
+        {
+            // 이 기법의 모든 렌더 스텝에 제출
+            for (auto& step : renderSteps)
+                step.Submit(drawable);
+        }
+    }
+    
+    // RenderGraph와 연결
+    void Technique::Link(RenderGraphNameSpace::RenderGraph& renderGraph)
+    {
+        // 각 렌더 스텝을 RenderGraph의 해당 패스와 연결
+        for (auto& step : renderSteps)
+            step.Link(renderGraph);
+    }
+
+[4.2] RenderStep (렌더링 단계)
+---------------------------------------------
+RenderStep은 Technique 내 개별 렌더링 단계를 나타냅니다.
+
+    역할:
+    - 특정 RenderPass에 RenderJob 제출
+    - 렌더링 파이프라인 상태 설정
+
+[4.3] RenderJob (렌더링 작업)
+---------------------------------------------
+RenderJob은 실제 렌더링을 수행하는 최소 단위 작업입니다.
+
+    구성 요소:
+    - drawable: 렌더링할 객체 (Mesh 등)
+    - renderStep: 렌더링 스텝 정보
+
+    실행 과정 (Execute 메소드):
+    [1] Frustum Culling 체크
+        └─ 카메라 절두체 외부 객체는 렌더링 생략
+    
+    [2] 렌더링 파이프라인 설정
+        ├─ drawable->SetRenderPipeline()
+        │  ├─ VertexBuffer 설정
+        │  ├─ IndexBuffer 설정
+        │  └─ InputLayout 설정
+        └─ renderStep->SetRenderPipeline()
+           ├─ VertexShader 설정
+           ├─ PixelShader 설정
+           ├─ ConstantBuffer 설정
+           ├─ SamplerState 설정
+           ├─ RasterizerState 설정
+           └─ DepthStencilState 설정
+    
+    [3] DrawIndexed 호출
+        └─ deviceContext->DrawIndexed(indexCount, 0, 0)
+
+    코드 예시 (Core/RenderingPipeline/RenderingManager/Pass/Base/RenderJob.cpp):
+    
+    // 렌더링 작업 실행
+    void RenderJob::Excute(bool isPassFrustumCulling) NOEXCEPTRELEASE
+    {
+        // [1] 절두체 컬링 체크 (패스별 설정 && 전역 설정 && 실제 절두체 내 존재)
+        if (isPassFrustumCulling && useViewFrustum && !IsInViewFrustum())
+        {
+            // 절두체 밖에 있으면 렌더링 건너뛰기 (성능 최적화)
+            return;
+        }
+        
+        // [2] 렌더링 파이프라인 설정
+        drawable->SetRenderPipeline();   // 객체의 버텍스/인덱스 버퍼 설정
+        renderStep->SetRenderPipeline(); // 렌더 스텝의 셰이더/상태 설정
+        
+        // [3] 실제 드로우 콜 실행
+        Window::GetDxGraphic().DrawIndexed(drawable->GetIndexCount());
+    }
+    
+    // 절두체 내부에 있는지 확인
+    bool RenderJob::IsInViewFrustum() const
+    {
+        // drawable의 Bounding Volume을 가져와서 절두체와 교차 테스트
+        return viewFrustumCulling.IsInFrustum(drawable->GetBoundingVolume());
+    }
+
+[4.4] RenderQueuePass 작동 방식
+---------------------------------------------
+RenderQueuePass는 제출된 모든 RenderJob을 수집하여 일괄 실행합니다.
+
+    동작 순서:
+    
+    [제출 단계]
+    Model::Submit() 
+    ├─> Technique::Submit() 
+    │   └─> RenderStep::Submit() 
+    │       └─> RenderQueuePass::Accept(RenderJob)
+    │           └─> renderJobs.push_back(renderJob)
+    
+    [실행 단계]
+    RenderQueuePass::Execute()
+    ├─> for (auto& job : renderJobs)
+    │   └─> job.Execute()
+    │       ├─ Frustum/Occlusion Culling
+    │       ├─ 렌더링 파이프라인 설정
+    │       └─ DrawIndexed 호출
+    
+    [리셋 단계]
+    RenderQueuePass::Reset()
+    └─> renderJobs.clear()
+
+================================================================================
+5. DirectX 렌더링 파이프라인 단계
+================================================================================
+
+본 엔진은 DirectX 11의 렌더링 파이프라인을 다음과 같이 구성합니다:
+
+    [IA - Input Assembler]
+    ├─ InputLayout: 정점 데이터 레이아웃 정의
+    ├─ VertexBuffer: 정점 데이터
+    ├─ IndexBuffer: 인덱스 데이터
+    └─ PrimitiveTopology: 기본 도형 유형 (삼각형 리스트 등)
+    
+    코드 예시 (Core/RenderingPipeline/Pipeline/IA/):
+    
+    // VertexBuffer 바인딩 (VertexBuffer.cpp)
+    void VertexBuffer::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        const UINT offset = 0u;
+        GetDeviceContext()->IASetVertexBuffers(
+            0u,                      // 시작 슬롯
+            1u,                      // 버퍼 개수
+            vertexBuffer.GetAddressOf(), // 버퍼 포인터
+            &stride,                 // 정점 크기
+            &offset                  // 오프셋
+        );
+    }
+    
+    // IndexBuffer 바인딩 (IndexBuffer.cpp)
+    void IndexBuffer::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->IASetIndexBuffer(
+            indexBuffer.Get(),       // 인덱스 버퍼
+            DXGI_FORMAT_R32_UINT,   // 인덱스 포맷 (32비트 unsigned int)
+            0u                       // 오프셋
+        );
+    }
+    
+    // PrimitiveTopology 설정 (PrimitiveTopology.cpp)
+    void PrimitiveTopology::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->IASetPrimitiveTopology(topology);
+        // topology 예시: D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+    }
+    
+    // InputLayout 설정 (InputLayout.cpp)
+    void InputLayout::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->IASetInputLayout(inputLayout.Get());
+    }
+    
+    [VS - Vertex Shader]
+    ├─ VertexShader: 정점 셰이더 실행
+    └─ ConstantBuffer: 변환 행렬 등 상수 데이터
+    
+    코드 예시 (Core/RenderingPipeline/Pipeline/VSPS/):
+    
+    // VertexShader 바인딩 (VertexShader.cpp)
+    void VertexShader::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->VSSetShader(
+            vertexShader.Get(),     // 정점 셰이더
+            nullptr,                // 클래스 인스턴스
+            0u                      // 인스턴스 개수
+        );
+    }
+    
+    // ConstantBuffer 업데이트 및 바인딩 (TransformConstantBuffer.cpp)
+    void TransformConstantBuffer::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        // Transform 행렬 계산 및 업데이트
+        const auto modelView = parent->GetTransformMatrix() * 
+                               camera->GetViewMatrix();
+        const Transforms tf = {
+            DirectX::XMMatrixTranspose(modelView),
+            DirectX::XMMatrixTranspose(
+                modelView * 
+                camera->GetProjectionMatrix()
+            )
+        };
+        
+        // ConstantBuffer에 데이터 업데이트
+        Update(tf);
+        
+        // Vertex Shader에 바인딩 (슬롯 0)
+        GetDeviceContext()->VSSetConstantBuffers(
+            0u, 1u, constantBuffer.GetAddressOf()
+        );
+    }
+    
+    [RS - Rasterizer Stage]
+    ├─ Viewport: 뷰포트 설정
+    └─ RasterizerState: 컬링 모드, 채우기 모드 등
+    
+    [PS - Pixel Shader]
+    ├─ PixelShader: 픽셀 셰이더 실행
+    ├─ Texture: 텍스처 샘플링
+    ├─ SamplerState: 샘플링 방식 설정
+    └─ ConstantBuffer: 조명, 재질 등 상수 데이터
+    
+    코드 예시 (Core/RenderingPipeline/Pipeline/VSPS/):
+    
+    // PixelShader 바인딩 (PixelShader.cpp)
+    void PixelShader::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->PSSetShader(
+            pixelShader.Get(),      // 픽셀 셰이더
+            nullptr,                // 클래스 인스턴스
+            0u                      // 인스턴스 개수
+        );
+    }
+    
+    // Texture 바인딩 (Core/Draw/Base/Image/Texture.cpp)
+    void Texture::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->PSSetShaderResources(
+            slot,                   // 텍스처 슬롯 (0, 1, 2...)
+            1u,                     // 리소스 개수
+            shaderResourceView.GetAddressOf()  // 텍스처 SRV
+        );
+    }
+    
+    // SamplerState 설정 (SamplerState.cpp)
+    void SamplerState::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->PSSetSamplers(
+            0u,                     // 샘플러 슬롯
+            1u,                     // 샘플러 개수
+            samplerState.GetAddressOf()  // 샘플러 스테이트
+        );
+    }
+    
+    [OM - Output Merger]
+    ├─ RenderTarget: 렌더 타겟 설정
+    ├─ DepthStencil: 깊이/스텐실 버퍼
+    ├─ DepthStencilState: 깊이/스텐실 테스트 설정
+    └─ BlendState: 블렌딩 설정
+    
+    코드 예시 (Core/RenderingPipeline/):
+    
+    // RenderTarget과 DepthStencil 바인딩 (RenderTarget.cpp)
+    void RenderTarget::BindAsTarget(const DepthStencil& depthStencil) NOEXCEPTRELEASE
+    {
+        // 렌더 타겟과 깊이 스텐실을 Output Merger 단계에 바인딩
+        GetDeviceContext()->OMSetRenderTargets(
+            1u,                         // 렌더 타겟 개수
+            renderTargetView.GetAddressOf(),  // 렌더 타겟 뷰
+            depthStencil.depthStencilView.Get()  // 깊이 스텐실 뷰
+        );
+    }
+    
+    // DepthStencilState 설정 (Pipeline/OM/DepthStencil.cpp)
+    void DepthStencilState::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->OMSetDepthStencilState(
+            depthStencilState.Get(),  // 깊이 스텐실 스테이트
+            stencilRef                // 스텐실 참조 값
+        );
+    }
+    
+    // BlendState 설정 (Pipeline/OM/ColorBlend.cpp)
+    void ColorBlend::SetRenderPipeline() NOEXCEPTRELEASE
+    {
+        GetDeviceContext()->OMSetBlendState(
+            blendState.Get(),         // 블렌드 스테이트
+            nullptr,                  // 블렌드 팩터
+            0xFFFFFFFFu               // 샘플 마스크
+        );
+    }
+
+각 단계는 Pipeline 폴더 내 해당 하위 폴더에 구현되어 있습니다:
+- Core/RenderingPipeline/Pipeline/IA/
+- Core/RenderingPipeline/Pipeline/VSPS/
+- Core/RenderingPipeline/Pipeline/Rasterizer/
+- Core/RenderingPipeline/Pipeline/OM/
+
+================================================================================
+6. 주요 최적화 기법
+================================================================================
+
+[6.1] Frustum Culling (절두체 컬링)
+---------------------------------------------
+카메라의 시야 절두체 외부에 있는 객체는 렌더링하지 않음으로써 성능 향상.
+
+    구현 위치: RenderJob::Execute()
+    관련 클래스: CameraViewFrustumCulling, CameraFrustum
+    
+    동작 방식:
+    1) 카메라의 View/Projection 행렬로 절두체 평면 계산
+    2) 각 객체의 Bounding Volume이 절두체 내부에 있는지 체크
+    3) 외부 객체는 DrawIndexed 호출 생략
+
+    코드 예시 (Core/Camera/CameraViewFrustumCulling.cpp):
+    
+    // View/Projection 행렬로 절두체 업데이트
+    void CameraViewFrustumCulling::UpdateFromMatrices(
+        const DirectX::XMMATRIX& viewMatrix, 
+        const DirectX::XMMATRIX& projMatrix)
+    {
+        // View * Projection 행렬 계산
+        DirectX::XMMATRIX viewProj = viewMatrix * projMatrix;
+        
+        // 6개의 절두체 평면 추출 (Near, Far, Left, Right, Top, Bottom)
+        // 각 평면은 4D 벡터로 표현 (ax + by + cz + d = 0)
+        
+        // Left 평면 = 4번째 행 + 1번째 행
+        frustumPlanes[0] = DirectX::XMPlaneNormalize(
+            DirectX::XMVectorAdd(viewProj.r[3], viewProj.r[0])
+        );
+        
+        // Right 평면 = 4번째 행 - 1번째 행
+        frustumPlanes[1] = DirectX::XMPlaneNormalize(
+            DirectX::XMVectorSubtract(viewProj.r[3], viewProj.r[0])
+        );
+        
+        // Bottom 평면 = 4번째 행 + 2번째 행
+        frustumPlanes[2] = DirectX::XMPlaneNormalize(
+            DirectX::XMVectorAdd(viewProj.r[3], viewProj.r[1])
+        );
+        
+        // Top 평면 = 4번째 행 - 2번째 행
+        frustumPlanes[3] = DirectX::XMPlaneNormalize(
+            DirectX::XMVectorSubtract(viewProj.r[3], viewProj.r[1])
+        );
+        
+        // Near 평면 = 3번째 행
+        frustumPlanes[4] = DirectX::XMPlaneNormalize(viewProj.r[2]);
+        
+        // Far 평면 = 4번째 행 - 3번째 행
+        frustumPlanes[5] = DirectX::XMPlaneNormalize(
+            DirectX::XMVectorSubtract(viewProj.r[3], viewProj.r[2])
+        );
+    }
+    
+    // AABB(Axis-Aligned Bounding Box)가 절두체 내부에 있는지 확인
+    bool CameraViewFrustumCulling::IsInFrustum(const BoundingBox& bbox) const
+    {
+        DirectX::XMVECTOR center = DirectX::XMLoadFloat3(&bbox.center);
+        DirectX::XMVECTOR extents = DirectX::XMLoadFloat3(&bbox.extents);
+        
+        // 6개의 평면 모두에 대해 체크
+        for (int i = 0; i < 6; i++)
+        {
+            // 평면의 노멀 방향으로 가장 먼 점 계산
+            DirectX::XMVECTOR planeNormal = frustumPlanes[i];
+            
+            // AABB의 중심에서 평면까지의 거리 계산
+            float distance = DirectX::XMVectorGetX(
+                DirectX::XMPlaneDotCoord(planeNormal, center)
+            );
+            
+            // AABB의 반경 계산 (평면 방향으로의 최대 거리)
+            float radius = DirectX::XMVectorGetX(
+                DirectX::XMVector3Dot(
+                    DirectX::XMVectorAbs(planeNormal), 
+                    extents
+                )
+            );
+            
+            // 평면 밖에 있으면 렌더링 불필요
+            if (distance < -radius)
+                return false;
+        }
+        
+        // 모든 평면을 통과하면 절두체 내부에 있음
+        return true;
+    }
+    
+    // RenderJob에서 사용 예시 (RenderJob.cpp)
+    void RenderJob::Excute(bool isPassFrustumCulling) NOEXCEPTRELEASE
+    {
+        // 절두체 컬링 체크
+        if (isPassFrustumCulling && useViewFrustum && !IsInViewFrustum())
+        {
+            // 절두체 밖에 있으면 렌더링 건너뛰기
+            return; // ← 성능 향상! DrawIndexed 호출 안 함
+        }
+        
+        // 절두체 내부에 있는 객체만 렌더링
+        drawable->SetRenderPipeline();
+        renderStep->SetRenderPipeline();
+        Window::GetDxGraphic().DrawIndexed(drawable->GetIndexCount());
+    }
+
+[6.2] Render Graph 기반 최적화
+---------------------------------------------
+데이터 의존성을 명시적으로 관리하여 불필요한 렌더링 패스 제거.
+
+    PipelineDataProvider: 데이터 제공자 (출력)
+    PipelineDataConsumer: 데이터 소비자 (입력)
+    
+    연결 예시:
+    ShadowMapPass.shadowMap → LambertianRenderPass.shadowMap (입력)
+
+[6.3] 스마트 포인터를 통한 메모리 관리
+---------------------------------------------
+shared_ptr, unique_ptr 활용으로 메모리 누수 방지 및 자동 해제.
+
+================================================================================
+7. 셰이더 시스템
+================================================================================
+
+본 엔진은 다양한 HLSL 셰이더를 지원합니다:
+
+    기본 셰이더 (Shader/ 폴더):
+    ├─ ColorShader.hlsl: 단색 렌더링
+    ├─ LitColor.hlsl: 조명이 적용된 컬러
+    ├─ LitTextureDiffuse.hlsl: 디퓨즈 텍스처 + 조명
+    ├─ LitTextureDiffuseNormal.hlsl: 노멀 매핑 지원
+    ├─ LitTextureDiffuseSpecular.hlsl: 스페큘러 맵 지원
+    ├─ LitTextureDiffuseSpecularNormal.hlsl: 모든 맵 지원
+    ├─ ShadowVS.hlsl / ShadowPS.hlsl: 그림자 맵 생성
+    ├─ Skybox.hlsl: 스카이박스 렌더링
+    └─ PostProcessing/: 포스트 프로세싱 셰이더들
+
+    셰이더 컴파일:
+    - 런타임에 D3DX11CompileFromFile로 컴파일
+    - 디버그 빌드 시 디버그 정보 포함 및 최적화 생략
+    - 컴파일된 바이트코드로 Shader 객체 생성
+
+    코드 예시 (셰이더 컴파일 및 생성):
+    
+    // VertexShader 컴파일 및 생성 (DxGraphic.cpp 예시)
+    ComPtr<ID3D11VertexShader> vertexShader;
+    ComPtr<ID3DBlob> shaderCode;
+    
+    DWORD shaderFlags = 0;
+    #if defined(DEBUG) || defined(_DEBUG)
+        shaderFlags |= D3D10_SHADER_DEBUG;           // 디버그 정보 포함
+        shaderFlags |= D3D10_SHADER_SKIP_OPTIMIZATION; // 최적화 생략
+    #endif
+    
+    ID3D10Blob* compiledShader = 0;
+    ID3D10Blob* errorMessage = 0;
+    
+    // HLSL 파일 컴파일
+    HRESULT hr = D3DX11CompileFromFileA(
+        "Shader/ColorShader.hlsl",  // 셰이더 파일 경로
+        nullptr,                     // 매크로 정의
+        nullptr,                     // Include 파일
+        "VS",                        // 엔트리 포인트 함수명
+        "vs_5_0",                    // 셰이더 모델 (Vertex Shader 5.0)
+        shaderFlags,                 // 컴파일 플래그
+        0,                           // 효과 플래그
+        0,                           // 스레드 펌프
+        &shaderCode,                 // 컴파일된 코드
+        &errorMessage,               // 에러 메시지
+        nullptr                      // 결과
+    );
+    
+    // 에러 체크
+    if (FAILED(hr))
+    {
+        if (errorMessage != 0)
+        {
+            MessageBoxA(0, (char*)errorMessage->GetBufferPointer(), 0, 0);
+            ReleaseCOM(errorMessage);
+        }
+        DXTrace(__FILE__, (DWORD)__LINE__, hr, "D3DX11CompileFromFile", true);
+    }
+    
+    // VertexShader 객체 생성
+    GRAPHIC_THROW_INFO(device->CreateVertexShader(
+        shaderCode->GetBufferPointer(),  // 바이트코드
+        shaderCode->GetBufferSize(),     // 바이트코드 크기
+        nullptr,                         // 클래스 링커
+        &vertexShader                    // 생성된 셰이더
+    ));
+    
+    // Vertex Shader 단계를 렌더링 파이프라인에 바인딩
+    deviceContext->VSSetShader(vertexShader.Get(), nullptr, 0);
+    
+    HLSL 셰이더 예시 (Shader/LitTextureDiffuse.hlsl):
+    
+    // Vertex Shader 입력 구조체
+    struct VSInput
+    {
+        float3 pos : POSITION;      // 정점 위치
+        float3 normal : NORMAL;     // 정점 노멀
+        float2 texCoord : TEXCOORD; // 텍스처 좌표
+    };
+    
+    // Vertex Shader 출력 구조체
+    struct VSOutput
+    {
+        float4 pos : SV_POSITION;   // 변환된 위치
+        float3 worldPos : POSITION; // 월드 공간 위치
+        float3 normal : NORMAL;     // 노멀
+        float2 texCoord : TEXCOORD; // 텍스처 좌표
+    };
+    
+    // Constant Buffer
+    cbuffer TransformCB : register(b0)
+    {
+        matrix modelView;           // 모델-뷰 행렬
+        matrix modelViewProj;       // 모델-뷰-프로젝션 행렬
+    };
+    
+    // Vertex Shader
+    VSOutput VS(VSInput input)
+    {
+        VSOutput output;
+        
+        // 정점 위치 변환
+        output.pos = mul(float4(input.pos, 1.0f), modelViewProj);
+        output.worldPos = mul(float4(input.pos, 1.0f), modelView).xyz;
+        
+        // 노멀 변환 (회전만 적용)
+        output.normal = mul(input.normal, (float3x3)modelView);
+        output.texCoord = input.texCoord;
+        
+        return output;
+    }
+    
+    // Pixel Shader
+    Texture2D diffuseMap : register(t0);  // 디퓨즈 텍스처
+    SamplerState sampler0 : register(s0); // 샘플러
+    
+    float4 PS(VSOutput input) : SV_TARGET
+    {
+        // 텍스처 샘플링
+        float4 diffuseColor = diffuseMap.Sample(sampler0, input.texCoord);
+        
+        // 간단한 램버시안 조명 계산
+        float3 lightDir = normalize(float3(1, 1, -1));
+        float diffuse = max(dot(normalize(input.normal), lightDir), 0.0f);
+        
+        // 최종 색상
+        return diffuseColor * (diffuse + 0.2f); // 0.2는 앰비언트
+    }
+
+================================================================================
+8. 카메라 시스템과 렌더링
+================================================================================
+
+카메라는 렌더링의 시작점이며, 다음과 같은 역할을 수행합니다:
+
+    [8.1] 메인 카메라 렌더링
+    ┌─────────────────────────────────────────────────┐
+    │ App::GetRenderGraph().RenderMainCamera(camera)    │
+    │ - View/Projection 행렬 설정                       │
+    │ - ViewFrustum 업데이트                            │
+    │ - 씬의 모든 객체를 RenderGraph에 Submit            │
+    └─────────────────────────────────────────────────┘
+    
+    [8.2] 섀도우 카메라 렌더링
+    ┌─────────────────────────────────────────────────┐
+    │ App::GetRenderGraph().RenderShadowCamera(camera)  │
+    │ - 라이트 시점의 View/Projection 행렬 설정          │
+    │ - ShadowMapPass에 객체 Submit                     │
+    └─────────────────────────────────────────────────┘
+    
+    카메라 관련 클래스:
+    - Camera: 카메라 컴포넌트
+    - CameraProjection: 투영 행렬 관리
+    - CameraFrustum: 절두체 계산
+    - CameraViewFrustumCulling: 절두체 컬링 로직
+
+================================================================================
+9. 렌더 타겟 및 리소스 관리
+================================================================================
+
+[9.1] RenderTarget
+---------------------------------------------
+렌더링 결과를 저장하는 타겟 버퍼.
+
+    종류:
+    - OutputOnlyRenderTarget: 최종 출력용 (백 버퍼)
+    - ShaderInputRenderTarget: 셰이더 입력으로 사용 가능
+    
+    용도:
+    - 백 버퍼: 최종 화면 출력
+    - 중간 렌더 타겟: 포스트 프로세싱 등에 사용
+
+[9.2] DepthStencil
+---------------------------------------------
+깊이 및 스텐실 정보를 저장하는 버퍼.
+
+    종류:
+    - OutputOnlyDepthStencil: 깊이 테스트 전용
+    - ShaderInputDepthStencil: 셰이더에서 읽기 가능 (섀도우 맵)
+    
+    용도:
+    - masterDepth: 기본 깊이 버퍼
+    - shadowMap: 그림자 맵 생성용 깊이 버퍼
+
+[9.3] SwapChain
+---------------------------------------------
+백 버퍼와 프론트 버퍼를 교환하여 화면에 출력.
+
+    설정 (DxGraphic::SwapChainSettings):
+    - BufferCount: 1 (더블 버퍼링)
+    - Format: DXGI_FORMAT_R8G8B8A8_UNORM
+    - MSAA: 옵션에 따라 4x MSAA 사용 가능
+    - SwapEffect: DXGI_SWAP_EFFECT_SEQUENTIAL
+
+================================================================================
+10. 실제 렌더링 플로우 예시
+================================================================================
+
+다음은 하나의 프레임이 렌더링되는 전체 과정입니다:
+
+    [시작] App::DoFrame 호출
+    │
+    ├─[1] BeginFrame
+    │   └─ ImGui 초기화, 셰이더 리소스 뷰 초기화
+    │
+    ├─[2] PhysicsSystem::Update
+    │   └─ 물리 시뮬레이션 업데이트
+    │
+    ├─[3] Scene::Update
+    │   ├─ 모든 오브젝트의 Update() 호출
+    │   ├─ Transform 계산
+    │   └─ 애니메이션 업데이트 (있는 경우)
+    │
+    ├─[4] Scene::LateUpdate (카메라 설정)
+    │   ├─ cameras.LinkTechniques(RenderGraph)
+    │   │   └─ 모든 모델의 Technique를 RenderGraph에 연결
+    │   │
+    │   └─ RenderGraph.RenderMainCamera(camera)
+    │       ├─ ViewFrustum 업데이트
+    │       └─ Scene의 모든 Model::Submit(channel) 호출
+    │           └─ 각 Technique::Submit()
+    │               └─ 각 RenderStep::Submit()
+    │                   └─ RenderQueuePass::Accept(RenderJob)
+    │
+    ├─[5] RenderGraph::Execute
+    │   │
+    │   ├─[Pass 1] ShadowMapPass::Execute()
+    │   │   ├─ 깊이/스텐실 클리어
+    │   │   ├─ 모든 RenderJob 실행 (섀도우 캐스터만)
+    │   │   │   └─ ShadowVS/ShadowPS 셰이더로 깊이 렌더링
+    │   │   └─ shadowMap 출력
+    │   │
+    │   ├─[Pass 2] LambertianRenderPass::Execute()
+    │   │   ├─ 렌더 타겟/깊이 스텐실 클리어
+    │   │   ├─ 모든 RenderJob 실행 (메인 렌더링)
+    │   │   │   ├─ Frustum Culling 체크
+    │   │   │   ├─ VertexBuffer/IndexBuffer 설정
+    │   │   │   ├─ VertexShader/PixelShader 바인딩
+    │   │   │   ├─ ConstantBuffer 업데이트 (Transform, Light 등)
+    │   │   │   ├─ Texture 바인딩 (Diffuse, Normal, Specular 등)
+    │   │   │   ├─ ShadowMap 바인딩 (셰이더 입력)
+    │   │   │   └─ DrawIndexed 호출
+    │   │   └─ renderTarget, depthStencil 출력
+    │   │
+    │   ├─[Pass 3] OutlineMaskPass::Execute()
+    │   │   ├─ 선택된 오브젝트만 렌더링
+    │   │   ├─ 단색으로 렌더링 (마스크 생성)
+    │   │   └─ outlineMask 출력
+    │   │
+    │   ├─[Pass 4] HorizontalBlurPass::Execute()
+    │   │   ├─ 전체 화면 쿼드 렌더링
+    │   │   ├─ outlineMask를 셰이더 입력으로 사용
+    │   │   ├─ 수평 블러 커널 적용
+    │   │   └─ blurredHorizontal 출력
+    │   │
+    │   ├─[Pass 5] VerticalBlurPass::Execute()
+    │   │   ├─ 전체 화면 쿼드 렌더링
+    │   │   ├─ blurredHorizontal을 셰이더 입력으로 사용
+    │   │   ├─ 수직 블러 커널 적용
+    │   │   └─ blurredOutline 출력
+    │   │
+    │   └─[Pass 6] OutlineDrawPass::Execute()
+    │       ├─ 메인 렌더 타겟에 아웃라인 합성
+    │       ├─ renderTarget + blurredOutline 합성
+    │       └─ backbuffer에 최종 출력
+    │
+    ├─[6] RenderGraph::RenderWindows()
+    │   └─ ImGui 디버그 창 렌더링 (커널 설정, 섀도우 설정 등)
+    │
+    ├─[7] UI 렌더링
+    │   ├─ FolderView::RenderFolderView()
+    │   ├─ MenuBar::RenderMenuBar()
+    │   └─ Inspector::Update()
+    │
+    ├─[8] Scene::LateUpdate (후처리)
+    │   └─ 컴포넌트별 후처리 로직
+    │
+    ├─[9] EndFrame
+    │   ├─ ImGui::Render()
+    │   ├─ ImGui_ImplDX11_RenderDrawData()
+    │   └─ swapChain->Present(0, 0)
+    │       └─ 백 버퍼와 프론트 버퍼 교환
+    │
+    └─[10] RenderGraph::Reset()
+        └─ 모든 RenderQueuePass의 renderJobs.clear()
+
+================================================================================
+12. Scene 관리 시스템
+================================================================================
+
+Scene은 게임의 한 장면을 나타내며, 여러 Object들을 관리하는 컨테이너 역할을 합니다.
+
+[12.1] Scene 클래스
+---------------------------------------------
+    코드 (Core/Scene/Base/Scene.h):
+    
+    class Scene : public EngineLoop
+    {
+    public:
+        // Scene 생성 팩토리
+        static std::shared_ptr<Scene> Create(std::string sceneName);
+        
+        // Object 관리
+        std::shared_ptr<Object> AddObject(std::shared_ptr<Object> object);
+        std::shared_ptr<Object> RemoveObject(const std::string& name);
+        std::shared_ptr<Object> GetObject(const std::string& name);
+        std::vector<std::shared_ptr<Object>> GetObjects();
+        bool HasObject(const std::string& name);
+        
+        // SceneGraph 접근
+        std::shared_ptr<SceneGraph> GetSceneGraph();
+        
+        // 카메라 관리
+        CameraContainer& GetCameraContainer() { return cameras; }
+        void CameraMoveRotation(Window& window, const GameTimer& timer, 
+                                float deltaTime);
+        
+        // 현재 활성화된 씬 반환
+        static std::shared_ptr<Scene> GetActiveScene();
+        
+        // EngineLoop 구현
+        void Initialize() override;
+        void Update(float deltaTime) override;
+        void LateUpdate() override;
+        // ... 기타 생명주기 메소드
+        
+    protected:
+        static std::shared_ptr<Scene> activeScene;  // 현재 활성 씬
+        
+        std::unordered_map<std::string, size_t> objectIndex;  // 빠른 검색
+        std::vector<std::shared_ptr<Object>> objects;         // Object 목록
+        
+        std::string sceneName;
+        std::shared_ptr<SceneGraph> sceneGraph;  // 씬 그래프
+        CameraContainer cameras;                  // 카메라 관리자
+    };
+    
+    사용 예시 (Core/Scene/SponzaScene.cpp):
+    
+    void SponzaScene::Initialize()
+    {
+        // 카메라 추가
+        std::shared_ptr<Object> camera = AddObject(Object::Create("Camera"));
+        cameras.AddCamera(camera->AddComponent<Camera>());
+        camera->GetComponent<TransformComponent>()->SetPosition(-22.0f, 4.0f, 0.0f);
+        
+        // 3D 모델 추가
+        std::shared_ptr<Object> sponza = AddObject(Object::Create("Sponza"));
+        sponza->AddComponent<Model>("Model/Sample/sponza/sponza.obj", 0.05f);
+        
+        // 조명 추가
+        std::shared_ptr<Object> light = AddObject(Object::Create("Light"));
+        light->AddComponent<PointLight>();
+        light->transform->SetPosition(0.0f, 10.0f, 0.0f);
+    }
+
+[12.2] SceneGraph
+---------------------------------------------
+SceneGraph는 씬의 계층 구조를 관리하고 렌더링을 조율합니다.
+
+    주요 역할:
+    - Object들의 계층 구조 관리
+    - 부모-자식 관계 추적
+    - 렌더링 순서 결정
+
+================================================================================
+13. 물리 시스템 (PhysX)
+================================================================================
+
+본 엔진은 NVIDIA PhysX를 통합하여 실시간 물리 시뮬레이션을 제공합니다.
+
+[13.1] PhysicsSystem (싱글톤)
+---------------------------------------------
+    코드 (Core/Component/Physics/PhysicsSystem.h):
+    
+    class PhysicsSystem
+    {
+    public:
+        // 싱글톤 인스턴스
+        static PhysicsSystem& GetInstance();
+        
+        // 시스템 생명주기
+        bool Initialize();
+        void Shutdown();
+        void Update(float deltaTime);
+        
+        // PhysX 객체 접근
+        physx::PxPhysics* GetPhysics() const { return physics; }
+        physx::PxScene* GetScene() const { return scene; }
+        
+        // 메시 콜라이더 생성
+        physx::PxTriangleMesh* CreateTriangleMeshCollider(
+            const std::vector<physx::PxVec3>& vertices,
+            const std::vector<uint32_t>& indices);
+        
+        physx::PxConvexMesh* CreateConvexMeshCollider(
+            const std::vector<physx::PxVec3>& vertices,
+            bool autoGenerateHull = true,
+            uint32_t vertexLimit = 256);
+        
+    private:
+        // PhysX 핵심 객체들
+        physx::PxFoundation* foundation = nullptr;
+        physx::PxPhysics* physics = nullptr;
+        physx::PxDefaultCpuDispatcher* dispatcher = nullptr;
+        physx::PxScene* scene = nullptr;
+        physx::PxPvd* pvd = nullptr;  // PhysX Visual Debugger
+        
+        float timeAccumulator = 0.0f;  // 고정 시간 간격 시뮬레이션용
+    };
+    
+    초기화 과정:
+    
+    bool PhysicsSystem::Initialize()
+    {
+        // 1) Foundation 생성 (PhysX 기반)
+        foundation = PxCreateFoundation(PX_PHYSICS_VERSION, allocator, 
+                                        errorCallback);
+        
+        // 2) Physics 객체 생성
+        physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, 
+                                  PxTolerancesScale());
+        
+        // 3) CPU Dispatcher 생성 (멀티스레딩)
+        dispatcher = PxDefaultCpuDispatcherCreate(2);  // 2개 스레드
+        
+        // 4) Scene 생성
+        PxSceneDesc sceneDesc(physics->getTolerancesScale());
+        sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);  // 중력 설정
+        sceneDesc.cpuDispatcher = dispatcher;
+        sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+        
+        scene = physics->createScene(sceneDesc);
+        
+        return true;
+    }
+    
+    업데이트 (고정 시간 간격):
+    
+    void PhysicsSystem::Update(float deltaTime)
+    {
+        const float fixedTimestep = 1.0f / 60.0f;  // 60 FPS
+        
+        timeAccumulator += deltaTime;
+        
+        // 고정 시간 간격으로 여러 번 시뮬레이션
+        while (timeAccumulator >= fixedTimestep)
+        {
+            scene->simulate(fixedTimestep);
+            scene->fetchResults(true);  // 결과 대기
+            
+            timeAccumulator -= fixedTimestep;
+        }
+    }
+
+[13.2] PhysicsComponent
+---------------------------------------------
+Object에 물리 속성을 부여하는 Component입니다.
+
+    주요 기능:
+    - Rigidbody (동적/정적)
+    - Collider (Box, Sphere, Mesh 등)
+    - 질량, 마찰, 반발 계수 설정
+    
+    사용 예시:
+    
+    // 물리 객체 생성
+    auto box = Object::Create("PhysicsBox");
+    box->AddComponent<Model>("Model/cube.obj");
+    
+    // 물리 컴포넌트 추가 (질량 50kg, 중력 적용)
+    auto physics = box->AddComponent<PhysicsComponent>(50.0f, true);
+    
+    // Box Collider 추가
+    physics->AddBoxCollider(1.0f, 1.0f, 1.0f);  // 크기 설정
+    
+    // 물리 속성 설정
+    physics->SetFriction(0.5f);      // 마찰 계수
+    physics->SetRestitution(0.3f);   // 반발 계수
+    
+    // 힘 적용
+    physics->AddForce(DirectX::XMFLOAT3(0, 100, 0));  // 위로 힘
+
+[13.3] 충돌 감지
+---------------------------------------------
+    PhysX는 자동으로 충돌을 감지하고 콜백 함수를 호출합니다.
+    
+    충돌 이벤트:
+    - OnCollisionEnter: 충돌 시작
+    - OnCollisionStay: 충돌 중
+    - OnCollisionExit: 충돌 종료
+
+================================================================================
+14. 입력 시스템
+================================================================================
+
+본 엔진은 키보드와 마우스 입력을 이벤트 기반으로 처리합니다.
+
+[14.1] Keyboard 클래스
+---------------------------------------------
+    코드 (Core/InputSystem/KeyBoard.h):
+    
+    class Keyboard
+    {
+    public:
+        class Event
+        {
+        public:
+            enum class Type { Press, Release };
+            
+            bool IsPress() const noexcept;
+            bool IsRelease() const noexcept;
+            unsigned char GetCode() const noexcept;
+        };
+        
+        // 키 상태 확인
+        bool IsPressed(unsigned char keycode) const noexcept;
+        
+        // 이벤트 큐에서 읽기
+        std::optional<Event> ReadKey() noexcept;
+        bool KeyIsEmpty() const noexcept;
+        void FlushKey() noexcept;
+        
+        // 문자 입력
+        std::optional<char> ReadChar() noexcept;
+        bool CharIsEmpty() const noexcept;
+        void FlushChar() noexcept;
+        
+        // Autorepeat (키 반복 입력)
+        void EnableAutorepeat() noexcept;
+        void DisableAutorepeat() noexcept;
+        bool AutorepeatIsEnabled() const noexcept;
+        
+    private:
+        static constexpr unsigned int nKeys = 256u;
+        static constexpr unsigned int bufferSize = 16u;
+        
+        bool autorepeatEnabled = false;
+        std::bitset<nKeys> keystates;    // 각 키의 현재 상태
+        std::queue<Event> keybuffer;     // 이벤트 큐
+        std::queue<char> charbuffer;     // 문자 입력 큐
+    };
+    
+    사용 예시 (Core/App.cpp):
+    
+    void App::KeyBoardInput(float deltaTime)
+    {
+        // 이벤트 큐에서 읽기
+        while (const auto currentKey = wnd.keyBoard.ReadKey())
+        {
+            if (!currentKey->IsPress())
+                continue;
+            
+            switch (currentKey->GetCode())
+            {
+            case VK_ESCAPE:  // ESC 키
+                if (wnd.GetCursorEnabled())
+                {
+                    wnd.DisableCursor();
+                    wnd.mouse.EnableRaw();
+                }
+                else
+                {
+                    wnd.EnableCursor();
+                    wnd.mouse.DisableRaw();
+                }
+                break;
+                
+            case VK_F1:  // F1 키
+                isShowDemoWindow = true;
+                break;
+            }
+        }
+        
+        // 현재 상태 확인 (실시간 입력)
+        if (wnd.keyBoard.IsPressed('W'))
+            camera->MoveForward(deltaTime);
+        
+        if (wnd.keyBoard.IsPressed('S'))
+            camera->MoveBackward(deltaTime);
+        
+        if (wnd.keyBoard.IsPressed('A'))
+            camera->MoveLeft(deltaTime);
+        
+        if (wnd.keyBoard.IsPressed('D'))
+            camera->MoveRight(deltaTime);
+    }
+
+[14.2] Mouse 클래스
+---------------------------------------------
+    주요 기능:
+    - 마우스 위치 추적
+    - 버튼 상태 (좌/우/휠)
+    - Raw Input 지원 (FPS 카메라용)
+    - 휠 스크롤 이벤트
+    
+    사용 예시:
+    
+    // 마우스 이동으로 카메라 회전
+    while (const auto delta = wnd.mouse.ReadRawDelta())
+    {
+        camera->Rotate(delta->x * sensitivity, delta->y * sensitivity);
+    }
+    
+    // 마우스 버튼
+    if (wnd.mouse.LeftIsPressed())
+    {
+        // 클릭 처리
+    }
+
+================================================================================
+15. Window 및 DirectX 초기화
+================================================================================
+
+[15.1] Window 클래스
+---------------------------------------------
+    코드 (Core/Window.h):
+    
+    class Window
+    {
+    public:
+        Window(int width, int height, const char* name);
+        
+        // 메시지 루프
+        static std::optional<int> ProcessMessages() noexcept;
+        
+        // 커서 제어
+        void EnableCursor() noexcept;
+        void DisableCursor() noexcept;
+        bool GetCursorEnabled() const noexcept;
+        
+        // DirectX Graphics 접근
+        static void SetDxGraphic(std::unique_ptr<DxGraphic> graphic);
+        static DxGraphic& GetDxGraphic();
+        
+        // 활성 SceneGraph 관리
+        static void SetActiveSceneGraph(std::shared_ptr<SceneGraph> sceneGraph);
+        static std::shared_ptr<SceneGraph> GetActiveSceneGraph();
+        
+        HWND GetHWnd() const { return hWnd; }
+        int GetClientWidht() { return width; }
+        int GetClientHeight() { return height; }
+        
+        Keyboard keyBoard;
+        Mouse mouse;
+        
+    private:
+        // 윈도우 메시지 처리
+        static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, 
+                                                WPARAM wParam, LPARAM lParam);
+        LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        
+        // 커서 관련
+        void ConfineCursor() noexcept;
+        void FreeCursor() noexcept;
+        void ShowCursor() noexcept;
+        void HideCursor() noexcept;
+        
+        bool cursorEnabled = true;
+        int width, height;
+        HWND hWnd;
+        
+        static std::unique_ptr<DxGraphic> graphic;
+        static std::shared_ptr<SceneGraph> activeSceneGraph;
+    };
+    
+    윈도우 생성 과정:
+    
+    Window::Window(int width, int height, const char* name)
+        : width(width), height(height)
+    {
+        // 1) 윈도우 크기 계산 (클라이언트 영역 기준)
+        RECT windowRect;
+        windowRect.left = 100;
+        windowRect.right = width + windowRect.left;
+        windowRect.top = 100;
+        windowRect.bottom = height + windowRect.top;
+        
+        AdjustWindowRect(&windowRect, WS_CAPTION | WS_MINIMIZEBOX | 
+                         WS_SYSMENU, FALSE);
+        
+        // 2) 윈도우 생성
+        hWnd = CreateWindow(
+            WindowClass::GetName(),
+            name,
+            WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+            CW_USEDEFAULT, CW_USEDEFAULT,
+            windowRect.right - windowRect.left,
+            windowRect.bottom - windowRect.top,
+            nullptr, nullptr,
+            WindowClass::GetInstance(),
+            this  // CreateParams로 this 전달
+        );
+        
+        // 3) 윈도우 표시
+        ShowWindow(hWnd, SW_SHOWDEFAULT);
+        
+        // 4) ImGui 초기화
+        ImGui_ImplWin32_Init(hWnd);
+        
+        // 5) DirectX Graphics 생성
+        graphic = std::make_unique<DxGraphic>(hWnd);
+    }
+
+[15.2] DirectX 초기화 과정
+---------------------------------------------
+    DxGraphic 생성자에서 순차적으로 초기화:
+    
+    DxGraphic::DxGraphic(HWND hWnd)
+    {
+        width = WINWIDTH;
+        height = WINHEIGHT;
+        
+        // 1) Device 생성
+        CreateDevice();
+        
+        // 2) MSAA 품질 확인
+        CheckMSAAQuality();
+        
+        // 3) SwapChain 설정 및 생성
+        SwapChainSettings(hWnd);
+        CreateSwapChain();
+        
+        // 4) RenderTargetView 생성
+        CreateRenderTargetView();
+        
+        // 5) ImGui DirectX11 백엔드 초기화
+        ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
+    }
+    
+    1) Device 생성:
+    
+    HRESULT DxGraphic::CreateDevice()
+    {
+        D3D_FEATURE_LEVEL featureLevel;
+        UINT createDeviceFlags = 0;
+        
+        #if defined(DEBUG) || defined(_DEBUG)
+            createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+        #endif
+        
+        HRESULT hr = D3D11CreateDevice(
+            nullptr,                    // 기본 어댑터 사용
+            D3D_DRIVER_TYPE_HARDWARE,   // 하드웨어 가속
+            nullptr,
+            createDeviceFlags,
+            nullptr, 0,                 // 기본 기능 수준
+            D3D11_SDK_VERSION,
+            &device,                    // ID3D11Device
+            &featureLevel,              // 실제 기능 수준
+            &deviceContext              // ID3D11DeviceContext
+        );
+        
+        // Feature Level 11.0 확인
+        if (featureLevel != D3D_FEATURE_LEVEL_11_0)
+        {
+            MessageBox(0, "DirectX 11 지원 안 됨", 0, 0);
+            return S_FALSE;
+        }
+        
+        return S_OK;
+    }
+    
+    2) SwapChain 생성:
+    
+    void DxGraphic::CreateSwapChain()
+    {
+        // DXGI Factory 가져오기
+        IDXGIDevice* dxgiDevice = nullptr;
+        device->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+        
+        IDXGIAdapter* dxgiAdapter = nullptr;
+        dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter);
+        
+        IDXGIFactory* dxgiFactory = nullptr;
+        dxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+        
+        // SwapChain 생성
+        GRAPHIC_FAILED(dxgiFactory->CreateSwapChain(
+            device.Get(), 
+            &swapChainDesc, 
+            &swapChain
+        ));
+        
+        // 정리
+        ReleaseCOM(dxgiDevice);
+        ReleaseCOM(dxgiAdapter);
+        ReleaseCOM(dxgiFactory);
+    }
+
+================================================================================
+16. Material 시스템
+================================================================================
+
+Material은 3D 모델의 외형을 결정하는 재질 정보를 관리합니다.
+
+[16.1] Material 클래스
+---------------------------------------------
+    코드 (Core/Draw/Base/Material.h):
+    
+    class Material
+    {
+    public:
+        // Assimp aiMaterial로부터 생성
+        Material(const aiMaterial& material, 
+                 const std::filesystem::path& path) NOEXCEPTRELEASE;
+        
+        // Vertex/Index 데이터 생성
+        VertexCore::VertexBuffer GetVertex(const aiMesh& mesh) const noexcept;
+        std::vector<unsigned short> GetIndex(const aiMesh& mesh) const noexcept;
+        
+        // DirectX 버퍼 생성
+        std::shared_ptr<Graphic::VertexBuffer> CreateVertexBuffer(
+            const aiMesh& mesh, float scale = 1.0f) const NOEXCEPTRELEASE;
+        
+        std::shared_ptr<Graphic::IndexBuffer> CreateIndexBuffer(
+            const aiMesh& mesh) const NOEXCEPTRELEASE;
+        
+        // 렌더링 기법 반환
+        std::vector<Technique> GetTechnique() const noexcept;
+        
+    private:
+        VertexCore::VertexLayout vertexLayout;  // 정점 레이아웃
+        std::vector<Technique> techniques;       // 렌더링 기법들
+        std::string modelPath;
+        std::string name;
+    };
+    
+    Material 속성:
+    - Diffuse Texture (기본 색상)
+    - Normal Map (노멀 매핑)
+    - Specular Map (반사광)
+    - Ambient, Emissive 등
+    
+    Assimp에서 로드:
+    
+    Material::Material(const aiMaterial& material, 
+                       const std::filesystem::path& path)
+    {
+        // 1) Diffuse 텍스처 로드
+        aiString texturePath;
+        if (material.GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) 
+            == AI_SUCCESS)
+        {
+            std::string fullPath = path.parent_path().string() + "\\" + 
+                                   texturePath.C_Str();
+            diffuseTexture = Texture::Create(fullPath);
+        }
+        
+        // 2) Normal Map 로드
+        if (material.GetTexture(aiTextureType_NORMALS, 0, &texturePath) 
+            == AI_SUCCESS)
+        {
+            std::string fullPath = path.parent_path().string() + "\\" + 
+                                   texturePath.C_Str();
+            normalMap = Texture::Create(fullPath);
+        }
+        
+        // 3) Specular Map 로드
+        if (material.GetTexture(aiTextureType_SPECULAR, 0, &texturePath) 
+            == AI_SUCCESS)
+        {
+            std::string fullPath = path.parent_path().string() + "\\" + 
+                                   texturePath.C_Str();
+            specularMap = Texture::Create(fullPath);
+        }
+        
+        // 4) Technique 구성 (사용 가능한 텍스처에 따라)
+        if (diffuseTexture && normalMap && specularMap)
+        {
+            // 모든 맵 사용하는 셰이더
+            techniques.push_back(
+                Technique("LitTextureDiffuseSpecularNormal", channel)
+            );
+        }
+        else if (diffuseTexture && normalMap)
+        {
+            techniques.push_back(
+                Technique("LitTextureDiffuseNormal", channel)
+            );
+        }
+        else if (diffuseTexture)
+        {
+            techniques.push_back(
+                Technique("LitTextureDiffuse", channel)
+            );
+        }
+    }
+
+================================================================================
+17. Object와 Component 시스템
+================================================================================
+
+본 엔진은 Unity와 유사한 Entity-Component 패턴을 채택하여 게임 오브젝트를 
+구성합니다. Object는 게임 세계의 엔티티를 나타내며, Component는 Object에 
+기능을 추가하는 모듈입니다.
+
+[12.1] 설계 철학
+---------------------------------------------
+    Unity 스타일 차용:
+    - GameObject → Object
+    - MonoBehaviour → Component
+    - AddComponent<T>(), GetComponent<T>() 제공
+    
+    개선 사항:
+    - C++20 Concept을 활용한 타입 안전성
+    - 스마트 포인터(shared_ptr)로 메모리 자동 관리
+    - Transform 자동 캐싱으로 성능 향상
+
+[12.2] EngineLoop 인터페이스
+---------------------------------------------
+모든 Object와 Component는 EngineLoop 인터페이스를 구현하여 통일된 생명주기를 
+가집니다.
+
+    코드 (Core/Object/EngineLoop.h):
+    
+    class EngineLoop
+    {
+    public:
+        virtual void Initialize() = 0;    // 초기화 (리소스 로드 등)
+        virtual void BeforeFrame() = 0;   // 첫 프레임 전 실행
+        virtual void Start() = 0;         // 게임 시작 시 1회 실행
+        virtual void LateStart() = 0;     // Start 이후 1회 실행
+        virtual void Update(float deltaTime) = 0;  // 매 프레임 업데이트
+        virtual void LateUpdate() = 0;    // Update 이후 실행
+        virtual void Finalize() = 0;      // 종료 전 정리
+        virtual void Destroy() = 0;       // 객체 파괴 시 실행
+        
+        virtual void OnEnable() = 0;      // 활성화 시
+        virtual void OnDisable() = 0;     // 비활성화 시
+        
+        virtual void Reset() = 0;         // 리셋
+        
+        virtual ~EngineLoop() = default;
+    };
+    
+    생명주기 순서:
+    1) Initialize() - 객체 생성 직후
+    2) BeforeFrame() - 첫 프레임 시작 전
+    3) Start() - 게임 시작 시 1회
+    4) LateStart() - Start 직후 1회
+    5) Update(deltaTime) - 매 프레임 (게임 로직)
+    6) LateUpdate() - Update 이후 (카메라, 후처리 등)
+    7) Finalize() - 씬 종료 시
+    8) Destroy() - 객체 파괴 시
+
+[12.3] Object 클래스
+---------------------------------------------
+Object는 게임 세계의 기본 엔티티로, Component들의 컨테이너 역할을 합니다.
+
+    주요 특징:
+    - 모든 Object는 기본적으로 TransformComponent를 가짐
+    - Component들을 std::unordered_map으로 관리
+    - shared_ptr과 enable_shared_from_this로 안전한 참조 관리
+    
+    코드 예시 (Core/Object/Object.h):
+    
+    template<typename T>
+    concept ComponentChild = std::is_base_of_v<Component, T>;
+    
+    class Object : public EngineLoop, 
+                   public std::enable_shared_from_this<Object>
+    {
+    public:
+        // Object 생성 팩토리 메소드
+        static std::shared_ptr<Object> Create(std::string name)
+        {
+            std::shared_ptr<Object> newObject = std::make_shared<Object>(name);
+            
+            // 모든 Object는 TransformComponent를 기본으로 가짐
+            auto transformComponent = 
+                std::make_shared<TransformComponent>(newObject);
+            
+            newObject->components[transformComponent->GetClassName()] = 
+                transformComponent;
+            
+            transformComponent->SetObject(newObject);
+            newObject->transform = transformComponent;
+            transformComponent->transform = transformComponent;
+            
+            return newObject;
+        }
+        
+        // Component 추가 (템플릿, 타입 안전성 보장)
+        template <ComponentChild ComponentClass, typename... Args>
+        std::shared_ptr<ComponentClass> AddComponent(Args&&... args)
+        {
+            // TransformComponent 중복 방지
+            if constexpr (std::is_same_v<ComponentClass, TransformComponent>)
+                return std::dynamic_pointer_cast<ComponentClass>(transform);
+            
+            // 이미 존재하는 컴포넌트는 재사용
+            std::string componentName = ComponentClass::GetStaticClassName();
+            if (components.find(componentName) != components.end())
+                return std::dynamic_pointer_cast<ComponentClass>(
+                    components[componentName]
+                );
+            
+            // 새 컴포넌트 생성
+            auto component = std::make_shared<ComponentClass>(
+                shared_from_this(), 
+                std::forward<Args>(args)...
+            );
+            
+            // Object와 Transform 참조 설정
+            component->SetObject(shared_from_this());
+            component->transform = this->transform;
+            
+            components[component->GetClassName()] = component;
+            
+            return component;
+        }
+        
+        // Component 가져오기 (템플릿)
+        template <ComponentChild ComponentClass>
+        std::shared_ptr<ComponentClass> GetComponent()
+        {
+            for (auto& component : components)
+            {
+                if (component.second->GetClassName() == 
+                    ComponentClass::GetStaticClassName())
+                {
+                    return std::dynamic_pointer_cast<ComponentClass>(
+                        component.second
+                    );
+                }
+            }
+            
+            return nullptr;
+        }
+        
+        // Component 존재 여부 확인
+        template<ComponentChild ComponentClass>
+        bool HasComponent() const
+        {
+            std::string componentName = ComponentClass::GetStaticClassName();
+            return components.find(componentName) != components.end();
+        }
+        
+        std::shared_ptr<TransformComponent> transform;  // 항상 존재
+        
+    protected:
+        std::unordered_map<std::string, std::shared_ptr<Component>> components;
+        std::string name;
+        bool isActive = true;
+    };
+    
+    Object의 생명주기 관리 (Core/Object/Object.cpp):
+    
+    // Update 예시 - 모든 Component의 Update 호출
+    void Object::Update(float deltaTime)
+    {
+        // 비활성화된 Object는 업데이트 안 함
+        if (!isActive)
+            return;
+        
+        // 모든 활성화된 Component 업데이트
+        for (auto& component : components)
+        {
+            if (component.second->GetEnable())
+                component.second->Update(deltaTime);
+        }
+    }
+    
+    실제 사용 예시 (Core/Scene/SponzaScene.cpp):
+    
+    void SponzaScene::Initialize()
+    {
+        // 카메라 Object 생성
+        std::shared_ptr<Object> camera = AddObject(Object::Create("Camera"));
+        
+        // Camera Component 추가
+        cameras.AddCamera(camera->AddComponent<Camera>());
+        
+        // TransformComponent로 위치/회전 설정
+        camera->GetComponent<TransformComponent>()->SetPosition(-22.0f, 4.0f, 0.0f);
+        camera->GetComponent<TransformComponent>()->SetRotationFromEuler(
+            0.0f, Math::PI / 2.0f, 0.0f
+        );
+        
+        // 3D 모델 Object 생성
+        std::shared_ptr<Object> gobber = AddObject(Object::Create("Gobber"));
+        
+        // Model Component 추가 (경로, 스케일)
+        gobber->AddComponent<Model>("Model/Sample/gobber/GoblinX.obj", 4.0f);
+        
+        // 위치 및 회전 설정
+        gobber->GetComponent<TransformComponent>()->SetPosition(-30.0f, 10.0f, 0.0f);
+        gobber->GetComponent<TransformComponent>()->SetRotationFromEuler(
+            0.0f, -Math::PI / 2.0f, 0.0f
+        );
+        
+        // 물리 Component 추가 (질량 50kg, 중력 적용)
+        auto gobberPhysics = gobber->AddComponent<PhysicsComponent>(50.0f, true);
+    }
+
+[12.4] Component 클래스
+---------------------------------------------
+Component는 Object에 특정 기능을 추가하는 모듈입니다.
+
+    코드 (Core/Component/Component.h):
+    
+    class Component : public EngineLoop
+    {
+    public:
+        Component(std::shared_ptr<Object> object)
+        {
+            SetObject(object);
+            
+            // Object의 Transform 자동 캐싱
+            if (object && object->transform != nullptr)
+                transform = object->transform;
+        }
+        
+        // 기본 구현 제공 (오버라이드 선택적)
+        void Initialize() override { }
+        void Update(float deltaTime) override { }
+        void LateUpdate() override { }
+        // ... 나머지 생명주기 메소드들
+        
+        void SetObject(std::shared_ptr<Object> object)
+        {
+            this->object = object;
+        }
+        
+        std::shared_ptr<Object> GetObject()
+        {
+            return object;
+        }
+        
+        void SetEnable(bool isEnable)
+        {
+            if (this->isActive == isEnable)
+                return;
+            
+            bool wasActive = this->isActive;
+            this->isActive = isEnable;
+            
+            // 상태 변경 시 이벤트 호출
+            if (wasActive != isEnable)
+            {
+                if (isEnable)
+                    OnEnable();
+                else
+                    OnDisable();
+            }
+        }
+        
+        bool GetEnable() const { return isActive; }
+        
+        // 클래스 이름 반환 (RTTI 대체)
+        virtual std::string GetClassName() const { return "Component"; }
+        static std::string GetStaticClassName() { return "Component"; }
+        
+        std::shared_ptr<TransformComponent> transform;  // 빠른 접근
+        
+    protected:
+        std::shared_ptr<Object> object;
+        bool isActive = true;
+    };
+
+[12.5] TransformComponent (핵심 Component)
+---------------------------------------------
+모든 Object가 가지는 필수 Component로, 3D 공간에서의 위치/회전/크기를 관리합니다.
+
+    주요 특징:
+    - 쿼터니언 기반 회전 (짐벌락 방지)
+    - 월드 좌표계 / 로컬 좌표계 분리 관리
+    - 부모-자식 계층 구조 지원
+    - 자동 좌표계 변환 (월드 ↔ 로컬)
+
+[12.5.1] Transform 구조체
+---------------------------------------------
+    위치, 회전, 크기를 담는 기본 데이터 구조입니다.
+    
+    struct Transform
+    {
+        Position position;      // 위치 (Vector3)
+        Quaternion rotation;    // 회전 (쿼터니언)
+        Scale scale;           // 크기 (Vector3)
+        
+        // === 기본 Getter/Setter ===
+        Position& GetPosition();
+        void SetPosition(float x, float y, float z);
+        void SetPosition(const Position& newPosition);
+        
+        Quaternion& GetRotation();
+        void SetRotation(const Quaternion& newRotation);
+        void SetRotationFromEuler(float roll, float pitch, float yaw);
+        Euler GetRotationEuler() const;
+        
+        Scale& GetScale();
+        void SetScale(float x, float y, float z);
+        void SetScale(float uniform);
+        
+        // === SRT 행렬 생성 (Scale -> Rotation -> Translation) ===
+        DirectX::XMMATRIX GetTransformMatrix() const;
+        DirectX::XMFLOAT4X4 GetTransformMatrix4x4() const;
+        
+        // === 방향 벡터 (회전 적용됨) ===
+        Vector3 GetRight() const;     // 오른쪽 방향 (1, 0, 0)
+        Vector3 GetUp() const;        // 위쪽 방향 (0, 1, 0)
+        Vector3 GetForward() const;   // 앞쪽 방향 (0, 0, 1)
+        Vector3 GetLeft() const;      // -Right
+        Vector3 GetDown() const;      // -Up
+        Vector3 GetBack() const;      // -Forward
+        
+        // === 변환 적용 ===
+        void Translate(const Vector3& translation);  // 위치 이동
+        void Rotate(const Quaternion& additionalRotation);  // 회전 추가
+        void LookAt(const Vector3& target, const Vector3& up);  // 대상 바라보기
+        
+        // === 좌표계 변환 ===
+        Vector3 TransformPoint(const Vector3& point) const;  // 로컬 → 월드 (위치 적용)
+        Vector3 TransformVector(const Vector3& vector) const;  // 로컬 → 월드 (방향만)
+        Vector3 InverseTransformPoint(const Vector3& point) const;  // 월드 → 로컬 (위치)
+        Vector3 InverseTransformVector(const Vector3& vector) const;  // 월드 → 로컬 (방향)
+        
+        // === 보간 (애니메이션용) ===
+        static Transform Lerp(const Transform& from, const Transform& to, float t);  // 선형 보간
+        static Transform Slerp(const Transform& from, const Transform& to, float t); // 구면 선형 보간
+        
+        // === 유틸리티 ===
+        Transform GetInverse() const;  // 역변환
+        static Transform FromMatrix(const XMMATRIX& matrix);  // 행렬에서 추출
+        void Reset();  // Identity로 초기화
+    };
+    
+    구현 세부 사항 (Transform.cpp):
+    
+    // 1) 방향 벡터 계산 - 회전 쿼터니언을 적용한 방향
+    Vector3 Transform::GetRight() const
+    {
+        XMMATRIX rotationMatrix = GetRotationMatrix();
+        XMVECTOR rightVector = XMLoadFloat3(&Vector::right);  // (1, 0, 0)
+        rightVector = XMVector3TransformNormal(rightVector, rotationMatrix);
+        rightVector = XMVector3Normalize(rightVector);
+        
+        XMFLOAT3 result;
+        XMStoreFloat3(&result, rightVector);
+        return Vector3(result.x, result.y, result.z);
+    }
+    
+    // 2) LookAt 변환 - 대상을 바라보도록 회전 설정
+    void Transform::LookAt(const Vector3& target, const Vector3& upDir)
+    {
+        Vector3 forward = target - position;
+        if (forward.GetLength() < 0.001f) return;  // 너무 가까우면 무시
+        
+        // Forward 벡터 정규화
+        XMVECTOR forwardVec = Vector::ConvertXMVECTOR(forward);
+        forwardVec = XMVector3Normalize(forwardVec);
+        
+        XMVECTOR upVec = Vector::ConvertXMVECTOR(upDir);
+        upVec = XMVector3Normalize(upVec);
+        
+        // Right = Forward × Up (외적으로 직교 벡터 생성)
+        XMVECTOR rightVec = XMVector3Cross(forwardVec, upVec);
+        rightVec = XMVector3Normalize(rightVec);
+        
+        // Up 재계산으로 직교성 보장: Up = Right × Forward
+        upVec = XMVector3Cross(rightVec, forwardVec);
+        
+        // 회전 행렬 구성 후 쿼터니언 추출
+        XMMATRIX rotationMatrix;
+        rotationMatrix.r[0] = rightVec;
+        rotationMatrix.r[1] = upVec;
+        rotationMatrix.r[2] = forwardVec;
+        rotationMatrix.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+        
+        XMVECTOR quatVec = XMQuaternionRotationMatrix(rotationMatrix);
+        quatVec = XMQuaternionNormalize(quatVec);
+        
+        rotation.x = XMVectorGetX(quatVec);
+        rotation.y = XMVectorGetY(quatVec);
+        rotation.z = XMVectorGetZ(quatVec);
+        rotation.w = XMVectorGetW(quatVec);
+    }
+    
+    // 3) Slerp 구현 - 부드러운 회전 보간
+    Transform Transform::Slerp(const Transform& from, const Transform& to, float t)
+    {
+        t = std::max(0.0f, std::min(1.0f, t));  // [0, 1] 범위 제한
+        
+        Transform result;
+        result.position = from.position + (to.position - from.position) * t;
+        result.scale = from.scale + (to.scale - from.scale) * t;
+        
+        // 쿼터니언 구면 선형 보간 (각속도가 일정)
+        XMVECTOR fromQuat = XMVectorSet(from.rotation.x, from.rotation.y, 
+                                         from.rotation.z, from.rotation.w);
+        XMVECTOR toQuat = XMVectorSet(to.rotation.x, to.rotation.y, 
+                                       to.rotation.z, to.rotation.w);
+        XMVECTOR slerpedQuat = XMQuaternionSlerp(fromQuat, toQuat, t);
+        
+        result.rotation.x = XMVectorGetX(slerpedQuat);
+        result.rotation.y = XMVectorGetY(slerpedQuat);
+        result.rotation.z = XMVectorGetZ(slerpedQuat);
+        result.rotation.w = XMVectorGetW(slerpedQuat);
+        
+        return result;
+    }
+
+[12.5.2] TransformComponent 클래스
+---------------------------------------------
+    Transform 구조체를 2개 보유하여 월드/로컬 좌표계를 관리합니다.
+    
+    class TransformComponent : public Component
+    {
+    private:
+        Transform worldTransform;   // 월드 좌표계 (씬 기준)
+        Transform localTransform;   // 로컬 좌표계 (부모 기준)
+        
+        std::shared_ptr<TransformComponent> parent;
+        std::vector<std::shared_ptr<TransformComponent>> children;
+        std::unordered_map<std::string, UINT> childIndex;
+        
+        DirectX::XMFLOAT4X4 transformMatrix;  // 행렬 캐시
+        
+        // 내부 헬퍼 함수
+        void UpdateWorldRotation() noexcept;  // 로컬 회전 → 월드 회전
+        void UpdateLocalRotation() noexcept;  // 월드 회전 → 로컬 회전
+    };
+    
+    핵심 설계 원칙:
+    
+    1) 월드 좌표 설정 시 → 로컬 좌표 자동 계산
+       
+       void TransformComponent::SetPosition(Position position)
+       {
+           worldTransform.SetPosition(position);
+           
+           if (HasParent())
+           {
+               // 월드 위치를 부모의 로컬 좌표계로 역변환
+               XMVECTOR worldPosVec = Vector::ConvertXMVECTOR(position);
+               XMMATRIX parentWorldToLocal = XMMatrixInverse(nullptr, 
+                                             parent->GetTransformMatrix());
+               XMVECTOR localPosVec = XMVector3TransformCoord(worldPosVec, 
+                                                              parentWorldToLocal);
+               
+               XMFLOAT3 localPosFloat3;
+               XMStoreFloat3(&localPosFloat3, localPosVec);
+               localTransform.SetPosition(localPosFloat3);
+           }
+           else
+               localTransform.SetPosition(position);  // 부모 없으면 동일
+       }
+    
+    2) 로컬 좌표 설정 시 → 월드 좌표 자동 계산
+       
+       void TransformComponent::SetLocalPosition(Position position)
+       {
+           localTransform.SetPosition(position);
+           
+           if (HasParent())
+           {
+               // 로컬 위치를 부모의 월드 좌표계로 변환
+               XMVECTOR localPosVec = Vector::ConvertXMVECTOR(position);
+               XMMATRIX parentWorldMatrix = parent->GetTransformMatrix();
+               XMVECTOR worldPosVec = XMVector3TransformCoord(localPosVec, 
+                                                              parentWorldMatrix);
+               
+               XMFLOAT3 worldPosFloat3;
+               XMStoreFloat3(&worldPosFloat3, worldPosVec);
+               worldTransform.SetPosition(worldPosFloat3);
+           }
+           else
+               worldTransform.SetPosition(position);  // 부모 없으면 동일
+       }
+    
+    3) 회전 업데이트 - 쿼터니언 곱셈
+       
+       void TransformComponent::UpdateWorldRotation()
+       {
+           if (HasParent())
+           {
+               // 월드 회전 = 부모 월드 회전 * 로컬 회전
+               const Quaternion& localRot = localTransform.GetRotation();
+               const Quaternion& parentRot = parent->GetRotation();
+               
+               XMVECTOR localQ = XMVectorSet(localRot.x, localRot.y, 
+                                             localRot.z, localRot.w);
+               XMVECTOR parentQ = XMVectorSet(parentRot.x, parentRot.y, 
+                                              parentRot.z, parentRot.w);
+               
+               // 쿼터니언 곱셈 (순서 중요: Parent * Local)
+               XMVECTOR worldQ = XMQuaternionMultiply(parentQ, localQ);
+               worldQ = XMQuaternionNormalize(worldQ);  // 정규화로 오차 방지
+               
+               Quaternion& worldQuat = worldTransform.GetRotation();
+               worldQuat.x = XMVectorGetX(worldQ);
+               worldQuat.y = XMVectorGetY(worldQ);
+               worldQuat.z = XMVectorGetZ(worldQ);
+               worldQuat.w = XMVectorGetW(worldQ);
+           }
+           else
+               worldTransform.SetRotation(localTransform.GetRotation());
+       }
+       
+       void TransformComponent::UpdateLocalRotation()
+       {
+           if (HasParent())
+           {
+               // 로컬 회전 = 부모 월드 회전의 역 * 월드 회전
+               const Quaternion& worldRot = worldTransform.GetRotation();
+               const Quaternion& parentRot = parent->GetRotation();
+               
+               XMVECTOR worldQ = XMVectorSet(worldRot.x, worldRot.y, 
+                                             worldRot.z, worldRot.w);
+               XMVECTOR parentQ = XMVectorSet(parentRot.x, parentRot.y, 
+                                              parentRot.z, parentRot.w);
+               XMVECTOR parentInvQ = XMQuaternionInverse(parentQ);
+               
+               XMVECTOR localQ = XMQuaternionMultiply(parentInvQ, worldQ);
+               localQ = XMQuaternionNormalize(localQ);
+               
+               Quaternion& localQuat = localTransform.GetRotation();
+               localQuat.x = XMVectorGetX(localQ);
+               localQuat.y = XMVectorGetY(localQ);
+               localQuat.z = XMVectorGetZ(localQ);
+               localQuat.w = XMVectorGetW(localQ);
+           }
+           else
+               localTransform.SetRotation(worldTransform.GetRotation());
+       }
+    
+    4) 변환 행렬 생성 - 계층 구조 고려
+       
+       DirectX::XMMATRIX TransformComponent::GetTransformMatrix() const
+       {
+           if (HasParent())
+           {
+               // 로컬 행렬 * 부모 월드 행렬
+               XMMATRIX localMatrix = GetLocalTransformMatrix();
+               XMMATRIX parentMatrix = parent->GetTransformMatrix();
+               return localMatrix * parentMatrix;
+           }
+           else
+           {
+               // 월드 행렬 직접 생성: Scale * Rotation * Translation
+               const Quaternion& rot = worldTransform.GetRotation();
+               XMVECTOR rotQuat = XMVectorSet(rot.x, rot.y, rot.z, rot.w);
+               
+               return
+                   XMMatrixScaling(worldTransform.GetScale().x, 
+                                   worldTransform.GetScale().y, 
+                                   worldTransform.GetScale().z) *
+                   XMMatrixRotationQuaternion(rotQuat) *
+                   XMMatrixTranslation(worldTransform.GetPosition().x, 
+                                       worldTransform.GetPosition().y, 
+                                       worldTransform.GetPosition().z);
+           }
+       }
+    
+    5) 계층 구조 전체 업데이트 - 재귀적 처리
+       
+       void TransformComponent::UpdateTransform()
+       {
+           if (HasParent())
+           {
+               // 위치: 로컬 위치를 부모 월드 변환으로 변환
+               XMVECTOR localPosVec = Vector::ConvertXMVECTOR(
+                   localTransform.GetPosition());
+               XMMATRIX parentWorldMatrix = parent->GetTransformMatrix();
+               XMVECTOR worldPosVec = XMVector3TransformCoord(localPosVec, 
+                                                              parentWorldMatrix);
+               
+               Position& worldPos = worldTransform.GetPosition();
+               worldPos.x = XMVectorGetX(worldPosVec);
+               worldPos.y = XMVectorGetY(worldPosVec);
+               worldPos.z = XMVectorGetZ(worldPosVec);
+               
+               // 회전: 쿼터니언 곱셈
+               UpdateWorldRotation();
+               
+               // 크기: 성분별 곱셈
+               const Scale& parentScale = parent->GetScale();
+               const Scale& localScale = localTransform.GetScale();
+               worldTransform.SetScale(
+                   localScale.x * parentScale.x,
+                   localScale.y * parentScale.y,
+                   localScale.z * parentScale.z
+               );
+           }
+           else
+               worldTransform = localTransform;
+           
+           // 자식들도 재귀적으로 업데이트
+           for (const auto& child : children)
+           {
+               if (child != nullptr)
+                   child->UpdateTransform();
+           }
+       }
+
+[12.5.3] 쿼터니언 사용 이유
+---------------------------------------------
+    
+    1) 짐벌락(Gimbal Lock) 방지
+       - 오일러 각도는 특정 각도에서 자유도 상실
+       - 쿼터니언은 모든 방향에서 안정적
+    
+    2) 부드러운 보간
+       - Slerp (구면 선형 보간)으로 자연스러운 회전
+       - 각속도가 일정하게 유지됨
+    
+    3) 메모리 효율
+       - 쿼터니언: 4개 float (16 bytes)
+       - 3x3 회전 행렬: 9개 float (36 bytes)
+    
+    4) 회전 결합 간편
+       - 행렬: C = A * B (16번의 곱셈)
+       - 쿼터니언: q3 = q1 * q2 (8번의 곱셈)
+
+[12.5.4] 사용 예시
+---------------------------------------------
+    
+    1) 기본 Transform 사용:
+    
+    auto obj = Object::Create("Player");
+    obj->transform->SetPosition(10.0f, 5.0f, 0.0f);
+    obj->transform->SetRotationFromEuler(0.0f, Math::PI / 4.0f, 0.0f);  // 45도 회전
+    obj->transform->SetScale(2.0f, 2.0f, 2.0f);
+    
+    // 방향 벡터 사용
+    Vector3 forward = obj->transform->GetForward();
+    obj->transform->SetPosition(
+        obj->transform->GetPosition() + forward * moveSpeed * deltaTime
+    );
+    
+    2) 계층 구조 사용:
+    
+    // 부모 생성 (차체)
+    auto car = Object::Create("Car");
+    car->transform->SetPosition(0.0f, 0.0f, 0.0f);
+    
+    // 자식 생성 (바퀴)
+    auto wheel = Object::Create("Wheel");
+    wheel->transform->SetLocalPosition(1.5f, -0.5f, 1.0f);  // 차체 기준
+    wheel->transform->SetParent(car->transform);
+    
+    // 차체 회전 시 바퀴도 함께 회전
+    car->transform->SetRotationFromEuler(0.0f, Math::PI / 2.0f, 0.0f);
+    car->transform->UpdateTransform();  // 자식들도 업데이트
+    
+    // 바퀴의 월드 위치는 자동 계산됨
+    Vector3 wheelWorldPos = wheel->transform->GetPosition();
+    
+    3) LookAt 사용 (카메라, 적 추적 등):
+    
+    auto enemy = Object::Create("Enemy");
+    auto player = Object::Create("Player");
+    
+    player->transform->SetPosition(10.0f, 0.0f, 5.0f);
+    enemy->transform->SetPosition(0.0f, 0.0f, 0.0f);
+    
+    // 적이 플레이어를 바라보도록
+    enemy->transform->GetTransform().LookAt(
+        player->transform->GetPosition(),
+        Vector3::up
+    );
+
+[12.6] 주요 Component 종류
+---------------------------------------------
+    
+    1) TransformComponent (필수)
+       - 위치, 회전, 크기 관리
+       - 부모-자식 계층 구조
+    
+    2) Camera
+       - 뷰/프로젝션 행렬 생성
+       - Frustum Culling
+    
+    3) Model
+       - 3D 모델 렌더링
+       - Assimp로 모델 로드
+       - Technique 시스템과 연동
+    
+    4) MeshComponent
+       - 여러 Mesh 관리
+       - 각 Mesh는 Material 보유
+    
+    5) PhysicsComponent
+       - PhysX 물리 시뮬레이션
+       - Rigidbody 동작
+       - 충돌 감지
+
+[12.7] Component 통신 패턴
+---------------------------------------------
+    
+    // 같은 Object의 다른 Component 접근
+    auto model = object->GetComponent<Model>();
+    auto physics = object->GetComponent<PhysicsComponent>();
+    
+    // 부모 Object의 Component 접근
+    if (transform->HasParent())
+    {
+        auto parentObj = transform->GetParent()->GetObject();
+        auto parentModel = parentObj->GetComponent<Model>();
+    }
+    
+    // 자식 Object의 Component 접근
+    for (auto& childTransform : transform->GetChildrens())
+    {
+        auto childObj = childTransform->GetObject();
+        auto childCamera = childObj->GetComponent<Camera>();
+    }
+
+[12.8] 설계상 장점
+---------------------------------------------
+    
+    1) 타입 안전성
+       - C++20 Concept (ComponentChild)로 컴파일 타임 체크
+       - 잘못된 타입은 컴파일 에러
+    
+    2) 메모리 안전성
+       - shared_ptr로 자동 메모리 관리
+       - enable_shared_from_this로 순환 참조 방지
+    
+    3) 성능 최적화
+       - Transform 캐싱 (모든 Component에서 빠른 접근)
+       - unordered_map으로 O(1) Component 검색
+       - 문자열 비교 최소화 (GetStaticClassName)
+    
+    4) 확장성
+       - 새 Component 추가 용이
+       - EngineLoop 인터페이스로 통일된 생명주기
+    
+    5) Unity와의 유사성
+       - 학습 곡선 최소화
+       - 직관적인 API
+
+================================================================================
+18. UI 시스템 (ImGui)
+================================================================================
+
+본 엔진은 ImGui를 사용하여 개발자 도구 UI를 제공합니다.
+
+[18.1] ImGui 통합
+---------------------------------------------
+    초기화 (Core/Window.cpp):
+    
+    Window::Window(int width, int height, const char* name)
+    {
+        // ... 윈도우 생성
+        
+        // ImGui 초기화
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;  // 도킹 활성화
+        
+        ImGui_ImplWin32_Init(hWnd);
+        ImGui_ImplDX11_Init(device.Get(), deviceContext.Get());
+    }
+    
+    렌더링 루프 (Core/App.cpp):
+    
+    void App::DoFrame(GameTimer& timer)
+    {
+        // ImGui 프레임 시작
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+        
+        // UI 렌더링
+        ShowUI();
+        
+        // ImGui 렌더링 완료
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    }
+
+[18.2] Inspector (오브젝트 속성 편집기)
+---------------------------------------------
+    Inspector는 선택한 Object의 Component들을 표시하고 편집합니다.
+    
+    기능:
+    - Transform 위치/회전/크기 실시간 편집
+    - Component 목록 표시
+    - 각 Component의 속성 표시/수정
+    - Component 추가/제거
+    
+    UI 구조:
+    
+    [Inspector]
+    ├─ Object: "PlayerCharacter"
+    │   ├─ TransformComponent
+    │   │   ├─ Position: [X: 0.0] [Y: 1.0] [Z: 0.0]
+    │   │   ├─ Rotation: [X: 0.0] [Y: 45.0] [Z: 0.0]
+    │   │   └─ Scale:    [X: 1.0] [Y: 1.0] [Z: 1.0]
+    │   ├─ Model
+    │   │   ├─ File: Model/player.obj
+    │   │   └─ Technique: LitTextureDiffuse
+    │   └─ PhysicsComponent
+    │       ├─ Mass: 70.0 kg
+    │       ├─ Friction: 0.5
+    │       └─ Restitution: 0.3
+
+[18.3] FolderView (씬 계층 구조)
+---------------------------------------------
+    FolderView는 Scene의 모든 Object를 계층 구조로 표시합니다.
+    
+    기능:
+    - Scene의 Object 목록
+    - 부모-자식 계층 시각화
+    - Object 선택 → Inspector 업데이트
+    - Object 추가/삭제
+    
+    UI 구조:
+    
+    [Scene Hierarchy]
+    ├─ 📷 MainCamera
+    ├─ 💡 DirectionalLight
+    └─ 📦 Environment
+        ├─ 🌳 Tree_01
+        ├─ 🌳 Tree_02
+        └─ 🏠 House
+            ├─ 🚪 Door
+            └─ 🪟 Window
+
+[18.4] MenuBar (상단 메뉴)
+---------------------------------------------
+    MenuBar는 주요 기능에 빠르게 접근할 수 있는 메뉴를 제공합니다.
+    
+    메뉴 구조:
+    
+    [File]
+    ├─ New Scene
+    ├─ Open Scene
+    ├─ Save Scene
+    └─ Exit
+    
+    [Edit]
+    ├─ Undo
+    ├─ Redo
+    └─ Preferences
+    
+    [GameObject]
+    ├─ Create Empty
+    ├─ 3D Object
+    │   ├─ Cube
+    │   ├─ Sphere
+    │   └─ Plane
+    └─ Light
+        ├─ Directional
+        ├─ Point
+        └─ Spot
+    
+    [Window]
+    ├─ Inspector
+    ├─ Hierarchy
+    └─ Demo Window
+
+================================================================================
+19. 예외 처리 시스템
+================================================================================
+
+[19.1] 예외 클래스 계층
+---------------------------------------------
+    
+    Exception (기본 예외 클래스)
+    ├─ HRException (HRESULT 에러)
+    ├─ InfoException (디버그 정보 포함)
+    ├─ DeviceRemovedException (디바이스 제거)
+    └─ CustomException (커스텀 에러)
+    
+    코드 (Core/Exception/HRException.h):
+    
+    class HRException : public Exception
+    {
+    public:
+        HRException(int line, const char* file, HRESULT hr) noexcept;
+        
+        const char* what() const noexcept override;
+        const char* GetType() const noexcept override;
+        
+        HRESULT GetErrorCode() const noexcept;
+        std::string GetErrorDescription() const noexcept;
+        
+    private:
+        HRESULT hr;
+    };
+    
+    사용 예시:
+    
+    // DirectX API 호출 시 자동 예외 발생
+    #define GRAPHIC_FAILED(hr) \
+        if (FAILED(hr)) \
+            throw HRException(__LINE__, __FILE__, hr)
+    
+    // 실제 사용
+    GRAPHIC_FAILED(device->CreateBuffer(&desc, nullptr, &buffer));
+
+[19.2] 디버그 정보 캡처
+---------------------------------------------
+    
+    DxgiInfoManager는 DirectX 디버그 레이어의 메시지를 캡처합니다.
+    
+    기능:
+    - 디버그 빌드에서만 활성화
+    - Warning, Error, Corruption 메시지 수집
+    - 예외 발생 시 디버그 정보 포함
+    
+    코드:
+    
+    DxgiInfoManager::DxgiInfoManager()
+    {
+        // DXGIGetDebugInterface 로드
+        typedef HRESULT(WINAPI* DXGIGetDebugInterface)(REFIID, void**);
+        
+        const auto hModDxgiDebug = LoadLibraryEx(
+            "dxgidebug.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32
+        );
+        
+        const auto DxgiGetDebugInterface = 
+            reinterpret_cast<DXGIGetDebugInterface>(
+                GetProcAddress(hModDxgiDebug, "DXGIGetDebugInterface")
+            );
+        
+        DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &pDxgiInfoQueue);
+    }
+
+================================================================================
+20. 참고 자료
+================================================================================
+
+관련 소스 파일:
+- Core/App.cpp: 메인 렌더링 루프
+- Core/DxGraphic.cpp: DirectX 초기화 및 기본 렌더링
+- Core/Window.h/cpp: 윈도우 생성 및 메시지 처리
+- Core/Object/Object.h/cpp: Object 클래스 구현
+- Core/Component/Component.h/cpp: Component 기본 클래스
+- Core/Component/Transform/TransformComponent.h: Transform 시스템
+- Core/Component/Physics/PhysicsSystem.h: PhysX 물리 시스템
+- Core/Scene/Base/Scene.h/cpp: 씬 관리 및 Object 컨테이너
+- Core/Draw/Base/Material.h/cpp: Material 및 Texture 시스템
+- Core/InputSystem/KeyBoard.h: 키보드 입력 처리
+- Core/InputSystem/Mouse.h: 마우스 입력 처리
+- Core/RenderingPipeline/RenderGraph/: RenderGraph 구현
+- Core/RenderingPipeline/RenderingManager/Pass/: 각종 RenderPass 구현
+- Utility/Imgui/: ImGui UI 시스템 구현
+- Core/Exception/: 예외 처리 클래스들
+- Documentation/코드스타일_및_개발철학.md: 설계 철학 및 최적화 전략
+
+외부 라이브러리:
+- DirectX 11: 그래픽 렌더링 API
+- PhysX 3.x: 물리 시뮬레이션 엔진
+- Assimp: 3D 모델 로딩 라이브러리
+- ImGui: 즉시 모드 GUI 라이브러리
+- DirectXTex: 텍스처 로딩 및 변환
+- Cnpy: NumPy 파일 입출력
+
+GitHub 저장소:
+- https://github.com/Red-Opera/DirectX_GameEngine
+- 브랜치: Post-processing
+
+================================================================================

@@ -32,6 +32,8 @@ App::App(const std::string& commandLine)
 
 	currentScene = SponzaScene::Create("Sponza");
 
+	// Exception::Error(ErrorCode::CPP_NULLReference, "포인터가 널입니다.");
+
 	currentScene->Initialize();
 	currentScene->BeforeFrame();
 	currentScene->Start();

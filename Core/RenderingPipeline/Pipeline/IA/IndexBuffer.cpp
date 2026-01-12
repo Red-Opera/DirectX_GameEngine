@@ -16,8 +16,6 @@ namespace Graphic
 
 	IndexBuffer::IndexBuffer(std::string path, const std::vector<USHORT>& indices) : indexCount((UINT)indices.size()), path(path)
 	{
-		CREATEINFOMANAGER(Window::GetDxGraphic());
-
 		D3D11_BUFFER_DESC indexBufferDesc;
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 		indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -29,15 +27,13 @@ namespace Graphic
 		D3D11_SUBRESOURCE_DATA initData = {};
 		initData.pSysMem = indices.data();
 
-		hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer);
-		GRAPHIC_THROW_INFO(hr);
+		HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateBuffer(&indexBufferDesc, &initData, &indexBuffer);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 경로와 설정으로 인덱스 버퍼 생성 실패");
 	}
 
 	void IndexBuffer::SetRenderPipeline() NOEXCEPTRELEASE
 	{
-		CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-		GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0); }, ErrorCode::GRAPHICS_BindFailed, "인덱스 버퍼를 입력 어셈블러에 바인딩 실패");
 	}
 
 	UINT IndexBuffer::GetIndexCount() const noexcept

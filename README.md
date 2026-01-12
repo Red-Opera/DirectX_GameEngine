@@ -39,24 +39,46 @@
 
 ## 실행 방법 및 프로그램 종속성
 ### 필수 요구 사항
-#### 1. **Windows 운영체제**  
-   - Windows 7 SP1 이상 권장
+#### 1. **Windows 운영체제**
 
-### 2. **DirectX Runtime (June 2010)**
-   - DirectX 관련 DLL이 프로그램 종속성으로 필요합니다.
-   - 아래 링크에서 다운로드 후 설치하세요.  
-     https://www.microsoft.com/ko-kr/download/details.aspx?id=35
+* Windows 8.1 이상 권장
 
-#### 3. **Visual Studio 2022 (또는 이하 버전)**
-   - C++ / Python 프로젝트 빌드를 위해 필요합니다.
-   - 아래 링크에서 Community, Professional, Enterprise 중 하나를 선택해 설치하세요.  
-     https://visualstudio.microsoft.com/ko/downloads/
+#### 2. **Visual Studio 2022 (또는 이상 버전)**
 
-#### 4. **Python 설치 (3.10 권장)**
-   - Python 스크립트를 실행하려면 Python이 필요합니다.
-   - Python 3.10 버전을 권장하며, 공식 사이트에서 설치 가능합니다.
-     
-     https://www.python.org/downloads/release/python-3100/
+* C++ / Python 프로젝트 빌드를 위해 필요합니다.
+* 아래 링크에서 Community, Professional, Enterprise 중 하나를 선택해 설치하세요.
+  [https://visualstudio.microsoft.com/ko/downloads/](https://visualstudio.microsoft.com/ko/downloads/)
+
+> ⚠️ 설치 시 **“데스크톱 개발용 C++” 워크로드**를 반드시 포함하세요.
+
+#### 3. **Python 설치 (3.10 권장)**
+
+* Python 스크립트를 실행하려면 Python이 필요합니다.
+* Python 3.10 버전을 권장하며, 공식 사이트에서 설치 가능합니다.
+  [https://www.python.org/downloads/release/python-3100/](https://www.python.org/downloads/release/python-3100/)
+
+---
+
+### 오류 해결 안내
+
+#### ❗ `dxc.exe`를 찾을 수 없다는 오류가 발생하는 경우
+
+해당 오류는 **Windows SDK가 설치되어 있지 않거나, 설치되어 있어도 DirectX Shader Compiler(dxc)가 포함되지 않은 경우** 발생합니다.
+
+아래 공식 Microsoft 페이지에서 **Windows SDK를 설치**해 주세요.
+
+* Windows SDK 다운로드:
+  [https://learn.microsoft.com/ko-kr/windows/apps/windows-sdk/downloads](https://learn.microsoft.com/ko-kr/windows/apps/windows-sdk/downloads)
+
+설치 후에도 문제가 지속된다면 다음 사항을 확인하십시오.
+
+* Windows SDK 설치 시 **“DirectX” 관련 구성 요소가 포함되어 있는지**
+* `dxc.exe` 경로가 환경 변수(`PATH`)에 포함되어 있는지
+  (일반적으로
+  `C:\Program Files (x86)\Windows Kits\10\bin\x64`)
+
+---
+
 
 ## 소스 코드 다운로드
 ```bash

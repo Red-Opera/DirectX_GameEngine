@@ -15,8 +15,6 @@ namespace Graphic
 {
     RenderTarget::RenderTarget(ID3D11Texture2D* texture, std::optional<UINT> face)
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
         D3D11_TEXTURE2D_DESC textureDESC;
         texture->GetDesc(&textureDESC);
         width = textureDESC.Width;
@@ -40,14 +38,12 @@ namespace Graphic
             renderTargetDESC.Texture2D = D3D11_TEX2D_RTV{ 0 };
         }
 
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateRenderTargetView(texture, &renderTargetDESC, &targetView));
-        
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateRenderTargetView(texture, &renderTargetDESC, &targetView);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 설정으로 렌더 타겟 뷰 생성 실패");
     }
 
     RenderTarget::RenderTarget(UINT width, UINT height) : width(width), height(height)
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
         // 깊이 스텐실 버퍼의 텍스쳐 제작
         D3D11_TEXTURE2D_DESC textureDesc = {};
         textureDesc.Width = width;
@@ -76,20 +72,21 @@ namespace Graphic
         textureDesc.MiscFlags = 0;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture));
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&textureDesc, nullptr, &texture);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 설정으로 렌더 타겟 텍스쳐 생성 실패");
 
         // 렌더링 결과를 출력하기 위하기 위해 생성
         D3D11_RENDER_TARGET_VIEW_DESC renerTargetDesc = {};
         renerTargetDesc.Format = textureDesc.Format;
         renerTargetDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
         renerTargetDesc.Texture2D = D3D11_TEX2D_RTV{ 0 };
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateRenderTargetView(texture.Get(), &renerTargetDesc, &targetView));
+        hr = GetDevice(Window::GetDxGraphic())->CreateRenderTargetView(texture.Get(), &renerTargetDesc, &targetView);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "렌더 타겟과 해당 설정으로 렌더 타겟 뷰 생성 실패");
     }
 
     void RenderTarget::RenderAsBuffer(ID3D11DepthStencilView* depthStencilView) NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->OMSetRenderTargets(1, targetView.GetAddressOf(), depthStencilView));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->OMSetRenderTargets(1, targetView.GetAddressOf(), depthStencilView); }, ErrorCode::GRAPHICS_BindFailed, "렌더 타겟 뷰를 출력 머티리얼로 바인딩 실패");
 
         D3D11_VIEWPORT viewport;
         viewport.Width = (float)width;
@@ -99,13 +96,11 @@ namespace Graphic
         viewport.TopLeftX = 0.0f;
         viewport.TopLeftY = 0.0f;
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->RSSetViewports(1u, &viewport));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->RSSetViewports(1u, &viewport); }, ErrorCode::GRAPHICS_BindFailed, "뷰포트를 렌더 타겟 뷰 크기에 맞게 설정 실패");
     }
 
     std::pair<Microsoft::WRL::ComPtr<ID3D11Texture2D>, D3D11_TEXTURE2D_DESC> RenderTarget::CreateStaging() const
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDESC{ };
         targetView->GetDesc(&renderTargetViewDESC);
 
@@ -126,18 +121,14 @@ namespace Graphic
         tempTextureDESC.ArraySize = 1;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
-        hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
-        GRAPHIC_THROW_INFO(hr);
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "임시 스테이징 텍스쳐와 해당 설정으로 텍스쳐 생성 실패");
 
         if (renderTargetViewDESC.ViewDimension == D3D11_RTV_DIMENSION::D3D11_RTV_DIMENSION_TEXTURE2DARRAY)
-        {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), renderTargetViewDESC.Texture2DArray.FirstArraySlice, nullptr));
-        }
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), renderTargetViewDESC.Texture2DArray.FirstArraySlice, nullptr); }, ErrorCode::GRAPHICS_CopyResourceFailed, "임시 스테이징 텍스쳐로 서브리소스 영역 복사 실패");
 
         else
-        {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()));
-        }
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()); }, ErrorCode::GRAPHICS_CopyResourceFailed, "임시 스테이징 텍스쳐로 리소스 복사 실패");
 
         return { std::move(textureTemp), textureDESC };
     }
@@ -167,9 +158,7 @@ namespace Graphic
 
     void RenderTarget::Clear(const std::array<float, 4>& color) NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->ClearRenderTargetView(targetView.Get(), color.data()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->ClearRenderTargetView(targetView.Get(), color.data()); }, ErrorCode::GRAPHICS_ClearResourceFailed, "렌더 타겟 뷰 클리어 실패");
     }
 
     UINT RenderTarget::GetWidth() const noexcept
@@ -189,8 +178,6 @@ namespace Graphic
 
     Microsoft::WRL::ComPtr<ID3D11Texture2D> Graphic::RenderTarget::GetTexture() const NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDESC{ };
         targetView->GetDesc(&renderTargetViewDESC);
 
@@ -211,18 +198,14 @@ namespace Graphic
         tempTextureDESC.ArraySize = 1;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D> textureTemp;
-        hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
-        GRAPHIC_THROW_INFO(hr);
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateTexture2D(&tempTextureDESC, nullptr, &textureTemp);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "임시 스테이징 텍스쳐와 해당 설정으로 텍스쳐 생성 실패");
 
         if (renderTargetViewDESC.ViewDimension == D3D11_RTV_DIMENSION::D3D11_RTV_DIMENSION_TEXTURE2DARRAY)
-        {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), renderTargetViewDESC.Texture2DArray.FirstArraySlice, nullptr));
-        }
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->CopySubresourceRegion(textureTemp.Get(), 0, 0, 0, 0, texture.Get(), renderTargetViewDESC.Texture2DArray.FirstArraySlice, nullptr); }, ErrorCode::GRAPHICS_CopyResourceFailed, "임시 스테이징 텍스쳐로 서브리소스 영역 복사 실패");
 
         else
-        {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()));
-        }
+			Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->CopyResource(textureTemp.Get(), texture.Get()); }, ErrorCode::GRAPHICS_CopyResourceFailed, "임시 스테이징 텍스쳐로 리소스 복사 실패");
 
         return std::move(textureTemp);
     }
@@ -230,8 +213,6 @@ namespace Graphic
     ShaderInputRenderTarget::ShaderInputRenderTarget(UINT width, UINT height, UINT slot)
         : RenderTarget(width, height), slot(slot)
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
         Microsoft::WRL::ComPtr<ID3D11Resource> resource;
         targetView->GetResource(&resource);
 
@@ -241,20 +222,17 @@ namespace Graphic
         resourceDESC.Texture2D.MostDetailedMip = 0;
         resourceDESC.Texture2D.MipLevels = 1;
 
-        GRAPHIC_THROW_INFO(GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(resource.Get(), &resourceDESC, &shaderResourceView));
+        HRESULT hr = GetDevice(Window::GetDxGraphic())->CreateShaderResourceView(resource.Get(), &resourceDESC, &shaderResourceView);
+		Require::Check(hr, ErrorCode::GRAPHICS_BufferCreateFailed, "해당 설정으로 셰이더 리소스 뷰 생성 실패");
     }
 
     void ShaderInputRenderTarget::SetRenderPipeline() NOEXCEPTRELEASE
     {
-        CREATEINFOMANAGERNOHR(Window::GetDxGraphic());
-
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1, shaderResourceView.GetAddressOf()));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->PSSetShaderResources(slot, 1, shaderResourceView.GetAddressOf()); }, ErrorCode::GRAPHICS_BindFailed, "픽셀 셰이더에 셰이더 리소스 뷰 바인딩 실패");
     }
 
     GraphicResource::Image RenderTarget::ToImage() const
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         auto [textureTemp, textureDESC] = CreateStaging();
 
         if (textureDESC.Format != DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
@@ -266,8 +244,8 @@ namespace Graphic
         GraphicResource::Image image{ width, height };
         D3D11_MAPPED_SUBRESOURCE mapped = { };
 
-        hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
-        GRAPHIC_THROW_INFO(hr);
+        HRESULT hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
+		Require::Check(hr, ErrorCode::GRAPHICS_MapUnmapFailed, "이미지로 저장하기 위해 RenderTarget을 맵핑하는데 실패");
 
         auto mappedBytes = static_cast<const char*>(mapped.pData);
 
@@ -279,15 +257,13 @@ namespace Graphic
                 image.SetColorPixel(x, y, *(color + x));
         }
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
+        Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0); }, ErrorCode::GRAPHICS_MapUnmapFailed, "이미지로 저장하기 위해 RenderTarget을 언맵핑하는데 실패");
 
         return image;
     }
 
     void RenderTarget::CreateDumpy(const std::string& path) const
     {
-        CREATEINFOMANAGER(Window::GetDxGraphic());
-
         auto [textureTemp, textureDESC] = CreateStaging();
 
         const auto width = GetWidth();
@@ -297,8 +273,8 @@ namespace Graphic
         arr.reserve(width * height);
 
         D3D11_MAPPED_SUBRESOURCE mapped = { };
-        hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
-        GRAPHIC_THROW_INFO(hr);
+        HRESULT hr = GetDeviceContext(Window::GetDxGraphic())->Map(textureTemp.Get(), 0, D3D11_MAP::D3D11_MAP_READ, 0, &mapped);
+        Require::Check(hr, ErrorCode::GRAPHICS_MapUnmapFailed, "더미 값으로 저장하기 위해 RenderTarget을 맵핑하는데 실패");
 
         auto bytes = static_cast<const char*>(mapped.pData);
 
@@ -356,12 +332,13 @@ namespace Graphic
         }
 
         else
-        {
-            GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
-            throw std::runtime_error{ "더미 값으로 저장하기 위한 RenderTarget 버퍼로 사용하는 포맷이 잘못되었음" };
-        }
+            Require::Check(
+                [&] { GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0); },
+                ErrorCode::GRAPHICS_MapUnmapFailed,
+                "더미 값으로 저장하기 위해 RenderTarget을 언맵핑하는데 실패"
+			);
 
-        GRAPHIC_THROW_INFO_ONLY(GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0));
+		Require::Check([&] { GetDeviceContext(Window::GetDxGraphic())->Unmap(textureTemp.Get(), 0); }, ErrorCode::GRAPHICS_MapUnmapFailed, "더미 값으로 저장하기 위해 RenderTarget을 언맵핑하는데 실패");
 
         cnpy::npy_save(path, arr.data(), { height, width, elementCount });
     }
