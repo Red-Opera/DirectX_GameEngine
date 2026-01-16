@@ -114,6 +114,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>./;Utility/;Extrenal/DirectXTex/include/;External\physX\physX\include/;$(WindowsSdkDir)Include\$(WindowsSdkVersion)\shared;$(WindowsSdkDir)Include\$(WindowsSdkVersion)\um;$(WindowsSdkDir)Include\$(WindowsSdkVersion)\winrt</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996; 6031;</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,9 +141,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <AdditionalIncludeDirectories>./;Utility/;Extrenal/DirectXTex/include/;External\physX\physX\include/;$(WindowsSdkDir)Include\$(WindowsSdkVersion)\shared;$(WindowsSdkDir)Include\$(WindowsSdkVersion)\um;$(WindowsSdkDir)Include\$(WindowsSdkVersion)\winrt</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

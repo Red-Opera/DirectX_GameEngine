@@ -93,7 +93,7 @@ void Object::Destroy()
 			compoent.second->Destroy();
 	}
 }
-
+ 
 void Object::OnEnable()
 {
 	for (auto& compoent : components)
