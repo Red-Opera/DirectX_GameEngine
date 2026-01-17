@@ -19,6 +19,8 @@
 #include <comdef.h>
 #include <stdlib.h>
 #include <malloc.h>
+
+// DirectX 헤더 파일 (모듈 시스템에서 분리됨)
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -33,13 +35,14 @@
 #include "Core/Exception/Base/Require.h"
 
 #include "Utility/GameTimer.h"
+#include "Utility/Imgui/ImguiManager.h"
+#include "Utility/LogSystem/PerformanceLog.h"
 #include "Utility/MathInfo.h"
 #include "Utility/Vector.h"
 
 #include "External/Imgui/imgui.h"
 
 // Define
-#define HR(x) { HRESULT hr = x; if(FAILED(hr)) { assert(false); } }
 #define ReleaseCOM(x) { if(x) { (x)->Release(); (x) = nullptr; } }
 #define WINWIDTH 1280
 #define WINHEIGHT 720
