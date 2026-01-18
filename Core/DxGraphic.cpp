@@ -3,6 +3,7 @@
 #include "dxgi.h"
 
 #include "Core/Window.h"
+#include "Exception/ExceptionInfo.h"
 #include "Exception/GraphicsException.h"
 #include "RenderingPipeline/Pipeline/OM/DepthStencil.h"
 #include "RenderingPipeline/RenderTarget.h"
@@ -208,8 +209,9 @@ HRESULT DxGraphic::CreateDevice()
 	UINT createDeviceFlags = 0;
 
 #ifndef NDEBUG
-	// Debug 모드에서 디버그 레이어 활성화
-	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	// Debug 모드에서 디버그 레이어 활성화 (성능 저하 유발 가능성 있음)
+    if (ExceptionInfo::useDXGIDebug)
+	    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
     // Device를 생성함
