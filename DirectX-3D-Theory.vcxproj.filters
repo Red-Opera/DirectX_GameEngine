@@ -1824,6 +1824,9 @@
     <ClInclude Include="Core\Exception\Base\Require.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Utility\Matrix.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\DX3DApp.cpp">
@@ -2295,6 +2298,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-4_ApplicationFramework.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility\Matrix.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

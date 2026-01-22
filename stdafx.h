@@ -38,6 +38,7 @@
 #include "Utility/Imgui/ImguiManager.h"
 #include "Utility/LogSystem/PerformanceLog.h"
 #include "Utility/MathInfo.h"
+#include "Utility/Matrix.h"
 #include "Utility/Vector.h"
 
 #include "External/Imgui/imgui.h"
