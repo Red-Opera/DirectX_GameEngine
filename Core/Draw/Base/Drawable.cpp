@@ -110,8 +110,9 @@ void Drawable::CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept
     // 메시에 정점이 없는 경우 기본 바운딩 스피어 사용
     if (mesh.mNumVertices == 0)
     {
-        m_boundingSphereCenter = { 0.0f, 0.0f, 0.0f };
-        m_boundingSphereRadius = 1.0f;
+        boundingSphereCenter = { 0.0f, 0.0f, 0.0f };
+        boundingSphereRadius = 1.0f;
+
         return;
     }
 
@@ -139,9 +140,9 @@ void Drawable::CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept
     }
 
     // AABB의 중심점 계산 (최소점과 최대점의 중점)
-    m_boundingSphereCenter.x = (minPoint.x + maxPoint.x) * 0.5f;
-    m_boundingSphereCenter.y = (minPoint.y + maxPoint.y) * 0.5f;
-    m_boundingSphereCenter.z = (minPoint.z + maxPoint.z) * 0.5f;
+    boundingSphereCenter.x = (minPoint.x + maxPoint.x) * 0.5f;
+    boundingSphereCenter.y = (minPoint.y + maxPoint.y) * 0.5f;
+    boundingSphereCenter.z = (minPoint.z + maxPoint.z) * 0.5f;
 
     // 바운딩 스피어 반지름 계산 (AABB 대각선의 절반 길이)
     XMVECTOR minVec = XMLoadFloat3(&minPoint);
@@ -149,18 +150,30 @@ void Drawable::CalculateBoundingSphere(const aiMesh& mesh, float scale) noexcept
     XMVECTOR diagonal = XMVectorSubtract(maxVec, minVec);
 
     // 반지름 = 대각선 길이의 절반
-    m_boundingSphereRadius = Vector::GetLength(diagonal) * 0.5f;
+    boundingSphereRadius = Vector::GetLength(diagonal) * 0.5f;
 }
 
 // 월드 공간에서의 바운딩 스피어 중심점 반환
 DirectX::XMFLOAT3 Drawable::GetBoundingSphereCenter() const noexcept
 {
+	XMMATRIX currentTransformMatrix = GetTransformMatrix();
+
+	// 이전 프레임과 변환 행렬과 중심점이 모두 동일하면 이전 결과 재사용 (AND 연산자로 수정)
+	bool transformMatrixEqual = Matrix::Equal(beforeTransformMatrix, currentTransformMatrix);
+	
+	if (transformMatrixEqual)
+		return beforeBoundingSphereWorldCenter;
+
     // 로컬 공간의 중심점을 월드 공간으로 변환
-    XMVECTOR centerVec = XMLoadFloat3(&m_boundingSphereCenter);
-    XMVECTOR transformedCenter = XMVector3Transform(centerVec, GetTransformMatrix());
+    XMVECTOR centerVec = XMLoadFloat3(&boundingSphereCenter);
+    XMVECTOR transformedCenter = XMVector3Transform(centerVec, currentTransformMatrix);
 
     XMFLOAT3 worldCenter;
     XMStoreFloat3(&worldCenter, transformedCenter);
+
+	// 이전 프레임과 동일하지 않다면 결과 갱신
+    beforeBoundingSphereWorldCenter = worldCenter;
+	beforeTransformMatrix = currentTransformMatrix;
 
     return worldCenter;
 }
@@ -169,18 +182,24 @@ DirectX::XMFLOAT3 Drawable::GetBoundingSphereCenter() const noexcept
 float Drawable::GetBoundingSphereRadius() const noexcept
 {
     // 변환 행렬에서 최대 스케일 요소 추출
-    XMMATRIX transformMatrix = GetTransformMatrix();
+    XMMATRIX currentTransformMatrix = GetTransformMatrix();
+
+	// 이전 프레임과 동일한 변환 행렬이면 이전 반지름 재사용
+    if (Matrix::Equal(beforeTransformMatrix, currentTransformMatrix))
+		return boundingSphereRadius * beforeSphereRadiusMaxScale;
 
     // 각 축의 스케일 계산 (변환 행렬의 각 행 벡터의 길이)
-    float scaleX = Vector::GetLength(transformMatrix.r[0]);
-    float scaleY = Vector::GetLength(transformMatrix.r[1]);
-    float scaleZ = Vector::GetLength(transformMatrix.r[2]);
+    float scaleX = Vector::GetLength(currentTransformMatrix.r[0]);
+    float scaleY = Vector::GetLength(currentTransformMatrix.r[1]);
+    float scaleZ = Vector::GetLength(currentTransformMatrix.r[2]);
     
     // 가장 큰 스케일 찾기 (비균등 스케일링 대응)
     float maxScale = std::max(scaleX, std::max(scaleY, scaleZ));
+	beforeSphereRadiusMaxScale = maxScale;
+	beforeTransformMatrix = currentTransformMatrix;
 
     // 원래 반지름에 최대 스케일 적용
-    return m_boundingSphereRadius * maxScale;
+    return boundingSphereRadius * maxScale;
 }
 
 // 뷰 절두체 컬링 체크 (객체가 카메라 시야에 있는지 확인)

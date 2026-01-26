@@ -3,6 +3,7 @@
 #include "dxgi.h"
 
 #include "Core/Window.h"
+#include "Exception/ExceptionInfo.h"
 #include "Exception/GraphicsException.h"
 #include "RenderingPipeline/Pipeline/OM/DepthStencil.h"
 #include "RenderingPipeline/RenderTarget.h"
@@ -155,7 +156,8 @@ void DxGraphic::EndFrame()
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
 
-    HRESULT hr = swapChain->Present(0, 0);
+    UINT presentFlags = DXGI_PRESENT_ALLOW_TEARING;
+    HRESULT hr = swapChain->Present(0, presentFlags);
 
 #ifndef NDEBUG
     infoManager.Set();
@@ -208,8 +210,9 @@ HRESULT DxGraphic::CreateDevice()
 	UINT createDeviceFlags = 0;
 
 #ifndef NDEBUG
-	// Debug 모드에서 디버그 레이어 활성화
-	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	// Debug 모드에서 디버그 레이어 활성화 (성능 저하 유발 가능성 있음)
+    if (ExceptionInfo::useDXGIDebug)
+	    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
     // Device를 생성함
@@ -259,7 +262,7 @@ void DxGraphic::SwapChainSettings(HWND hWnd)
     backBufferDesc.Width = 0;                                                   // 후면 버퍼 너비
     backBufferDesc.Height = 0;                                                  // 후면 버퍼 높이
 
-    backBufferDesc.RefreshRate.Denominator = 1;                                 // 창 주사율 분모
+    backBufferDesc.RefreshRate.Denominator = 0;                                 // 창 주사율 분모
     backBufferDesc.RefreshRate.Numerator = 0;                                  // 창 주사율 분자
 
     backBufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;                         // 후면 버퍼 픽셀 형식 (보통 8비트씩 하는게 적당하고 더 높여도 의미가 없음)
@@ -280,7 +283,7 @@ void DxGraphic::SwapChainSettings(HWND hWnd)
     swapChainDesc.OutputWindow = hWnd;                              // 출력할 창 설정
     swapChainDesc.Windowed = true;                                  // 창 모드 여부 O
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;       // 최신 Flip-model 사용 (성능 향상)
-    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;   // 화면이 바뀔 때 적절한 해상도로 설정
+    swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;   // 화면이 바뀔 때 적절한 해상도로 설정
 }
 
 void DxGraphic::CreateSwapChain()

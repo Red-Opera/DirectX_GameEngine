@@ -21,6 +21,8 @@ public:
 	void Set() noexcept;
 	const char* GetMessages();
 
+	static constexpr bool useDXGIDebug = false;		// DXGI 디버그 사용 여부
+
 private:
 	// 메시지 정보를 저장하는 구조체
 	struct MessageInfo

@@ -129,6 +129,9 @@ public:
 
 	float GetLength() const;
 
+	static bool Equal(const Vector3& left, const Vector3& right, float epsilon = 0.0001f);
+	static bool Eqaul(const DirectX::XMFLOAT3& left, const DirectX::XMFLOAT3& right, float epsilon = 0.0001f);
+
 	static const Vector3 zero;
 	static const Vector3 forward;
 	static const Vector3 back;

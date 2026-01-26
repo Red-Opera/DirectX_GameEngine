@@ -32,5 +32,11 @@ namespace Graphic
 
 		static std::unique_ptr<VertexConstantBuffer<Transform>> vertexConstantBufferMatrix;
 		const Drawable* parent = nullptr;
+
+	private:
+		Transform beforeTransform;
+		mutable alignas(16) XMMATRIX beforeModel;
+		mutable alignas(16) XMMATRIX beforeCamera;
+		mutable alignas(16) XMMATRIX beforeProjection;
 	};
 }

@@ -67,7 +67,12 @@ protected:
     std::shared_ptr<Graphic::PrimitiveTopology> primitiveTopology;  // 프리미티브 토폴로지
 
     // 바운딩 스피어 정보 (로컬 공간 기준)
-    DirectX::XMFLOAT3 m_boundingSphereCenter = { 0.0f, 0.0f, 0.0f }; // 바운딩 스피어 중심점
-    float m_boundingSphereRadius = 1.0f;                             // 바운딩 스피어 반지름
+    DirectX::XMFLOAT3 boundingSphereCenter = { 0.0f, 0.0f, 0.0f };              // 바운딩 스피어 중심점
+    float boundingSphereRadius = 1.0f;                                          // 바운딩 스피어 반지름
+
+	// 최적화 위한 이전 프레임 데이터
+    mutable DirectX::XMFLOAT3 beforeBoundingSphereWorldCenter = { 0.0f, 0.0f, 0.0f };   // 이전 프레임 월드 공간 바운딩 스피어 중심점
+	mutable DirectX::XMMATRIX beforeTransformMatrix = DirectX::XMMatrixIdentity();      // 이전 프레임 변환 행렬
+    mutable float beforeSphereRadiusMaxScale = 1.0f;                                    // 이전 프레임 바운딩 스피어 반지름
 };
 

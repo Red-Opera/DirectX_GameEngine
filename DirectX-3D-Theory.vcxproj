@@ -1104,6 +1104,7 @@
     <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelHelpers.h" />
     <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelParams.h" />
     <ClInclude Include="External\physX\physX\include\vehicle2\wheel\PxVehicleWheelStates.h" />
+    <ClInclude Include="Utility\Matrix.h" />
     <ClInclude Include="Utility\Imgui\ImguiManager.h" />
     <ClInclude Include="Core\WindowResources\icon\resource.h" />
     <ClInclude Include="Core\RenderingPipeline\Pipeline\VSPS\TransformConstantBuffer.h" />
@@ -1247,6 +1248,7 @@
     <ClCompile Include="External\Cnpy\cnpy.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Utility\Matrix.cpp" />
     <ClCompile Include="Theory\Chapter4_DirectXInit\T4-1_BasicKnowledge.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>

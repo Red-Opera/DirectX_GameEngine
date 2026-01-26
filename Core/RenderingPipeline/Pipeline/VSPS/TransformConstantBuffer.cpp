@@ -33,19 +33,36 @@ namespace Graphic
 	{
 		assert(parent != nullptr);
 
-		// 부모의 Transformd에서 카메라 위치를 곱하여 View 위치를 구함
-		const auto model = parent->GetTransformMatrix();
-		const auto viewTransform = model * Window::GetDxGraphic().GetCamera();
+		// 부모의 Transform에서 카메라 위치를 곱하여 View 위치를 구함
+		const XMMATRIX model = parent->GetTransformMatrix();
+		const XMMATRIX camera = Window::GetDxGraphic().GetCamera();
+		const XMMATRIX projection = Window::GetDxGraphic().GetProjection();
 
-		// 상수 버퍼로 만들 Transform을 만듬
-		return
+		// 변환이 변경되었는지 여부를 확인
+		bool isChange = !Matrix::Equal(model, beforeModel) ||
+						!Matrix::Equal(camera, beforeCamera) ||
+						!Matrix::Equal(projection, beforeProjection);
+
+		if (isChange)
 		{
-			DirectX::XMMatrixTranspose(model),
-			DirectX::XMMatrixTranspose(viewTransform),
+			beforeModel = model;
+			beforeCamera = camera;
+			beforeProjection = projection;
 
-			// World * View * Projection
-			DirectX::XMMatrixTranspose(viewTransform * Window::GetDxGraphic().GetProjection())
-		};
+			const XMMATRIX viewTransform = model * camera;
+
+			// 상수 버퍼로 만들 Transform을 만듬
+			beforeTransform =
+			{
+				DirectX::XMMatrixTranspose(model),
+				DirectX::XMMatrixTranspose(viewTransform),
+
+				// World * View * Projection
+				DirectX::XMMatrixTranspose(viewTransform * projection)
+			};
+		}
+
+		return beforeTransform;
 	}
 
 	std::unique_ptr<RenderInstance> TransformConstantBuffer::Instance() const noexcept

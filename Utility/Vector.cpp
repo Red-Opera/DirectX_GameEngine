@@ -312,6 +312,20 @@ float Vector3::GetLength() const
 	return sqrtf(x * x + y * y + z * z);
 }
 
+bool Vector3::Equal(const Vector3& left, const Vector3& right, float epsilon)
+{
+	return (fabs(left.x - right.x) < epsilon) &&
+		   (fabs(left.y - right.y) < epsilon) &&
+		   (fabs(left.z - right.z) < epsilon);
+}
+
+bool Vector3::Eqaul(const DirectX::XMFLOAT3& left, const DirectX::XMFLOAT3& right, float epsilon)
+{
+	return (fabs(left.x - right.x) < epsilon) &&
+		   (fabs(left.y - right.y) < epsilon) &&
+		   (fabs(left.z - right.z) < epsilon);
+}
+
 Vector2::Vector2(const Vector3& vector) noexcept : x(vector.x), y(vector.y)
 {
 

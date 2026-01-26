@@ -130,7 +130,7 @@ void Require::Check(HRESULT hr, ErrorCode errorCode, const char* message, const 
     Check(false, errorCode, fullMessage.c_str(), location);
 }
 
-void Require::Check(HRESULT hr, ErrorCode errorCode, const std::string& message, const std::source_location& location)
+void Require::Check(HRESULT hr, ErrorCode errorCode, const std::string_view message, const std::source_location& location)
 {
-    Check(hr, errorCode, message.c_str(), location);
+    Check(hr, errorCode, message.data(), location);
 }
